@@ -7,4 +7,5 @@
 	<jsp:param value="북이온앤온" name="title"/>
 </jsp:include>
 	<h1>인덱스 화면</h1>
+	test
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
