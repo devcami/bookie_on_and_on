@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xsi:schemaLocation="http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+	
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	
+	<!-- #7.1 영속성 관련 bean등록 -->
+	<context:property-placeholder location="classpath:datasource.properties"/>
+	
+	<!-- datasource bean -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="${datasource.driverClassName}"/>
+		<property name="url" value="${datasource.url}"/>
+		<property name="username" value="${datasource.username}"/>
+		<property name="password" value="${datasource.password}"/>
+	</bean>
+	<!-- sqlSessionFactory bean -->
+	<bean id="sqlSessionFactoryBean" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"/>
+		<property name="configLocation" value="classpath:mybatis-config.xml"/>
+		<property name="mapperLocations" value="classpath*:mapper/**/*-mapper.xml"/>
+	</bean>
+	<!-- sqlSessionTemplate bean : SqlSession interface의 구현클래스 -->
+	<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg ref="sqlSessionFactoryBean"/>
+	</bean>
+	
+	<!-- #8.2. @Mapper 인터페이스 관리 -->
+	<!-- 인터페이스에 적힌 구현체 클래스를 알아서 만들어 사용 / method 명이 mapper Id값으로 사용 -->
+	<mybatis-spring:scan base-package="com.kh.bookie.**.dao"/>
+</beans>

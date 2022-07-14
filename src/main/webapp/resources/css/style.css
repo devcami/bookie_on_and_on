@@ -1,0 +1,24 @@
+@CHARSET "UTF-8";
+body {
+	font-family: 'Noto Sans KR', sans-serif;
+	margin: 0 300px;
+}
+div, section, header, aside, footer {padding:10px;}
+
+/********** 전체컨테이너 **********/
+div#container	{
+	
+}
+
+/********** header **********/
+
+
+/********** content **********/
+section#content		{
+	min-height:600px;
+	background-color : pink;
+}
+
+
+/********** footer **********/
+footer	{background-color:#f8f9fa; background-clip:content-box; clear:both; height:95px; text-align:center;}
