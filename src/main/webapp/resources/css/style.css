@@ -1,24 +1,63 @@
 @CHARSET "UTF-8";
 body {
 	font-family: 'Noto Sans KR', sans-serif;
-	margin: 0 300px;
+	margin:0 auto;
+	width: 800px;
+	background-color: #ffc36a;
 }
-div, section, header, aside, footer {padding:10px;}
 
 /********** 전체컨테이너 **********/
 div#container	{
-	
+	border-radius: 5px;
+	background-color: #FFF;
+	box-shadow: 0px 2px 8px #5454544a;
 }
 
 /********** header **********/
 
-
-/********** content **********/
-section#content		{
-	min-height:600px;
-	background-color : pink;
+header div#header-container{
+	margin: 0 auto;
+	padding: 15px;
+}
+header div#header-container img{
+	margin: 0 5px;
+	width: 100px;
+}
+header div#header-container img:hover{
+	cursor: pointer;
+	transform: scale(1.1);
+}
+header div#header-container img.sh-right{
+	float: right;
 }
 
 
+
+/* navbar 통째 */
+header nav.fixed-bottom{
+	text-align:center;
+	margin: 0 auto;
+	background-color: #FFF;
+	position: fixed;
+	width: 800px;
+	height: 100px;
+	border-top: 0.5px #cfcfcf solid;
+	box-shadow: 0px -2px 5px #5454544a;
+	border-radius : 10px;
+}
+header .nav-item{
+	margin: 0 42px;
+}
+
+header .nav-item a img{
+	width: 50px;
+}
+
 /********** footer **********/
-footer	{background-color:#f8f9fa; background-clip:content-box; clear:both; height:95px; text-align:center;}
+footer	{
+	background-clip:content-box; 
+	clear:both; 
+	height:80px; 
+	text-align:center;
+}
+

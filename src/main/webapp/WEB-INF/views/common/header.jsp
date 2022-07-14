@@ -1,4 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
@@ -23,6 +24,7 @@
 
 <!-- 사용자작성 css -->
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/style.css" />
+
 <script>
 <c:if test="${not empty msg}">
 	alert('${msg}');
@@ -33,7 +35,75 @@
 <div id="container">
 	<header>
 		<div id="header-container">
-			<img src="${pageContext.request.contextPath}/resources/images/logo.png" alt="북이온앤온로고" width="100px" />
+			<img src="${pageContext.request.contextPath}/resources/images/logo.png" alt="북이온앤온로고" width="100px" onclick="location.href='${pageContext.request.contextPath}'"/>
+			<img class="sh-right" src="${pageContext.request.contextPath}/resources/images/icon/search.png" alt="검색"  />
+			<img class="sh-right" src="${pageContext.request.contextPath}/resources/images/icon/alarm.png" alt="알림"  />
 		</div>
+		<nav class="navbar fixed-bottom navbar-expand-lg navbar-light">
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon "></span>
+		  	</button>
+			<div class="collapse navbar-collapse " id="navbarNav">
+				<ul class="navbar-nav mr-auto">
+			    	<li class="nav-item">
+			    		<%-- 현재 URI --%>
+						<c:set var="uri" value="${pageContext.request.requestURI}"/>
+						
+			    		<!-- 홈 링크 -->
+			    		<a class="nav-link" href="${pageContext.request.contextPath}">
+			    			<c:if test="${uri eq '/bookie/'}">
+			    			<img src="${pageContext.request.contextPath}/resources/images/icon/i_home_on.png" alt="homeicon" />홈
+			    			</c:if>
+			    			<c:if test="${uri ne '/bookie/'}">
+			    			<img src="${pageContext.request.contextPath}/resources/images/icon/i_home.png" alt="homeicon" />홈
+			    			</c:if>
+		    			</a>
+	    			</li>
+                    <li class="nav-item">
+			    		<!-- 독후감 링크 /dokoo/로 시작 -->
+                    	<a class="nav-link" href="${pageContext.request.contextPath}/dokoo/dokooList.do">
+			    			<c:if test="${fn:contains(uri, '/bookie/dokoo/')}">
+                    		<img src="${pageContext.request.contextPath}/resources/images/icon/i_dokoo_on.png" alt="dokooicon" />독후감
+			    			</c:if>
+			    			<c:if test="${!fn:contains(uri, '/bookie/dokoo/')}">
+                    		<img src="${pageContext.request.contextPath}/resources/images/icon/i_dokoo.png" alt="dokooicon" />독후감
+			    			</c:if>
+                    	</a>
+                    </li>
+                    <li class="nav-item">
+			    		<!-- 피드 링크 /pheed/로 시작 -->
+                    	<a class="nav-link" href="${pageContext.request.contextPath}/pheed/pheedList.do">
+			    			<c:if test="${fn:contains(uri, '/bookie/pheed/')}">
+                    		<img src="${pageContext.request.contextPath}/resources/images/icon/i_pheed_on.png" alt="pheedicon" />피드
+			    			</c:if>
+			    			<c:if test="${!fn:contains(uri, '/bookie/pheed/')}">
+                    		<img src="${pageContext.request.contextPath}/resources/images/icon/i_pheed.png" alt="pheedicon" />피드
+			    			</c:if>
+                    	</a>
+                    </li>
+                    <li class="nav-item">
+			    		<!-- 북클럽 링크 /club/로 시작 -->
+                    	<a class="nav-link" href="${pageContext.request.contextPath}/club/clubList.do">
+			    			<c:if test="${fn:contains(uri, '/bookie/club/')}">
+                    		<img src="${pageContext.request.contextPath}/resources/images/icon/i_club_on.png" alt="clubicon" />북클럽
+			    			</c:if>
+			    			<c:if test="${!fn:contains(uri, '/bookie/club/')}">
+                    		<img src="${pageContext.request.contextPath}/resources/images/icon/i_club.png" alt="clubicon" />북클럽
+			    			</c:if>
+                    	</a>
+                    </li>
+                    <li class="nav-item">
+			    		<!-- 내서재 링크 /mypage/로 시작 -->
+                    	<a class="nav-link" href="${pageContext.request.contextPath}/mypage">
+			    			<c:if test="${fn:contains(uri, '/bookie/mypage')}">
+                    		<img src="${pageContext.request.contextPath}/resources/images/icon/i_mypage_on.png" alt="mypageicon" />내서재
+			    			</c:if>
+			    			<c:if test="${!fn:contains(uri, '/bookie/mypage/')}">
+                    		<img src="${pageContext.request.contextPath}/resources/images/icon/i_mypage.png" alt="mypageicon" />내서재
+			    			</c:if>
+                    	</a>
+                    </li>
+			    </ul>
+			 </div>
+		</nav>
 	</header>
-	<section id="content">
