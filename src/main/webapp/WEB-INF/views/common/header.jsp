@@ -37,9 +37,9 @@
 	<header>
 		<div id="header-container">
 			<img src="${pageContext.request.contextPath}/resources/images/logo.png" alt="북이온앤온로고" width="100px" onclick="location.href='${pageContext.request.contextPath}'"/>
+			<i class="fa-solid fa-user-plus i-login" onclick="location.href='${pageContext.request.contextPath}/member/login.do'"></i>
 			<img class="sh-right" src="${pageContext.request.contextPath}/resources/images/icon/search.png" alt="검색"  />
-			<img class="sh-right" src="${pageContext.request.contextPath}/resources/images/icon/alarm.png" alt="알림"  />
-			<i class="fa-solid fa-user-plus i-login"></i>
+			<%-- <img class="sh-right" src="${pageContext.request.contextPath}/resources/images/icon/alarm.png" alt="알림"  /> --%>
 		</div>
 		<nav class="navbar fixed-bottom navbar-expand-lg navbar-light">
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
