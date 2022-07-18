@@ -19,6 +19,7 @@
 		</div>
 		<div class="article goto">
 			<div class="button d-grid col-12 mx-auto">
+				<p>ddd</p>
 				<p>함께 읽어요!</p>
 				<p>북클럽</p><span>></span>
 			</div>
