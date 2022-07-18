@@ -14,6 +14,20 @@
 	<!-- Enables the Spring MVC @Controller programming model -->
 	<annotation-driven />
 
+	
+	<!-- #15.1. jacksonMessageConverter Bean -->
+	<beans:bean id="jacksonMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
+	
+	<!-- #15.2. @ResponseBody 처리를 위한 MessageConverter 등록 -->
+	<!-- spring.5.x에 와서 이하 생략 가능. (annotation-driven에 의한 자동처리) -->
+	<beans:bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+		<beans:property name="messageConverters">
+			<beans:list>
+				<beans:ref bean="jacksonMessageConverter"/>
+			</beans:list>
+		</beans:property>
+	</beans:bean>	
+
 	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
 	<resources mapping="/resources/**" location="/resources/" />
 
@@ -21,6 +35,16 @@
 	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<beans:property name="prefix" value="/WEB-INF/views/" />
 		<beans:property name="suffix" value=".jsp" />
+	</beans:bean>
+	
+	<!-- #14.1. jsonView bean 등록 -->
+	<beans:bean id="jsonView" class="net.sf.json.spring.web.servlet.view.JsonView">
+		<beans:property name="contentType" value="application/json; charset=utf-8"/>
+	</beans:bean>
+	<!-- #14.2. BeanNameViewResolver 등록 -->
+	<beans:bean id="beanNameViewResolver" class="org.springframework.web.servlet.view.BeanNameViewResolver">
+		<!-- InternalResourceViewResolver보다 우선적으로 처리 = viewname을 리턴하자나 그때 얘가 먼저 처리된다 = 이름(jsonView)과 일치하는 뷰네임이 있니 ? 연결 없으면 넘겨 -->
+		<beans:property name="order" value="1"/> 
 	</beans:bean>
 	
 	<context:component-scan base-package="com.kh.bookie" />
