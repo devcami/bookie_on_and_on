@@ -1,0 +1,51 @@
+@charset "UTF-8";
+section#content	{
+	margin: 0 auto;
+	padding: 20px 30px;
+	min-height:600px;
+	border-radius: 5px;
+}
+/* 검색버튼 */
+#btn-search{
+    width: 55px;
+    background: none;
+    border-radius: 10px;
+    color: #FE9801;
+    border: 1px solid #FE9801;
+    transition: .1s ease-in-out;
+}
+#btn-search:hover{
+	background-color: #FE9801;
+	color: #fff;
+	box-shadow: 0px 0px 4px #5454544a;
+}
+
+/* 베스트도서 50선 p태그 */
+#book-container p{
+	font-size:25px;
+	color:#697C37;
+}
+
+/* 더보기 버튼 */
+
+
+/* 검색한 책 */
+#book-container .book-table{
+	margin: 10px 0;
+	padding: 10px;
+	/* border: 1px gainsboro solid; */
+	border-radius: 10px;
+	box-shadow: 1px 2px 3px #5454544a;
+	cursor: pointer;
+}
+#book-container .book-table .tbl tr td img{
+	margin-right : 20px;
+}
+#book-container .book-table .tbl tr td.book-title{
+	font-size: 25px;
+}
+#book-container .book-table .tbl tr td.book-author{
+	font-size: 19px;
+	color: #FE9801;
+}
+

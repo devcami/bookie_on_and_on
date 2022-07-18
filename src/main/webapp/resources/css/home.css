@@ -40,6 +40,7 @@ div.article button{
 	color: #FE9801;
 	border: 1px solid #FE9801;
 	transition: .2s ease-in-out;
+	font-size: 25px;
 }
 div.article button:hover{
 	background-color: #FE9801;
@@ -50,11 +51,36 @@ div.article button:active{
 	transform: scale(1.05);
 }
 
+
+/* 홈화면 카테고리 이동 버튼 */
 div.article.goto .button{
 	width: 100%;
 	height: 100px;
 	background-color: #CCDA46;
 	border-radius: 10px;
 	border: none;
+	color: #FFF;
+	text-shadow: 2px 2px 2px #697C37;
+	cursor: pointer;
+	transition: .2s ease-in-out;
 }
-
+div.article.goto .button:hover{
+	background-color: #cbda466f;
+}
+div.article.goto i{
+	color: white;
+	font-size: 50px;
+	float: right;
+	text-shadow: 0px 0px 4px #5454544a;
+}
+div.article.goto p.small{
+	font-size: 20px;
+	text-align: left;
+	bottom: -10px;
+	left: 0;
+}
+div.article.goto p{
+	font-size: 50px;
+	bottom: 35px;
+	left: 15px;
+}

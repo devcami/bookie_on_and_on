@@ -38,7 +38,7 @@
 		<div id="header-container">
 			<img src="${pageContext.request.contextPath}/resources/images/logo.png" alt="북이온앤온로고" width="100px" onclick="location.href='${pageContext.request.contextPath}'"/>
 			<i class="fa-solid fa-user-plus i-login" onclick="location.href='${pageContext.request.contextPath}/member/login.do'"></i>
-			<img class="sh-right" src="${pageContext.request.contextPath}/resources/images/icon/search.png" alt="검색"  />
+			<img class="sh-right" src="${pageContext.request.contextPath}/resources/images/icon/search.png" alt="검색" onclick="location.href='${pageContext.request.contextPath}/search/searchForm.do'" />
 			<%-- <img class="sh-right" src="${pageContext.request.contextPath}/resources/images/icon/alarm.png" alt="알림"  /> --%>
 		</div>
 		<nav class="navbar fixed-bottom navbar-expand-lg navbar-light">
@@ -62,8 +62,8 @@
 		    			</a>
 	    			</li>
                     <li class="nav-item">
-			    		<!-- 독후감 링크 /dokoo/로 시작 -->
-                    	<a class="nav-link" href="${pageContext.request.contextPath}/dokoo/dokooList.do">
+			    		<!-- 독후감 링크 /dokoo/로 시작 dokooFlList : follwer list / dokooCrList : 발견 list -->
+                    	<a class="nav-link" href="${pageContext.request.contextPath}/dokoo/dokooFlList.do">
 			    			<c:if test="${fn:contains(uri, '/bookie/dokoo/')}">
                     		<img src="${pageContext.request.contextPath}/resources/images/icon/i_dokoo_on.png" alt="dokooicon" />독후감
 			    			</c:if>
@@ -73,8 +73,8 @@
                     	</a>
                     </li>
                     <li class="nav-item">
-			    		<!-- 피드 링크 /pheed/로 시작 -->
-                    	<a class="nav-link" href="${pageContext.request.contextPath}/pheed/pheedList.do">
+			    		<!-- 피드 링크 /pheed/로 시작 pheedFlList : follower list / pheedCrList : 발견 list -->
+                    	<a class="nav-link" href="${pageContext.request.contextPath}/pheed/pheedFlList.do">
 			    			<c:if test="${fn:contains(uri, '/bookie/pheed/')}">
                     		<img src="${pageContext.request.contextPath}/resources/images/icon/i_pheed_on.png" alt="pheedicon" />피드
 			    			</c:if>
@@ -85,7 +85,7 @@
                     </li>
                     <li class="nav-item">
 			    		<!-- 북클럽 링크 /club/로 시작 -->
-                    	<a class="nav-link" href="${pageContext.request.contextPath}/club/clubList.do">
+                    	<a class="nav-link" href="${pageContext.request.contextPath}/club/clubMyList.do">
 			    			<c:if test="${fn:contains(uri, '/bookie/club/')}">
                     		<img src="${pageContext.request.contextPath}/resources/images/icon/i_club_on.png" alt="clubicon" />북클럽
 			    			</c:if>
