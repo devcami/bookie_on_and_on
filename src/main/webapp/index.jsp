@@ -18,10 +18,24 @@
 			</div>
 		</div>
 		<div class="article goto">
-			<div class="button d-grid col-12 mx-auto">
-				<p>ddd</p>
-				<p>함께 읽어요!</p>
-				<p>북클럽</p><span>></span>
+			<div class="button d-grid col-12" onclick="${pageContext.request.contextPath}/club/clubList.do">
+				<p class="col-12 m-0 small">함께 읽어요!</p>
+				<p><i class="fa-solid fa-hand-point-right"></i></p>
+				<p class="col-12 m-0">북클럽</p>
+			</div>
+		</div>
+		<div class="article goto">
+			<div class="button d-grid col-12" onclick="${pageContext.request.contextPath}/dokoo/dokooCrList.do">
+				<p class="col-12 m-0 small">나만의 에세이</p>
+				<p><i class="fa-solid fa-hand-point-right"></i></p>
+				<p class="col-12 m-0">독후감</p>
+			</div>
+		</div>
+		<div class="article goto">
+			<div class="button d-grid col-12" onclick="${pageContext.request.contextPath}/pheed/pheedCrList.do">
+				<p class="col-12 m-0 small">이 부분 어때요?</p>
+				<p><i class="fa-solid fa-hand-point-right"></i></p>
+				<p class="col-12 m-0">피드 둘러보기</p>
 			</div>
 		</div>
 	</section>
