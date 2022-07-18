@@ -9,10 +9,10 @@
 </jsp:include>
 	<section id="content">
 		<div class="article main-banner">
-			<img src="${pageContext.request.contextPath}/resources/images/main-banner.jpg" alt="" />
+			<img src="${pageContext.request.contextPath}/resources/images/main-banner.png" alt="메인배너" />
 		</div>
 		<div class="article book-club-ann">
-			<img src="${pageContext.request.contextPath}/resources/images/book-club-ann.jpg" alt="" />
+			<img src="${pageContext.request.contextPath}/resources/images/book-club-8.png" alt="북클럽공고" />
 			<div class="button d-grid col-10 mx-auto">
 				<button type="button" class="btn btn-lg ">북클럽 더보기 + </button>
 			</div>

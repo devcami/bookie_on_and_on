@@ -202,6 +202,19 @@
 		    <version>1.3.3</version>
 		</dependency>
 	    
+  		<!-- #14. jsonView bean 의존 -->
+	    <dependency>
+	        <groupId>net.sf.json-lib</groupId>
+	        <artifactId>json-lib-ext-spring</artifactId>
+	        <version>1.0.2</version>
+	    </dependency>
+	    
+	    <!-- #15. MessageConvert의 json처리용 의존 -->
+        <dependency>
+	        <groupId>com.fasterxml.jackson.core</groupId>
+	        <artifactId>jackson-databind</artifactId>
+	        <version>2.9.5</version>
+	    </dependency>
 	    
 		<!-- Test -->
 		<dependency>

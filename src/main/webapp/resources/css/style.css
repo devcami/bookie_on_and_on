@@ -40,7 +40,7 @@ header nav.fixed-bottom{
 	background-color: #FFF;
 	position: fixed;
 	width: 800px;
-	height: 100px;
+	height: 80px;
 	border-top: 0.5px #cfcfcf solid;
 	box-shadow: 0px -2px 5px #5454544a;
 	border-radius : 10px;
@@ -50,7 +50,7 @@ header .nav-item{
 }
 
 header .nav-item a img{
-	width: 50px;
+	width: 45px;
 }
 
 /********** footer **********/
