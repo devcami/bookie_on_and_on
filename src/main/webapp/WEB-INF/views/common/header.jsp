@@ -16,6 +16,7 @@
 
 <!-- bootstrap css -->
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+<script src="https://kit.fontawesome.com/1c396dc14f.js" crossorigin="anonymous"></script>
 
 <!-- 글꼴 -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -36,8 +37,9 @@
 	<header>
 		<div id="header-container">
 			<img src="${pageContext.request.contextPath}/resources/images/logo.png" alt="북이온앤온로고" width="100px" onclick="location.href='${pageContext.request.contextPath}'"/>
+			<i class="fa-solid fa-user-plus i-login" onclick="location.href='${pageContext.request.contextPath}/member/login.do'"></i>
 			<img class="sh-right" src="${pageContext.request.contextPath}/resources/images/icon/search.png" alt="검색"  />
-			<img class="sh-right" src="${pageContext.request.contextPath}/resources/images/icon/alarm.png" alt="알림"  />
+			<%-- <img class="sh-right" src="${pageContext.request.contextPath}/resources/images/icon/alarm.png" alt="알림"  /> --%>
 		</div>
 		<nav class="navbar fixed-bottom navbar-expand-lg navbar-light">
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">

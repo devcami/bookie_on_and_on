@@ -1,6 +1,13 @@
 @CHARSET "UTF-8";
+@font-face {
+    font-family: 'KOTRAHOPE';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2110@1.0/KOTRAHOPE.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
 body {
-	font-family: 'Noto Sans KR', sans-serif;
+    font-family: 'KOTRAHOPE';
+   	font-size: 18px;
 	margin:0 auto;
 	width: 800px;
 	background-color: #ffc36a;
@@ -16,11 +23,26 @@ div#container	{
 /********** header **********/
 
 header div#header-container{
+   	font-size: 30px;
 	margin: 0 auto;
 	padding: 15px;
 }
+
+header div#header-container .i-login{
+	font-size: 70px;
+	color: #FE9801;
+	float: right;
+	vertical-align:middle;
+	margin: 10px;
+	text-shadow : 3px 3px 1px #CCDA46;
+}
+header div#header-container .i-login:hover{
+	color: #CCDA46 ;
+	cursor: pointer;
+	transform: scale(1.1);
+}
 header div#header-container img{
-	margin: 0 5px;
+	margin: 0 10px;
 	width: 100px;
 }
 header div#header-container img:hover{
@@ -40,7 +62,7 @@ header nav.fixed-bottom{
 	background-color: #FFF;
 	position: fixed;
 	width: 800px;
-	height: 80px;
+	height: 85px;
 	border-top: 0.5px #cfcfcf solid;
 	box-shadow: 0px -2px 5px #5454544a;
 	border-radius : 10px;
@@ -50,7 +72,10 @@ header .nav-item{
 }
 
 header .nav-item a img{
-	width: 45px;
+	width: 50px;
+}
+header .nav-item a.nav-link{
+	margin-top: 5px;
 }
 
 /********** footer **********/
