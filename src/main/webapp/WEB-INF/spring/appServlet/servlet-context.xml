@@ -64,7 +64,8 @@
 		</interceptor>
 	</interceptors> -->
 	
-		<!-- #11.2. aop관련 어노테이션 등록처리 -->
+	<!-- #11.2. aop관련 어노테이션 등록처리 -->
+	<!-- #13.3. root-context의 transaction aop설정을 servlet-context에 적용 -->
 	<aop:aspectj-autoproxy/>
 	
 	<!-- #12.1. 파일 업로드 처리할 multipartResolver -->
