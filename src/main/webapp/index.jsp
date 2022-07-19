@@ -18,17 +18,17 @@
 			</div>
 		</div>
 		<div class="article goto">
-			<div class="button d-grid col-12" onclick="${pageContext.request.contextPath}/club/clubList.do">
-				<p class="col-12 m-0 small">함께 읽어요!</p>
+			<div class="button d-grid col-12" onclick="">
+				<p class="col-12 m-0 small">님을 위한</p>
 				<p><i class="fa-solid fa-hand-point-right"></i></p>
-				<p class="col-12 m-0">북클럽</p>
+				<p class="col-12 m-0">추천 도서</p>
 			</div>
 		</div>
 		<div class="article goto">
 			<div class="button d-grid col-12" onclick="${pageContext.request.contextPath}/dokoo/dokooCrList.do">
-				<p class="col-12 m-0 small">나만의 에세이</p>
+				<p class="col-12 m-0 small">베스트 | 신간</p>
 				<p><i class="fa-solid fa-hand-point-right"></i></p>
-				<p class="col-12 m-0">독후감</p>
+				<p class="col-12 m-0">분야별 도서 보기</p>
 			</div>
 		</div>
 		<div class="article goto">
@@ -38,5 +38,6 @@
 				<p class="col-12 m-0">피드 둘러보기</p>
 			</div>
 		</div>
+		
 	</section>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

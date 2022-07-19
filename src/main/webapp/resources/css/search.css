@@ -27,7 +27,9 @@ section#content	{
 }
 
 /* 더보기 버튼 */
-
+#btn-more {
+	
+}
 
 /* 검색한 책 */
 #book-container .book-table{
