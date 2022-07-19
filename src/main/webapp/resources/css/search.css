@@ -27,8 +27,18 @@ section#content	{
 }
 
 /* 더보기 버튼 */
-#btn-more {
-	
+#btn-more{
+	font-size: 30px;
+    background: none;
+    border-radius: 10px;
+    color: #FE9801;
+    border: 1px solid #FE9801;
+    transition: .1s ease-in-out;
+}
+#btn-more:hover{
+	background-color: #FE9801;
+	color: #fff;
+	box-shadow: 0px 0px 4px #5454544a;
 }
 
 /* 검색한 책 */

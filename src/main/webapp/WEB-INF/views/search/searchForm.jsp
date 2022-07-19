@@ -27,7 +27,7 @@
 		
 	</div>
 	<div id='btn-more-container'>
-		<button id="btn-more" class="btn" type="button">더보기</button>
+		<button id="btn-more" class="btn gap-2 col-12" type="button">더보기</button>
 		<span style="display:none;" id="cPage"></span>
 	</div>
 </section>

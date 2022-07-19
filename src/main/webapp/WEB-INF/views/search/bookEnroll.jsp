@@ -10,4 +10,9 @@
 <section id="content">
 	
 </section>
+<script>
+window.addEventListener(('load') => {
+	
+});
+</script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
