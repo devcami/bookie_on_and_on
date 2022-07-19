@@ -30,8 +30,8 @@ public class SearchController {
 	public void searchForm() {}
 	
 	@GetMapping("/bookEnroll.do")
-	public void bookEnroll(@RequestParam String itemId, Model model) {
-		model.addAttribute("itemId", itemId);
+	public void bookEnroll(@RequestParam String isbn13, Model model) {
+		model.addAttribute("isbn13", isbn13);
 	}
 	
 	
