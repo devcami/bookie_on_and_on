@@ -15,13 +15,13 @@
 			name="bookSearchFrm" 
 			action="${pageContext.request.contextPath}/search/searchBook.do"
 			method="GET">
-			    <select id="searchType" name="searchType" class="col-md-2 form-control d-inline form-select">
+			    <select id="searchType" name="searchType" class="row-col-2 form-control d-inline form-select">
 			      <option selected value="bookName">책제목</option>
 			      <option value="author">저자</option>
 			      <option value="publisher">출판사</option>
 			    </select>
-			    <input type="text" class="form-control col-md-8 d-inline mx-3" id="inputZip" placeholder="검색어를 입력해주세요">
-			    <input type="button" class="btn btn-primary" id="btn-search" value="검색"/>
+			    <input type="text" class="form-control row-col-md-6 d-inline mx-3" id="inputZip" placeholder="검색어를 입력해주세요">
+			    <input type="button" class="btn btn-md btn-primary" id="btn-search" value="검색"/>
 		</form>
 	</div>
 	<div class="" id="book-container">
@@ -29,7 +29,7 @@
 		
 	</div>
 	<div id='btn-more-container'>
-		<button id="btn-more" class="btn gap-2 col-12" type="button">더보기</button>
+		<button id="btn-more" class="btn gap-2 row-col-12" type="button">더보기</button>
 		<span style="display:none;" id="cPage"></span>
 	</div>
 </section>
