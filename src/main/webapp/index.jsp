@@ -15,13 +15,13 @@
 		</div>
 		<div class="article book-club-ann">
 			<img src="${pageContext.request.contextPath}/resources/images/book-club-8.png" alt="북클럽공고" />
-			<div class="button d-grid col-10 mx-auto">
+			<div class="button d-grid col-md-10 mx-auto">
 				<button type="button" class="btn btn-lg ">북클럽 더보기 + </button>
 			</div>
 		</div>
 		<div class="article goto">
-			<div class="button d-grid col-12" onclick="">
-				<p class="col-12 m-0 small">님을 위한</p>
+			<div class="button d-grid col-md-12" onclick="">
+				<p class="col-md-12 m-0 small">님을 위한</p>
 				<p><i class="fa-solid fa-hand-point-right"></i></p>
 				<p class="col-12 m-0">추천 도서</p>
 			</div>

@@ -304,6 +304,7 @@ create table likes_club (
 -- 조회
 --==============================================
 select * from user_sequences; -- 시퀀스 조회
+
 select * from member;
 select * from authority;
 select * from interest;
@@ -332,5 +333,12 @@ select * from likes_dokoo;
 select * from likes_club;
 
 
+-- remeber-me table
+create table persistent_logins (
+    username varchar(64) not null, 
+    series varchar(64) primary key, 
+    token varchar(64) not null,  -- username, password, expire time을 단방향 암호화한 값
+    last_used timestamp not null);
 
+select * from persistent_logins;
 
