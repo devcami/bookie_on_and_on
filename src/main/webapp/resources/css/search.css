@@ -8,9 +8,9 @@ section#content	{
 
 /****** 검색화면 - 책리스트 ******/
 
+/* select */
 /* 검색버튼 */
 #btn-search{
-    width: 55px;
     background: none;
     border-radius: 10px;
     color: #FE9801;
