@@ -5,6 +5,9 @@ section#content	{
 	min-height:600px;
 	border-radius: 5px;
 }
+
+/****** 검색화면 - 책리스트 ******/
+
 /* 검색버튼 */
 #btn-search{
     width: 55px;
@@ -49,6 +52,14 @@ section#content	{
 	border-radius: 10px;
 	box-shadow: 1px 2px 3px #5454544a;
 	cursor: pointer;
+	transition: .25s ;
+}
+#book-container .book-table:hover{
+	background-color: #ffd18c88;
+	transform: scale(1.02);
+}
+#book-container .book-table:active{
+	transform: scale(0.95);
 }
 #book-container .book-table .tbl tr td img{
 	margin-right : 20px;
@@ -60,4 +71,83 @@ section#content	{
 	font-size: 19px;
 	color: #FE9801;
 }
+
+/****** 책 등록폼 ******/
+#book-container {
+	border-radius: 5px;
+}
+#book-container div.book-image{
+	text-align: center;
+	padding: 0 30px;
+}
+#book-container div.book-image img{
+	margin: 20px;
+	box-shadow: 0px 0px 5px #5454544a;
+}
+#book-container div.book-eval{
+	display: flex;
+	flex-direction: column;
+    align-items: center;
+}
+/* 별점 */
+#book-container div.book-eval div.starRev{
+	margin: 10px;
+}
+.starR1{
+    background: url('http://miuu227.godohosting.com/images/icon/ico_review.png') no-repeat -52px 0;
+    background-size: auto 100%;
+    width: 15px;
+    height: 30px;
+    float:left;
+    text-indent: -9999px;
+    cursor: pointer;
+}
+.starR2{
+    background: url('http://miuu227.godohosting.com/images/icon/ico_review.png') no-repeat right 0;
+    background-size: auto 100%;
+    width: 15px;
+    height: 30px;
+    float:left;
+    text-indent: -9999px;
+    cursor: pointer;
+}
+.starR1.on{background-position:0 0;}
+.starR2.on{background-position:-15px 0;}
+
+/* 상태 */
+#book-container div.book-eval .btn-group{
+	margin-top: 30px;
+}
+#book-container div.book-eval .btn-group .btn-outline-primary {
+	margin:5px;
+	border-radius: 10px;
+    color: #FE9801;
+    border-color: #FE9801;
+}
+#book-container div.book-eval .btn-group .btn-outline-primary:hover {
+    color: #fff;
+    background-color: #FE9801;
+    border-color: #FE9801;
+}
+#book-container div.book-eval .btn-group .btn-check:checked+.btn-outline-primary{
+    color: #fff;
+    background-color: #FE9801;
+    border-color: #FE9801;
+}
+#book-container div.book-eval .btn-outline-secondary{
+	margin: 20px;
+	border-radius: 10px;
+}
+
+/* 책정보 */
+#book-container div.book-image div.book-info{
+	text-align: left;
+}
+section#content div.line{
+	margin : 50px 0 ;
+	border : solid 7px #CCDA46;
+	border-radius: 10px
+} 
+
+
 

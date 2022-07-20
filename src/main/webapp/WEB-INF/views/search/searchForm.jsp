@@ -3,6 +3,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/search.css" />
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param value="책검색" name="title"/>
@@ -52,16 +54,17 @@ const getPage = (cPage) => {
 			start : cPage,
 			SearchTarget : 'Book',
 			output : 'js',
-			Corver : 'mini',
+			Cover : 'mini',
 			Version : '20131101'
 		},
 		success(resp){
 			const {item} = resp;
 			item.forEach((book) => {
-				const {itemId, title, author, publisher, pubDate, cover} = book;
+				console.log(book);
+				const {isbn13, title, author, publisher, pubDate, cover} = book;
 				const div = `
 					<div class="book-table" onclick="bookEnroll(this);">
-						<input type="hidden" name="itemId" value=\${itemId} />
+						<input type="hidden" name="isbn13" value=\${isbn13} />
 						<table class="tbl">
 							<tr>
 								<td rowspan="4">
@@ -95,8 +98,8 @@ const getPage = (cPage) => {
 <%-- 책 클릭 시 내 서재에 등록 폼 --%>
 const bookEnroll = (e) => {
 	console.log(e.firstElementChild.value);	
-	const itemId = e.firstElementChild.value;
-	location.href = "${pageContext.request.contextPath}/search/bookEnroll.do?itemId=" + itemId;
+	const isbn13 = e.firstElementChild.value;
+	location.href = "${pageContext.request.contextPath}/search/bookEnroll.do?isbn13=" + isbn13;
 };
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
