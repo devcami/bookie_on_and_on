@@ -1,0 +1,153 @@
+@charset "UTF-8";
+section#content	{
+	margin: 0 auto;
+	padding: 20px 30px;
+	min-height:600px;
+	border-radius: 5px;
+}
+
+/* 버튼 */
+#btn-enroll {
+	font-size: 20px;
+    background: none;
+    border-radius: 10px;
+    color: #FE9801;
+    border: 1px solid #FE9801;
+    transition: .1s ease-in-out;
+    padding: 5px 12px;
+}
+#btn-enroll:hover{
+	background-color: #FE9801;
+	color: #fff;
+	box-shadow: 0px 0px 4px #5454544a;
+	cursor: pointer;
+}
+
+/* 상단 메뉴 */
+#top-menu {
+	display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #e9e9e9;
+}
+
+/* 공통 */
+.divs {
+	margin-top: 10px;
+	border-bottom: 2px solid #e9e9e9;	
+	padding-bottom: 20px;
+}
+
+.form-group {
+	margin-top: 1rem;
+	margin-bottom: 0 !important;
+}
+
+/* 북클럽 등록 폼 */
+label {
+	font-size: larger;
+	margin-bottom: 0.3rem !important;
+}
+
+.basic-input {
+    height: 42px;
+    border: 0 !important;
+    border-radius: 22px !important;
+    outline: none;
+    background-color: rgb(233, 233, 233) !important;
+}
+
+.form-control:focus {
+	box-shadow: 0 0 0px 0.2rem #e9e9e9 !important;
+}
+
+.col-form-label-sm {
+	font-size: 1rem !important;
+}
+small {
+	font-size: 95%;
+}
+
+/* 기본 정보 */
+p {
+	margin: 0 !important;
+	font-size: 35px;
+}
+.row {
+	margin-left: 0 !important;
+	width: 85%;
+	align-items: center;
+}
+
+.date-div{
+	display: flex;
+    justify-content: space-between;
+    margin : 10px 0;
+    align-items: center;
+}
+.label-div {
+	margin-right: 3px;
+	width: 123px;
+}
+i {
+	margin-right: 5px
+}
+
+/* 인원 */
+.nop-div {
+	display: flex;
+    justify-content: space-between;
+    margin: 10px 0;
+    align-items: center;
+    width: 54%
+}
+
+.nop-div span{
+	margin: 0 5px;
+}
+
+.nop-col {
+	display: flex;
+	align-items: center;
+}
+
+
+/* 읽는 책 */
+#books-p {
+	display: inline-block;
+	margin-right: 10px !important;
+}
+#books-small {
+	display: inline-block !important;
+}
+.book-table {
+	margin: 10px 0;
+    padding: 10px;
+    /* border: 1px gainsboro solid; */
+    border-radius: 10px;
+    box-shadow: 1px 2px 3px #5454544a;
+    cursor: pointer;
+    transition: .25s;
+}
+.book-title {
+	font-size: 25px;
+}
+.book-author {
+	font-size: 19px;
+    color: #FE9801;
+}
+#btn-more {
+    font-size: 30px;
+    background: none;
+    border-radius: 10px;
+    color: #FE9801;
+    border: 1px solid #FE9801;
+    transition: .1s ease-in-out;
+}
+#btn-more:hover {
+    background-color: #FE9801;
+    color: #fff;
+    box-shadow: 0px 0px 4px #5454544a;
+}
+
