@@ -101,7 +101,7 @@
                     </li>
                     <li class="nav-item">
 			    		<!-- 내서재 링크 /mypage/로 시작 -->
-                    	<a class="nav-link" href="${pageContext.request.contextPath}/mypage">
+                    	<a class="nav-link" href="${pageContext.request.contextPath}/mypage/mypage.do">
 			    			<c:if test="${fn:contains(uri, '/bookie/mypage')}">
                     		<img src="${pageContext.request.contextPath}/resources/images/icon/i_mypage_on.png" alt="mypageicon" />내서재
 			    			</c:if>
