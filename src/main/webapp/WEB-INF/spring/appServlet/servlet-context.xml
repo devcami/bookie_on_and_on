@@ -49,20 +49,20 @@
 	
 	<context:component-scan base-package="com.kh.bookie"/>
 	
-		<!-- #10. interceptor 등록 -->
-<!-- 	<interceptors>
+	<!-- #10. interceptor 등록 -->
+	<interceptors>
 		<interceptor>
 			<mapping path="/**"/>
 			<beans:bean class="com.kh.bookie.common.interceptor.LoggerInterceptor"></beans:bean>
 		</interceptor>
-		<interceptor>
+	</interceptors> 
+		<!-- <interceptor>
 			<mapping path="/member/**" />
 			<mapping path="/board/**" />
 			<exclude-mapping path="/member/memberLogin.do"/>
 			<exclude-mapping path="/board/boardList.do"/>
 			<beans:bean class="com.kh.bookie.common.interceptor.LoginInterceptor"></beans:bean>
-		</interceptor>
-	</interceptors> -->
+		</interceptor> -->
 	
 	<!-- #11.2. aop관련 어노테이션 등록처리 -->
 	<!-- #13.3. root-context의 transaction aop설정을 servlet-context에 적용 -->
