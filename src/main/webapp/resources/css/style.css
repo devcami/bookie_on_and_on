@@ -29,11 +29,11 @@ header div#header-container{
 }
 
 header div#header-container .i-login{
-	font-size: 70px;
+	font-size: 60px;
 	color: #FE9801;
 	float: right;
 	vertical-align:middle;
-	margin: 10px;
+	margin: 18px 10px;
 	text-shadow : 3px 3px 1px #CCDA46;
 }
 header div#header-container .i-login:hover{
