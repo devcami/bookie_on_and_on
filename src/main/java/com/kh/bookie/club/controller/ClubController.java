@@ -32,6 +32,9 @@ public class ClubController {
 	@GetMapping("/enrollClub.do")
 	public void enrollClub() {}
 	
+	@GetMapping("/addBookPopup.do")
+	public void addBookPopup() {}
+	
 //	@GetMapping("/bookEnroll.do")
 //	public void bookEnroll(@RequestParam String isbn13, Model model) {
 //		model.addAttribute("isbn13", isbn13);

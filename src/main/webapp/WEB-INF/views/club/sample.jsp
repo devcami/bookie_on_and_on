@@ -7,7 +7,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/clubList.css" />
 <jsp:include page="/WEB-INF/views/common/header.jsp">
-	<jsp:param value="북클럽리스트" name="clubList"/>
+	<jsp:param value="북클럽리스트" name="title"/>
 </jsp:include>
 <section id="content">
 	<div id="menu">

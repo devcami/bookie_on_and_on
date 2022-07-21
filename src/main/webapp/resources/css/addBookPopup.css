@@ -1,0 +1,166 @@
+@CHARSET "UTF-8";
+@font-face {
+    font-family: 'KOTRAHOPE';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2110@1.0/KOTRAHOPE.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+body {
+    font-family: 'KOTRAHOPE';
+   	font-size: 18px;
+	margin:0 auto;
+	width: 800px;
+	background-color: #ffc36a;
+} 
+
+
+
+/* 여기서부터 폼 내용 */ 
+/* 책 등록 모달 */
+#addBookModal .modal-dialog {
+  max-width: 800px;
+  margin: 1.75rem auto;
+} 
+
+.modal-book-container {
+	display: flex;
+    justify-content: space-evenly;
+    align-items: center;	
+}
+
+.modal-content {
+/* 	border: unset; */
+}
+
+..modal-book-container .book-table {
+	width: 90%;
+}
+
+.book-modal-header {
+	padding: 1rem 1rem 0 1rem !important;
+    border-bottom: none !important;
+}
+
+#modal-header-bottom {
+	border-bottom: 1px solid #e9ecef;
+	padding: 0 1rem;
+	color: #495057;
+	display: flex;
+	align-items: center;
+	padding-bottom: 15px;
+}
+
+.img-btn {
+	margin: 0 9px;
+}
+
+.x-btn {
+	transform: translate(-8px, -15px) !important;
+    font-size: 2rem !important;
+    opacity: .7 !important;
+}
+
+.btn-plus {
+	color: white !important;
+	background-color: #FE9801 !important;
+    border: #FE9801 !important;
+    font-size: larger;
+    padding: 0px 11px;
+}
+
+.mybtn {
+	font-size: 20px;
+    background: none;
+    border-radius: 10px;
+    color: #FE9801;
+    border: 1px solid #FE9801;
+    transition: .1s ease-in-out;
+    padding: 5px 12px;
+}
+.mybtn:hover{
+	background-color: #FE9801;
+	color: #fff;
+	box-shadow: 0px 0px 4px #5454544a;
+	cursor: pointer;
+}
+
+.form-control:focus {
+	border-color: #ced4da !important;
+	box-shadow: unset !important;
+}
+.enroll-btn {
+	background-color: #FE9801 !important;
+	border: #FE9801 !important;
+	height: 47px;
+}
+.enroll-btn:hover {
+	color: #fff;
+    background-color: #ffc107 !important;
+    border-color: #ffc107 !important;
+}
+
+
+/* 읽는 책 */
+#books-p {
+	display: inline-block;
+	margin-right: 10px !important;
+}
+#books-small {
+	display: inline-block !important;
+}
+.book-table {
+	width: 90%;
+	margin: 10px 0;
+    padding: 10px;
+    /* border: 1px gainsboro solid; */
+    border-radius: 10px;
+    box-shadow: 1px 2px 3px #5454544a;
+    cursor: pointer;
+    transition: .25s;
+}
+.book-title {
+	font-size: 25px;
+}
+.book-author {
+	font-size: 19px;
+    color: #FE9801;
+}
+#btn-more {
+    font-size: 22px;
+    background: none;
+    border-radius: 10px;
+    color: #FE9801;
+    border: 1px solid #FE9801;
+    transition: .1s ease-in-out;
+    margin-top: 10px;
+    width: 80%;
+}
+#btn-more:hover {
+    background-color: #FE9801;
+    color: #fff;
+    box-shadow: 0px 0px 4px #5454544a;
+}
+#btn-more:focus {
+	box-shadow: unset !important;
+}
+.book-container{
+	display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.deleteBook-btn:hover {
+	box-shadow: 0px 0px 4px #5454544a;
+    cursor: pointer;
+}
+.book-btn {
+	width: 20%;
+}
+
+#btn-more-container{
+	display: flex;
+	margin-left: 20px;
+}
+
+.book-table .tbl tr td img {
+    margin-right: 20px;
+}

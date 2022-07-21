@@ -407,3 +407,7 @@ insert into pheed_comment values(seq_pheed_comment_no.nextval, 1, '길동', 'ㅎ
 insert into pheed_comment values(seq_pheed_comment_no.nextval, 1, '길동', 'ㅎㅇㅎㅇ', null, sysdate);
 insert into pheed_comment values(seq_pheed_comment_no.nextval, 2, '길동', 'ㅎㅇ', null, sysdate);
 insert into pheed_comment values(seq_pheed_comment_no.nextval, 2, '길동', 'ㅎㅇㅎㅇ', 1, sysdate);
+
+
+alter table mission modify content varchar2(4000);
+commit;
