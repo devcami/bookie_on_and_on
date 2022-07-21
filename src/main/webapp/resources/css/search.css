@@ -73,12 +73,53 @@ section#content	{
 }
 
 /****** 책 등록폼 ******/
+/* 제목 바 */
+#title-header{
+	top: 0px;
+	width: 800px;
+	font-size: 20px;
+	background-color: #FFF;
+	text-align: center;
+	z-index:1;
+	border-radius: 10px;
+	box-shadow: 1px 2px 3px #5454544a;
+}
+#title-header #title-p{
+	padding-right: 30px;
+	margin-top: 10px;
+	display: flex;
+	align-items: center;
+}
+#title-header #title-p i{
+	font-size: 40px;
+	margin: 0 40px;
+	cursor: pointer;
+}
+#title-header #title-p i:hover{
+	color:#;
+}
+#title-header.drop {
+  position: fixed;
+  animation: dropHeader 0.3s;
+}
+@keyframes dropHeader {
+  0% {
+    top: -5rem;
+  }
+  100% {
+    top: 0;
+  }
+}
+
+
+/* 책 등록 */
 #book-container {
 	border-radius: 5px;
 }
 #book-container div.book-image{
 	text-align: center;
-	padding: 0 30px;
+	background-color: #F4EEC7;
+	padding:  30px;
 }
 #book-container div.book-image img{
 	margin: 20px;
@@ -88,6 +129,9 @@ section#content	{
 	display: flex;
 	flex-direction: column;
     align-items: center;
+}
+#book-container div.book-image #subTitle-div{
+	color: #b7a97f;
 }
 /* 별점 */
 #book-container div.book-eval div.starRev{
@@ -117,6 +161,10 @@ section#content	{
 /* 상태 */
 #book-container div.book-eval .btn-group{
 	margin-top: 30px;
+	margin-left: 150px;
+}
+#book-container div.book-eval .btn-group .btn-check{
+	opacity : 0;
 }
 #book-container div.book-eval .btn-group .btn-outline-primary {
 	margin:5px;
@@ -134,15 +182,97 @@ section#content	{
     background-color: #FE9801;
     border-color: #FE9801;
 }
-#book-container div.book-eval .btn-outline-secondary{
-	margin: 20px;
+#book-container div.book-eval .btn-group .btn-secondary{
+	border-radius: 10px;
+	margin: 10px 50px;
+}
+
+
+
+/* 책정보 */
+section#content div#book-desc{
+	padding: 30px;
+}
+section#content div#book-desc .book-info .book-author{
+	font-size: 30px;
+}
+section#content div#book-desc .book-info div{
+	padding: 20px;
+	margin: 40px 0;
+	background-color: #F4EEC7;
 	border-radius: 10px;
 }
 
-/* 책정보 */
-#book-container div.book-image div.book-info{
-	text-align: left;
+/* 저장버튼 */
+/* section#content #book-container .book-eval .btn-group #btn-enroll{
+	width: 100px;
+	font-size: 23px;
+	background-color: #FE9801;
+	color:#FFF;
+} */
+
+/* 5 */
+.custom-btn {
+	margin: 20px;
+	width: 130px;
+	height: 40px;
+	color: #fff;
+	border-radius: 5px;
+	padding: 10px 25px;
+	background: transparent;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	position: relative;
+	display: inline-block;
+	box-shadow:inset 
+			2px 2px 2px 0px rgba(255,255,255,.5),
+			7px 7px 20px 0px rgba(0,0,0,.1),
+			4px 4px 5px 0px rgba(0,0,0,.1);
+	outline: none;
 }
+
+.btn-5 {
+	width: 130px;
+	height: 40px;
+	line-height: 42px;
+	padding: 0;
+	border: none;
+    background: linear-gradient(0deg, #FE9801 0%, #ff7614 100%);
+}
+.btn-5:hover {
+	color: #FE9801;
+	background: transparent;
+ 	box-shadow:none;
+}
+.btn-5:before,
+.btn-5:after{
+	content:'';
+	position:absolute;
+	top:0;
+	right:0;
+	height:2px;
+	width:0;
+	background: #FE9801;
+	box-shadow:
+	 -1px -1px 5px 0px #fff,
+	 7px 7px 20px 0px #0003,
+	 4px 4px 5px 0px #0002;
+	transition:400ms ease all;
+}
+.btn-5:after{
+	right:inherit;
+	top:inherit;
+	left:0;
+	bottom:0;
+}
+.btn-5:hover:before,
+.btn-5:hover:after{
+	width:100%;
+	transition:800ms ease all;
+}
+
+
+
 section#content div.line{
 	margin : 50px 0 ;
 	border : solid 7px #CCDA46;

@@ -9,10 +9,16 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param value="책등록" name="title"/>
 </jsp:include>
+<div id="title-header" class="" style="display:none">
+	<p id="title-p">
+		<i class="fa-solid fa-angle-left" onclick="location.href='${pageContext.request.contextPath}/search/searchForm.do'"></i>
+	</p>
+</div>
 <section id="content">
 	<div id="book-container">
 		<div class="book-image" >
 			<img id="book-image" src="" alt="책표지" />
+			<h2 id="title"></h2>
 			<h5 id="subTitle"></h5>
 		</div>
 		<div class="line"></div>
@@ -30,7 +36,7 @@
 				<span class="star starR2">별4_오른쪽</span>
 				<span class="star starR1">별5_왼쪽</span>
 				<span class="star starR2">별5_오른쪽</span>
-				<input type="hidden" name="score" id="book-score"/>
+				
 			</div>
 			
 			<div class="btn-group" role="group" aria-label="Basic radio toggle button group">
@@ -49,16 +55,63 @@
 			  <input type="radio" class="btn-check" name="status" id="btnradio5" value="중단" autocomplete="off">
 			  <label class="btn btn-outline-primary btn-status" for="btnradio5">중단</label>
 			  
+				<button type="button" class="btn btn-sm btn-secondary" id="btn-deselect" onclick="deselect();">선택해제</button>
 			</div>
-			<button type="button" class="btn btn-sm btn-outline-secondary" onclick="deselect();">선택해제</button>
+			<button class="custom-btn btn-5" onclick="bookEnroll();"><span>등록</span></button>
+			<!-- <button type="submit" class="btn btn-md btn-outline-primary" id="btn-enroll" onclick="bookEnroll();">저장</button> -->
 		</div>
 	</div>
 	<div class="line"></div>
 	<div id="book-desc">
-	
+		
 	</div>
+	<div class="line"></div>
 </section>
+<form name="bookEnrollFrm" method="POST">
+	<input type="hidden" name="score" id="book-score" value="0"/>
+	<input type="hidden" name="isbn13" id="book-isbn13" value=""/>
+	<input type="hidden" name="book-status" id="book-status" />
+</form>
 <script>
+<%-- 제출 --%>
+const bookEnroll = () => {
+	Array.from(document.querySelectorAll("[name=status]")).forEach((status) => {
+		if(status.checked){
+			// console.log(status.value);
+			document.querySelector("#book-status").value = status.value;
+		}
+	});
+	
+	if(document.querySelector("#book-status").value == ""){
+		alert('책 상태를 선택해주세요.');
+		return;
+	}
+	console.log(document.querySelector("#book-status"));
+	console.log(document.bookEnrollFrm.score);
+	console.log(document.bookEnrollFrm.isbn13);
+	
+	//document.bookEnrollFrm.submit();
+};
+
+<%-- 상단 제목 바 --%>
+let imgDiv = document.querySelector(".book-image");
+let header = document.querySelector("#header-container")
+let headerHeight = header.clientHeight;
+let imgDivHeight = imgDiv.clientHeight;
+
+const titlebar = document.querySelector("#title-header");
+window.onscroll = function () {
+	let windowTop = window.scrollY;
+	if (windowTop >= imgDivHeight + headerHeight) {
+		titlebar.classList.add("drop");
+		titlebar.style.display = "inline";
+	} 
+	else {
+		titlebar.classList.remove("drop");
+		titlebar.style.display = "none";
+	}
+};
+
 window.addEventListener('load', () => {
 	const searchApi = 'https://cors-anywhere.herokuapp.com/';
 	const bookContainer = document.querySelector("#book-container");
@@ -77,17 +130,25 @@ window.addEventListener('load', () => {
 		success(resp){
 			const {item} = resp;
 			console.log(item);
-			const {title, subInfo, author, pubDate, description, isbn13, cover, categoryId, categoryName, publisher} = item[0];			
-			const {subTitle} = subInfo;
+			const {title, subInfo, author, pubDate, description, isbn13, cover, customerReviewRank, categoryId, categoryName, publisher} = item[0];			
+			const {subTitle, itemPage} = subInfo;
 			const img = document.querySelector("#book-image");
 			img.src = `\${cover}`;
-			document.querySelector("#subTitle").innerText=`\${subTitle}`
+			
+			document.querySelector("#book-isbn13").value = `${isbn13}`;
+			document.querySelector("#title-p").innerHTML +=`\${title}`;
+			document.querySelector("#title").innerText=`\${title}`;
+			document.querySelector("#subTitle").innerText=`\${subTitle}`;
 			const divDescription = `
-				<div class="book-des">
-					<div class="book-info">
-						<h3 class="book-title">\${title}</h3>
-						<h5 class="book-author">\${author}</h5>
-						<h5 class="book-pub">\${publisher} | \${pubDate}</h5>
+				<div class="book-info">
+					<h5 class="book-author">저자 : \${author}</h5>
+					<p class="book-pub">출판사 : \${publisher} | 출판일 : \${pubDate}</h5>
+					<p class="cate">카테고리 : \${categoryName}</p>
+					<p class="page">페이지 : \${itemPage}p</p>
+					<h6 class="aladin-score">알라딘 별점 : \${customerReviewRank}점</h6>
+					
+					<div>
+						<p class="desc">\${description}</p>
 					</div>
 				</div>
 			`;
@@ -105,11 +166,26 @@ $('.starRev span').click(function(){
 	document.querySelector("#book-score").value = length;
 	//console.log(length);
 	
+	btnradio3.checked="true";
+	
 	return false;
 });
 
+document.querySelectorAll(".btn-check").forEach((select) => {
+	if(select.id != 'btnradio3'){
+		select.addEventListener('click' , () => {
+			$('.starRev span').removeClass('on');
+			if(document.querySelector("#book-score").value != "0")
+				alert('별점은 다 읽은 책에만 등록할 수 있습니다.');
+		});
+	}
+		
+});
+
 const deselect = () => {
-	$("input:radio[name='status']").prop('checked', false);	
+	$("input:radio[name='status']").prop('checked', false);
+	$('.starRev span').removeClass('on');
+	document.querySelector("#book-status").value = "";
 };
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
