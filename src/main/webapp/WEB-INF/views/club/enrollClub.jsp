@@ -266,7 +266,7 @@
 				      			</tr>
 				      		</tbody>
 				      	</table>
-					    <button type="button" class="btn gap-1 col-3 mission-btn" data-toggle="modal" data-target="#addBookModal">
+					    <button type="button" class="btn gap-1 col-1 mission-btn" data-toggle="modal" data-target="#addBookModal">
 							  +
 					    </button>
 				      </div>

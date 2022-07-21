@@ -11,7 +11,6 @@ create table member (
     phone char(11) not null,
     gender char(1) not null,
     birthday date,
-    job varchar2(100),
     introduce varchar2(1000),
     renamed_filename varchar2(256),
     original_filename varchar2(256),
@@ -21,9 +20,6 @@ create table member (
     constraint uq_member_nickname unique (nickname),
     constraint ck_member_gender check (gender in ('M', 'F'))
 );
-
-select * from member;
-
 
 -- 2. authority
 create table authority(
@@ -49,6 +45,10 @@ create table follower(
     constraint fk_follower_member_id foreign key(member_id) references member(member_id) on delete cascade,
     constraint fk_following_member_id foreign key(following_member_id) references member(member_id) on delete cascade
 );
+
+select * from pheed where member_id like 'honggd' or member_id like 'sinsa';
+insert into follower values('sinsa', 'honggd');
+insert into follower values('honggd', 'admin');
 
 -- 5. book
 create table book(
@@ -121,7 +121,6 @@ create table pheed(
 
 create sequence seq_pheed_no;
 
-
 -- 10. pheed_attachment - 피드 첨부파일 테이블
 create table pheed_attachment(
     attach_no number not null,
@@ -140,15 +139,14 @@ create table pheed_comment(
     pheedc_no number not null,
     pheed_no number not null,
     nickname varchar2(100) not null,
+    content varchar2(1000) not null,
     comment_ref number,
     created_at date default sysdate not null,
     constraint pk_pheedc_no primary key(pheedc_no),
     constraint fk_pheed_comment_pheed_no foreign key(pheed_no) references pheed(pheed_no) on delete cascade,
     constraint fk_pheed_comment_nickname foreign key(nickname) references member(nickname) on delete set null
 );
-
 create sequence seq_pheed_comment_no;
-
 
 -- 12. club - 북클럽 테이블 
 create table club(
@@ -188,9 +186,6 @@ create table mission (
 );
 
 create sequence seq_mission_mission_no;
-
-alter table mission add m_end_date date not null;
-commit;
 
 -- 15. mission_status
 create table mission_status (
@@ -347,3 +342,68 @@ create table persistent_logins (
 
 select * from persistent_logins;
 
+select * from pheed;
+select * from pheed where member_id in ('honggd');
+
+-- sample data
+insert into member
+values(
+    'honggd1',
+    '1234',
+    sysdate,
+    '길동1',
+    '01012341234',
+    'M',
+    to_date('90-12-25','rr-mm-dd'),
+    '안녕하세요 홍길동입니다.',
+    null,
+    null,
+    'https://www.instagram.com/honggd',
+    default
+);
+insert into member
+values(
+    'sinsa',
+    '1234',
+    sysdate,
+    '신사',
+    '01012345678',
+    'F',
+    to_date('90-10-25','rr-mm-dd'),
+    '안녕하세요 신사임당입니다.',
+    null,
+    null,
+    'https://www.instagram.com/sinsa',
+    default
+);
+insert into member
+values(
+    'admin',
+    '1234',
+    sysdate,
+    '빈지노',
+    '01011111234',
+    'M',
+    to_date('87-09-12','rr-mm-dd'),
+    '안녕하세요 관리자입니다.',
+    null,
+    null,
+    'https://www.instagram.com/realisshoman',
+    default
+);
+insert into authority values ('honggd', 'ROLE_USER');
+insert into authority values ('admin', 'ROLE_USER');
+insert into authority values ('admin', 'ROLE_ADMIN');
+insert into interest values ('honggd', '취미, 공학');
+
+insert into pheed values(seq_pheed_no.nextval, 'honggd1', '9791197912412', '23', '피드피드테스트팔로워테스트','O');
+insert into pheed values(seq_pheed_no.nextval, 'honggd', '9791166890871', '55', '피드피드테스트2','F');
+
+insert into pheed_attachment values(seq_pheed_attachment_no.nextval, '1', 'attach1.jpg', 'attach1.jpg', sysdate);
+insert into pheed_attachment values(seq_pheed_attachment_no.nextval, '2', 'attach2.jpg', 'attach2.jpg', sysdate);
+
+
+insert into pheed_comment values(seq_pheed_comment_no.nextval, 1, '길동', 'ㅎㅇ', null, sysdate);
+insert into pheed_comment values(seq_pheed_comment_no.nextval, 1, '길동', 'ㅎㅇㅎㅇ', null, sysdate);
+insert into pheed_comment values(seq_pheed_comment_no.nextval, 2, '길동', 'ㅎㅇ', null, sysdate);
+insert into pheed_comment values(seq_pheed_comment_no.nextval, 2, '길동', 'ㅎㅇㅎㅇ', 1, sysdate);
