@@ -7,7 +7,7 @@ section#content	{
 }
 
 /* 버튼 */
-#btn-enroll {
+.mybtn {
 	font-size: 20px;
     background: none;
     border-radius: 10px;
@@ -16,8 +16,26 @@ section#content	{
     transition: .1s ease-in-out;
     padding: 5px 12px;
 }
-#btn-enroll:hover{
+.mybtn:hover{
 	background-color: #FE9801;
+	color: #fff;
+	box-shadow: 0px 0px 4px #5454544a;
+	cursor: pointer;
+}
+
+.mybtn-close {
+	font-size: 20px;
+    background: none;
+    border-radius: 10px;
+    border: none;
+    transition: .1s ease-in-out;
+    padding: 5px 12px;
+    background-color: #e9e9e9;
+    
+}
+
+.mybtn-close:hover{
+	background-color: black;
 	color: #fff;
 	box-shadow: 0px 0px 4px #5454544a;
 	cursor: pointer;
@@ -122,6 +140,7 @@ i {
 	display: inline-block !important;
 }
 .book-table {
+	width: 90%;
 	margin: 10px 0;
     padding: 10px;
     /* border: 1px gainsboro solid; */
@@ -150,4 +169,89 @@ i {
     color: #fff;
     box-shadow: 0px 0px 4px #5454544a;
 }
+.book-container{
+	display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
+/* 책 등록 모달 */
+#addBookModal .modal-dialog {
+  max-width: 700px;
+  margin: 1.75rem auto;
+}
+
+.modal-header {
+	padding: 1rem 1rem 0 1rem !important;
+    border-bottom: none !important;
+}
+
+#modal-header-bottom {
+	border-bottom: 1px solid #e9ecef;
+	padding: 0 1rem;
+	color: #495057;
+	display: flex;
+	align-items: center;
+}
+
+.img-btn {
+	margin: 0 9px;
+}
+
+.x-btn {
+	transform: translate(-8px, -15px) !important;
+    font-size: 2rem !important;
+    opacity: .7 !important;
+}
+
+/* 미션 */
+.card-header{
+	border-radius: 40px !important; 
+	border: none !important;
+}
+.card {
+	border: none !important;
+	margin: 5px 0;
+}
+
+.btn-link {
+	color: black !important;
+}
+
+.card-body {
+	display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#mission-div table {
+	width: 100%;
+	margin-bottom: 25px;
+}
+
+#mission-div tr {
+	display: flex;
+    justify-content: space-around;
+}
+
+/* 맨 마지막 등록 / 취소 버튼 */
+#bottom-menu {
+	margin: 15px 0 50px;
+}
+
+#btn-enroll {
+	width: 200px;
+	background-color: #FE9801;
+    color: #fff;
+    border: none;
+}
+#btn-enroll:hover {
+	box-shadow: 0px 0px 4px #FE9801;
+}
+#btn-cancel {
+	width: 200px;
+	background-color: #e9e9e9;
+	color: black;
+	border: none;
+	height: 41px;
+}

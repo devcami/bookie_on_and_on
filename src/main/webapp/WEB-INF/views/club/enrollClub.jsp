@@ -12,7 +12,7 @@
 <section id="content">
 	<div id="top-menu">
 		<h1>북클럽 등록</h1>	
-		<button id="btn-enroll" class="">등 록</button>	    	
+		<!-- <button id="btn-enroll" class="mybtn">등 록</button> -->	  
 	</div>
 	<form:form name="clubEnrollFrm" method="POST">
 		<div id="intro-div" class="divs">
@@ -98,53 +98,209 @@
 		<div id="book-div" class="divs">
 			<p id="books-p"><strong>읽는 책</strong></p>
 			<small id="books-small" class="form-text text-muted">등록 가능한 책은 최대 4권 입니다.</small>
-			<div class="book-table" onclick="bookEnroll(this);">
-				<input type="hidden" name="isbn13" value="9788932474755">
-				<table class="tbl">
-					<tbody><tr>
-						<td rowspan="4">
-							<img src="https://image.aladin.co.kr/product/29820/33/covermini/8932474753_1.jpg" style="width:65px;">
-						</td>
-						<td colspan="5" class="book-title">헤어질 결심 각본</td>
-					</tr>
-					<tr>
-						<td class="book-author">박찬욱, 정서경 (지은이)</td>
-					</tr>
-					<tr>
-						<td colspan="2" class="book-p">출판사 : 을유문화사 🧡 출판일 : 2022-08-05</td>
-					</tr>
-				</tbody></table>
+			
+			<div class="book-container">
+			
+				<div class="book-table" onclick="bookEnroll(this);">
+					<input type="hidden" name="isbn13" value="9788932474755">
+					<table class="tbl">
+						<tbody><tr>
+							<td rowspan="4">
+								<img src="https://image.aladin.co.kr/product/29820/33/covermini/8932474753_1.jpg" style="width:65px;">
+							</td>
+							<td colspan="5" class="book-title">헤어질 결심 각본</td>
+						</tr>
+						<tr>
+							<td class="book-author">박찬욱, 정서경 (지은이)</td>
+						</tr>
+						<tr>
+							<td colspan="2" class="book-p">출판사 : 을유문화사 🧡 출판일 : 2022-08-05</td>
+						</tr>
+					</tbody></table>
+				</div>
+				
+				<div>
+					<button class="btn" onclick="deleteBook();">삭제</button>
+				</div>
 			</div>
-			<div class="book-table" onclick="bookEnroll(this);">
-				<input type="hidden" name="isbn13" value="9788917238532">
-				<table class="tbl">
-					<tbody><tr>
-						<td rowspan="4">
-							<img src="https://image.aladin.co.kr/product/28415/31/covermini/891723853x_2.jpg" style="width:65px;">
-						</td>
-						<td colspan="5" class="book-title">ETS 토익 정기시험 기출문제집 1000 Vol. 3 Listening (리스닝) - TOEIC 기출문제 한국 독점출간 / 문제집 + 해설집 + ETS 성우 음원 MP3 파일 + APP 모바일 학습 / 2022 대비 최신판</td>
-					</tr>
-					<tr>
-						<td class="book-author">ETS (엮은이)</td>
-					</tr>
-					<tr>
-						<td colspan="2" class="book-p">출판사 : (주)YBM(와이비엠) 🧡 출판일 : 2021-12-13</td>
-					</tr>
-				</tbody></table>
+
+			<div class="book-container">
+			
+				<div class="book-table" onclick="bookEnroll(this);">
+					<input type="hidden" name="isbn13" value="9791191056556">
+					<table class="tbl">
+						<tbody><tr>
+							<td rowspan="4">
+								<img src="https://image.aladin.co.kr/product/29358/89/covermini/k782837210_2.jpg" style="width:65px;">
+							</td>
+							<td colspan="5" class="book-title">미드나잇 라이브러리 (1주년 스페셜 에디션)</td>
+						</tr>
+						<tr>
+							<td class="book-author">매트 헤이그 (지은이), 노진선 (옮긴이)</td>
+						</tr>
+						<tr>
+							<td colspan="2" class="book-p">출판사 : 인플루엔셜(주) 🧡 출판일 : 2021-04-28</td>
+						</tr>
+					</tbody></table>
+				</div>
+				
+				<div>
+					<button class="btn" onclick="deleteBook();">삭제</button>
+				</div>
+			
 			</div>
+
 			<div id="btn-more-container">
-				<button id="btn-more" class="btn gap-2 col-12" type="button">책 추가</button>
+				<!-- Button trigger modal -->
+				<button type="button" id="btn-more" class="btn gap-2 col-12" data-toggle="modal" data-target="#addBookModal">
+				  책 추가
+				</button>
 				<span style="display:none;" id="cPage">1</span>
 			</div>
 		</div>
+		
+		<!-- Modal -->
+		<div class="modal fade" id="addBookModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		    
+		      <div class="modal-header">
+		        <h3 class="modal-title" id="exampleModalCenterTitle">책 추가</h3>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>	
+		      </div>
+		      
+		      <div id="modal-header-bottom">
+			      <h6 class="modal-title" id="exampleModalCenterTitle">추가된 책</h6>
+			      <div class="img-btn">
+				      <img src="https://image.aladin.co.kr/product/29358/89/covermini/k782837210_2.jpg" style="width:65px;">
+				      <button type="button" class="close x-btn" >
+				      	 <span aria-hidden="true">&times;</span>
+				      </button>				      
+			      </div>
+			      <div class="img-btn">
+				      <img src="https://image.aladin.co.kr/product/29820/33/covermini/8932474753_1.jpg" style="width:65px;">
+				      <button type="button" class="close x-btn" >
+				      	 <span aria-hidden="true">&times;</span>
+				      </button>				      
+			      </div>
+			      <div class="img-btn">
+				      <img src="https://image.aladin.co.kr/product/29358/89/covermini/k782837210_2.jpg" style="width:65px;">
+				      <button type="button" class="close x-btn" >
+				      	 <span aria-hidden="true">&times;</span>
+				      </button>				      
+			      </div>
+			  </div>
+		      
+		      <div class="modal-body">		        
+		        <div class="searchbar center-block">
+					<form name="bookSearchFrm" action="/bookie/search/searchForm.do" method="GET">
+						    <select id="searchType" name="searchType" class="col-2 form-control d-inline form-select">
+						      <option value="Keyword">키워드</option>
+						      <option value="Title">책제목</option>
+						      <option value="Author">저자</option>
+						      <option selected="" value="Publisher">출판사</option>
+						    </select>
+						    <input type="text" class="form-control col-md-8 d-inline mx-3" name="searchKeyword" id="searchKeyword" value="" placeholder="검색어를 입력해주세요">
+						    <input type="submit" class="mybtn" id="btn-search" value="검색">
+					</form>
+				</div>
+		      </div>
+		      
+		      <div class="book-table" onclick="bookEnroll(this);">
+				<input type="hidden" name="isbn13" value="9791191056556">
+				<table class="tbl">
+					<tbody>
+						<tr>
+							<td rowspan="4">
+								<img src="https://image.aladin.co.kr/product/29358/89/covermini/k782837210_2.jpg" style="width:65px;">
+							</td>
+							<td colspan="5" class="book-title">미드나잇 라이브러리 (1주년 스페셜 에디션)</td>
+						</tr>
+						<tr>
+							<td class="book-author">매트 헤이그 (지은이), 노진선 (옮긴이)</td>
+						</tr>
+						<tr>
+							<td colspan="2" class="book-p">출판사 : 인플루엔셜(주) 🧡 출판일 : 2021-04-28</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		      
+		      
+		      <div class="modal-footer">
+		        <button type="button" class="mybtn">Save changes</button>
+		        <button type="button" class="mybtn-close" data-dismiss="modal">Close</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+		
 
 		<div id="mission-div" class="divs">
 			<p><strong>미션</strong></p>
+			
+			<div class="accordion" id="accordionExample">
+				<div class="card">
+				    <div class="card-header" id="headingOne">
+				      <h5 class="mb-0">
+				        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+				          Book #1 미션
+				        </button>
+				      </h5>
+				    </div>
+				    <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+				      <div class="card-body">
+				      	<table>
+				      		<tbody>
+				      			<tr>
+				      				<td>1</td>
+				      				<td>제목</td>
+				      				<td>디파짓</td>
+				      				<td>기한</td>
+				      				<td>
+				      					<button class="mybtn" onclick="deleteBook();">수정</button>
+				      					<button class="mybtn delete-btn" onclick="deleteMission();">삭제</button>
+				      				</td>
+				      			</tr>
+				      		</tbody>
+				      	</table>
+					    <button type="button" class="btn gap-1 col-3 mission-btn" data-toggle="modal" data-target="#addBookModal">
+							  +
+					    </button>
+				      </div>
+				    </div>
+				  </div>
+				  
+				  <div class="card">
+				    <div class="card-header" id="headingTwo">
+				      <h5 class="mb-0">
+				        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+				          Book #2 미션
+				        </button>
+				      </h5>
+				    </div>
+				    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+				      <div class="card-body">
+						 book #2 미션
+				      </div>
+				    </div>
+				  </div>
+			</div>
 		</div>
+		
+		<div id="bottom-menu">
+			<button id="btn-enroll" class="mybtn">등 록</button>
+			<button id="btn-cancel" class="mybtn">취 소</button>	    	
+		</div>
+		
 	</form:form>
 </section>
 
 <script>
 
+
 </script>
+
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
