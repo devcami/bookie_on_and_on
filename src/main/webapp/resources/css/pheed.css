@@ -1,0 +1,58 @@
+@charset "UTF-8";
+section#content	{
+	margin: 0 auto;
+	padding: 20px 30px;
+	min-height:1000px;
+	border-radius: 5px;
+}
+
+/********** 상단 피드 헤더 바 **********/
+#pheed-header.drop {
+  position: fixed;
+  animation: dropHeader 0.3s;
+}
+@keyframes dropHeader {
+  0% {
+    top: -5rem;
+  }
+  100% {
+    top: 0;
+  }
+}
+#pheed-header{
+	padding: 0 20px;
+	top: 0px;
+	width: 800px;
+	font-size: 25px;
+	background-color: #FFF;
+	z-index:1;
+	border-radius: 10px;
+	box-shadow: 1px 2px 3px #5454544a;
+}
+
+/* 리스트 버튼 */
+.btns .btn-pheed{
+	color:#CCDA46;
+}
+.btns .btn-pheed:hover{
+	text-decoration: none;
+	color: #ff7614;
+	text-shadow: 1px 1px 2px #ffda5f;
+}
+/* 등록버튼 */
+#btn-pheed-enroll{
+	text-decoration: none;
+	color: #FE9801;
+	float: right;
+}
+#btn-pheed-enroll:hover{
+	color: #ff7614;
+	text-shadow: 1px 1px 2px #ffda5f;
+}
+#btn-pheed-enroll .fa-plus{
+	font-size:30px;
+}
+
+
+
+
