@@ -3,31 +3,28 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kh.bookie.pheed.model.dao.PheedDao">
-	<select id="selectPheedFList" resultMap="pheedMap">
+	<select id="selectPheedFList" resultType="pheed">
 	</select>
-	<select id="selectPheedCList" resultMap="pheedMap">
+	<select id="selectPheedCList" resultType="pheed">
 		select * 
 		from
-		    pheed p left join pheed_attachment a
-        		on p.pheed_no = a.pheed_no
+		    pheed
+        where
+        	is_opened = 'O'
 		order by
 			1 desc
 	</select>
-	<resultMap type="pheed" id="pheedMap">
-		<id column="pheed_no" property="pheedNo"/>
-		<result column="member_id" property="memberId"/>
-		<result column="item_id" property="itemId"/>
-		<result column="page" property="page"/>
-		<result column="content" property="content"/>
-		<result column="is_opened" property="isOpened"/>
-		
-		<collection property="attachments" javaType="arrayList" ofType="pheedAttachment">
-			<id column="attach_no" property="attachNo"/>
-			<result column="original_filename" property="originalFilename"/>
-			<result column="renamed_filename" property="renamedFilename"/>
-			<result column="created_at" property="createdAt"/>
-		</collection>
-	</resultMap>
 	
+	<select id="selectAttachment" resultType="pheedAttachment">
+		select
+			*
+		from
+			pheed_attachment
+		where
+			pheed_no = #{pheed_no}
+	</select>
 	
+	<select id="selectMember" resultType="member">
+		select * from member where member_id = #{member_id}
+	</select>
 </mapper>

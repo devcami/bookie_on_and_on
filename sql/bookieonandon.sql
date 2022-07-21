@@ -342,8 +342,13 @@ create table persistent_logins (
 
 select * from persistent_logins;
 
-select * from pheed;
-select * from pheed where member_id in ('honggd');
+select 
+    * 
+from 
+    pheed p left join pheed_attachment a
+        on p.pheed_no = a.pheed_no
+order by 1 desc ;
+select * from pheed_attachment;
 
 -- sample data
 insert into member
