@@ -13,15 +13,16 @@
 	<div class="searchbar center-block">
 		<form
 			name="bookSearchFrm" 
-			action="${pageContext.request.contextPath}/search/searchBook.do"
+			action="${pageContext.request.contextPath}/search/searchForm.do"
 			method="GET">
 			    <select id="searchType" name="searchType" class="col-2 form-control d-inline form-select">
-			      <option selected value="bookName">책제목</option>
-			      <option value="author">저자</option>
-			      <option value="publisher">출판사</option>
+			      <option ${param.searchType eq "Keyword"? 'selected' : ''} value="Keyword">키워드</option>
+			      <option ${param.searchType eq "Title"? 'selected' : ''} value="Title">책제목</option>
+			      <option ${param.searchType eq "Author"? 'selected' : ''} value="Author">저자</option>
+			      <option ${param.searchType eq "Publisher"? 'selected' : ''} value="Publisher">출판사</option>
 			    </select>
-			    <input type="text" class="form-control col-md-6 d-inline mx-3" id="inputZip" placeholder="검색어를 입력해주세요">
-			    <input type="button" class="btn btn-md btn-primary" id="btn-search" value="검색"/>
+			    <input type="text" class="form-control col-md-8 d-inline mx-3" name="searchKeyword" id="searchKeyword" value="${param.searchKeyword ne '' ? param.searchKeyword : '' }" placeholder="검색어를 입력해주세요">
+			    <input type="submit" class="btn btn-md btn-primary" id="btn-search" value="검색"/>
 		</form>
 	</div>
 	<div class="" id="book-container">
@@ -30,37 +31,138 @@
 	</div>
 	<div id='btn-more-container'>
 		<button id="btn-more" class="btn gap-2 col-12" type="button">더보기</button>
-		<span style="display:none;" id="cPage"></span>
+		<span style="display:none;" id="cPage">1</span>
 	</div>
 </section>
 <script>
-<%-- paging --%>
-window.addEventListener('load', () => {
-	getPage(1);
-});
-document.querySelector("#btn-more").onclick = () => {
-	const cPageVal = Number(document.querySelector("#cPage").innerText) + 1;
-	getPage(cPageVal);
-};
-const getPage = (cPage) => {
+<%-- 검색 제출 시 유효성 검사 & 비동기--%>
+document.bookSearchFrm.addEventListener('submit', (e) => {
+	const searchKeyword = document.querySelector("#searchKeyword");
+	// 숫자, 영문, 한글로 2자 이상
+	if(!/^[0-9a-zA-Z가-힣]{2,}$/.test(searchKeyword.value)){
+		alert("검색어를 2자 이상 입력해주세요.");
+		e.preventDefault();
+		return;
+	}
+	
 	const searchApi = 'https://cors-anywhere.herokuapp.com/';
 	const container = document.querySelector("#book-container");
-	$.ajax({
-		url : searchApi + "http://www.aladin.co.kr/ttb/api/ItemList.aspx",
-		data : {
+	const query = document.bookSearchFrm.searchKeyword.value;
+	const queryType = document.bookSearchFrm.searchType.value;
+	container.innerHTML = "";
+	getPage(1, 20);	
+});
+
+<%-- scroll 유지 테스트 --%>
+//쿠키 생성 함수
+function setCookie(cName, cValue, cDay){
+	var expire = new Date();
+	expire.setDate(expire.getDate() + cDay);
+	cookies = cName + '=' + escape(cValue) + '; path=/ '; // 한글 깨짐을 막기위해 escape(cValue)를 합니다.
+	if(typeof cDay != 'undefined') cookies += ';expires=' + expire.toGMTString() + ';';
+	document.cookie = cookies;
+}
+
+// 쿠키 가져오기 함수
+function getCookie(cName) {
+	cName = cName + '=';
+	var cookieData = document.cookie;
+	var start = cookieData.indexOf(cName);
+	var cValue = '';
+	if(start != -1){
+		start += cName.length;
+		var end = cookieData.indexOf(';', start);
+		if(end == -1)end = cookieData.length;
+		cValue = cookieData.substring(start, end);
+	}
+	return unescape(cValue);
+}
+
+<%-- paging --%>
+var maxResult = 20;
+//var cPage = Number(document.querySelector("#cPage").innerText);
+window.addEventListener('load', () => {
+	const intY = getCookie("intY");
+	const cPageVal = getCookie("cPageVal");
+	// console.log(intY, cPageVal);
+	document.querySelector("#cPage").innerText = cPageVal; 
+	if(cPageVal > 1){
+		maxResult = cPageVal * maxResult;
+	}
+	else if(cPageVal > 2){
+		maxResult = 40;
+	}
+	if(intY != 0) {
+	 	//쿠키값에 scroll 값이 저장되었을 경우
+		console.log("scrollTo : " + intY);
+		getPage(1, maxResult);
+ 		setTimeout(() => window.scrollTo(0, intY), 2000);
+	} else {
+	 	//scroll 값이 없는 경우
+		getPage(1, maxResult);
+	 	setTimeout(() => window.scrollTo(0, 0), 1000)
+	}
+});
+
+window.addEventListener('scroll', (e) => {
+	const nowPage = document.querySelector("#cPage").innerText;
+	let intY = window.scrollY;	
+	setCookie("intY", intY, "1");
+	//console.log(nowPage);
+	setCookie("cPageVal", nowPage, "1");
+});
+
+document.querySelector("#btn-more").onclick = () => {
+	let c = Number(document.querySelector("#cPage").innerText);
+	document.querySelector("#cPage").innerText = c + 1;
+	maxResult = 20;
+	getPage(c + 1, maxResult);
+};
+
+const getPage = (cPage, maxResult) => {
+	console.log(cPage, maxResult);
+	const searchApi = 'https://cors-anywhere.herokuapp.com/';
+	const container = document.querySelector("#book-container");
+	console.log('${param.searchType}', '${param.searchKeyword}');
+	
+	let data = {
 			ttbkey : 'ttbiaj96820130001',
 			QueryType : 'Bestseller',
-			MaxResults : 20,
-			start : cPage,
-			SearchTarget : 'Book',
-			output : 'js',
+			SearchTarget: 'Book',
+			Start : cPage,
+			MaxResults : maxResult,
+			Output : 'js',
 			Cover : 'mini',
 			Version : '20131101'
-		},
+	};
+	let url;
+	if('${param.searchType}' == ''){
+		url = searchApi + "http://www.aladin.co.kr/ttb/api/ItemList.aspx";
+	} else{
+		url = searchApi + "http://www.aladin.co.kr/ttb/api/ItemSearch.aspx";
+		data.QueryType = '${param.searchType}';
+	}
+	if('${param.searchKeyword}' != ''){
+		data.Query = '${param.searchKeyword}';
+	}
+	console.log(data);
+	$.ajax({
+		url : url,
+		//https://www.aladin.co.kr/ttb/api/ItemSearch.aspx?ttbkey=ttbiaj96820130001&Query=aladdin&QueryType=Keyword&MaxResults=10&start=1&SearchTarget=Book&output=js&Version=20131101
+		data : data,
 		success(resp){
 			const {item} = resp;
+			const divNon = `
+				<div>
+					<p style="text-align:center"> 검색된 결과가 없습니다. </p>
+				</div>`
+			if(item.length == 0){
+				container.insertAdjacentHTML('beforeend', divNon);
+				const btn = document.querySelector("#btn-more")
+				btn.disabled = "disabled";
+				btn.style.cursor = "not-allowed";
+			} 
 			item.forEach((book) => {
-				console.log(book);
 				const {isbn13, title, author, publisher, pubDate, cover} = book;
 				const div = `
 					<div class="book-table" onclick="bookEnroll(this);">
@@ -85,7 +187,6 @@ const getPage = (cPage) => {
 		},
 		error : console.log,
 		complete(){
-			document.querySelector("#cPage").innerHTML = cPage;
 			if(cPage == 10){
 				const btn = document.querySelector("#btn-more")
 				btn.disabled = "disabled";
