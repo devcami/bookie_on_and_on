@@ -14,7 +14,7 @@
 <div id="pheed-container">
 	<div id="pheed-header">
 		<div class="btns">
-			<button type="button" class="btn btn-lg btn-link btn-pheed">팔로워</button>
+			<button type="button" class="btn btn-lg btn-link btn-pheed" onclick="location.href='${pageContext.request.contextPath}/pheed/pheedFList.do'">팔로워</button>
 			<button type="button" class="btn btn-lg btn-link btn-pheed" onclick="location.href='${pageContext.request.contextPath}/pheed/pheedCList.do'" id="btn-pheed-c">발견</button>
 			<button type="button" class="btn btn-lg btn-link" id="btn-pheed-enroll"><i class="fa-solid fa-plus"></i></button>
 		</div>
@@ -51,7 +51,13 @@
 					</div>
 					<div class="pheed-sns">
 						<div class="pheed-sns-icons">
-							
+							<div class="btn-group" role="group" aria-label="Basic example">
+							  <button type="button" class="btn"><i class="fa-regular fa-heart"></i></button>
+							  <button type="button" class="btn"><i class="fa-regular fa-comment-dots"></i></button>
+							  <button type="button" class="btn"><i class="fa-regular fa-bookmark"></i></button>
+							  <button type="button" data-toggle="modal" data-target="#reportModal" 
+							  			class="btn" id="btn-report"><i class="fa-solid fa-ellipsis"></i></button>
+							</div>
 						</div>
 						<div class="pheed-sns-cal" id="sns-cal">
 						</div>
@@ -96,6 +102,58 @@ window.onscroll = function () {
 	} 
 	else{
 		pheedHeader.classList.remove("drop");
+	}
+};
+</script>
+
+<%-- 신고창 모달 --%>
+<div class="modal fade" id="reportModal" tabindex="-1" role="dialog" aria-labelledby="reportModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="reportModalLabel">신고</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      	<form name="pheedReportFrm" method="post" action="${pageContext.request.contextPath}/pheed/pheedReport.do">
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">작성자</label>
+            <input type="text" class="form-control" id="memberId" value="로긴멤버아이디" readonly>
+          </div>
+          <div class="form-group">
+            <p class="col-form-label">신고 내용</p>
+          	<div class="alert alert-danger alert-dismissible fade show" role="alert" id="alert" style="display:none">
+			  내용을 10자 이상 작성해주세요 !
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+            <textarea class="form-control" id="content" placeholder="신고 내용을 작성해주세요."></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+        <button type="button" class="btn btn-danger" onclick="report();">신고하기</button>
+      </div>
+    </div>
+  </div>
+</div>
+<%-- 신고창 폼 제출 --%>
+<script>
+const report = () => {
+	const content = document.querySelector("#content");
+	if(!/^(.|\n){10,}$/.test(content.value)){
+		$('.alert').alert();
+		return;
+	}
+	
+	if(alert('신고를 제출하시겠습니까?')){
+		document.pheedReportFrm.submit();	
+	}else{
+		return;
 	}
 };
 </script>

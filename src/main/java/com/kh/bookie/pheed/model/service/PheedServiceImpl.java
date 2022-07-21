@@ -17,7 +17,14 @@ public class PheedServiceImpl implements PheedService{
 	
 	@Override
 	public List<Pheed> selectPheedFList() {
-		return pheedDao.selectPheedFList();
+		List<Pheed> list = pheedDao.selectPheedFList();
+		for(Pheed p : list) {
+			PheedAttachment attach = pheedDao.selectAttachment(p.getPheedNo());
+			p.setAttach(attach);
+			Member member = pheedDao.selectMember(p.getMemberId());
+			p.setMember(member);
+		}
+		return list;
 	}
 	
 	@Override
