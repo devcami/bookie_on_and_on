@@ -61,7 +61,7 @@ section#content	{
 	margin : 30px;
 	text-align: center;
 	border-radius: 10px;
-	box-shadow: 0px -1px 8px #9b9a9a4a;
+	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
 }
 /* 프로필 */
 #content .pheed-container .pheed-writer .profile{
@@ -98,7 +98,6 @@ section#content	{
 	font-size: 27px;
 	padding: 30px;
 }
-#content .pheed-container .pheed .pheed-content{}
 #content .pheed-container .pheed .pheed-content p{
 	font-size: 24px;
 }
@@ -108,5 +107,20 @@ section#content	{
 	font-size: 20px;
 	color: #adadad;
 }
+#content .pheed-container .pheed .pheed-sns .pheed-sns-icons .btn-group{
+	display: inline !important;
+	
+}
+#content .pheed-container .pheed .pheed-sns .pheed-sns-icons .btn-group .btn{
+	padding: 5px 5px;
+	font-size: 25px;
+	background-color: white;
+	
+}
+#content .pheed-container .pheed .pheed-sns .pheed-sns-icons .btn-group #btn-report{
+	float: right;
+}
+
+
 
 
