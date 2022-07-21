@@ -22,6 +22,8 @@ create table member (
     constraint ck_member_gender check (gender in ('M', 'F'))
 );
 
+select * from member;
+
 
 -- 2. authority
 create table authority(
@@ -186,6 +188,9 @@ create table mission (
 );
 
 create sequence seq_mission_mission_no;
+
+alter table mission add m_end_date date not null;
+commit;
 
 -- 15. mission_status
 create table mission_status (
