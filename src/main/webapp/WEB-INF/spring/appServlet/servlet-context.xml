@@ -47,7 +47,7 @@
 		<beans:property name="order" value="1"/> 
 	</beans:bean>
 	
-	<context:component-scan base-package="com.kh.bookie" />
+	<context:component-scan base-package="com.kh.bookie"/>
 	
 		<!-- #10. interceptor 등록 -->
 <!-- 	<interceptors>

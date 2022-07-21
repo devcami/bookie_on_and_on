@@ -27,14 +27,14 @@
 			</div>
 		</div>
 		<div class="article goto">
-			<div class="button d-grid col-12" onclick="${pageContext.request.contextPath}/dokoo/dokooCrList.do">
+			<div class="button d-grid col-12" onclick="">
 				<p class="col-12 m-0 small">베스트 | 신간</p>
 				<p><i class="fa-solid fa-hand-point-right"></i></p>
 				<p class="col-12 m-0">분야별 도서 보기</p>
 			</div>
 		</div>
 		<div class="article goto">
-			<div class="button d-grid col-12" onclick="${pageContext.request.contextPath}/pheed/pheedCrList.do">
+			<div class="button d-grid col-12" onclick="location.href='${pageContext.request.contextPath}/pheed/pheedCList.do'">
 				<p class="col-12 m-0 small">이 부분 어때요?</p>
 				<p><i class="fa-solid fa-hand-point-right"></i></p>
 				<p class="col-12 m-0">피드 둘러보기</p>
