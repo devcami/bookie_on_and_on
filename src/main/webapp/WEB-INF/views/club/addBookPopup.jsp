@@ -76,13 +76,13 @@
 						name="bookSearchFrm" 
 						action="${pageContext.request.contextPath}/club/addBookPopup.do"
 						method="GET">
-					    <select id="searchType" name="searchType" class="col-2 form-control d-inline form-select">
-					      <option value="Keyword">키워드</option>
-					      <option value="Title">책제목</option>
-					      <option value="Author">저자</option>
-					      <option selected="" value="Publisher">출판사</option>
+					   <select id="searchType" name="searchType" class="col-2 form-control d-inline form-select">
+					      <option ${param.searchType eq "Keyword"? 'selected' : ''} value="Keyword">키워드</option>
+					      <option ${param.searchType eq "Title"? 'selected' : ''} value="Title">책제목</option>
+					      <option ${param.searchType eq "Author"? 'selected' : ''} value="Author">저자</option>
+					      <option ${param.searchType eq "Publisher"? 'selected' : ''} value="Publisher">출판사</option>
 					    </select>
-					    <input type="text" class="form-control col-md-8 d-inline mx-3" name="searchKeyword" id="searchKeyword" value="" placeholder="검색어를 입력해주세요">
+					    <input type="text" class="form-control col-md-8 d-inline mx-3" name="searchKeyword" id="searchKeyword" value="${param.searchKeyword ne '' ? param.searchKeyword : '' }" placeholder="검색어를 입력해주세요">
 					    <input type="submit" class="mybtn" id="btn-search" value="검색">
 					</form>
 				</div>

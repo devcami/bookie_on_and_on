@@ -147,7 +147,6 @@ i {
     /* border: 1px gainsboro solid; */
     border-radius: 10px;
     box-shadow: 1px 2px 3px #5454544a;
-    cursor: pointer;
     transition: .25s;
 }
 .book-title {
@@ -157,7 +156,7 @@ i {
 	font-size: 19px;
     color: #FE9801;
 }
-#btn-more {
+#btn-add-book {
     font-size: 30px;
     background: none;
     border-radius: 10px;
@@ -166,12 +165,12 @@ i {
     transition: .1s ease-in-out;
     margin-top: 10px;
 }
-#btn-more:hover {
+#btn-add-book:hover {
     background-color: #FE9801;
     color: #fff;
     box-shadow: 0px 0px 4px #5454544a;
 }
-#btn-more:focus {
+#btn-add-book:focus {
 	box-shadow: unset !important;
 }
 .book-container{
@@ -236,6 +235,36 @@ i {
     border: #FE9801 !important;
     font-size: larger;
     padding: 0px 11px;
+}
+#btn-more-container{
+	display: flex;
+	margin-left: 20px;
+}
+#btn-more {
+    font-size: 22px;
+    background: none;
+    border-radius: 10px;
+    color: #FE9801;
+    border: 1px solid #FE9801;
+    transition: .1s ease-in-out;
+    margin-top: 10px;
+    width: 97%;
+}
+#btn-more:hover {
+    background-color: #FE9801;
+    color: #fff;
+    box-shadow: 0px 0px 4px #5454544a;
+}
+#btn-more:focus {
+	box-shadow: unset !important;
+}
+
+.noclick {
+	background-color: grey !important;
+    border: grey !important;
+}
+#bestSellerP {
+	margin-left: 25px !important;
 }
 
 /* 미션 */
