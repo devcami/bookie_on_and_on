@@ -185,7 +185,7 @@ create table mission (
     constraint pk_mission_no primary key(mission_no)
 );
 
-create sequence seq_mission_mission_no;
+create sequence seq_mission_no;
 
 -- 15. mission_status
 create table mission_status (
@@ -411,3 +411,12 @@ insert into pheed_comment values(seq_pheed_comment_no.nextval, 2, '길동', 'ㅎ
 
 alter table mission modify content varchar2(4000);
 commit;
+
+
+select * from club;
+
+alter table club_book add IMG_SRC varchar2(4000);
+alter table mission add item_id varchar2(30);
+ALTER TABLE mission RENAME COLUMN m_end_Date TO m_endDate;
+commit;
+

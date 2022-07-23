@@ -14,17 +14,22 @@
 		<h1>북클럽 등록</h1>	
 		<!-- <button id="btn-enroll" class="mybtn">등 록</button> -->	  
 	</div>
-	<form:form name="clubEnrollFrm" method="POST">
+	<form name="clubEnrollFrm" >
 		<div id="intro-div" class="divs">
 		  <div class="form-group">
 		  	<i class="fa-solid fa-tag"></i>
-		    <label for="exampleInputEmail1">제목</label>
-		    <input type="email" class="form-control col-form-label-sm basic-input" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="제목을 입력하세요.">
+		    <label for="title">제목</label>
+		    <input 
+		    	type="text" 
+		    	id="title"
+		    	name="title"
+		    	class="form-control col-form-label-sm basic-input"  
+		    	aria-describedby="emailHelp" placeholder="제목을 입력하세요.">
 		  </div>
 		  <div class="form-group">
 		  	<i class="fa-solid fa-pencil"></i>
-		    <label for="exampleFormControlTextarea1">한 줄 설명</label>
-		    <textarea class="form-control" id="exampleFormControlTextarea1" rows="2"></textarea>
+		    <label for="content">한 줄 설명</label>
+		    <textarea name="content" class="form-control" id="content" rows="2"></textarea>
 		    <small id="emailHelp" class="form-text text-muted">북클럽에 대한 간단한 설명을 적어주세요!</small>
   		  </div>
 		</div>
@@ -37,11 +42,11 @@
 				</div>
 				<div class="row">
 					<div class="col">
-				      <input type="date" class="form-control col-form-label-sm basic-input" placeholder="First name">
+				      <input type="date" name="recruitStart" id="recruitStart" class="form-control col-form-label-sm basic-input" placeholder="First name">
 				    </div>
 				    <span>~</span>
 				    <div class="col" >
-				      <input type="date" class="form-control col-form-label-sm basic-input" placeholder="Last name">
+				      <input type="date" name="recruitEnd" id="recruitEnd" class="form-control col-form-label-sm basic-input" placeholder="Last name">
 				    </div>
 				</div>
 			 </div>
@@ -52,11 +57,11 @@
 				</div>
 				<div class="row">
 					<div class="col">
-				      <input type="date" class="form-control col-form-label-sm basic-input" >
+				      <input type="date" name="clubStart" id="clubStart" class="form-control col-form-label-sm basic-input" >
 				    </div>
 				    <span>~</span>
 				    <div class="col">
-				      <input type="date" class="form-control col-form-label-sm basic-input" >
+				      <input type="date" name="clubEnd" id="clubEnd" class="form-control col-form-label-sm basic-input" >
 				    </div>
 				</div>
 			 </div>
@@ -67,7 +72,11 @@
 					<label class="my-1" for="inlineFormCustomSelectPref">최소 인원</label>				
 				</div>
 		    	<div class="col nop-col">
-			      <input type="text" class="form-control col-form-label-sm basic-input" placeholder="최소 인원" dir="rtl">
+			      <input 
+			      	type="text"
+			      	name="minimumNop" 
+			      	class="form-control col-form-label-sm basic-input" 
+			      	placeholder="최소 인원" dir="rtl">
 			   	  <span>명</span>
 			    </div>
 			 </div>
@@ -77,7 +86,11 @@
 					<label class="my-1" for="inlineFormCustomSelectPref">최대 인원</label>				
 				</div>
 		    	<div class="col nop-col">
-			      <input type="text" class="form-control col-form-label-sm basic-input" placeholder="최대 인원" dir="rtl">
+			      <input 
+			      	type="text"
+			      	name="maximumNop" 
+			      	class="form-control col-form-label-sm basic-input" 
+			      	placeholder="최대 인원" dir="rtl">
 			      <span>명</span>
 			    </div>
 			 </div>
@@ -88,7 +101,12 @@
 					<label class="my-1" for="inlineFormCustomSelectPref">디파짓</label>				
 				</div>
 		    	<div class="col nop-col">
-			      <input type="text" class="form-control col-form-label-sm basic-input" placeholder="금액을 입력하세요" dir="rtl">
+			      <input 
+			      	type="text" 
+			      	id="deposit" 
+			      	name="deposit"
+			      	class="form-control col-form-label-sm basic-input" 
+			      	placeholder="금액을 입력하세요" dir="rtl">
 			      <i class="fa-solid fa-won-sign"></i>
 			    </div>
 			 </div>
@@ -98,6 +116,7 @@
 		<div id="book-div" class="divs">
 			<p id="books-p"><strong>읽는 책</strong></p>
 			<small id="books-small" class="form-text text-muted">등록 가능한 책은 최대 4권 입니다.</small>
+			<p id="mLabel" style="font-size: medium; margin-top: 10px !important;">📋 기본정보를 먼저 입력해주세요!</p>
 			
 			<div id="bookWrapper">
 			<!--
@@ -108,19 +127,36 @@
 
 			<div id="btn-add-book-container">
 				<!-- Button trigger modal -->
-<!-- 				<button 
-					type="button" id="btn-add-book" class="btn gap-2 col-12" 	
-					onclick="addBook();"> -->
 					<button 
-					type="button" id="btn-add-book" class="btn gap-2 col-12" 	
-					data-toggle="modal" data-target="#addBookModal"
-					onclick="addBookTest();">
-					
-				  책 추가
-				</button>
+						type="button" id="btn-add-book" class="btn gap-2 col-12" 	
+						data-toggle="modal" 
+						data-target="#addBookModal"
+						onclick="addBookTest();"
+					>책 추가</button>
 				<span style="display:none;" id="cPage">1</span>
 			</div>
 		</div>
+		
+<!-- 		<button 
+			type="button" 
+			id="btn-add-book"
+			class="btn gap-2 col-12"
+			onclick="addBookTest();"
+			data-container="body" 
+			data-toggle="popover" 
+			data-placement="top" 
+			data-content="📋 기본정보를 먼저 입력해주세요!">
+		  책 추가
+		</button>
+ -->
+		
+<!-- 		<script>
+		
+		 $(function () {
+		    $( '[data-toggle="popover"]' ).popover()
+		  } );
+		
+		</script> -->
 		
 
 		<div id="mission-div" class="divs">
@@ -135,11 +171,16 @@
 		</div>
 
 		<div id="bottom-menu">
-			<button id="btn-enroll" class="mybtn last-btn">등 록</button>
-			<button id="btn-cancel" class="mybtn last-btn">취 소</button>	    	
+			<button type="button" onclick="frmSubmit();" id="btn-enroll" class="mybtn last-btn">등 록</button>
+			<button type="button" id="btn-cancel" class="mybtn last-btn">취 소</button>	    	
 		</div>
+
+		<div id="additionalInfo">
+			<input type="hidden" name="finalDeposit" id="finalDeposit" />			
+		</div>
+
 		
-	</form:form>
+	</form>
 </section>
 	
 	<!-- 책 추가 Modal -->
@@ -210,18 +251,18 @@
 		    <div class="modal-content">
 		      <div class="modal-header">
 		        <h5 class="modal-title" id="exampleModalLabel">미션 등록</h5>
-		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		        <button type="button" class="close" onclick="hideMissionModal();" aria-label="Close">
 		          <span aria-hidden="true">&times;</span>
 		        </button>
 		      </div>
 		      <div class="m-modal-body">
-		        <form>
 		          <div class="m-divs">
 		            <label for="recipient-name" class="m-label">미션명</label>
-		            <input type="text" class="m-input" id="recipient-name">
+		            <input type="text" class="m-input" id="mName">
 		          </div>
      		      <div class="m-divs">
 		            <label for="recipient-name" class="m-label">마감 기한</label>
+		            &nbsp;<span id="clubPeriodLabel" style="color: #6c757d;">(북클럽 기한: 2022-08-02 ~ 2022-08-17)</span>
 					<div class="m-divs-div">
 			            <input type="date" class="m-input" id="mEndDate">		            
 		            	<span> 까지 </span>					
@@ -231,19 +272,18 @@
 		          <div class="m-divs">
 		            <label for="recipient-name" class="m-label">디파짓</label>
 		            <div class="m-divs-div">
-		            	<input type="text" class="m-input" id="mdeposit" dir="rtl">	
+		            	<input type="text" class="m-input" id="mDeposit" placeholder="자동으로 계산됩니다!" readonly>	
 		            	<i class="fa-solid fa-won-sign"></i>	            
 		            </div>
 		          </div>
 		          <div class="m-divs">
 		            <label for="message-text" class="m-label">내용</label>
-		            <textarea class="form-control" id="m-content"></textarea>
+		            <textarea class="form-control" id="mContent"></textarea>
 		          </div>
-		        </form>
 		      </div>
 		      <div class="modal-footer">
-		        <button type="button" id="m-cancel-btn" class="btn btn-secondary cancel-btn" data-dismiss="modal">취 소</button>
-		        <button type="button" id="m-enroll-btn" class="btn btn-primary enroll-btn">등 록</button>
+		        <button type="button" id="m-cancel-btn" class="btn btn-secondary cancel-btn" onclick="hideMissionModal();">취 소</button>
+		        <button type="button" id="m-enroll-btn" class="btn btn-primary enroll-btn" onclick="enrollMission();">등 록</button>
 		      </div>
 		    </div>
 		  </div>
@@ -262,18 +302,6 @@
 
 <script>
 
-/* const addBook = () => {
-		const title = "addBookPopup";
-		const spec = "width=700px";
-		const popup = open("", title, spec);
-		
-		const frm = document.addBookFrm;
-		frm.target = title; // 해당 팝업에서 폼을 제출 
-		frm.submit();
-	} */
-	
-
-	
 
 
 /***************모달테스트임************/
@@ -521,6 +549,7 @@ const getPage = (cPage, maxResult) => {
 						<div class="modal-book-container" id="book\${isbn13}">
 						<div class="book-table">
 							<input type="hidden" name="isbn13" value=\${isbn13} />
+							<input type="hidden" name="bookImg" value="\${cover}"/>
 							<table class="tbl">
 								<tbody><tr>
 									<td rowspan="4">
@@ -648,26 +677,56 @@ const ckSelectedBook = (isbn, divId) => {
 }
 
 
-$('#addBookModal').on('hidden.bs.modal', function (e) {
-   	// 모달 닫길때 이벤트
-/*    	console.log(selectedBooks.length, '개');
+$('#addBookModal').on('hide.bs.modal', function (e) {
+/*     // 모달 닫길때 이벤트
+    console.log(selectedBooks.length, '개');
    	
    	const msg = '총 ' + selectedBooks.length + '권의 책이 선택되었습니다. 등록하시겠습니까?';
-   	confirm(msg);
+   	const yn = confirm(msg);
    	
-   	if(confirm){
+   	if(yn){
    		console.log('예');
-   	}  */
-   	enrollBook();
+	   	
+   	}
+   	else {
+   		selectedBooks.forEach((book) => {
+
+   			
+   			console.log(book);
+   			
+ 	   		// 모달 안 작은 이미지 삭제
+	   		$(`#smallImg\${isbn}`).remove();
+	
+	   		// 객체와 배열에서 모두 삭제
+	   		delBook(isbn); 
+   		});
+   	} */ 
+   	
+	enrollBook();
+   	
 });
 
+
+const hideAddBookBtn = () => {
+	const btn = document.querySelector("#btn-add-book")
+	btn.disabled = "disabled";
+	btn.classList.add('noclick');
+	btn.style.color = "white";
+}
+
+const showAddBookBtn = () => {
+	const btn = document.querySelector("#btn-add-book")
+	btn.disabled = "";
+	btn.classList.remove('noclick');
+	btn.style.color = "#FE9801";
+}
+
+
+ 
 const enrollBook = () => {
 	
 	if(selectedBooks.length == 4){
-		const btn = document.querySelector("#btn-add-book")
-		btn.disabled = "disabled";
-		btn.classList.add('noclick');
-		btn.style.color = "white";
+		hideAddBookBtn();
 	}
 		
 	const container = document.getElementById('bookWrapper');
@@ -714,13 +773,24 @@ const enrollBook = () => {
 			    <div id="\${collapseId}" class="collapse" aria-labelledby="\${headId}" data-parent="#missionContainer">
 			      <div class="card-body">
 			      	<table>
-			      		<tbody>
-				      		<tr>
-		      					<td colspan="5">🧡책에 대한 미션을 등록해주세요!</td>
+			      		<tbody id="missionWrapper\${isbn}">
+				      		<tr id="addMissionLabel">
+		      					<td colspan="4" style="margin-bottom: 17px;">🧡책에 대한 미션을 등록해주세요!</td>
 		      				</tr>
+		      				
+		      				
 			      		</tbody>
 			      	</table>
-				    <button type="button" class="btn gap-1 col-1 mission-btn" data-toggle="modal" data-target="#addMissionModal" data-whatever="@mdo">
+				    <button 
+				    	type="button" 
+				    	value = "\${isbn}"
+				    	id = "plus\${isbn}"  
+				    	class="btn gap-1 col-1 mission-btn" 
+				    	onclick="plusMission(this);"
+				    	data-toggle="modal" 
+						data-target="#addMissionModal" 
+						data-whatever="@mdo"
+				    	>
 				    +
 				    </button>
 			      </div>
@@ -776,10 +846,7 @@ const deleteBook = (e) => {
 	// 읽는 책 4개 미만인지 확인
 	const bookWrapper = document.querySelector('#bookWrapper');
 	if(bookWrapper.childElementCount < 4){
-		const btn = document.querySelector("#btn-add-book")
-		btn.disabled = "";
-		btn.classList.remove('noclick');
-		btn.style.color = "#FE9801";
+		showAddBookBtn();
 	}
 	
 	// 미션 삭제
@@ -794,6 +861,255 @@ const deleteBook = (e) => {
 	
 }
 
+/****************** 미션 등록 / 삭제 ********************/
+ 
+// 미션 모달 내용 비우기
+const missionModalEmpty = () => {
+	$('#mName').val('');
+	$('#mEndDate').val('');
+	$('#mDeposit').val('');
+	$('#mContent').val('');
+}
+
+//플러스 버튼 누르면 -> 모달열림
+let status = '';
+const plusMission = (e) => {
+	
+	status = "enroll";
+	
+	// (북클럽 기한: 2022-08-02 ~ 2022-08-17)
+	const clubStart = $('#clubStart').val();
+	const clubEnd = $('#clubEnd').val();
+	const isbn = e.value;   	
+	
+	const period = `(북클럽 기한: \${clubStart} ~ \${clubEnd})`; 
+	
+	$('#addMissionModal').attr('value', isbn);
+	$('#clubPeriodLabel').text(period);
+
+	
+	/* 
+	북클럽 기간 검사..일단 미뤄둬..
+
+	
+	if(clubStart == '' || clubEnd ==''){
+		alert('먼저 북클럽 기간을 입력해주세요.');
+		notShowModal("#addMissionModal");
+		return;
+	}
+	*/
+
+	
+
+}
+
+const ckMissionModal = () => {
+	const yn = confirm('취소하시겠습니까?');
+		if(yn){   			
+			
+			// 내용도 모두 지우기
+			missionModalEmpty();
+			// return; 
+			$('#addMissionModal').modal('hide');
+			return;
+		}
+		else {
+			console.log('계속 진행시켜.');
+			return;
+		}
+}
+
+const hideMissionModal = () => {
+	
+	// 내용이 모두 비워져있으면
+	if(!$('#mName').val() && !$('#mEndDate').val() &&  !$('#mContent').val()) {
+		$('#addMissionModal').modal('hide');
+		return;
+		
+   	}
+	
+   	// 내용 하나라도 채워져있으면
+   	if(!$('#mName').val() || !$('#mEndDate').val()  || !$('#mContent').val()) {
+   		
+   		ckMissionModal();
+   	}
+   	
+   	
+   	if($('#mName').val() && $('#mEndDate').val() && $('#mContent').val()) {
+   		
+   		ckMissionModal();
+   		
+   	}
+   	
+}
+
+
+let cnt = 1;
+let missionCnt = 0;
+
+// 미션 모달에서 등록 버튼 누르면 
+const enrollMission = () => {
+	const clubStart = $('#clubStart').val();
+	const clubEnd = $('#clubEnd').val();
+	let mEndDate = $('#mEndDate').val();
+	
+	// 내용이 모두 채워져 있는지 유효성 검사
+   	if(!$('#mName').val() || !$('#mEndDate').val() || !$('#mContent').val()) {
+   		alert('모든 칸을 입력해주세요');
+   		return;
+   	}
+
+	// 미션 날짜가 북클럽 기간 사이가 아닐때 유효성 검사
+	if(!(mEndDate >= clubStart && mEndDate <= clubEnd)){
+		alert('북클럽 기간과 미션 기한을 확인해주세요.');
+		return;	
+	}
+
+	// 모든 칸이 입력됐으니까 변수 받아오고
+	   	const mName = $('#mName').val();
+		mEndDate = $('#mEndDate').val();
+		const mContent = $('#mContent').val();
+
+	if(status == 'enroll'){
+
+		missionCnt++;
+		
+		const mDeposit = changeDeposit();
+		
+		// 미션 탭에 tr 추가 
+		const isbn = $('#addMissionModal').attr("value");
+		const mtbody = document.querySelector(`#missionWrapper\${isbn}`);
+
+		const mtr = `
+			<tr class=="head-tr" id="mission\${cnt}">
+				<td><input class="missionInput" type="text" name="missionName" id="mName\${cnt}" value="\${mName}" readOnly/></td>
+				<td><input class="missionInput" type="text" name="missionDeposit" id="mDeposit\${cnt}" value="\${mDeposit}원" readOnly/></td>
+				<td><input class="missionInput" type="text" name="missionDate" id="mEndDate\${cnt}" value="~ \${mEndDate}" readOnly /></td>
+				<td value="\${isbn}">
+					<button type="button" class="mybtn" onclick="editMission(this);" value="\${cnt}">수정</button>
+					<button type="button" class="mybtn" onclick="deleteMission(this);" value="\${cnt}">삭제</button>
+				</td>
+				<input type="hidden" name="missionContent" id="mContent\${cnt}" value="\${mContent}"/>
+			</tr>
+		`;
+		
+		mtbody.insertAdjacentHTML('beforeend', mtr);
+		cnt++;
+	}
+	else {
+		
+		// 수정할거임 
+		$(`#mName\${mNo}`).val(mName);
+		$(`#mEndDate\${mNo}`).val('~ ' + mEndDate);
+		$(`#mContent\${mNo}`).val(mContent);
+		
+		alert('수정되었습니다!');
+	}
+	
+	
+	// 등록했으니 미션모달 내용 싹 지우기
+	missionModalEmpty();
+	
+	// 모달 닫기
+	$('#addMissionModal').modal('hide');
+
+}
+
+const notShowModal = (missionModal) => {
+/* 	$(missionModal).on('show.bs.modal', function (e) {
+
+		  e.preventDefault();
+
+		}) */
+}
+
+const showModal = (modal) => {
+	$(modal).off('show.bs.modal');
+}
+
+let mNo='';
+const editMission = (e) => {
+	status="edit";
+	
+	console.log(e);
+	
+	mNo = e.value;
+	const isbn = $(e.parentElement).attr('value');
+	
+	// 수정할거니까 모달 보여줘
+ 	$('#addMissionModal').modal('show');
+
+	// 이전 값 뿌려줘야 하니까 가져와
+ 	const mNameBefore = $(`#mName\${mNo}`).val();
+	const mEndDateBefore = $(`#mEndDate\${mNo}`).val().substr(2);
+	let mContentBefore = $(`#mContent\${mNo}`).val();
+
+	// 이전 값 모달에 뿌리셈
+	$('#mName').val(mNameBefore);
+	$('#mEndDate').val(mEndDateBefore);
+	$('#mContent').val(mContentBefore);
+	
+}
+
+const changeDeposit = () => {
+	
+	const deposit = $('#deposit').val();
+	const mDeposit = Math.round(deposit / missionCnt);
+	
+	// 현재 있는 미션 모두 가져와
+	// 디포짓 바꿔 
+	$("input[name=missionDeposit]").val(mDeposit + "원");
+	$('#finalDeposit').val(mDeposit);
+	
+	
+	return mDeposit;
+	
+}
+
+
+// 미션 삭제할거임
+const deleteMission = (e) => {
+	
+	mNo = e.value;
+	const missionId = "#mission" + mNo;
+	const mtr = document.querySelector(missionId);
+	
+	const isbn = $(e.parentElement).attr('value');
+	const mtbodyId = "#missionWrapper" + isbn;
+	const mtbody = document.querySelector(mtbodyId); 
+	
+	// 미션리스트에서 선택된 미션 지워
+	mtbody.removeChild(mtr);
+	
+	// 전체 개수 삭제하셈.
+	missionCnt--;
+	
+	// 디파짓도 바꾸셈
+	changeDeposit();
+	
+}
+
+const frmSubmit = () => {
+	
+	const frm = document.clubEnrollFrm;
+	console.log(selectedBooks);
+	const additionalInfo = document.querySelector('#additionalInfo');
+	
+	selectedBooks.forEach((isbn) => {
+		const tbodyId = "missionWrapper" + isbn;
+		const mCnt = document.getElementById(tbodyId).childElementCount - 1;
+		const mInput = `
+			<input type="hidden" name="mCount" value="\${mCnt}" />
+		`;
+		additionalInfo.insertAdjacentHTML('beforeend', mInput);
+	});
+
+
+	frm.action = `${pageContext.request.contextPath}/club/enrollClub.do`
+	frm.method = "POST";
+	frm.submit();
+	
+}
 </script>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
