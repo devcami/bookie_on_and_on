@@ -49,10 +49,12 @@
 						<img src="https://image.aladin.co.kr/product/29496/39/covermini/k202838509_2.jpg" style="widht: 50px;" />
 					</div>
 					<div class="nop-div">
-						<span>인원)</span>&nbsp;
-						<span class="current-nop">1</span>
-						/
-						<span class="max-nop">6</span>
+						<span class="fa-stack fa-lg" id='h-span'>
+						  <i class="fa fa-heart fa-regular fa-stack-1x front" ></i>
+						</span>
+						<span class="fa-stack fa-lg" id='h-span'>
+						  <i class="fa fa-bookmark fa-regular fa-stack-1x front"></i>
+						</span>
 					</div>				
 				</div>
 				<div class="text-div">
@@ -81,10 +83,10 @@
 					
 					</div>
 					<div class="nop-div">
-						<span>인원)</span>&nbsp;
-						<span class="current-nop">1</span>
-						/
-						<span class="max-nop">6</span>
+						<span class="fa-stack fa-lg">
+						  <i class="fa fa-heart fa-stack-1x" style="color: pink;"></i>
+						  <i class="fa fa-heart fa-stack-1x" style="color: black;"></i>
+						</span>
 					</div>				
 				</div>
 				<div class="text-div">
@@ -125,6 +127,77 @@
 </section>
 
 <script>
+	// hello-spring boardList.jsp에서 가져와
+	window.addEventListener('load', (e) => {
+		document.querySelectorAll(".bookCard").forEach((card) => {
+			card.addEventListener('click', (e) => {
+				console.log('디브실행');
+				
+				
+			});	
+		})
+		
+		
+	})
+
+	window.addEventListener('load', (e) => {
+		document.querySelectorAll(".fa-heart").forEach((heart) => {
+			heart.addEventListener('click', (e) => {
+				console.log('하트실행');
+				
+				// 부모한테 이벤트 전파하지마셈
+				e.stopPropagation(); 
+				
+				// 클릭할때마다 상태왔다갔다
+				changeIcon(e.target, 'heart');
+			});	
+		});	
+	});
+	
+	window.addEventListener('load', (e) => {
+		document.querySelectorAll(".fa-bookmark").forEach((heart) => {
+			heart.addEventListener('click', (e) => {
+				
+				// 부모한테 이벤트 전파하지마셈
+				e.stopPropagation(); 
+				
+				// 클릭할때마다 상태왔다갔다
+				changeIcon(e.target, 'bookmark');
+			});	
+		});	
+	});
+	
+	
+	const changeIcon = (icon, shape) => {
+
+		let cnt = icon.parentElement.childElementCount;
+		
+		const iHeart = `<i class="fa fa-heart fa-solid fa-stack-1x h-behind"></i>`;
+		const iBookMark = `<i class="fa fa-bookmark fa-solid fa-stack-1x b-behind"></i>`;
+		
+		console.log(icon.parentElement);
+		
+		if(cnt==1) {
+			if(shape == 'heart'){
+				icon.parentElement.insertAdjacentHTML('beforeend', iHeart);
+			}
+			else {
+				icon.parentElement.insertAdjacentHTML('beforeend', iBookMark);
+			}
+		}
+		else {
+			icon.parentElement.removeChild(icon.parentElement.lastElementChild);
+		}
+		
+		
+
+	}
+	
+	
+	/* const clubLike = (e) => {
+		console.log(e);
+		e.stopPropagation(); 
+	} */
 
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

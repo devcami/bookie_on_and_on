@@ -341,8 +341,14 @@ create table persistent_logins (
 
 select * from persistent_logins;
 
+select 
+    * 
+from 
+    pheed p left join pheed_attachment a
+        on p.pheed_no = a.pheed_no
+order by 1 desc ;
+select * from pheed_attachment;
 select * from pheed;
-select * from pheed where member_id in ('honggd');
 
 -- sample data
 insert into member
@@ -402,11 +408,6 @@ insert into pheed_attachment values(seq_pheed_attachment_no.nextval, '1', 'attac
 insert into pheed_attachment values(seq_pheed_attachment_no.nextval, '2', 'attach2.jpg', 'attach2.jpg', sysdate);
 
 
-insert into pheed_comment values(seq_pheed_comment_no.nextval, 1, '길동', 'ㅎㅇ', null, sysdate);
-insert into pheed_comment values(seq_pheed_comment_no.nextval, 1, '길동', 'ㅎㅇㅎㅇ', null, sysdate);
-insert into pheed_comment values(seq_pheed_comment_no.nextval, 2, '길동', 'ㅎㅇ', null, sysdate);
-insert into pheed_comment values(seq_pheed_comment_no.nextval, 2, '길동', 'ㅎㅇㅎㅇ', 1, sysdate);
-
 
 alter table mission modify content varchar2(4000);
 commit;
@@ -437,9 +438,24 @@ select
     c.*,
     b.*,
     b.club_no bclub_no,
-    (select count(*) from my_club where club_no = c.club_no) current_nop
+    (select count(*) from my_club where club_no = c.club_no) current_nop,
+    (select count(*) from likes_club where club_no = c.club_no)  likes_cnt
 from
     club c join club_book b on c.club_no = b.club_no
 order by
     recruit_start desc;
-    
+
+insert into pheed_comment values(seq_pheed_comment_no.nextval, 5, '길동', 'test!', null, sysdate);
+insert into pheed_comment values(seq_pheed_comment_no.nextval, 5, '길동', 'commentTest!!', 1, sysdate);
+commit;
+
+alter table pheed add enroll_date date default sysdate;
+select * from member;
+select * from likes_club;
+select * from club;
+
+insert into likes_club values (22, 'honggd');
+insert into likes_club values (22, 'sinsa');
+insert into likes_club values (26, 'honggd1');
+
+commit;

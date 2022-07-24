@@ -93,9 +93,31 @@ section#content	{
     justify-content: flex-end;
     width: 100%;
 }
-.nop-div span {
-	
+.fa-stack {
+	width: 1.7em !important;
 }
+.fa-heart, .fa-bookmark {
+	font-size: 34px;
+	margin: 0 3px;
+}
+#h-span {
+	margin-right: 2px;
+}
+.front {
+	color: black;
+	z-index: 1 !important;
+}
+.h-behind {
+	color: #F10086;
+    font-size: 29px;
+}
+
+.b-behind {
+	color: #FFC46B;
+    font-size: 29px;
+}
+
+
 .text-div {
 	display: flex;
 	flex-direction: column;

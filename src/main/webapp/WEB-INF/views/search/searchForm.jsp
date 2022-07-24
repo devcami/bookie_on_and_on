@@ -26,8 +26,7 @@
 		</form>
 	</div>
 	<div class="" id="book-container">
-		<p>베스트 도서 200선</p>
-		
+		<p id="resultP"></p>
 	</div>
 	<div id='btn-more-container'>
 		<button id="btn-more" class="btn gap-2 col-12" type="button">더보기</button>
@@ -39,7 +38,7 @@
 document.bookSearchFrm.addEventListener('submit', (e) => {
 	const searchKeyword = document.querySelector("#searchKeyword");
 	// 숫자, 영문, 한글로 2자 이상
-	if(!/^[0-9a-zA-Z가-힣]{2,}$/.test(searchKeyword.value)){
+	if(!/^[0-9a-zA-Z가-힣\s]{2,}$/.test(searchKeyword.value)){
 		alert("검색어를 2자 이상 입력해주세요.");
 		e.preventDefault();
 		return;
@@ -96,7 +95,7 @@ window.addEventListener('load', () => {
 	 	//쿠키값에 scroll 값이 저장되었을 경우
 		console.log("scrollTo : " + intY);
 		getPage(1, maxResult);
- 		setTimeout(() => window.scrollTo(0, intY), 2000);
+ 		setTimeout(() => window.scrollTo(0, intY), 1000);
 	} else {
 	 	//scroll 값이 없는 경우
 		getPage(1, maxResult);
@@ -138,9 +137,11 @@ const getPage = (cPage, maxResult) => {
 	let url;
 	if('${param.searchType}' == ''){
 		url = searchApi + "http://www.aladin.co.kr/ttb/api/ItemList.aspx";
+		document.querySelector("#resultP").innerText = "베스트 도서 200선";
 	} else{
 		url = searchApi + "http://www.aladin.co.kr/ttb/api/ItemSearch.aspx";
 		data.QueryType = '${param.searchType}';
+		document.querySelector("#resultP").innerText = "검색 결과";
 	}
 	if('${param.searchKeyword}' != ''){
 		data.Query = '${param.searchKeyword}';

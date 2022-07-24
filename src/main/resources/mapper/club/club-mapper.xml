@@ -34,7 +34,8 @@
 		    c.*,
 		    b.*,
 		    b.club_no bclub_no,
-		    (select count(*) from my_club where club_no = c.club_no) current_nop
+		    (select count(*) from my_club where club_no = c.club_no) current_nop,
+		    (select count(*) from likes_club where club_no = c.club_no) likesCnt
 		from
 		    club c join club_book b on c.club_no = b.club_no
 		order by
@@ -52,6 +53,7 @@
 		<result column="minimum_nop" property="minimumNop"/>
 		<result column="deposit" property="deposit"/>
 		<result column="current_nop" property="currentNop"/>
+		<result column="likes_cnt" property="likesCnt"/>
 		<collection property="bookList" javaType="arrayList" ofType="clubBook">
 			<id column="item_id" property="itemId"/>
 			<id column="bclub_no" property="clubNo"/>

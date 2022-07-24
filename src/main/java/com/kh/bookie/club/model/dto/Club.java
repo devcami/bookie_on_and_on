@@ -18,7 +18,7 @@ public class Club extends ClubEntity {
 	private List<Mission> missionList = new ArrayList<>();
 	private List<String> imgSrcList = new ArrayList<>(); 
 	private int currentNop;
-	
+	private int likesCnt;
 	
 	public Club(int clubNo, String title, String content, LocalDate recruitStart, LocalDate recruitEnd, LocalDate clubStart,
 			LocalDate clubEnd, int bookCount, int maximunNop, int minimunNop, int deposit, String interest) {
@@ -28,6 +28,7 @@ public class Club extends ClubEntity {
 		this.missionList = missionList;
 		this.imgSrcList = imgSrcList;
 		this.currentNop = currentNop;
+		this.likesCnt = likesCnt;
 		
 	}
 
