@@ -5,17 +5,29 @@ import java.time.LocalDateTime;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.ToString;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PheedAttachment {
-	private int attachNo;
+@ToString
+@Builder
+public class PheedComment {
+	@NonNull
+	private int pheedCNo;
+	@NonNull
 	private int pheedNo;
-	private String originalFilename;
-	private String renamedFilename;
+	@NonNull
+	private String nickname;
+	@NonNull
+	private String content;
+	private int commentRef;
+	@NonNull
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDateTime createdAt;
+	
 }

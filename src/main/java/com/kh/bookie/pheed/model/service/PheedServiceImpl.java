@@ -9,6 +9,7 @@ import com.kh.bookie.member.model.dto.Member;
 import com.kh.bookie.pheed.model.dao.PheedDao;
 import com.kh.bookie.pheed.model.dto.Pheed;
 import com.kh.bookie.pheed.model.dto.PheedAttachment;
+import com.kh.bookie.pheed.model.dto.PheedComment;
 
 @Service
 public class PheedServiceImpl implements PheedService{
@@ -37,5 +38,10 @@ public class PheedServiceImpl implements PheedService{
 			p.setMember(member);
 		}
 		return list;
+	}
+	
+	@Override
+	public List<PheedComment> selectPheedCommentList(int pheedNo) {
+		return pheedDao.selectPheedCommentList(pheedNo);
 	}
 }
