@@ -6,9 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,7 +38,26 @@ public class ClubController {
 	ServletContext application;
 
 	@GetMapping("/clubList.do")
-	public void clubList() {
+	public ModelAndView clubList(
+			@RequestParam(defaultValue = "1") int cPage,
+			ModelAndView mav,
+			HttpServletRequest request) {
+		
+		try {
+			
+			// 목록 조회
+			int numPerPage = 5;
+			List<Club> list = clubService.selectClubList(cPage, numPerPage);
+			log.debug("list = {}", list);
+			
+			
+		} catch(Exception e) {
+			log.error("북클럽목록 조회 오류!!", e);
+			mav.addObject("msg", "북클럽목록 조회에 실패했습니다!");
+			throw e;
+		}
+		
+		return mav;
 	}
 
 	@GetMapping("/enrollClub.do")
@@ -49,6 +70,7 @@ public class ClubController {
 			Club club, 
 			@RequestParam List<String> isbn13,
 			@RequestParam List<String> bookImg, 
+			@RequestParam(required = false) List<String> interests,
 			@RequestParam(required = false) List<String> missionName,
 			@RequestParam(required = false) List<String> missionDate,
 			@RequestParam(required = false) List<String> missionContent,
@@ -68,7 +90,23 @@ public class ClubController {
 //			log.debug("missionContent = {}", missionContent);
 //			log.debug("missionDeposit = {}", finalDeposit);
 //			log.debug("mCount = {}", mCount);
-				
+//			log.debug("mCount = {}", mCount);
+
+//			log.debug("interests = {}", interests);
+			String interest = "";
+
+			for(int m = 0; m < interests.size(); m++) {
+				interest += interests.get(m);
+				interest += ",";
+			}
+			
+			interest = interest.substring(0, interest.length()-1);
+			club.setInterest(interest);
+			
+			
+//			log.debug("제발!! interest = {}", interest);
+			
+			
 			club.setBookCount(isbn13.size());
 
 			for (int i = 0; i < isbn13.size(); i++) {
@@ -111,14 +149,14 @@ public class ClubController {
 			
 			int result = clubService.enrollClub(club);
 			mav.addObject("club", club);
-			
+			mav.addObject("msg", "북클럽이 등록되었습니다!");
 			mav.setViewName("club/clubAnn");
 			
 			
 
 		} catch (Exception e) {
 			log.error("북클럽 등록 오류!!", e);
-			mav.addObject("msg", "북클럽 조회 오류");
+			mav.addObject("msg", "북클럽 등록에 실패했습니다!");
 			throw e;
 		}
 

@@ -18,7 +18,8 @@
 			#{bookCount},
 			#{maximumNop},
 			#{minimumNop},
-			#{deposit}
+			#{deposit},
+			#{interest}
 		)
 		<selectKey keyProperty="clubNo" resultType="_int" order="AFTER">
 			select
@@ -27,5 +28,35 @@
 				dual
 		</selectKey>
 	</insert>
+	
+	<select id="selectClubList" resultMap="clubListCollectionMap">
+		select
+		    c.*,
+		    b.*,
+		    b.club_no bclub_no,
+		    (select count(*) from my_club where club_no = c.club_no) current_nop
+		from
+		    club c join club_book b on c.club_no = b.club_no
+		order by
+		    recruit_start desc
+	</select>
+	<resultMap type="club" id="clubListCollectionMap">
+		<id column="club_no" property="clubNo"/>
+		<result column="title" property="title"/>
+		<result column="content" property="content"/>
+		<result column="recruit_start" property="recruitStart"/>
+		<result column="recruit_end" property="recruitEnd"/>
+		<result column="club_start" property="clubStart"/>
+		<result column="club_end" property="clubEnd"/>
+		<result column="maximum_nop" property="maximumNop"/>
+		<result column="minimum_nop" property="minimumNop"/>
+		<result column="deposit" property="deposit"/>
+		<result column="current_nop" property="currentNop"/>
+		<collection property="bookList" javaType="arrayList" ofType="clubBook">
+			<id column="item_id" property="itemId"/>
+			<id column="bclub_no" property="clubNo"/>
+			<result column="img_src" property="imgSrc"/>
+		</collection>
+	</resultMap>
 	
 </mapper>

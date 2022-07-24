@@ -22,5 +22,105 @@ section#content	{
 }
 
 
+/********** 부트 공통 ************/
+.form-control:focus {
+	border-color: #ffc10729 !important;
+    box-shadow: 0 0 0 0.15rem #ffc10729 !important;
+}
 
 
+/********* 상단메뉴 *********/
+#menu {
+	display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+#menu-left {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+}
+
+#searchType {
+	margin-right: 10px
+}
+
+
+/************ 북클럽 리스트 ***********/
+#clubListDiv {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: flex-start;
+	
+}
+.bookCard {
+	width: 48.1%;
+    margin: 7px;
+    cursor: pointer;
+    margin: 7px 7px 40px 7px;
+}
+.card-top {
+	width: 100%;
+	display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    background-color: #ffa50021;
+    padding: 10px;
+    border-radius: 6px;
+}
+.badge-div{
+	display: flex;
+    width: 100%;
+}
+.alert-badge {
+	font-weight: normal !important;
+}
+.img-div {
+	margin: 15px 0 35px 0;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+.img-div img {
+	width: 65px;
+    margin: 0 3px;
+}
+.nop-div {
+	display: flex;
+    justify-content: flex-end;
+    width: 100%;
+}
+.nop-div span {
+	
+}
+.text-div {
+	display: flex;
+	flex-direction: column;
+}
+.text-div h5 {
+	margin: 10px 0 5px 0;
+}
+.text-status, .text-date {
+	color: #6c757d;
+}
+
+/************** 페이지 바 **************/
+.pagination {
+	justify-content: center;
+}
+.pagination li {
+	margin: 0 4px;
+}
+
+.page-item.disabled .page-link {
+	color: #fe9801 !important;
+	border: 1px solid #fe9801 !important;
+}
+
+.page-link {
+	color: #6c757d !important;
+	border-radius: 30px !important;
+}

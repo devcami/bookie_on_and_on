@@ -14,15 +14,21 @@ import lombok.ToString;
 @ToString(callSuper = true)
 public class Club extends ClubEntity {
 
-	List<ClubBook> bookList = new ArrayList<>();
-	List<Mission> missionList = new ArrayList<>();
+	private List<ClubBook> bookList = new ArrayList<>();
+	private List<Mission> missionList = new ArrayList<>();
+	private List<String> imgSrcList = new ArrayList<>(); 
+	private int currentNop;
+	
 	
 	public Club(int clubNo, String title, String content, LocalDate recruitStart, LocalDate recruitEnd, LocalDate clubStart,
-			LocalDate clubEnd, int bookCount, int maximunNop, int minimunNop, int deposit) {
-		super(clubNo, title, content, recruitStart, recruitEnd, clubStart, clubEnd, bookCount, maximunNop, minimunNop, deposit);
+			LocalDate clubEnd, int bookCount, int maximunNop, int minimunNop, int deposit, String interest) {
+		super(clubNo, title, content, recruitStart, recruitEnd, clubStart, clubEnd, bookCount, maximunNop, minimunNop, deposit, interest);
 		
 		this.bookList = bookList;
 		this.missionList = missionList;
+		this.imgSrcList = imgSrcList;
+		this.currentNop = currentNop;
+		
 	}
 
 	@Override
@@ -89,6 +95,12 @@ public class Club extends ClubEntity {
 	public String getTitle() {
 		// TODO Auto-generated method stub
 		return super.getTitle();
+	}
+	
+	@Override
+	public String getInterest() {
+		// TODO Auto-generated method stub
+		return super.getInterest();
 	}
 
 	@Override
@@ -157,6 +169,11 @@ public class Club extends ClubEntity {
 		super.setTitle(title);
 	}
 
+	@Override
+	public void setInterest(String interest) {
+		// TODO Auto-generated method stub
+		super.setInterest(interest);
+	}
 	
 	
 }

@@ -110,6 +110,40 @@
 			      <i class="fa-solid fa-won-sign"></i>
 			    </div>
 			 </div>
+			 <div class="interest-div">
+			 	<div class="label-div">
+					<i class="fa-solid fa-sitemap"></i>
+					<label class="my-1" for="inlineFormCustomSelectPref">분야</label>				
+				</div>
+				<div class="col interest-col">
+				 	<input type="checkbox" name="interests" value="경제"/>
+				 	<label for="경제">경제</label>	
+				 	<input type="checkbox" name="interests" value="공학"/>
+				 	<label for="공학">공학</label>	
+				 	<input type="checkbox" name="interests" value="문학"/>
+				 	<label for="문학">문학</label>	
+				 	<input type="checkbox" name="interests" value="자기계발"/>
+				 	<label for="자기계발">자기계발</label>	
+				 	<input type="checkbox" name="interests" value="언어"/>
+				 	<label for="언어">언어</label>	
+				 	<input type="checkbox" name="interests" value="취미"/>
+				 	<label for="취미">취미</label>	
+				 	<input type="checkbox" name="interests" value="정치사회"/>
+				 	<label for="정치사회">정치사회</label>	
+				 	<input type="checkbox" name="interests" value="예술"/>
+				 	<label for="예술">예술</label>	
+				 	<input type="checkbox" name="interests" value="교육"/>
+				 	<label for="교육">교육</label>	
+				 	<input type="checkbox" name="interests" value="만화"/>
+				 	<label for="만화">만화</label>	
+				 	<input type="checkbox" name="interests" value="종교"/>
+				 	<label for="종교">종교</label>	
+				 	<input type="checkbox" name="interests" value="기타"/>
+				 	<label for="기타">기타</label>	
+				 	
+				 				
+				</div>
+			 </div>
 		</div>
 		
 		<!-- 읽는 책 -->
@@ -301,6 +335,10 @@
 
 
 <script>
+
+window.onload = function(){
+	document.getElementById('recruitStart').value = new Date().toISOString().substring(0, 10);
+}
 
 
 

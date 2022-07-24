@@ -130,6 +130,64 @@ i {
 	display: flex;
 	align-items: center;
 }
+.interest-div {
+	display: flex;
+    justify-content: space-between;
+    margin: 10px 0;
+    align-items: center;
+}
+.interest-col label {
+	margin-right: 37px;
+}
+
+/* input[name=interests] {
+	accent-color: #ffc36a;
+} */
+
+
+
+
+
+
+input[type="checkbox"] {
+        -webkit-appearance: none;
+        position: relative;
+        width: 16px;
+        height: 16px;
+        cursor: pointer;
+        outline: none !important;
+        border: 1px solid #eeeeee;
+        border-radius: 2px;
+        background: #fbfbfb;
+    }
+ 
+    input[type="checkbox"]::before {
+        content: "\2714";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        overflow: hidden;
+        transform: scale(0) translate(-50%, -50%);
+        line-height: 1;
+    }
+ 
+    input[type="checkbox"]:hover {
+        border-color: rgba(170, 170, 170, 0.5);
+    }
+ 
+    input[type="checkbox"]:checked {
+        background-color: #ff8955;
+        border-color: rgba(255, 255, 255, 0.3);
+        color: white;
+    }
+ 
+    input[type="checkbox"]:checked::before {
+        border-radius: 2px;
+        transform: scale(1) translate(-50%, -50%)
+    }
+
+
+
 
 
 /* 읽는 책 */

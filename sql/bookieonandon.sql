@@ -163,7 +163,6 @@ create table club(
     deposit number not null,
     constraint pk_club_no primary key(club_no)
 );
-
 create sequence seq_club_no;
 
 -- 13. club_book
@@ -414,9 +413,33 @@ commit;
 
 
 select * from club;
+select * from club_book;
+select * from mission;
+select * from my_club;
+select * from member;
+
+
+select * from interest;
+
+
+insert into my_club values ('25', 'honggd', 5000);
+insert into my_club values ('25', 'sinsa', 5000);
+insert into my_club values ('23', 'sinsa', 5000);
+
+commit;
 
 alter table club_book add IMG_SRC varchar2(4000);
 alter table mission add item_id varchar2(30);
 ALTER TABLE mission RENAME COLUMN m_end_Date TO m_endDate;
 commit;
 
+select
+    c.*,
+    b.*,
+    b.club_no bclub_no,
+    (select count(*) from my_club where club_no = c.club_no) current_nop
+from
+    club c join club_book b on c.club_no = b.club_no
+order by
+    recruit_start desc;
+    
