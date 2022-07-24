@@ -177,13 +177,15 @@ create table club_book (
 create table mission (
     club_no      number not null, 
     mission_no   number not null,
-    title          varchar2(300) not null,
-    content      varchar2(1000) not null,
+    m_title          varchar2(300) not null,
+    m_content      varchar2(1000) not null,
     point      number,
+    m_item_id varchar2(13),
+    m_endDate date,
     constraint fk_mission_club_no foreign key(club_no) references club(club_no) on delete cascade,
     constraint pk_mission_no primary key(mission_no)
 );
-
+select * from mission;
 create sequence seq_mission_no;
 
 -- 15. mission_status
@@ -453,9 +455,31 @@ alter table pheed add enroll_date date default sysdate;
 select * from member;
 select * from likes_club;
 select * from club;
+select * from mission;
 
 insert into likes_club values (22, 'honggd');
 insert into likes_club values (22, 'sinsa');
 insert into likes_club values (26, 'honggd1');
 
+delete from club where club_no = 22;
+
 commit;
+
+
+
+select
+		    c.*,
+		    b.*,
+		    b.club_no bclub_no,
+		    m.*,
+		    m.club_no mclub_no,
+		    (select count(*) from my_club where club_no = c.club_no and c.club_no = 26) current_nop,
+		    (select count(*) from likes_club where club_no = c.club_no and c.club_no = 26) likesCnt
+		from
+		    club c 
+		    	join club_book b on c.club_no = b.club_no
+		    	join mission m on c.club_no = m.club_no
+		where 
+			c.club_no = 26;
+            
+select * from mission where club_no = 26;
