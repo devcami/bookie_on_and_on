@@ -122,6 +122,16 @@ section#content	{
 	display: flex;
 	flex-direction: column;
 }
+
+.text-div-top {
+	display: flex;
+	justify-content: space-between;
+}
+.likes-div {
+	display: flex;
+	margin: 6px 7px;
+}
+
 .text-div h5 {
 	margin: 10px 0 5px 0;
 }

@@ -10,4 +10,8 @@ public interface ClubService {
 
 	List<Club> selectClubList(int cPage, int numPerPage);
 
+	int selectTotalClub();
+
+	Club selectOneClub(int clubNo);
+
 }

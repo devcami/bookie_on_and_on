@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,6 +23,7 @@ import com.kh.bookie.club.model.dto.Club;
 import com.kh.bookie.club.model.dto.ClubBook;
 import com.kh.bookie.club.model.dto.Mission;
 import com.kh.bookie.club.model.service.ClubService;
+import com.kh.bookie.common.HelloSpringUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -49,7 +51,14 @@ public class ClubController {
 			int numPerPage = 5;
 			List<Club> list = clubService.selectClubList(cPage, numPerPage);
 			log.debug("list = {}", list);
+			mav.addObject("list", list);
 			
+			// 페이지 바
+			int totalClub = clubService.selectTotalClub();
+			String url = request.getRequestURI();
+			
+			String pagebar = HelloSpringUtils.getPagebar(cPage, numPerPage, totalClub, url);
+			mav.addObject("pagebar", pagebar);
 			
 		} catch(Exception e) {
 			log.error("북클럽목록 조회 오류!!", e);
@@ -102,11 +111,6 @@ public class ClubController {
 			
 			interest = interest.substring(0, interest.length()-1);
 			club.setInterest(interest);
-			
-			
-//			log.debug("제발!! interest = {}", interest);
-			
-			
 			club.setBookCount(isbn13.size());
 
 			for (int i = 0; i < isbn13.size(); i++) {
@@ -151,8 +155,6 @@ public class ClubController {
 			mav.addObject("club", club);
 			mav.addObject("msg", "북클럽이 등록되었습니다!");
 			mav.setViewName("club/clubAnn");
-			
-			
 
 		} catch (Exception e) {
 			log.error("북클럽 등록 오류!!", e);
@@ -164,7 +166,23 @@ public class ClubController {
 	}
 
 
-	
-	
+	@GetMapping("/clubAnn.do")
+	public ModelAndView clubAnn(
+			ModelAndView mav,
+			@RequestParam int clubNo) {
+		
+		try {
+			log.debug("clubNo = {}", clubNo);
+			Club club = clubService.selectOneClub(clubNo);
+			mav.addObject("club", club);
+			
+		} catch(Exception e) {
+			log.error("클럽 공고 상세보기 오류!", e);
+			mav.addObject("msg", "클럽 공고 상세조회에 실패했습니다!");
+			throw e;
+		}
+		
+		return mav;
+	}
 
 }

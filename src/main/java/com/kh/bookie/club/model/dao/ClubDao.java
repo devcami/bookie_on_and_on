@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.session.RowBounds;
 
 import com.kh.bookie.club.model.dto.Club;
@@ -22,5 +23,10 @@ public interface ClubDao {
 	int insertMission(Mission mission);
 
 	List<Club> selectClubList(RowBounds rowBounds);
+
+	@Select("select count(*) from club")
+	int selectTotalClub();
+
+	Club selectOneClub(int clubNo);
 
 }

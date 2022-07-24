@@ -7,9 +7,10 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/clubList.css" />
 <jsp:include page="/WEB-INF/views/common/header.jsp">
-	<jsp:param value="북클럽리스트" name="clubList"/>
+	<jsp:param value="북클럽리스트" name="title"/>
 </jsp:include>
 <section id="content">
+
 	<div id="menu">
 		<h1>북클럽리스트</h1>
 		<div id="menu-left">
@@ -32,21 +33,24 @@
 		</div>	
 	</div>
 	<div id="clubListDiv">
-			
+	<jsp:useBean id="today" class="java.util.Date" />
+	<fmt:formatDate value='${today}' pattern='yyyy-MM-dd' var="nowDate"/>
+	<c:forEach items="${list}" var="club" varStatus="vs">
 	
-	
-	
-			<div class="bookCard">
-				<div class="card-top">
+		<%-- 모집중인 경우 --%>
+		<c:if test="${club.recruitEnd ge nowDate && club.maximumNop ne club.currentNop}">
+			<div class="bookCard" id="card${club.clubNo}" data-no="${club.clubNo}">
+				<div class="card-top" style="background-color: #ffa50021;">
 					<div class='badge-div'>
 						<h6><span class="badge badge-pill badge-light">모집중</span></h6>
-						<h6><span class="badge badge-pill badge-danger alert-badge">마감임박</span></h6>
+						<c:if test="${club.maximumNop - 1 == currentNop}">
+							<h6><span class="badge badge-pill badge-danger alert-badge">마감임박</span></h6>						
+						</c:if>
 					</div>
 					<div class="img-div">
-						<img src="https://image.aladin.co.kr/product/29521/63/covermini/8901260719_3.jpg" style="widht: 50px;" />
-						<img src="https://image.aladin.co.kr/product/29689/64/covermini/8965137705_1.jpg" style="widht: 50px;" />
-						<img src="https://image.aladin.co.kr/product/29808/73/covermini/8954699804_2.jpg" style="widht: 50px;" />
-						<img src="https://image.aladin.co.kr/product/29496/39/covermini/k202838509_2.jpg" style="widht: 50px;" />
+						<c:forEach items="${club.bookList}" var="clubBook" varStatus="bs">
+							<img src="${clubBook.imgSrc}" style="widht: 50px;" />												
+						</c:forEach>
 					</div>
 					<div class="nop-div">
 						<span class="fa-stack fa-lg" id='h-span'>
@@ -58,72 +62,70 @@
 					</div>				
 				</div>
 				<div class="text-div">
-					<h5>주식은 처음입니다.</h5>
-					<span class="text-status">진행중</span>
+					<div class='text-div-top'>
+						<h5>${club.title}</h5>
+						<div class='likes-div'>						
+							<span>좋아요</span>&nbsp;
+							<span class='likes'>${club.likesCnt}</span>
+							<span>개</span>					
+						</div>
+					</div>
+						<span class="text-status">진행중</span>	
 					<div class="date-div">
-						<span class="text-date">2022-03-20</span>
+						<span class="text-date">${club.recruitStart}</span>
 						<span class="text-date">~</span>
-						<span class="text-date">2022-04-17</span>
+						<span class="text-date">${club.recruitEnd}</span>
 					</div>
 				</div>
 			</div>
-			
-			
-			
-			
-			
-			
-			
-			<div class="bookCard">
-				<div class="card-top">
-					<h6><span class="badge badge-pill badge-light">모집중</span></h6>
+		</c:if>
+		<%-- 모집중인 경우 끝 --%>
+		
+		<%-- 마감된 경우 --%>
+		<c:if test="${club.recruitEnd lt nowDate || club.maximumNop eq club.currentNop}">
+			<div class="bookCard" id="card${club.clubNo}" data-no="${club.clubNo}">
+				<div class="card-top" style="background-color: #dee2e6;">
+					<div class='badge-div'>
+						<h6><span class="badge badge-pill badge-secondary alert-badge">모집마감</span></h6>
+					</div>
 					<div class="img-div">
-						<img src="https://image.aladin.co.kr/product/29521/63/covermini/8901260719_3.jpg" />
-						<img src="https://image.aladin.co.kr/product/29689/64/covermini/8965137705_1.jpg" />
-					
+						<c:forEach items="${club.bookList}" var="clubBook" varStatus="bs">
+							<img src="${clubBook.imgSrc}" style="widht: 50px;" />												
+						</c:forEach>
 					</div>
 					<div class="nop-div">
-						<span class="fa-stack fa-lg">
-						  <i class="fa fa-heart fa-stack-1x" style="color: pink;"></i>
-						  <i class="fa fa-heart fa-stack-1x" style="color: black;"></i>
+						<span class="fa-stack fa-lg" id='h-span'>
+						  <i class="fa fa-heart fa-regular fa-stack-1x front" ></i>
+						</span>
+						<span class="fa-stack fa-lg" id='h-span'>
+						  <i class="fa fa-bookmark fa-regular fa-stack-1x front"></i>
 						</span>
 					</div>				
 				</div>
 				<div class="text-div">
-				
-				</div>
-			</div>
-			
-			<div class="bookCard">
-				<div class="card-top">
-					<h6><span class="badge badge-pill badge-light">모집중</span></h6>
-					<div class="img-div">
-						<img src="https://image.aladin.co.kr/product/29521/63/covermini/8901260719_3.jpg" style="widht: 50px;" />
-						
+					<div class='text-div-top'>
+						<h5>${club.title}</h5>
+						<div class='likes-div'>						
+							<span>좋아요</span>&nbsp;
+							<span class='likes'>${club.likesCnt}</span>
+							<span>개</span>					
+						</div>
 					</div>
-					<div class="nop-div">
-						<span>인원)</span>&nbsp;
-						<span class="current-nop">1</span>
-						/
-						<span class="max-nop">6</span>
-					</div>				
-				</div>
-				<div class="text-div">
-				
+						<span class="text-status">모집마감</span>			
+					<div class="date-div">
+						<span class="text-date">${club.recruitStart}</span>
+						<span class="text-date">~</span>
+						<span class="text-date">${club.recruitEnd}</span>
+					</div>
 				</div>
 			</div>
+		</c:if>
+		<%-- 마감된 경우 끝 --%>
 			
-		</div>
-		
-		<nav aria-label="...">
-		  <ul class="pagination pagination-sm">
-		    <li class="page-item disabled">
-		      <a class="page-link" href="#" tabindex="-1">1</a>
-		    </li>
-		    <li class="page-item"><a class="page-link" href="#">2</a></li>
-		    <li class="page-item"><a class="page-link" href="#">3</a></li>
-		  </ul>
-		</nav>
+	</c:forEach>			
+	</div>
+		<nav>${pagebar}</nav>
+
 </section>
 
 <script>
@@ -132,6 +134,11 @@
 		document.querySelectorAll(".bookCard").forEach((card) => {
 			card.addEventListener('click', (e) => {
 				console.log('디브실행');
+				const target = e.target;
+				const currentCard = $(target).parents('.bookCard');
+				const clubNo = $(currentCard).attr('data-no');
+				
+				location.href = '${pageContext.request.contextPath}/club/clubAnn.do?clubNo=' + clubNo;
 				
 				
 			});	
@@ -143,7 +150,6 @@
 	window.addEventListener('load', (e) => {
 		document.querySelectorAll(".fa-heart").forEach((heart) => {
 			heart.addEventListener('click', (e) => {
-				console.log('하트실행');
 				
 				// 부모한테 이벤트 전파하지마셈
 				e.stopPropagation(); 
@@ -175,7 +181,6 @@
 		const iHeart = `<i class="fa fa-heart fa-solid fa-stack-1x h-behind"></i>`;
 		const iBookMark = `<i class="fa fa-bookmark fa-solid fa-stack-1x b-behind"></i>`;
 		
-		console.log(icon.parentElement);
 		
 		if(cnt==1) {
 			if(shape == 'heart'){

@@ -62,4 +62,14 @@ public class ClubServiceImpl implements ClubService {
 		return clubDao.selectClubList(rowBounds);
 	}
 
+	@Override
+	public int selectTotalClub() {
+		return clubDao.selectTotalClub();
+	}
+
+	@Override
+	public Club selectOneClub(int clubNo) {
+		return clubDao.selectOneClub(clubNo);
+	}
+
 }
