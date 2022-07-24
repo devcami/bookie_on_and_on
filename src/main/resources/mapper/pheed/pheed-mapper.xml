@@ -27,4 +27,8 @@
 	<select id="selectMember" resultType="member">
 		select * from member where member_id = #{member_id}
 	</select>
+	
+	<select id="selectPheedCommentList" resultType="pheedComment">
+		select * from pheed_comment where pheed_no = #{pheedNo}
+	</select>
 </mapper>

@@ -411,10 +411,13 @@ insert into pheed_attachment values(seq_pheed_attachment_no.nextval, '2', 'attac
 
 insert into pheed_comment values(seq_pheed_comment_no.nextval, 1, '길동', 'ㅎㅇ', null, sysdate);
 insert into pheed_comment values(seq_pheed_comment_no.nextval, 1, '길동', 'ㅎㅇㅎㅇ', null, sysdate);
-insert into pheed_comment values(seq_pheed_comment_no.nextval, 2, '길동', 'ㅎㅇ', null, sysdate);
-insert into pheed_comment values(seq_pheed_comment_no.nextval, 2, '길동', 'ㅎㅇㅎㅇ', 1, sysdate);
+insert into pheed_comment values(seq_pheed_comment_no.nextval, 5, '길동', 'test!', null, sysdate);
+insert into pheed_comment values(seq_pheed_comment_no.nextval, 5, '길동', 'commentTest!!', 1, sysdate);
+commit;
 
 alter table pheed add enroll_date date default sysdate;
 select * from pheed;
+
+
 
 
