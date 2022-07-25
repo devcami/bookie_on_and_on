@@ -1,5 +1,8 @@
 package com.kh.bookie.dokoo.model.dto;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.kh.bookie.member.model.dto.Member;
 
 import lombok.Data;
@@ -11,4 +14,5 @@ import lombok.ToString;
 @ToString(callSuper = true)
 public class Dokoo extends DokooEntity {
 	Member member;
+	List<DokooComment> dokooComments = new ArrayList<>();
 }
