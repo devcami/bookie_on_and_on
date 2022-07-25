@@ -1,0 +1,26 @@
+@charset "UTF-8";
+section#content	{
+	margin: 0 auto;
+	padding: 20px 30px;
+	min-height:600px;
+	border-radius: 5px;
+}
+
+/* 버튼 */
+#btn-enroll {
+	font-size: 30px;
+    background: none;
+    border-radius: 10px;
+    color: #FE9801;
+    border: 1px solid #FE9801;
+    transition: .1s ease-in-out;
+}
+#btn-enroll:hover{
+	background-color: #FE9801;
+	color: #fff;
+	box-shadow: 0px 0px 4px #5454544a;
+}
+
+
+
+
