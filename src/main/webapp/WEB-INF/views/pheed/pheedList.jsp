@@ -81,9 +81,10 @@
 			<button class="btn btn-outline-secondary" type="button" id="btn-enroll-comment" onclick="enrollComment();">등록</button>
 		</div>
     </div>
-    <div class="table-comment">
-		<table class="table table-borderless">
-			
+    <div class="comment">
+		<table class="table table-borderless" id="tbl-comment">
+			<tr>
+			</tr>
 		</table>
     </div>
     <div class="dontclick"></div>
@@ -98,16 +99,60 @@ const pheedComment = (e) => {
 	console.log(pheedNo);
 	const sidebar = document.querySelector("#sidebar");
 	sidebar.classList.add("show-nav");
-	
+	const tbl = document.querySelector("#tbl-comment");
 	$.ajax({
 		url : `${pageContext.request.contextPath}/pheed/selectComments.do?pheedNo=\${pheedNo}`,
 		method : 'GET',
 		success(resp){
-			console.log(resp);
+			//console.log(resp);
+			tbl.innerHTML = "";
+			const {comments} = resp;
+			comments.forEach((comment) => {
+				//console.log(comment);
+				const {pheedCNo, pheedNo, nickname, content, commentRef, createdAt} = comment;
+				//console.log(pheedCNo, pheedNo, nickname, content, commentRef, createdAt);
+				const {year, monthValue, dayOfMonth, hour, minute, second} = createdAt;
+				const date = new Date(year, monthValue, dayOfMonth, hour, minute, second);
+				
+				const tr = document.createElement("tr");
+				const td1 = document.createElement("td");
+				const td2 = document.createElement("td");
+				const td3 = document.createElement("td");
+				const td4 = document.createElement("td");
+				/* const btnReply = document.createElement("button"); */
+				const btnCDel = document.createElement("button");
+				
+				if(commentRef == 1){
+					tr.classList.add("level2");						
+				} else{
+					tr.classList.add("level1");						
+				}
+				td1.classList.add("comment-writer");
+				td1.innerHTML = nickname;
+				td2.classList.add("comment-content");
+				td2.innerHTML = content;
+				td3.classList.add("comment-date");
+				td3.innerText = date.toLocaleDateString();
+				
+				td4.classList.add("comment-btn-del");
+				td4.innerHTML = "<button type='button' class='btn btn-sm btn-danger btn-cdel' onclick='commentDel();'>삭제</button>";
+				
+				tr.append(td1, td2, td3, td4);
+				tbl.append(tr);
+				
+			});
 		},
 		error : console.log
 	});
 };
+
+<%-- 댓글 작성 버튼 enrollComment--%>
+
+
+<%-- 삭제 버튼 commentDel --%>
+
+
+
 $(document).mouseup(function (e){
 	if($("#sidebar").has(e.target).length === 0){
 		closeComment();

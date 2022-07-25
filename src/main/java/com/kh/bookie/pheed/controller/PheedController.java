@@ -61,7 +61,7 @@ public class PheedController {
 	}
 	
 	@GetMapping("/pheedCList.do")
-	public ModelAndView pheedCList(ModelAndView mav, HttpServletRequest request) {
+	public ModelAndView pheedCList(ModelAndView mav) {
 		try {
 			// 목록 조회
 			List<Pheed> list = pheedService.selectPheedCList();
