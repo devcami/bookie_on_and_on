@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kh.bookie.club.model.dao.ClubDao">
+
+	<insert id="enrollClub">
+		insert into
+			club
+		values (
+			seq_club_no.nextval,
+			#{title},
+			#{content},
+			#{recruitStart},
+			#{recruitEnd},
+			#{clubStart},
+			#{clubEnd},
+			#{bookCount},
+			#{maximumNop},
+			#{minimumNop},
+			#{deposit},
+			#{interest}
+		)
+		<selectKey keyProperty="clubNo" resultType="_int" order="AFTER">
+			select
+				seq_club_no.currval
+			from
+				dual
+		</selectKey>
+	</insert>
+	
+	<select id="selectClubList" resultMap="clubListCollectionMap">
+		select
+		    c.*,
+		    b.*,
+		    b.club_no bclub_no,
+		    (select count(*) from my_club where club_no = c.club_no) current_nop,
+		    (select count(*) from likes_club where club_no = c.club_no) likes_Cnt
+		from
+		    club c join club_book b on c.club_no = b.club_no
+		order by
+		    recruit_start desc
+	</select>
+	<resultMap type="club" id="clubListCollectionMap">
+		<id column="club_no" property="clubNo"/>
+		<result column="title" property="title"/>
+		<result column="content" property="content"/>
+		<result column="recruit_start" property="recruitStart"/>
+		<result column="recruit_end" property="recruitEnd"/>
+		<result column="club_start" property="clubStart"/>
+		<result column="club_end" property="clubEnd"/>
+		<result column="maximum_nop" property="maximumNop"/>
+		<result column="minimum_nop" property="minimumNop"/>
+		<result column="deposit" property="deposit"/>
+		<result column="current_nop" property="currentNop"/>
+		<result column="interest" property="interest"/>
+		<result column="likes_cnt" property="likesCnt"/>
+		<collection property="bookList" javaType="arrayList" ofType="clubBook">
+			<id column="item_id" property="itemId"/>
+			<id column="bclub_no" property="clubNo"/>
+			<result column="img_src" property="imgSrc"/>
+		</collection>
+	</resultMap>
+	
+	
+	
+	
+	
+	<select id="selectOneClub" resultMap="selectOneClubCollectionMap">
+		select
+		    c.*,
+		    b.*,
+		    b.club_no bclub_no,
+		    m.*,
+		    m.club_no mclub_no,
+		    (select count(*) from my_club where club_no = c.club_no and c.club_no = #{clubNo}) current_nop,
+		    (select count(*) from likes_club where club_no = c.club_no and c.club_no = #{clubNo}) likesCnt
+		from
+		    club c 
+		    	join club_book b on c.club_no = b.club_no
+		    	join mission m on c.club_no = m.club_no
+		where 
+			c.club_no = #{clubNo}
+	</select>
+	<resultMap type="club" id="selectOneClubCollectionMap">
+		<id column="club_no" property="clubNo"/>
+		<result column="title" property="title"/>
+		<result column="content" property="content"/>
+		<result column="recruit_start" property="recruitStart"/>
+		<result column="recruit_end" property="recruitEnd"/>
+		<result column="club_start" property="clubStart"/>
+		<result column="club_end" property="clubEnd"/>
+		<result column="maximum_nop" property="maximumNop"/>
+		<result column="minimum_nop" property="minimumNop"/>
+		<result column="deposit" property="deposit"/>
+		<result column="current_nop" property="currentNop"/>
+		<result column="interest" property="interest"/>
+		<result column="likes_cnt" property="likesCnt"/>
+		<collection property="bookList" javaType="arrayList" ofType="clubBook">
+			<id column="item_id" property="itemId"/>
+			<id column="bclub_no" property="clubNo"/>
+			<result column="img_src" property="imgSrc"/>
+		</collection>
+		<collection property="missionList" javaType="arrayList" ofType="mission">
+			<id column="mission_no" property="missionNo"/>
+			<result column="mclub_no" property="clubNo"/>
+			<result column="m_title" property="title"/>
+			<result column="m_content" property="content"/>
+			<result column="point" property="point"/>
+			<result column="m_Item_Id" property="itemId"/>
+			<result column="m_endDate" property="mEndDate"/>
+		</collection>
+	</resultMap>
+	
+</mapper>

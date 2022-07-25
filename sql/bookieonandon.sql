@@ -163,7 +163,6 @@ create table club(
     deposit number not null,
     constraint pk_club_no primary key(club_no)
 );
-
 create sequence seq_club_no;
 
 -- 13. club_book
@@ -178,14 +177,16 @@ create table club_book (
 create table mission (
     club_no      number not null, 
     mission_no   number not null,
-    title          varchar2(300) not null,
-    content      varchar2(1000) not null,
+    m_title          varchar2(300) not null,
+    m_content      varchar2(1000) not null,
     point      number,
+    m_item_id varchar2(13),
+    m_endDate date,
     constraint fk_mission_club_no foreign key(club_no) references club(club_no) on delete cascade,
     constraint pk_mission_no primary key(mission_no)
 );
-
-create sequence seq_mission_mission_no;
+select * from mission;
+create sequence seq_mission_no;
 
 -- 15. mission_status
 create table mission_status (
@@ -420,6 +421,45 @@ insert into dokoo_comment values(seq_dokooc_no.nextval, 2, '신사', null, sysda
 insert into dokoo_comment values(seq_dokooc_no.nextval, 2, '길동', null, sysdate, 'commentTest!!');
 insert into dokoo_comment values(seq_dokooc_no.nextval, 3, '빈지노', null, sysdate, 'commentTest!!');
 insert into dokoo_comment values(seq_dokooc_no.nextval, 3, '길동1', null, sysdate, 'commentTest!!');
+
+alter table mission modify content varchar2(4000);
+commit;
+
+
+select * from club;
+select * from club_book;
+select * from mission;
+select * from my_club;
+select * from member;
+
+
+select * from interest;
+
+
+insert into my_club values ('25', 'honggd', 5000);
+insert into my_club values ('25', 'sinsa', 5000);
+insert into my_club values ('23', 'sinsa', 5000);
+
+commit;
+
+alter table club_book add IMG_SRC varchar2(4000);
+alter table mission add item_id varchar2(30);
+ALTER TABLE mission RENAME COLUMN m_end_Date TO m_endDate;
+commit;
+
+select
+    c.*,
+    b.*,
+    b.club_no bclub_no,
+    (select count(*) from my_club where club_no = c.club_no) current_nop,
+    (select count(*) from likes_club where club_no = c.club_no)  likes_cnt
+from
+    club c join club_book b on c.club_no = b.club_no
+order by
+    recruit_start desc;
+
+insert into pheed_comment values(seq_pheed_comment_no.nextval, 5, '길동', 'test!', null, sysdate);
+insert into pheed_comment values(seq_pheed_comment_no.nextval, 5, '길동', 'commentTest!!', 1, sysdate);
 commit;
 
 alter table dokoo add is_opened char(1) not null ;
@@ -439,6 +479,33 @@ SELECT
     ,DATA_DEFAULT   -- 기본 값   
 FROM user_tab_columns; -- 해당 계정에 속한 테이블 
    --  dba_tab_columns 전체 테이블의 경우 
+alter table pheed add enroll_date date default sysdate;
+select * from member;
+select * from likes_club;
+select * from club;
+select * from mission;
 
+insert into likes_club values (22, 'honggd');
+insert into likes_club values (22, 'sinsa');
+insert into likes_club values (26, 'honggd1');
 
+delete from club where club_no = 22;
 
+commit;
+
+select
+		    c.*,
+		    b.*,
+		    b.club_no bclub_no,
+		    m.*,
+		    m.club_no mclub_no,
+		    (select count(*) from my_club where club_no = c.club_no and c.club_no = 26) current_nop,
+		    (select count(*) from likes_club where club_no = c.club_no and c.club_no = 26) likesCnt
+		from
+		    club c 
+		    	join club_book b on c.club_no = b.club_no
+		    	join mission m on c.club_no = m.club_no
+		where 
+			c.club_no = 26;
+            
+select * from mission where club_no = 26;

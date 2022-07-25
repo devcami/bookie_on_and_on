@@ -91,7 +91,7 @@
                     </li>
                     <li class="nav-item">
 			    		<!-- 북클럽 링크 /club/로 시작 -->
-                    	<a class="nav-link" href="${pageContext.request.contextPath}/club/clubMyList.do">
+                    	<a class="nav-link" href="${pageContext.request.contextPath}/club/clubList.do">
 			    			<c:if test="${fn:contains(uri, '/bookie/WEB-INF/views/club/')}">
                     		<img src="${pageContext.request.contextPath}/resources/images/icon/i_club_on.png" alt="clubicon" />북클럽
 			    			</c:if>
