@@ -117,8 +117,7 @@ window.addEventListener('load', () => {
 	const bookContainer = document.querySelector("#book-container");
 	const bookDescription = document.querySelector("#book-desc");
 	$.ajax({
-		url : searchApi + "http://www.aladin.co.kr/ttb/api/ItemLookUp.aspx",
-		//http://www.aladin.co.kr/ttb/api/ItemLookUp.aspx?ttbkey=ttbiaj96820130001&itemIdType=ISBN13&ItemId=9788932474755&output=js&version=20131101
+		url : '${pageContext.request.contextPath}/search/selectBook.do',
 		data : {
 			ttbkey : 'ttbiaj96820130001',
 			itemIdType : 'ISBN13', 
@@ -130,7 +129,12 @@ window.addEventListener('load', () => {
 		success(resp){
 			const {item} = resp;
 			console.log(item);
-			const {title, subInfo, author, pubDate, description, isbn13, cover, customerReviewRank, categoryId, categoryName, publisher} = item[0];			
+			let {title, subInfo, author, pubDate, description, isbn13, cover, customerReviewRank, categoryId, categoryName, publisher} = item[0];			
+			if(customerReviewRank == 0){
+				customerReviewRank = '리뷰가 없습니다.';
+			} else{
+				customerReviewRank += '점';
+			}
 			const {subTitle, itemPage} = subInfo;
 			const img = document.querySelector("#book-image");
 			img.src = `\${cover}`;
@@ -145,7 +149,9 @@ window.addEventListener('load', () => {
 					<p class="book-pub">출판사 : \${publisher} | 출판일 : \${pubDate}</h5>
 					<p class="cate">카테고리 : \${categoryName}</p>
 					<p class="page">페이지 : \${itemPage}p</p>
-					<h6 class="aladin-score">알라딘 별점 : \${customerReviewRank}점</h6>
+					<h6 class="aladin-score">알라딘 별점 : 
+							\${customerReviewRank}
+					</h6>
 					
 					<div>
 						<p class="desc">\${description}</p>

@@ -29,6 +29,6 @@
 	</select>
 	
 	<select id="selectPheedCommentList" resultType="pheedComment">
-		select * from pheed_comment where pheed_no = #{pheedNo}
+		select * from pheed_comment where pheed_no = #{pheedNo} order by created_at
 	</select>
 </mapper>
