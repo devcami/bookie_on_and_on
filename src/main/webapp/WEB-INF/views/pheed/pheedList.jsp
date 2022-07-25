@@ -168,16 +168,16 @@ const closeComment = () => {
 
 
 window.addEventListener('load', () => {
-	const searchApi = 'https://cors-anywhere.herokuapp.com/';
 	let bookTitle;
 	<c:forEach items="${list}" var="pheed" varStatus="vs">
 	$.ajax({
-		url : searchApi + "http://www.aladin.co.kr/ttb/api/ItemLookUp.aspx",
+		url : '${pageContext.request.contextPath}/search/selectBook.do',
 		data : {
 			ttbkey : 'ttbiaj96820130001',
 			itemIdType : 'ISBN13', 
 			ItemId : ${pheed.itemId},
 			output : 'js',
+			Cover : 'Big',
 			Version : '20131101'
 		},
 		success(resp){

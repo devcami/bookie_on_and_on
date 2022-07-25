@@ -131,7 +131,8 @@ const getPage = (cPage, maxResult) => {
 			MaxResults : maxResult,
 			Output : 'js',
 			Cover : 'mini',
-			Version : '20131101'
+			Version : '20131101',
+			Query : ''
 	};
 	if('${param.searchType}' == ''){
 		//url = '{pageContext.request.contextPath}/search/selectBookList.do' 
@@ -146,13 +147,13 @@ const getPage = (cPage, maxResult) => {
 	if('${param.searchKeyword}' != ''){
 		book.Query = '${param.searchKeyword}';
 	}
-	//console.log(data);
+	console.log(JSON.stringify(book));
 	$.ajax({
 		url : `${pageContext.request.contextPath}/search/selectBookList.do`,
-		//https://www.aladin.co.kr/ttb/api/ItemSearch.aspx?ttbkey=ttbiaj96820130001&Query=aladdin&QueryType=Keyword&MaxResults=10&start=1&SearchTarget=Book&output=js&Version=20131101
-		data : JSON.stringify(book),
+		data : book,
 		contentType : "application/json; charset=utf-8",
 		success(resp){
+			console.log(resp);
 			const {item} = resp;
 			const divNon = `
 				<div>
