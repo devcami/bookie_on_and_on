@@ -412,7 +412,21 @@ insert into pheed_attachment values(seq_pheed_attachment_no.nextval, '2', 'attac
 
 insert into dokoo values(seq_dokoo_no.nextval, 'honggd1', '9791164064410', '독후감테스트', '내용은 몇글자가 들어가야될까요 안녕하세요  뭐요 뭘봐 견뎌 홍길동동주렁주렁', sysdate,'O');
 insert into dokoo values(seq_dokoo_no.nextval, 'honggd', '9791191824001', '지구어쩌구온실', '테스트입니다. 내용은 몇글자가 들어가야될까요 안녕하세요  뭐요 뭘봐 견뎌 홍길동동주렁주렁', sysdate,'O');
-insert into dokoo values(seq_dokoo_no.nextval, 'honggd', '9791191824001', '똑같은 책 테스트 독후감', ' 독후감을 써보자 테스트입니다. 내용은 몇글자가 들어가야될까요 안녕하세요  뭐요 뭘봐 견뎌 홍길동동주렁주렁', sysdate,'F');;
+insert into dokoo values(seq_dokoo_no.nextval, 'honggd', '9791191824001', '테스트 페이지바 ! 1', ' 독후감을 써보자 테스트입니다. 내용은 몇글자가 들어가야될까요 안녕하세요  뭐요 뭘봐 견뎌 홍길동동주렁주렁', sysdate,'O');
+insert into dokoo values(seq_dokoo_no.nextval, 'honggd', '9791191824001', '똑같은 책 페이지바 2', ' 독후감을 써보자 테스트입니다. 내용은 몇글자가 들어가야될까요 안녕하세요  뭐요 뭘봐 견뎌 홍길동동주렁주렁', sysdate,'O');
+insert into dokoo values(seq_dokoo_no.nextval, 'honggd', '9791191824001', '홍길동동주렁주렁', ' 독후감을 써보자 테스트입니다. 내용은 몇글자가 들어가야될까요 안녕하세요  뭐요 뭘봐 견뎌 홍길동동주렁주렁', sysdate,'O');
+insert into dokoo values(seq_dokoo_no.nextval, 'honggd', '9791191824001', '홍홍길길동동주주렁렁주주렁렁', ' 독후감을 써보자 테스트입니다. 내용은 몇글자가 들어가야될까요 안녕하세요  뭐요 뭘봐 견뎌 홍길동동주렁주렁', sysdate,'O');
+insert into dokoo values(seq_dokoo_no.nextval, 'sinsa', '9791191824001', '다음페이지에있는놈을 봐주세요', ' 독후감을 써보자 테스트입니다. 내용은 몇글자가 들어가야될까요 안녕하세요  뭐요 뭘봐 견뎌 홍길동동주렁주렁', sysdate,'O');
+insert into dokoo values(seq_dokoo_no.nextval, 'admin', '9791191824001', 'dj샘플데이터를언제까지 추가해야되냐?', ' 독후감을 써보자 테스트입니다. 내용은 몇글자가 들어가야될까요 안녕하세요  뭐요 뭘봐 견뎌 홍길동동주렁주렁', sysdate,'O');
+insert into dokoo values(seq_dokoo_no.nextval, 'sinsa', '9791191824001', '왜요오', ' 독후감을 써보자 테스트입니다. 내용은 몇글자가 들어가야될까요 안녕하세요  뭐요 뭘봐 견뎌 홍길동동주렁주렁', sysdate,'C');
+insert into dokoo values(seq_dokoo_no.nextval, 'honggd1', '9791191824001', '내글을 읽어봐 넌 행복해지고', ' 독후감을 써보자 테스트입니다. 내용은 몇글자가 들어가야될까요 안녕하세요  뭐요 뭘봐 견뎌 홍길동동주렁주렁', sysdate,'O');
+insert into dokoo values(seq_dokoo_no.nextval, 'admin', '9791191824001', '다른책 ㄱ추가하기 너무 귀찮아', ' 독후감을 써보자 테스트입니다. 내용은 몇글자가 들어가야될까요 안녕하세요  뭐요 뭘봐 견뎌 홍길동동주렁주렁', sysdate,'O');
+insert into dokoo values(seq_dokoo_no.nextval, 'honggd', '9791191824001', '책을읽읍시다.', ' 독후감을 써보자 테스트입니다. 내용은 몇글자가 들어가야될까요 안녕하세요  뭐요 뭘봐 견뎌 홍길동동주렁주렁', sysdate,'O');
+insert into dokoo values(seq_dokoo_no.nextval, 'sinsa', '9791191824001', '콜라먹고싶은데 일어나기 귀찮아', ' 독후감을 써보자 테스트입니다. 내용은 몇글자가 들어가야될까요 안녕하세요  뭐요 뭘봐 견뎌 홍길동동주렁주렁', sysdate,'O');
+insert into dokoo values(seq_dokoo_no.nextval, 'admin', '9791191824001', '빈지노빈진호', ' 독후감을 써보자 테스트입니다. 내용은 몇글자가 들어가야될까요 안녕하세요  뭐요 뭘봐 견뎌 홍길동동주렁주렁', sysdate,'O');
+insert into dokoo values(seq_dokoo_no.nextval, 'sinsa', '9791191824001', '지금은 5시 25분', ' 독후감을 써보자 테스트입니다. 내용은 몇글자가 들어가야될까요 안녕하세요  뭐요 뭘봐 견뎌 홍길동동주렁주렁', sysdate,'O');
+insert into dokoo values(seq_dokoo_no.nextval, 'honggd', '9791191824001', '똑같은 ', ' 독후감을 써보자 테스트입니다. 내용은 몇글자가 들어가야될까요 안녕하세요  뭐요 뭘봐 견뎌 홍길동동주렁주렁', sysdate,'F');
+insert into dokoo values(seq_dokoo_no.nextval, 'honggd1', '9791191824001', '독후감독후감', ' 독후감을 써보자 테스트입니다. 내용은 몇글자가 들어가야될까요 안녕하세요  뭐요 뭘봐 견뎌 홍길동동주렁주렁', sysdate,'O');
 
 insert into dokoo_comment values(seq_dokooc_no.nextval, 1, '길동1', null, sysdate, 'ㅎㅇ');
 insert into dokoo_comment values(seq_dokooc_no.nextval, 1, '길동', null, sysdate, 'ㅎㅇㅎㅇ');
@@ -509,3 +523,18 @@ select
 			c.club_no = 26;
             
 select * from mission where club_no = 26;
+
+
+select * from dokoo_comment;
+select * from dokoo;
+select
+			d.*,
+			m.*,
+            c.*
+		from
+			dokoo d
+				left join member m on d.member_id = m.member_id
+				left join dokoo_comment c on d.dokoo_no = c.dokoo_no
+		order by
+			d.enroll_date desc;
+            
