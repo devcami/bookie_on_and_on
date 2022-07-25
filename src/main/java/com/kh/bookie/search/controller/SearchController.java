@@ -39,43 +39,43 @@ public class SearchController {
 	public void searchForm() {}
 	
 	@GetMapping("/selectBookList.do")
-	public ResponseEntity<?> selectBestSeller(
-			@RequestParam String ttbkey, 
-			@RequestParam String QueryType,
-			@RequestParam String SearchTarget,
-			@RequestParam int Start,
-			@RequestParam int MaxResults,
-			@RequestParam String Output,
-			@RequestParam String Cover,
-			@RequestParam String Version,
-			@RequestParam String Query){
-		Resource resource;
-		
-		String bestUrl = ALADDIN_URL + "ItemList.aspx?ttbkey=" + ttbkey 
-					+ "&QueryType=" + QueryType
-					+ "&SearchTarget=" + SearchTarget
-					+ "&Start=" + Start
-					+ "&MaxResults=" + MaxResults
-					+ "&Output=" + Output
-					+ "&Cover=" + Cover
-					+ "&Version=" + Version;
-		String searchUrl = ALADDIN_URL + "ItemSearch.aspx?ttbkey=" + ttbkey 
-				+ "&QueryType=" + QueryType
-				+ "&SearchTarget=" + SearchTarget
-				+ "&Start=" + Start
-				+ "&MaxResults=" + MaxResults
-				+ "&Output=" + Output
-				+ "&Cover=" + Cover
-				+ "&Version=" + Version;
-		if(!Query.equals("") && Query != null) {
-			searchUrl += "&Query=" + Query;
-			resource = resourceLoader.getResource(searchUrl);
-		} else {
-			resource = resourceLoader.getResource(bestUrl);
-		}
-		
-		return ResponseEntity.ok(resource);
-	}
+	   public ResponseEntity<?> selectBestSeller(
+	         @RequestParam String ttbkey, 
+	         @RequestParam String QueryType,
+	         @RequestParam String SearchTarget,
+	         @RequestParam int Start,
+	         @RequestParam int MaxResults,
+	         @RequestParam String Output,
+	         @RequestParam String Cover,
+	         @RequestParam String Version,
+	         @RequestParam String Query){
+	      Resource resource;
+	      
+	      String bestUrl = ALADDIN_URL + "ItemList.aspx?ttbkey=" + ttbkey 
+	               + "&QueryType=" + QueryType
+	               + "&SearchTarget=" + SearchTarget
+	               + "&Start=" + Start
+	               + "&MaxResults=" + MaxResults
+	               + "&Output=" + Output
+	               + "&Cover=" + Cover
+	               + "&Version=" + Version;
+	      String searchUrl = ALADDIN_URL + "ItemSearch.aspx?ttbkey=" + ttbkey 
+	            + "&QueryType=" + QueryType
+	            + "&SearchTarget=" + SearchTarget
+	            + "&Start=" + Start
+	            + "&MaxResults=" + MaxResults
+	            + "&Output=" + Output
+	            + "&Cover=" + Cover
+	            + "&Version=" + Version;
+	      if(!Query.equals("") && Query != null) {
+	         searchUrl += "&Query=" + Query;
+	         resource = resourceLoader.getResource(searchUrl);
+	      } else {
+	         resource = resourceLoader.getResource(bestUrl);
+	      }
+	      
+	      return ResponseEntity.ok(resource);
+	   }
 	
 	@GetMapping("/bookEnroll.do")
 	public void bookEnroll(@RequestParam String isbn13, Model model) {

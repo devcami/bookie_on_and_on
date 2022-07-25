@@ -513,118 +513,113 @@ document.querySelector("#btn-more").onclick = () => {
 }); */
 
 
-const getPage = (cPage, maxResult) => {
-	   // console.log(cPage, maxResult);
-	   const searchApi = 'https://cors-anywhere.herokuapp.com/';
-	   const container = document.querySelector("#books-div");
-	   // console.log('${param.searchType}', '${param.searchKeyword}');
-	   const query = document.querySelector("#searchKeyword").value;
-	   const queryType = document.querySelector("#searchType").value;
-		   
-	   let data = {
-	         ttbkey : 'ttbiaj96820130001',
-	         QueryType : 'Bestseller',
-	         SearchTarget: 'Book',
-	         Start : cPage,
-	         MaxResults : maxResult,
-	         Output : 'js',
-	         Cover : 'mini',
-	         Version : '20131101'
-	   };
-	   let url;
-	   
-	   /*********************************
-	   if('${param.searchType}' == ''){
-	      url = searchApi + "http://www.aladin.co.kr/ttb/api/ItemList.aspx";
-	   } else{
-	      url = searchApi + "http://www.aladin.co.kr/ttb/api/ItemSearch.aspx";
-	      data.QueryType = '${param.searchType}';
-	   }
-	   if('${param.searchKeyword}' != ''){
-	      data.Query = '${param.searchKeyword}';
-	   }
-	   
-	   *********************/
-	   	   if(queryType == 'All'){
-	   		   console.log('처음로딩');
-		      url = searchApi + "http://www.aladin.co.kr/ttb/api/ItemList.aspx";
-		   } else{
-			   console.log("검색 후 로딩");
-		      url = searchApi + "http://www.aladin.co.kr/ttb/api/ItemSearch.aspx";
-		      data.QueryType = queryType;
-		   }
-		   if(query != ''){
-		      data.Query = query;
-		   }
-	   
-	   
-	   console.log('data = ', data);
-	   $.ajax({
-	      url : url,
-	      //https://www.aladin.co.kr/ttb/api/ItemSearch.aspx?ttbkey=ttbiaj96820130001&Query=aladdin&QueryType=Keyword&MaxResults=10&start=1&SearchTarget=Book&output=js&Version=20131101
-	      data : data,
-	      success(resp){
-	    	  const {item} = resp;
-				const divNon = `
-					<div>
-						<p style="text-align:center"> 검색된 결과가 없습니다. </p>
-					</div>`
-					
-				// console.log('item = {}', item);
- 				if(item.length == 0){
-					container.insertAdjacentHTML('beforeend', divNon);
-					const btn = document.querySelector("#btn-more")
-					btn.disabled = "disabled";
-					btn.style.cursor = "not-allowed";
-				}
-					
-				item.forEach((book) => {
-					const {isbn13, title, author, publisher, pubDate, cover} = book;
-					const btnDivId = "btnDiv" + isbn13;
-					const div = `
-						<div class="modal-book-container" id="book\${isbn13}">
-						<div class="book-table">
-							<input type="hidden" name="isbn13" value=\${isbn13} />
-							<input type="hidden" name="bookImg" value="\${cover}"/>
-							<table class="tbl">
-								<tbody><tr>
-									<td rowspan="4">
-										<img src=\${cover} style="width:65px;">
-									</td>
-									<td colspan="5" class="book-title">\${title}</td>
-								</tr>
-								<tr>
-									<td class="book-author">\${author}</td>
-								</tr>
-								<tr>
-									<td colspan="2" class="book-p">출판사 : \${publisher} 🧡 출판일 : \${pubDate}</td>
-								</tr>
-							</tbody></table>
-						</div>
-						<div id=\${btnDivId}>
-							<button type="button" class="mybtn btn-plus" onclick="modalAddBook(this);" value=\${isbn13}>+</button>
-							<input type="hidden" name="img" value=\${cover} />
-						</div>
-					</div>
-					`;
-					container.insertAdjacentHTML('beforeend', div);
-					
-					ckSelectedBook(isbn13, btnDivId);
-				});
-				
-	      },
-	      error : console.log
-/* 	      complete(){
-	         if(cPage == 10){
-	            const btn = document.querySelector("#btn-more")
-	            btn.disabled = "disabled";
-	            btn.style.cursor = "not-allowed";
-	         }
-	      } */
-	   });
-	};
+/***************************여기 getPage()자리 **********************************/
+ 
+ 
+ const getPage = (cPage, maxResult) => {
+	console.log(cPage, maxResult);
+	// const searchApi = 'https://cors-anywhere.herokuapp.com/';
+	const container = document.querySelector("#books-div");
+	// console.log('${param.searchType}', '${param.searchKeyword}');
+	const query = document.querySelector("#searchKeyword").value;
+    const queryType = document.querySelector("#searchType").value;
 
-/***********************************/
+	
+	let book = {
+			ttbkey : 'ttbiaj96820130001',
+			QueryType : 'Bestseller',
+			SearchTarget: 'Book',
+			Start : cPage,
+			MaxResults : maxResult,
+			Output : 'js',
+			Cover : 'mini',
+			Version : '20131101',
+			Query : ''
+	};
+	
+
+	if('${param.searchType}' == ''){
+        // url = searchApi + "http://www.aladin.co.kr/ttb/api/ItemList.aspx";
+     } else{
+        // url = searchApi + "http://www.aladin.co.kr/ttb/api/ItemSearch.aspx";
+        book.QueryType = '${param.searchType}';
+     }
+     if('${param.searchKeyword}' != ''){
+        book.Query = '${param.searchKeyword}';
+     }
+     
+     if(queryType == 'All'){
+        console.log('처음로딩');
+     } else{
+        console.log("검색 후 로딩");
+        book.QueryType = queryType;
+     }
+     if(query != ''){
+        book.Query = query;
+     }
+
+	
+	$.ajax({
+		url : `${pageContext.request.contextPath}/search/selectBookList.do`,
+		data : book,
+		contentType : "application/json; charset=utf-8",
+		success(resp){
+			console.log(resp);
+            const {item} = resp;
+            const divNon = `
+               <div>
+                  <p style="text-align:center"> 검색된 결과가 없습니다. </p>
+               </div>`
+           
+            if(item.length == 0){
+               container.insertAdjacentHTML('beforeend', divNon);
+               const btn = document.querySelector("#btn-more")
+               btn.disabled = "disabled";
+               btn.style.cursor = "not-allowed";
+            }
+              
+            item.forEach((book) => {
+               const {isbn13, title, author, publisher, pubDate, cover} = book;
+               const btnDivId = "btnDiv" + isbn13;
+               const div = `
+                  <div class="modal-book-container" id="book\${isbn13}">
+                  <div class="book-table">
+                     <input type="hidden" name="isbn13" value=\${isbn13} />
+                     <input type="hidden" name="bookImg" value="\${cover}"/>
+                     <table class="tbl">
+                        <tbody><tr>
+                           <td rowspan="4">
+                              <img src=\${cover} style="width:65px;">
+                           </td>
+                           <td colspan="5" class="book-title">\${title}</td>
+                        </tr>
+                        <tr>
+                           <td class="book-author">\${author}</td>
+                        </tr>
+                        <tr>
+                           <td colspan="2" class="book-p">출판사 : \${publisher} 🧡 출판일 : \${pubDate}</td>
+                        </tr>
+                     </tbody></table>
+                  </div>
+                  <div id=\${btnDivId}>
+                     <button type="button" class="mybtn btn-plus" onclick="modalAddBook(this);" value=\${isbn13}>+</button>
+                     <input type="hidden" name="img" value=\${cover} />
+                  </div>
+               </div>
+               `;
+               container.insertAdjacentHTML('beforeend', div);
+               
+               ckSelectedBook(isbn13, btnDivId);
+            });
+            
+         },
+		error : console.log
+	});
+};
+ 
+ 
+
+/******************************************************************************/
 
 const selectedBooks = [];  
 const booksDiv = new Object();
@@ -688,11 +683,23 @@ const modalDeleteBook = (e) => {
 	const container = document.querySelector("#modal-header-bottom");
 	container.removeChild(e.parentElement);
 
-	const divId = "btnDiv" + isbn;
-	const div = document.getElementById(divId);
+	const btnId = "btnDiv" + isbn;
+	const div = document.getElementById(btnId);
 	div.firstElementChild.classList.remove('noclick');
 	div.firstElementChild.disabled = '';
+	
+	
+	const divId = "#book" + isbn;
+	const bDiv = $('#bookWrapper').children(divId);
+	
+	// 바깥 책 있으면 삭제해라
+	if(bDiv.length == 1){
+		$(divId).remove();
+	}
+
+	// 배열하고 객체에서 싹 지워
 	delBook(isbn);
+	
 	
 	// console.log("삭제후",booksDiv);
 };
@@ -774,6 +781,7 @@ const enrollBook = () => {
 	`;
 	
 	const divs = Object.values(booksDiv);
+	console.log(divs);
 	divs.forEach((div) => {
 		const isbn = $(div).find('input')[0].defaultValue;
 
@@ -812,9 +820,7 @@ const enrollBook = () => {
 			      		<tbody id="missionWrapper\${isbn}">
 				      		<tr id="addMissionLabel">
 		      					<td colspan="4" style="margin-bottom: 17px;">🧡책에 대한 미션을 등록해주세요!</td>
-		      				</tr>
-		      				
-		      				
+		      				</tr>	
 			      		</tbody>
 			      	</table>
 				    <button 
@@ -836,33 +842,7 @@ const enrollBook = () => {
 			
 			missionContainer.insertAdjacentHTML('beforeend', missionDiv);
 		}
-		
-		
-		
-
-		/*
-		
-			<table>
-	      		<tbody>
-	      			<tr>
-	      				<td colspan="5">🧡책에 대한 미션을 등록해주세요!</td>
-	      			</tr>
-	      		    <!-- <tr class="head-tr">
-	      				<th>번호</th>
-	      				<th>제목</th>
-	      				<th>디파짓</th>
-	      				<th>기한</th>
-	      				<td>
-	      					<button style="display:none;">수정</button>
-	      					<button style="display:none;">삭제</button>
-	      				</td>
-	      			</tr>  -->
-	      		</tbody>
-	      	</table>
-			
-		*/
-		
-		
+	
 	});
 }
 

@@ -1,0 +1,154 @@
+@charset "UTF-8";
+section#content {
+    margin: 0 auto;
+    padding: 20px 30px;
+    min-height: 600px;
+    border-radius: 5px;
+}
+/*****head*******/
+#head {
+	width: 100%;
+    height: 370px;
+    background-color: #ffa50021;
+}
+#head-img {
+	display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-top: 90px;
+}
+#head-img img{
+	margin: 4px;
+    width: 15%;
+    filter: drop-shadow(3px 3px 5px #000);
+}
+
+
+#head-text{
+	margin: 0 30px;
+}
+#head-text h3 {
+	margin: 0 !important;
+}
+
+/* 공통 */
+.divs{
+	font-size: 27px;
+	display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+.divs-head {
+ margin-bottom: 3px !important;
+ font-size: 45px;
+}
+
+/* 뱃지 */
+.badge-div {
+	margin-top: 12px;
+	    margin-bottom: 30px;
+}
+.mybadge{
+	color: #fff;
+	background-color: #FFC4C4;
+	font-size: small !important;
+	font-weight: 300 !important;
+}
+
+/**  기본 정보 **/
+#info-div {
+	margin: 20px 0;
+    border-bottom: 1px dashed grey;
+    padding-bottom: 20px;
+}
+#heart-span{
+	font-size: 35px;
+}
+.label-div {
+	width: 25%;
+}
+.fa-won-sign {
+	transform: translateY(-2px);
+	font-size: 20px;
+}
+
+/**** 읽는 책 *****/
+#book-div{
+	border-bottom: 1px dashed grey;
+    padding-bottom: 35px;
+}
+#mini-info {
+	display: block;
+	color: darkgrey;
+	font-size: 25px;
+}
+
+#book-imgs {
+	margin-top: 15px;
+}
+#book-imgs img {
+	width: 20%;
+	margin: 0 4px;
+	cursor: pointer;
+	transition: .5s;
+}
+
+#book-imgs img:hover {
+	transform: scale(1.1);
+}
+
+/*********** 미션 **************/
+#mission-head {
+	margin-bottom: 3px !important;
+ 	font-size: 45px;
+ 	margin-top: 10px;
+}
+#mission-div{
+	display: flex;
+	flex-wrap: wrap;
+}
+.mCard{
+	display: flex;
+    width: 47%;
+    margin: 10px 11px;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    margin: 5px 11px 20px 11px;
+}
+
+.m-img-div {
+	text-align: center;
+    margin: 22px 0;
+}
+
+.mCard img {
+	height: 160px;
+}
+.m-text-div {
+	display: flex;
+    flex-direction: column;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+.m-text-div span {
+	font-size: larger;
+	margin-bottom: 5px;
+}
+
+#bottom{
+	position: fixed;
+	bottom: 100px;
+	right: 100px;
+}
+
+
+
+
+
+
+
+
+
+

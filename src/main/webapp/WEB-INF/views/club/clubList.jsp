@@ -49,7 +49,7 @@
 					</div>
 					<div class="img-div">
 						<c:forEach items="${club.bookList}" var="clubBook" varStatus="bs">
-							<img src="${clubBook.imgSrc}" style="widht: 50px;" />												
+							<img src="${clubBook.imgSrc}" />												
 						</c:forEach>
 					</div>
 					<div class="nop-div">
@@ -90,7 +90,7 @@
 					</div>
 					<div class="img-div">
 						<c:forEach items="${club.bookList}" var="clubBook" varStatus="bs">
-							<img src="${clubBook.imgSrc}" style="widht: 50px;" />												
+							<img src="${clubBook.imgSrc}" />												
 						</c:forEach>
 					</div>
 					<div class="nop-div" style="visibility: hidden;">
