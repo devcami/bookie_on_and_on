@@ -68,7 +68,7 @@
 	    			</li>
                     <li class="nav-item">
 			    		<!-- 독후감 링크 /dokoo/로 시작 dokooFlList : follwer list / dokooCrList : 발견 list -->
-                    	<a class="nav-link" href="${pageContext.request.contextPath}/dokoo/dokooFlList.do">
+                    	<a class="nav-link" href="${pageContext.request.contextPath}/dokoo/dokooList.do">
 			    			<c:if test="${fn:contains(uri, '/bookie/WEB-INF/views/dokoo/')}">
                     		<img src="${pageContext.request.contextPath}/resources/images/icon/i_dokoo_on.png" alt="dokooicon" />독후감
 			    			</c:if>
