@@ -61,7 +61,7 @@ section#content	{
 	margin : 30px;
 	text-align: center;
 	border-radius: 10px;
-	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
+	/* box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4); */
 }
 /* 프로필 */
 #content .pheed-container .pheed-writer .profile{
@@ -121,6 +121,36 @@ section#content	{
 	float: right;
 }
 
+#content #reportModal #alert{
+	display: block;
+	width: 100%;
+}
 
+/******** 댓글창 ********/
+#sidebar.show-nav {
+    transform: translate(0px);
+    box-shadow: 0 0 0 9999px rgba(0,0,0,0.5) !important;
+    z-index: 100;
+}
+#sidebar {
+    color: #000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 35%;
+    height: 88%;
+    z-index: 100;
+    transform: translateX(-100%);
+    transition: .3s ease;
+    border-radius: 10px;
+}
+#sidebar button#close{
+	display: block;
+	float: right;
+	font-size: 30px;
+}
 
+#sidebar .dontclick{
+	height: 100%;
+}
 

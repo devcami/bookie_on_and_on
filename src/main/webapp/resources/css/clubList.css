@@ -1,0 +1,158 @@
+@charset "UTF-8";
+section#content	{
+	margin: 0 auto;
+	padding: 20px 30px;
+	min-height:600px;
+	border-radius: 5px;
+}
+
+/* 버튼 */
+#btn-enroll {
+	font-size: 30px;
+    background: none;
+    border-radius: 10px;
+    color: #FE9801;
+    border: 1px solid #FE9801;
+    transition: .1s ease-in-out;
+}
+#btn-enroll:hover{
+	background-color: #FE9801;
+	color: #fff;
+	box-shadow: 0px 0px 4px #5454544a;
+}
+
+
+/********** 부트 공통 ************/
+.form-control:focus {
+	border-color: #ffc10729 !important;
+    box-shadow: 0 0 0 0.15rem #ffc10729 !important;
+}
+
+
+/********* 상단메뉴 *********/
+#menu {
+	display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+#menu-left {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+}
+
+#searchType {
+	margin-right: 10px
+}
+
+
+/************ 북클럽 리스트 ***********/
+#clubListDiv {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: flex-start;
+	
+}
+.bookCard {
+	width: 48.1%;
+    margin: 7px;
+    cursor: pointer;
+    margin: 7px 7px 40px 7px;
+}
+.card-top {
+	width: 100%;
+	display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    background-color: #ffa50021;
+    padding: 10px;
+    border-radius: 6px;
+}
+.badge-div{
+	display: flex;
+    width: 100%;
+}
+.alert-badge {
+	font-weight: normal !important;
+}
+.img-div {
+	margin: 15px 0 35px 0;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+.img-div img {
+	width: 65px;
+    margin: 0 3px;
+}
+.nop-div {
+	display: flex;
+    justify-content: flex-end;
+    width: 100%;
+}
+.fa-stack {
+	width: 1.7em !important;
+}
+.fa-heart, .fa-bookmark {
+	font-size: 34px;
+	margin: 0 3px;
+}
+#h-span {
+	margin-right: 2px;
+}
+.front {
+	color: black;
+	z-index: 1 !important;
+}
+.h-behind {
+	color: #F10086;
+    font-size: 29px;
+}
+
+.b-behind {
+	color: #FFC46B;
+    font-size: 29px;
+}
+
+
+.text-div {
+	display: flex;
+	flex-direction: column;
+}
+
+.text-div-top {
+	display: flex;
+	justify-content: space-between;
+}
+.likes-div {
+	display: flex;
+	margin: 6px 7px;
+}
+
+.text-div h5 {
+	margin: 10px 0 5px 0;
+}
+.text-status, .text-date {
+	color: #6c757d;
+}
+
+/************** 페이지 바 **************/
+.pagination {
+	justify-content: center;
+}
+.pagination li {
+	margin: 0 4px;
+}
+
+.page-item.disabled .page-link {
+	color: #fe9801 !important;
+	border: 1px solid #fe9801 !important;
+}
+
+.page-link {
+	color: #6c757d !important;
+	border-radius: 30px !important;
+}
