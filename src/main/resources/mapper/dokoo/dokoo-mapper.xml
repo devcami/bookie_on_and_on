@@ -27,5 +27,34 @@
 			<id column="member_id" property="memberId"/>
 			<result column="nickname" property="nickname"/>
 		</association>
+		
+	</resultMap>
+	
+	<select id="selectTotalContent" resultType="_int">
+		select count(*) from dokoo
+	</select>
+	
+	<select id="selectOneDokoo" resultMap="dokooCollectionMap">
+		select
+			d.*,
+			m.*
+		from
+			dokoo d
+				left join member m on d.member_id = m.member_id
+		where
+			d.dokoo_no = #{dokooNo}
+	</select>
+
+	<select id="selectDokooComments" resultMap="dokooCommentMap">
+		select * from dokoo_comment where dokoo_no = #{dokooNo}
+	</select>	
+	
+	<resultMap type="dokooComment" id="dokooCommentMap">
+		<id column="dokooc_no" property="dokooCNo"/>
+		<result column="dokoo_no" property="dokooNo"/>
+		<result column="nickname" property="nickname"/>
+		<result column="comment_ref" property="commentRef"/>
+		<result column="created_at" property="createdAt"/>
+		<result column="content" property="content"/>
 	</resultMap>
 </mapper>
