@@ -342,8 +342,14 @@ create table persistent_logins (
 
 select * from persistent_logins;
 
+select 
+    * 
+from 
+    pheed p left join pheed_attachment a
+        on p.pheed_no = a.pheed_no
+order by 1 desc ;
+select * from pheed_attachment;
 select * from pheed;
-select * from pheed where member_id in ('honggd');
 
 -- sample data
 insert into member
@@ -407,3 +413,8 @@ insert into pheed_comment values(seq_pheed_comment_no.nextval, 1, '길동', 'ㅎ
 insert into pheed_comment values(seq_pheed_comment_no.nextval, 1, '길동', 'ㅎㅇㅎㅇ', null, sysdate);
 insert into pheed_comment values(seq_pheed_comment_no.nextval, 2, '길동', 'ㅎㅇ', null, sysdate);
 insert into pheed_comment values(seq_pheed_comment_no.nextval, 2, '길동', 'ㅎㅇㅎㅇ', 1, sysdate);
+
+alter table pheed add enroll_date date default sysdate;
+select * from pheed;
+
+
