@@ -113,6 +113,7 @@ public class ClubController {
 			club.setInterest(interest);
 			club.setBookCount(isbn13.size());
 
+			
 			for (int i = 0; i < isbn13.size(); i++) {
 				ClubBook book = new ClubBook();
 				book.setItemId(isbn13.get(i));
@@ -120,26 +121,29 @@ public class ClubController {
 
 				bookList.add(book);
 				
-				int mCnt = Integer.parseInt(mCount.get(i));
 				
-				
-				for(int j = 0; j < mCnt; j++) { 
-					 
-					Mission mission = new Mission(); 
-					 
-					mission.setItemId(isbn13.get(i));
-					mission.setContent(missionContent.get(j)); 
-					mission.setPoint(finalDeposit);
-					mission.setTitle(missionName.get(j));
-					mission.setMEndDate(LocalDate.parse(missionDate.get(j).substring(2), DateTimeFormatter.ISO_DATE));
+				if(mCount.size() != 0) {
+					int mCnt = Integer.parseInt(mCount.get(i));
 					
-					missionList.add(mission);
-				}
-				 
-				for(int k = mCnt-1; k >= 0 ; k--) {
-					missionContent.remove(k);
-					missionName.remove(k);
-					missionDate.remove(k);
+					for(int j = 0; j < mCnt; j++) { 
+						
+						Mission mission = new Mission(); 
+						
+						mission.setItemId(isbn13.get(i));
+						mission.setContent(missionContent.get(j)); 
+						mission.setPoint(finalDeposit);
+						mission.setTitle(missionName.get(j));
+						mission.setMEndDate(LocalDate.parse(missionDate.get(j).substring(2), DateTimeFormatter.ISO_DATE));
+						
+						missionList.add(mission);
+					}
+					
+					for(int k = mCnt-1; k >= 0 ; k--) {
+						missionContent.remove(k);
+						missionName.remove(k);
+						missionDate.remove(k);
+					}
+					
 				}
 				 
 

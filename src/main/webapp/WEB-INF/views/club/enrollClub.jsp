@@ -139,9 +139,7 @@
 				 	<input type="checkbox" name="interests" value="종교"/>
 				 	<label for="종교">종교</label>	
 				 	<input type="checkbox" name="interests" value="기타"/>
-				 	<label for="기타">기타</label>	
-				 	
-				 				
+				 	<label for="기타">기타</label>		
 				</div>
 			 </div>
 		</div>

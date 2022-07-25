@@ -93,7 +93,7 @@
 							<img src="${clubBook.imgSrc}" style="widht: 50px;" />												
 						</c:forEach>
 					</div>
-					<div class="nop-div">
+					<div class="nop-div" style="visibility: hidden;">
 						<span class="fa-stack fa-lg" id='h-span'>
 						  <i class="fa fa-heart fa-regular fa-stack-1x front" ></i>
 						</span>
