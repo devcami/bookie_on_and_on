@@ -182,13 +182,93 @@ section#dokoo-content #dokoo-container{
     top: 0;
   }
 }
-/* sns버튼 */
 
+/* 글 정보 */
+#dokoo-content #dokoo-container #dokoo-info #book-info{
+	background-color: #e5e1c2;
+	border-radius: 10px;
+	box-shadow: 0px 1px 5px #00000030;
+}
+#dokoo-content #dokoo-container #dokoo-info span{
+	font-size: 22px;
+}
+#dokoo-content #dokoo-container #dokoo-info #writer span{
+	font-size: 30px;
+}
+#dokoo-content #dokoo-container #dokoo-info #writer p{
+	padding-left: 60px;
+}
+
+
+/* 글 내용 */
+#dokoo-content #dokoo-container #dokoo-desc{
+	padding: 10px 30px;
+	font-size: 22px;
+}
+
+/* sns버튼 */
+#comment-container .dokoo-sns{
+	margin: 10px 25px;
+}
+#comment-container .dokoo-sns .btn-group{
+	display: block;
+}
+#comment-container .dokoo-sns .btn-group .btn{
+	background: transparent;
+	padding: 5px 5px;
+	font-size: 25px;
+}
+.fa-heart, .fa-bookmark {
+	font-size: 34px;
+	margin: 0 3px;
+}
+.front {
+	color: black;
+	z-index: 1 !important;
+}
+.h-behind {
+	color: #F10086;
+    font-size: 29px;
+}
+
+.b-behind {
+	color: #FFC46B;
+    font-size: 29px;
+}
+#h-span, #b-span {
+	margin-right: 2px;
+	cursor: pointer;
+}
+.fa-stack {
+	width: 1.7em !important;
+}
+#comment-container .dokoo-sns .btn-group #btn-report{
+	float: right;
+}
 
 /* 댓글 */
 hr{
 	border-top: 2px solid #697C37 !important;
 }
+form[name=dokooCommentFrm] .input-group .form-control{
+	border-radius: 0.4rem;
+	border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+	border: none;
+}
+form[name=dokooCommentFrm] .input-group .input-group-append .btn{
+	border-radius: 0.4rem;
+	border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+	background-color: #FE9801;
+	color: #FFF;
+}
+form[name=dokooCommentFrm] .input-group .input-group-append .btn:hover{
+	background-color:#FFF;  
+	color: #ff7614;
+    text-shadow: 1px 1px 2px #ffda5f;
+}
+
 #dokoo-content #comment-container{
 	margin: 30px 10px;
 }
@@ -208,3 +288,5 @@ hr{
 	
 }
 .link-grey { color: #aaa; } .link-grey:hover { color: #FE9801; }
+
+
