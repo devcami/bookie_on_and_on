@@ -527,14 +527,13 @@ select * from mission where club_no = 26;
 
 select * from dokoo_comment;
 select * from dokoo;
-select
+		select
 			d.*,
 			m.*,
-            c.*
+			c.*
 		from
 			dokoo d
 				left join member m on d.member_id = m.member_id
 				left join dokoo_comment c on d.dokoo_no = c.dokoo_no
-		order by
-			d.enroll_date desc;
-            
+		where
+			d.dokoo_no = 21;

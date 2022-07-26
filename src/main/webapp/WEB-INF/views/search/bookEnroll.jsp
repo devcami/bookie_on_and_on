@@ -113,7 +113,6 @@ window.onscroll = function () {
 };
 
 window.addEventListener('load', () => {
-	const searchApi = 'https://cors-anywhere.herokuapp.com/';
 	const bookContainer = document.querySelector("#book-container");
 	const bookDescription = document.querySelector("#book-desc");
 	$.ajax({
@@ -160,7 +159,7 @@ window.addEventListener('load', () => {
 			`;
 			bookDescription.insertAdjacentHTML('beforeend', divDescription);
 		},
-		error : console.log,
+		error : console.log
 	});
 });
 

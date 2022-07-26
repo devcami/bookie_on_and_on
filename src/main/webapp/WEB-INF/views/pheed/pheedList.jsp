@@ -53,12 +53,16 @@
 				<div class="pheed-sns">
 					<div class="pheed-sns-icons">
 						<div class="btn-group" role="group" aria-label="Basic example">
-						  <button type="button" class="btn"><i class="fa-regular fa-heart"></i></button>
-						  <button type="button" class="btn" onclick="pheedComment(this);">
-								<i class="fa-regular fa-comment-dots"></i>
-						  </button>
-						  <input type="hidden" name="pheedNo" value="${pheed.pheedNo}" />
-						  <button type="button" class="btn"><i class="fa-regular fa-bookmark"></i></button>
+							<span class="fa-stack fa-lg h-span">
+						  		<i class="fa fa-heart fa-regular fa-stack-1x front" ></i>
+							</span>
+							<span class="fa-stack fa-lg h-span">
+						  		<i class="fa fa-regular fa-comment-dots fa-stack-1x front" onclick="pheedComment(this);"></i>
+								<input type="hidden" name="pheedNo" value="${pheed.pheedNo}" />
+							</span>
+							<span class="fa-stack fa-lg b-span">
+						  		<i class="fa fa-bookmark fa-regular fa-stack-1x front"></i>
+							</span>
 						  <button type="button" data-toggle="modal" data-target="#reportModal" 
 						  			class="btn" id="btn-report"><i class="fa-solid fa-ellipsis"></i></button>
 						</div>
@@ -223,6 +227,7 @@ window.onscroll = function () {
           <div class="form-group">
             <label for="recipient-name" class="col-form-label">작성자</label>
             <input type="text" class="form-control" id="memberId" value="로긴멤버아이디" readonly>
+            <input type="hidden" class="form-control" id="category" value="pheed"/>
           </div>
           <div class="form-group">
             <p class="col-form-label">신고 내용</p>
@@ -267,6 +272,59 @@ document.querySelector("#report-content").addEventListener('keyup', (e) => {
 		document.querySelector("#alert").style.display = "none";
 	}
 });
+
+
+<%-- 좋아요 북마크 클릭이벤트 --%>
+window.addEventListener('load', (e) => {
+	document.querySelectorAll(".fa-heart").forEach((heart) => {
+		heart.addEventListener('click', (e) => {
+			
+			// 부모한테 이벤트 전파하지마셈
+			e.stopPropagation(); 
+			
+			// 클릭할때마다 상태왔다갔다
+			changeIcon(e.target, 'heart');
+		});	
+	});	
+});
+
+window.addEventListener('load', (e) => {
+	document.querySelectorAll(".fa-bookmark").forEach((heart) => {
+		heart.addEventListener('click', (e) => {
+			
+			// 부모한테 이벤트 전파하지마셈
+			e.stopPropagation(); 
+			
+			// 클릭할때마다 상태왔다갔다
+			changeIcon(e.target, 'bookmark');
+		});	
+	});	
+});
+
+
+const changeIcon = (icon, shape) => {
+
+	let cnt = icon.parentElement.childElementCount;
+	
+	const iHeart = `<i class="fa fa-heart fa-solid fa-stack-1x h-behind"></i>`;
+	const iBookMark = `<i class="fa fa-bookmark fa-solid fa-stack-1x b-behind"></i>`;
+	
+	
+	if(cnt==1) {
+		if(shape == 'heart'){
+			icon.parentElement.insertAdjacentHTML('beforeend', iHeart);
+		}
+		else {
+			icon.parentElement.insertAdjacentHTML('beforeend', iBookMark);
+		}
+	}
+	else {
+		icon.parentElement.removeChild(icon.parentElement.lastElementChild);
+	}
+	
+	
+
+}
 
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
