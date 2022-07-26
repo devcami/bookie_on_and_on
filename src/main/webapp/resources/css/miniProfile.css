@@ -1,0 +1,132 @@
+@charset "UTF-8";
+
+body{
+  background:#131519;
+}
+
+.forms{
+	width:80%;
+	margin-inline: auto;
+}
+
+.wrapper{
+  width:100%;
+  height:960px;
+  color:#131519;
+  background:white;
+  font-family:"Century Gothic", Arial, sans-serif;
+  box-sizing:border-box;
+  margin:0 auto;
+}
+
+/* Student Details (Read-Only) */
+.student-details{
+  height:0;
+  text-align:center;
+  transition:all .25s ease-in-out;
+  overflow:hidden;
+  opacity:0;
+}
+
+.student-details.expanded{
+  height:290px;
+  padding-bottom:30px;
+  opacity:1;
+}
+
+.gravatar{
+  width:200px;
+  height:200px;
+  padding-top:30px;
+  margin:0 auto;
+  /* background:#aaa url('http://download4u.in/wp-content/uploads/2014/09/Batman-Arkham-Origins.png') center center;
+  border-radius:100%; */
+}
+
+.gravatar img{
+  border-radius:50%;
+}
+
+.student-name,.student-email{
+  margin:5px 0 0 0;
+}
+
+.student-email{
+  color:#616062;
+}
+
+/* Tabbed Content */
+.tabs{
+  background:#fff;
+  padding:20px;
+  border-top:1px solid #ccc;
+  border-bottom:1px solid #ccc;
+}
+
+.tabs:hover{
+  cursor:pointer;
+}
+
+.tabs h3{
+  margin:0;
+}
+
+.tab-content{
+  height:0;
+  background:#dbedf6;
+  box-sizing:border-box;
+  transition:height .25s ease-in-out;
+  overflow:hidden;
+}
+
+.tab-content.expanded{
+  height:320px;
+}
+
+.tab-content form{
+  padding:15px 20px;
+}
+
+.tab-content .form-control{
+  padding-bottom:15px;
+}
+
+.tab-content .form-control label{
+  display:block;
+}
+
+.tab-content .form-control .textbox{
+  width:100%;
+  font-size:14px;
+  border:1px solid #aaa;
+  border-radius:5px;
+  box-sizing:border-box;
+  padding:10px;
+  margin:5px 0;
+  display:block;
+}
+
+.tab-content .form-buttons button{
+  font-size:14px;
+  border-radius:5px;
+  padding:10px;
+}
+
+.primary-btn{
+  width:100%;
+  color:#fff;
+  background-image:linear-gradient(to bottom, #5cb6f1, #0d649d);
+  border:1px solid #0e6aa6;
+  display:block;
+}
+
+.secondary-btn{
+  color:#0e6aa6;
+  background-image:linear-gradient(to bottom, #ffffff, #c4c4c4);
+  border:1px solid #d0d0d0;
+}
+
+/* Typography */
+h1,h2, h3,h4,h5,h6{
+  font-weight:normal;
+}

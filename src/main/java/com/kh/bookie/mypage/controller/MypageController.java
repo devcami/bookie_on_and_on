@@ -5,6 +5,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.kh.bookie.mypage.model.service.MypageService;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
@@ -12,10 +14,18 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MypageController {
 	
+	MypageService mypageService;
+	
 //	@Autowired
 //	private MemberService memberService;
 	
 	@GetMapping("/mypage.do")
-	public void loginMember() {}
+	public void mypage() {}
+	
+	@GetMapping("/mypageSetting.do")
+	public void mypageSetting() {}
+	
+	@GetMapping("/myMiniProfile.do")
+	public void myMiniProfile() {}
 
 }

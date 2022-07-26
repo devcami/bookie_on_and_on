@@ -7,6 +7,10 @@
     font-size: 13px;
 }
 
+h1 {
+	display:inline;
+}
+
 *,
 *::before,
 *::after {
@@ -369,12 +373,10 @@
 
 
 /********** 내프로필 말풍선 **********/
-p {
-	// layout
+.myprofile-body p {
 	position: relative;
-	max-width: 30em;
+	max-width: 35em;
 	margin-left: 1.5em;
-	// looks
 	background-color: #fff;
 	padding: 1.125em 1.5em;
 	font-size: 1.25em;
@@ -382,8 +384,7 @@ p {
   	box-shadow:	0 0.125rem 0.5rem rgba(0, 0, 0, .3), 0 0.0625rem 0.125rem rgba(0, 0, 0, .2);
 }
 
-p::before {
-	// layout
+.myprofile-body p::before {
 	content: '';
 	position: absolute;
 	width: 0;
@@ -393,7 +394,6 @@ p::before {
 	border: .75rem solid transparent;
 	border-top: none;
 
-	// looks
 	border-bottom-color: #fff;
 	filter: drop-shadow(0 -0.0625rem 0.0625rem rgba(0, 0, 0, .1));
 }
