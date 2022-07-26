@@ -13,7 +13,7 @@
 	<div class="searchbar center-block">
 		<form
 			name="bookSearchFrm" 
-			action="${pageContext.request.contextPath}/search/searchForm.do"
+			<%-- action="${pageContext.request.contextPath}/search/searchForm.do" --%>
 			method="GET">
 			    <select id="searchType" name="searchType" class="col-2 form-control d-inline form-select">
 			      <option ${param.searchType eq "Keyword"? 'selected' : ''} value="Keyword">키워드</option>
@@ -22,7 +22,7 @@
 			      <option ${param.searchType eq "Publisher"? 'selected' : ''} value="Publisher">출판사</option>
 			    </select>
 			    <input type="text" class="form-control col-md-8 d-inline mx-3" name="searchKeyword" id="searchKeyword" value="${param.searchKeyword ne '' ? param.searchKeyword : '' }" placeholder="검색어를 입력해주세요">
-			    <input type="submit" class="btn btn-md btn-primary" id="btn-search" value="검색"/>
+			    <input type="button" class="btn btn-md btn-primary" id="btn-search" value="검색"/>
 		</form>
 	</div>
 	<div class="" id="book-container">
@@ -35,7 +35,7 @@
 </section>
 <script>
 <%-- 검색 제출 시 유효성 검사 & 비동기--%>
-document.bookSearchFrm.addEventListener('submit', (e) => {
+document.querySelector("#btn-search").addEventListener('click', (e) => {
 	const searchKeyword = document.querySelector("#searchKeyword");
 	// 숫자, 영문, 한글로 2자 이상
 	if(!/^[0-9a-zA-Z가-힣\s]{2,}$/.test(searchKeyword.value)){
@@ -44,7 +44,6 @@ document.bookSearchFrm.addEventListener('submit', (e) => {
 		return;
 	}
 	
-	const searchApi = 'https://cors-anywhere.herokuapp.com/';
 	const container = document.querySelector("#book-container");
 	const query = document.bookSearchFrm.searchKeyword.value;
 	const queryType = document.bookSearchFrm.searchType.value;
@@ -120,11 +119,11 @@ document.querySelector("#btn-more").onclick = () => {
 
 const getPage = (cPage, maxResult) => {
 	console.log(cPage, maxResult);
-	const searchApi = 'https://cors-anywhere.herokuapp.com/';
+	// const searchApi = 'https://cors-anywhere.herokuapp.com/';
 	const container = document.querySelector("#book-container");
 	console.log('${param.searchType}', '${param.searchKeyword}');
 	
-	let data = {
+	let book = {
 			ttbkey : 'ttbiaj96820130001',
 			QueryType : 'Bestseller',
 			SearchTarget: 'Book',
@@ -132,26 +131,29 @@ const getPage = (cPage, maxResult) => {
 			MaxResults : maxResult,
 			Output : 'js',
 			Cover : 'mini',
-			Version : '20131101'
+			Version : '20131101',
+			Query : ''
 	};
-	let url;
 	if('${param.searchType}' == ''){
-		url = searchApi + "http://www.aladin.co.kr/ttb/api/ItemList.aspx";
+		//url = '{pageContext.request.contextPath}/search/selectBookList.do' 
+		//"http://www.aladin.co.kr/ttb/api/ItemList.aspx";
 		document.querySelector("#resultP").innerText = "베스트 도서 200선";
 	} else{
-		url = searchApi + "http://www.aladin.co.kr/ttb/api/ItemSearch.aspx";
-		data.QueryType = '${param.searchType}';
+		//url = '{pageContext.request.contextPath}/search/selectBookByKeyword.do' 
+		//"http://www.aladin.co.kr/ttb/api/ItemSearch.aspx";
+		book.QueryType = '${param.searchType}';
 		document.querySelector("#resultP").innerText = "검색 결과";
 	}
 	if('${param.searchKeyword}' != ''){
-		data.Query = '${param.searchKeyword}';
+		book.Query = '${param.searchKeyword}';
 	}
-	console.log(data);
+	console.log(JSON.stringify(book));
 	$.ajax({
-		url : url,
-		//https://www.aladin.co.kr/ttb/api/ItemSearch.aspx?ttbkey=ttbiaj96820130001&Query=aladdin&QueryType=Keyword&MaxResults=10&start=1&SearchTarget=Book&output=js&Version=20131101
-		data : data,
+		url : `${pageContext.request.contextPath}/search/selectBookList.do`,
+		data : book,
+		contentType : "application/json; charset=utf-8",
 		success(resp){
+			console.log(resp);
 			const {item} = resp;
 			const divNon = `
 				<div>

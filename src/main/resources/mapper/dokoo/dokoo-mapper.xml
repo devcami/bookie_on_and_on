@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kh.bookie.dokoo.model.dao.DokooDao">
+	<select id="selectDokooList" resultMap="dokooCollectionMap">
+		select
+			d.*,
+			m.*
+		from
+			dokoo d
+				left join member m on d.member_id = m.member_id
+		order by
+			d.enroll_date desc
+	</select>
+	
+	<resultMap type="dokoo" id="dokooCollectionMap">
+		<id column="dokoo_no" property="dokooNo"/>
+		<result column="member_id" property="memberId"/>
+		<result column="item_id" property="itemId"/>
+		<result column="title" property="title"/>
+		<result column="content" property="content"/>
+		<result column="enroll_date" property="enrollDate"/>
+		<result column="is_opened" property="isOpened"/>
+		
+		<association property="member" javaType="member">
+			<id column="member_id" property="memberId"/>
+			<result column="nickname" property="nickname"/>
+		</association>
+		
+	</resultMap>
+	
+	<select id="selectTotalContent" resultType="_int">
+		select count(*) from dokoo
+	</select>
+	
+	<select id="selectOneDokoo" resultMap="dokooCollectionMap">
+		select
+			d.*,
+			m.*
+		from
+			dokoo d
+				left join member m on d.member_id = m.member_id
+		where
+			d.dokoo_no = #{dokooNo}
+	</select>
+
+	<select id="selectDokooComments" resultMap="dokooCommentMap">
+		select * from dokoo_comment where dokoo_no = #{dokooNo}
+	</select>	
+	
+	<resultMap type="dokooComment" id="dokooCommentMap">
+		<id column="dokooc_no" property="dokooCNo"/>
+		<result column="dokoo_no" property="dokooNo"/>
+		<result column="nickname" property="nickname"/>
+		<result column="comment_ref" property="commentRef"/>
+		<result column="created_at" property="createdAt"/>
+		<result column="content" property="content"/>
+	</resultMap>
+</mapper>

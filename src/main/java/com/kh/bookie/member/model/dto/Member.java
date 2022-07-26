@@ -16,6 +16,7 @@ import lombok.ToString;
 @ToString(callSuper = true)
 public class Member extends MemberEntity implements UserDetails{
 	List<SimpleGrantedAuthority> authorities;
+	String[] interests;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {

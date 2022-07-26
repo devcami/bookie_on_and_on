@@ -410,6 +410,31 @@ insert into pheed_attachment values(seq_pheed_attachment_no.nextval, '1', 'attac
 insert into pheed_attachment values(seq_pheed_attachment_no.nextval, '2', 'attach2.jpg', 'attach2.jpg', sysdate);
 
 
+insert into dokoo values(seq_dokoo_no.nextval, 'honggd1', '9791164064410', '독후감테스트', '내용은 몇글자가 들어가야될까요 안녕하세요  뭐요 뭘봐 견뎌 홍길동동주렁주렁', sysdate,'O');
+insert into dokoo values(seq_dokoo_no.nextval, 'honggd', '9791191824001', '지구어쩌구온실', '테스트입니다. 내용은 몇글자가 들어가야될까요 안녕하세요  뭐요 뭘봐 견뎌 홍길동동주렁주렁', sysdate,'O');
+insert into dokoo values(seq_dokoo_no.nextval, 'honggd', '9791191824001', '테스트 페이지바 ! 1', ' 독후감을 써보자 테스트입니다. 내용은 몇글자가 들어가야될까요 안녕하세요  뭐요 뭘봐 견뎌 홍길동동주렁주렁', sysdate,'O');
+insert into dokoo values(seq_dokoo_no.nextval, 'honggd', '9791191824001', '똑같은 책 페이지바 2', ' 독후감을 써보자 테스트입니다. 내용은 몇글자가 들어가야될까요 안녕하세요  뭐요 뭘봐 견뎌 홍길동동주렁주렁', sysdate,'O');
+insert into dokoo values(seq_dokoo_no.nextval, 'honggd', '9791191824001', '홍길동동주렁주렁', ' 독후감을 써보자 테스트입니다. 내용은 몇글자가 들어가야될까요 안녕하세요  뭐요 뭘봐 견뎌 홍길동동주렁주렁', sysdate,'O');
+insert into dokoo values(seq_dokoo_no.nextval, 'honggd', '9791191824001', '홍홍길길동동주주렁렁주주렁렁', ' 독후감을 써보자 테스트입니다. 내용은 몇글자가 들어가야될까요 안녕하세요  뭐요 뭘봐 견뎌 홍길동동주렁주렁', sysdate,'O');
+insert into dokoo values(seq_dokoo_no.nextval, 'sinsa', '9791191824001', '다음페이지에있는놈을 봐주세요', ' 독후감을 써보자 테스트입니다. 내용은 몇글자가 들어가야될까요 안녕하세요  뭐요 뭘봐 견뎌 홍길동동주렁주렁', sysdate,'O');
+insert into dokoo values(seq_dokoo_no.nextval, 'admin', '9791191824001', 'dj샘플데이터를언제까지 추가해야되냐?', ' 독후감을 써보자 테스트입니다. 내용은 몇글자가 들어가야될까요 안녕하세요  뭐요 뭘봐 견뎌 홍길동동주렁주렁', sysdate,'O');
+insert into dokoo values(seq_dokoo_no.nextval, 'sinsa', '9791191824001', '왜요오', ' 독후감을 써보자 테스트입니다. 내용은 몇글자가 들어가야될까요 안녕하세요  뭐요 뭘봐 견뎌 홍길동동주렁주렁', sysdate,'C');
+insert into dokoo values(seq_dokoo_no.nextval, 'honggd1', '9791191824001', '내글을 읽어봐 넌 행복해지고', ' 독후감을 써보자 테스트입니다. 내용은 몇글자가 들어가야될까요 안녕하세요  뭐요 뭘봐 견뎌 홍길동동주렁주렁', sysdate,'O');
+insert into dokoo values(seq_dokoo_no.nextval, 'admin', '9791191824001', '다른책 ㄱ추가하기 너무 귀찮아', ' 독후감을 써보자 테스트입니다. 내용은 몇글자가 들어가야될까요 안녕하세요  뭐요 뭘봐 견뎌 홍길동동주렁주렁', sysdate,'O');
+insert into dokoo values(seq_dokoo_no.nextval, 'honggd', '9791191824001', '책을읽읍시다.', ' 독후감을 써보자 테스트입니다. 내용은 몇글자가 들어가야될까요 안녕하세요  뭐요 뭘봐 견뎌 홍길동동주렁주렁', sysdate,'O');
+insert into dokoo values(seq_dokoo_no.nextval, 'sinsa', '9791191824001', '콜라먹고싶은데 일어나기 귀찮아', ' 독후감을 써보자 테스트입니다. 내용은 몇글자가 들어가야될까요 안녕하세요  뭐요 뭘봐 견뎌 홍길동동주렁주렁', sysdate,'O');
+insert into dokoo values(seq_dokoo_no.nextval, 'admin', '9791191824001', '빈지노빈진호', ' 독후감을 써보자 테스트입니다. 내용은 몇글자가 들어가야될까요 안녕하세요  뭐요 뭘봐 견뎌 홍길동동주렁주렁', sysdate,'O');
+insert into dokoo values(seq_dokoo_no.nextval, 'sinsa', '9791191824001', '지금은 5시 25분', ' 독후감을 써보자 테스트입니다. 내용은 몇글자가 들어가야될까요 안녕하세요  뭐요 뭘봐 견뎌 홍길동동주렁주렁', sysdate,'O');
+insert into dokoo values(seq_dokoo_no.nextval, 'honggd', '9791191824001', '똑같은 ', ' 독후감을 써보자 테스트입니다. 내용은 몇글자가 들어가야될까요 안녕하세요  뭐요 뭘봐 견뎌 홍길동동주렁주렁', sysdate,'F');
+insert into dokoo values(seq_dokoo_no.nextval, 'honggd1', '9791191824001', '독후감독후감', ' 독후감을 써보자 테스트입니다. 내용은 몇글자가 들어가야될까요 안녕하세요  뭐요 뭘봐 견뎌 홍길동동주렁주렁', sysdate,'O');
+
+insert into dokoo_comment values(seq_dokooc_no.nextval, 1, '길동1', null, sysdate, 'ㅎㅇ');
+insert into dokoo_comment values(seq_dokooc_no.nextval, 1, '길동', null, sysdate, 'ㅎㅇㅎㅇ');
+insert into dokoo_comment values(seq_dokooc_no.nextval, 2, '빈지노', null, sysdate, 'test!');
+insert into dokoo_comment values(seq_dokooc_no.nextval, 2, '신사', null, sysdate, 'commentTest!!');
+insert into dokoo_comment values(seq_dokooc_no.nextval, 2, '길동', null, sysdate, 'commentTest!!');
+insert into dokoo_comment values(seq_dokooc_no.nextval, 3, '빈지노', null, sysdate, 'commentTest!!');
+insert into dokoo_comment values(seq_dokooc_no.nextval, 3, '길동1', null, sysdate, 'commentTest!!');
 
 alter table mission modify content varchar2(4000);
 commit;
@@ -451,6 +476,23 @@ insert into pheed_comment values(seq_pheed_comment_no.nextval, 5, '길동', 'tes
 insert into pheed_comment values(seq_pheed_comment_no.nextval, 5, '길동', 'commentTest!!', 1, sysdate);
 commit;
 
+alter table dokoo add is_opened char(1) not null ;
+alter table dokoo_comment add content varchar2(1000) not null ;
+alter table dokoo add constraint ck_dokoo_is_opened check(is_opened in ('O', 'F', 'C'));
+select * from dokoo_comment;
+select * from dokoo;
+SELECT 
+    TABLE_NAME
+    ,COLUMN_NAME    -- 컬럼 명
+    ,DATA_TYPE      -- 유형
+    ,DATA_LENGTH    -- 데이터 길이
+    ,DATA_PRECISION -- NUMBER 전체 자릿수
+    ,DATA_SCALE     -- NUMBER 소수점이하 표현 자릿수
+    ,NULLABLE       -- NULL 여부
+    ,COLUMN_ID      -- 컬럼 순서
+    ,DATA_DEFAULT   -- 기본 값   
+FROM user_tab_columns; -- 해당 계정에 속한 테이블 
+   --  dba_tab_columns 전체 테이블의 경우 
 alter table pheed add enroll_date date default sysdate;
 select * from member;
 select * from likes_club;
@@ -464,8 +506,6 @@ insert into likes_club values (26, 'honggd1');
 delete from club where club_no = 22;
 
 commit;
-
-
 
 select
 		    c.*,
@@ -483,3 +523,17 @@ select
 			c.club_no = 26;
             
 select * from mission where club_no = 26;
+
+
+select * from dokoo_comment;
+select * from dokoo;
+		select
+			d.*,
+			m.*,
+			c.*
+		from
+			dokoo d
+				left join member m on d.member_id = m.member_id
+				left join dokoo_comment c on d.dokoo_no = c.dokoo_no
+		where
+			d.dokoo_no = 21;

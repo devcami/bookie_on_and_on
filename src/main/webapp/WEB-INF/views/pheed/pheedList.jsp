@@ -53,12 +53,16 @@
 				<div class="pheed-sns">
 					<div class="pheed-sns-icons">
 						<div class="btn-group" role="group" aria-label="Basic example">
-						  <button type="button" class="btn"><i class="fa-regular fa-heart"></i></button>
-						  <button type="button" class="btn" onclick="pheedComment(this);">
-								<i class="fa-regular fa-comment-dots"></i>
-						  </button>
-						  <input type="hidden" name="pheedNo" value="${pheed.pheedNo}" />
-						  <button type="button" class="btn"><i class="fa-regular fa-bookmark"></i></button>
+							<span class="fa-stack fa-lg h-span">
+						  		<i class="fa fa-heart fa-regular fa-stack-1x front" ></i>
+							</span>
+							<span class="fa-stack fa-lg h-span">
+						  		<i class="fa fa-regular fa-comment-dots fa-stack-1x front" onclick="pheedComment(this);"></i>
+								<input type="hidden" name="pheedNo" value="${pheed.pheedNo}" />
+							</span>
+							<span class="fa-stack fa-lg b-span">
+						  		<i class="fa fa-bookmark fa-regular fa-stack-1x front"></i>
+							</span>
 						  <button type="button" data-toggle="modal" data-target="#reportModal" 
 						  			class="btn" id="btn-report"><i class="fa-solid fa-ellipsis"></i></button>
 						</div>
@@ -81,9 +85,10 @@
 			<button class="btn btn-outline-secondary" type="button" id="btn-enroll-comment" onclick="enrollComment();">등록</button>
 		</div>
     </div>
-    <div class="table-comment">
-		<table class="table table-borderless">
-			
+    <div class="comment">
+		<table class="table table-borderless" id="tbl-comment">
+			<tr>
+			</tr>
 		</table>
     </div>
     <div class="dontclick"></div>
@@ -98,16 +103,60 @@ const pheedComment = (e) => {
 	console.log(pheedNo);
 	const sidebar = document.querySelector("#sidebar");
 	sidebar.classList.add("show-nav");
-	
+	const tbl = document.querySelector("#tbl-comment");
 	$.ajax({
 		url : `${pageContext.request.contextPath}/pheed/selectComments.do?pheedNo=\${pheedNo}`,
 		method : 'GET',
 		success(resp){
-			console.log(resp);
+			//console.log(resp);
+			tbl.innerHTML = "";
+			const {comments} = resp;
+			comments.forEach((comment) => {
+				//console.log(comment);
+				const {pheedCNo, pheedNo, nickname, content, commentRef, createdAt} = comment;
+				//console.log(pheedCNo, pheedNo, nickname, content, commentRef, createdAt);
+				const {year, monthValue, dayOfMonth, hour, minute, second} = createdAt;
+				const date = new Date(year, monthValue, dayOfMonth, hour, minute, second);
+				
+				const tr = document.createElement("tr");
+				const td1 = document.createElement("td");
+				const td2 = document.createElement("td");
+				const td3 = document.createElement("td");
+				const td4 = document.createElement("td");
+				/* const btnReply = document.createElement("button"); */
+				const btnCDel = document.createElement("button");
+				
+				if(commentRef == 1){
+					tr.classList.add("level2");						
+				} else{
+					tr.classList.add("level1");						
+				}
+				td1.classList.add("comment-writer");
+				td1.innerHTML = nickname;
+				td2.classList.add("comment-content");
+				td2.innerHTML = content;
+				td3.classList.add("comment-date");
+				td3.innerText = date.toLocaleDateString();
+				
+				td4.classList.add("comment-btn-del");
+				td4.innerHTML = "<button type='button' class='btn btn-sm btn-danger btn-cdel' onclick='commentDel();'>삭제</button>";
+				
+				tr.append(td1, td2, td3, td4);
+				tbl.append(tr);
+				
+			});
 		},
 		error : console.log
 	});
 };
+
+<%-- 댓글 작성 버튼 enrollComment--%>
+
+
+<%-- 삭제 버튼 commentDel --%>
+
+
+
 $(document).mouseup(function (e){
 	if($("#sidebar").has(e.target).length === 0){
 		closeComment();
@@ -123,16 +172,16 @@ const closeComment = () => {
 
 
 window.addEventListener('load', () => {
-	const searchApi = 'https://cors-anywhere.herokuapp.com/';
 	let bookTitle;
 	<c:forEach items="${list}" var="pheed" varStatus="vs">
 	$.ajax({
-		url : searchApi + "http://www.aladin.co.kr/ttb/api/ItemLookUp.aspx",
+		url : '${pageContext.request.contextPath}/search/selectBook.do',
 		data : {
 			ttbkey : 'ttbiaj96820130001',
 			itemIdType : 'ISBN13', 
 			ItemId : ${pheed.itemId},
 			output : 'js',
+			Cover : 'Big',
 			Version : '20131101'
 		},
 		success(resp){
@@ -178,6 +227,7 @@ window.onscroll = function () {
           <div class="form-group">
             <label for="recipient-name" class="col-form-label">작성자</label>
             <input type="text" class="form-control" id="memberId" value="로긴멤버아이디" readonly>
+            <input type="hidden" class="form-control" id="category" value="pheed"/>
           </div>
           <div class="form-group">
             <p class="col-form-label">신고 내용</p>
@@ -222,6 +272,59 @@ document.querySelector("#report-content").addEventListener('keyup', (e) => {
 		document.querySelector("#alert").style.display = "none";
 	}
 });
+
+
+<%-- 좋아요 북마크 클릭이벤트 --%>
+window.addEventListener('load', (e) => {
+	document.querySelectorAll(".fa-heart").forEach((heart) => {
+		heart.addEventListener('click', (e) => {
+			
+			// 부모한테 이벤트 전파하지마셈
+			e.stopPropagation(); 
+			
+			// 클릭할때마다 상태왔다갔다
+			changeIcon(e.target, 'heart');
+		});	
+	});	
+});
+
+window.addEventListener('load', (e) => {
+	document.querySelectorAll(".fa-bookmark").forEach((heart) => {
+		heart.addEventListener('click', (e) => {
+			
+			// 부모한테 이벤트 전파하지마셈
+			e.stopPropagation(); 
+			
+			// 클릭할때마다 상태왔다갔다
+			changeIcon(e.target, 'bookmark');
+		});	
+	});	
+});
+
+
+const changeIcon = (icon, shape) => {
+
+	let cnt = icon.parentElement.childElementCount;
+	
+	const iHeart = `<i class="fa fa-heart fa-solid fa-stack-1x h-behind"></i>`;
+	const iBookMark = `<i class="fa fa-bookmark fa-solid fa-stack-1x b-behind"></i>`;
+	
+	
+	if(cnt==1) {
+		if(shape == 'heart'){
+			icon.parentElement.insertAdjacentHTML('beforeend', iHeart);
+		}
+		else {
+			icon.parentElement.insertAdjacentHTML('beforeend', iBookMark);
+		}
+	}
+	else {
+		icon.parentElement.removeChild(icon.parentElement.lastElementChild);
+	}
+	
+	
+
+}
 
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

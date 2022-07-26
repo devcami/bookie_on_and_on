@@ -101,30 +101,55 @@ section#content	{
 #content .pheed-container .pheed .pheed-content p{
 	font-size: 24px;
 }
-#content .pheed-container .pheed .pheed-content .book-info{
-}
 #content .pheed-container .pheed .pheed-content .book-info p{
 	font-size: 20px;
 	color: #adadad;
 }
+
+
+/* 좋아요버튼 */
 #content .pheed-container .pheed .pheed-sns .pheed-sns-icons .btn-group{
 	display: inline !important;
-	
 }
 #content .pheed-container .pheed .pheed-sns .pheed-sns-icons .btn-group .btn{
 	padding: 5px 5px;
-	font-size: 25px;
+	font-size: 34px;
+	margin: 0 3px;
 	background-color: white;
-	
 }
 #content .pheed-container .pheed .pheed-sns .pheed-sns-icons .btn-group #btn-report{
 	float: right;
 }
+.fa-heart, .fa-bookmark {
+	font-size: 34px;
+}
+.front {
+	color: black;
+	z-index: 1 !important;
+}
+.h-behind {
+	color: #F10086;
+    font-size: 29px;
+}
+
+.b-behind {
+	color: #FFC46B;
+    font-size: 29px;
+}
+.h-span, .b-span {
+	cursor: pointer;
+}
+.fa-stack {
+	width: 1.7em !important;
+}
+
 
 #content #reportModal #alert{
 	display: block;
 	width: 100%;
 }
+
+
 
 /******** 댓글창 ********/
 #sidebar.show-nav {
@@ -143,12 +168,37 @@ section#content	{
     transform: translateX(-100%);
     transition: .3s ease;
     border-radius: 10px;
+    overflow-x:scroll;
 }
 #sidebar button#close{
 	display: block;
 	float: right;
 	font-size: 30px;
 }
+
+#sidebar .comment table#tbl-comment tr td.comment-writer{
+	color: #727272;
+	font-size: 20px;
+	vertical-align: middle;
+	width: 150px;
+}
+#sidebar .comment table#tbl-comment tr td.comment-content{
+	vertical-align: middle;
+}
+#sidebar .comment table#tbl-comment tr td.comment-date{
+	font-size: 14px;
+	color: gainsboro;
+	width: 70px;
+	padding:0.75em 0 ;
+	vertical-align: middle;
+}
+#sidebar .comment table#tbl-comment tr td.comment-btn-del{
+	text-align: center;
+	padding:0.75em 0;
+	width: 50px;
+}
+
+
 
 #sidebar .dontclick{
 	height: 100%;
