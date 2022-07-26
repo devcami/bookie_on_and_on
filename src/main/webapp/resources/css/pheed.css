@@ -101,30 +101,55 @@ section#content	{
 #content .pheed-container .pheed .pheed-content p{
 	font-size: 24px;
 }
-#content .pheed-container .pheed .pheed-content .book-info{
-}
 #content .pheed-container .pheed .pheed-content .book-info p{
 	font-size: 20px;
 	color: #adadad;
 }
+
+
+/* 좋아요버튼 */
 #content .pheed-container .pheed .pheed-sns .pheed-sns-icons .btn-group{
 	display: inline !important;
-	
 }
 #content .pheed-container .pheed .pheed-sns .pheed-sns-icons .btn-group .btn{
 	padding: 5px 5px;
-	font-size: 25px;
+	font-size: 34px;
+	margin: 0 3px;
 	background-color: white;
-	
 }
 #content .pheed-container .pheed .pheed-sns .pheed-sns-icons .btn-group #btn-report{
 	float: right;
 }
+.fa-heart, .fa-bookmark {
+	font-size: 34px;
+}
+.front {
+	color: black;
+	z-index: 1 !important;
+}
+.h-behind {
+	color: #F10086;
+    font-size: 29px;
+}
+
+.b-behind {
+	color: #FFC46B;
+    font-size: 29px;
+}
+.h-span, .b-span {
+	cursor: pointer;
+}
+.fa-stack {
+	width: 1.7em !important;
+}
+
 
 #content #reportModal #alert{
 	display: block;
 	width: 100%;
 }
+
+
 
 /******** 댓글창 ********/
 #sidebar.show-nav {

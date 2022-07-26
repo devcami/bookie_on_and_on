@@ -27,7 +27,7 @@
 			</div>
 		</div>
 		<div class="article goto">
-			<div class="button d-grid col-12" onclick="">
+			<div class="button d-grid col-12" onclick="location.href='${pageContext.request.contextPath}/search/categoryList.do'" >
 				<p class="col-12 m-0 small">베스트 | 신간</p>
 				<p><i class="fa-solid fa-hand-point-right"></i></p>
 				<p class="col-12 m-0">분야별 도서 보기</p>

@@ -101,6 +101,9 @@ public class SearchController {
 	}
 	
 	
+	@GetMapping("/categoryList.do")
+	public void categoryList() {}
+	
 	
 	
 }
