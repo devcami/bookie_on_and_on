@@ -542,3 +542,18 @@ select * from dokoo;
             
             
 select* from mission where club_no = 43 and m_item_id = 9788963710358;
+
+		select 
+			*
+		from 
+			club_book b 
+				left join mission m on b.item_id = m.m_item_id
+		where 
+            b.club_no = 43 and m.m_item_id = 9788963710358;
+            
+            select * from club;
+            
+            select * from likes_club;
+            
+            select count(*) from likes_club where club_no = 26;
+            select * from my_club;
