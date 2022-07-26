@@ -14,7 +14,7 @@
 		<form
 			name="bookSearchFrm" 
 			<%-- action="${pageContext.request.contextPath}/search/searchForm.do" --%>
-			method="GET">
+			<%-- method="GET" --%>>
 			    <select id="searchType" name="searchType" class="col-2 form-control d-inline form-select">
 			      <option ${param.searchType eq "Keyword"? 'selected' : ''} value="Keyword">키워드</option>
 			      <option ${param.searchType eq "Title"? 'selected' : ''} value="Title">책제목</option>
@@ -153,7 +153,7 @@ const getPage = (cPage, maxResult) => {
 		data : book,
 		contentType : "application/json; charset=utf-8",
 		success(resp){
-			console.log(resp);
+			//console.log(resp);
 			const {item} = resp;
 			const divNon = `
 				<div>

@@ -104,6 +104,46 @@ public class SearchController {
 	@GetMapping("/categoryList.do")
 	public void categoryList() {}
 	
+	@GetMapping("/bookListByCategory.do")
+	public void bookListByCategory(Model model, @RequestParam String category) {
+		model.addAttribute("category", category);
+	}
+	
+	@GetMapping("selectBookListByCategory.do")
+	public ResponseEntity<?> selectBookListByCategory(
+											@RequestParam String ttbkey, 
+											@RequestParam String QueryType,
+											@RequestParam String SearchTarget,
+											@RequestParam int Start,
+											@RequestParam int MaxResults,
+											@RequestParam String Output,
+											@RequestParam String Cover,
+											@RequestParam String Version,
+											@RequestParam int CategoryId){
+		/*
+		 * http://www.aladin.co.kr/ttb/api/ItemList.aspx?
+		 * ttbkey=ttbiaj96820130001
+		 * &QueryType=ItemNewAll
+		 * &MaxResults=20
+		 * &start=1
+		 * &SearchTarget=Book
+		 * &CategoryId=3103
+		 * &output=js
+		 * &Version=20131101
+		 */
+		String url = ALADDIN_URL + "ItemList.aspx?ttbkey=" + ttbkey 
+				+ "&QueryType=" + QueryType
+				+ "&MaxResults=" + MaxResults
+				+ "&Start=" + Start
+				+ "&SearchTarget=" + SearchTarget
+				+ "&CategoryId=" + CategoryId
+				+ "&Cover=" + Cover
+				+ "&Output=" + Output
+				+ "&Version=" + Version;
+		Resource resource = resourceLoader.getResource(url);
+		return ResponseEntity.ok(resource);
+	}
+	
 	
 	
 }
