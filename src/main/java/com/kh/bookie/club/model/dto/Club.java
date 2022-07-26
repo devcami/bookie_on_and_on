@@ -21,8 +21,8 @@ public class Club extends ClubEntity {
 	private int likesCnt;
 	
 	public Club(int clubNo, String title, String content, LocalDate recruitStart, LocalDate recruitEnd, LocalDate clubStart,
-			LocalDate clubEnd, int bookCount, int maximunNop, int minimunNop, int deposit, String interest) {
-		super(clubNo, title, content, recruitStart, recruitEnd, clubStart, clubEnd, bookCount, maximunNop, minimunNop, deposit, interest);
+			LocalDate clubEnd, int bookCount, int maximunNop, int minimunNop, int deposit, String interest, String missionCnt) {
+		super(clubNo, title, content, recruitStart, recruitEnd, clubStart, clubEnd, bookCount, maximunNop, minimunNop, deposit, interest, missionCnt);
 		
 		this.bookList = bookList;
 		this.missionList = missionList;
@@ -103,6 +103,12 @@ public class Club extends ClubEntity {
 		// TODO Auto-generated method stub
 		return super.getInterest();
 	}
+	
+	@Override
+	public String getMissionCnt() {
+		// TODO Auto-generated method stub
+		return super.getMissionCnt();
+	}
 
 	@Override
 	public void setBookCount(int bookCount) {
@@ -176,6 +182,11 @@ public class Club extends ClubEntity {
 		super.setInterest(interest);
 	}
 	
+	@Override
+	public void setMissionCnt(String missionCnt) {
+		// TODO Auto-generated method stub
+		super.setMissionCnt(missionCnt);
+	}
 	
 }
 

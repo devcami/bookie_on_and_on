@@ -107,23 +107,33 @@ section#content {
 #mission-div{
 	display: flex;
 	flex-wrap: wrap;
+	margin-top: 15px;
 }
 .mCard{
 	display: flex;
-    width: 47%;
+    width: 100%;
     margin: 10px 11px;
     flex-wrap: nowrap;
-    flex-direction: column;
     margin: 5px 11px 20px 11px;
+    border-radius: var(--border-radius-primary);
+    box-shadow: 0px 0px 9px 0px rgb(0 0 0 / 10%);
+    transition: transform 0.15s ease-out;
+    background-color: #f8f9fa;
+}
+
+.mCard:hover {
+	transition: transform 0.15s ease-out;
+    box-shadow: 0px 0px 10px 4px rgb(0 0 0 / 10%);
+    background: white;
 }
 
 .m-img-div {
 	text-align: center;
-    margin: 22px 0;
+    
 }
 
 .mCard img {
-	height: 160px;
+	height: 200px;
 }
 .m-text-div {
 	display: flex;
@@ -131,19 +141,49 @@ section#content {
     width: 100%;
     justify-content: center;
     align-items: center;
+    position: relative;
+    cursor: pointer;
+
 }
-.m-text-div span {
+.m-text-div table {
+	width: 90%;
+    text-align: center;
+    border-collapse: separate;
+    border-spacing: 0px 10px;
+}
+
+.m-text-div table td {
 	font-size: larger;
 	margin-bottom: 5px;
 }
+
+#detail-btn-div{
+	position: absolute;
+    top: 0;
+    right: 0;	
+    cursor: pointer;
+	background-color: #ffc36a;
+    border-radius: 0 4px 0 32px;
+}
+
+#detail-btn {    
+	background-color: #ffc36a;
+	border-radius: 0 4px 0 32px;
+    font-size: inherit;
+    padding-left: 12px;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+}
+
+
+
 
 #bottom{
 	position: fixed;
 	bottom: 100px;
 	right: 100px;
 }
-
-
 
 
 

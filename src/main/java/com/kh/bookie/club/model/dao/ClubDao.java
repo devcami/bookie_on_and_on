@@ -1,6 +1,7 @@
 package com.kh.bookie.club.model.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -28,5 +29,7 @@ public interface ClubDao {
 	int selectTotalClub();
 
 	Club selectOneClub(int clubNo);
+
+	ClubBook selectBookMission(Map<String, Object> map);
 
 }

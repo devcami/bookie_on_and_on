@@ -197,12 +197,6 @@
 		
 
 	}
-	
-	
-	/* const clubLike = (e) => {
-		console.log(e);
-		e.stopPropagation(); 
-	} */
 
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

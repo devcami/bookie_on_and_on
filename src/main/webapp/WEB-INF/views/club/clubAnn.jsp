@@ -100,6 +100,8 @@
 		</div>
 	</div>
 	<%-- 읽는 책 끝 --%>
+	
+	
 
 	<%-- 미션 --%>
 	<div>
@@ -109,40 +111,47 @@
 			<span id="mini-info">미션을 수행하고 포인트를 받으세요!</span>
 		</div>	
 		<div id="mission-div">
-			<div class="mCard">
-				<div class='m-img-div'>
-					<img src="https://image.aladin.co.kr/product/28446/13/cover/8966074081_1.jpg" />								
-				</div>
-				<div class="m-text-div">
-					<span>🌼 시작 인증 사진 올리세요 지금 </span>
-					<span>🌼 미션 제목입니다</span>
-					<span>🌼 미션 제목입니다</span>
-				</div>
-			</div>
-			<div class="mCard">
-				<div class='m-img-div'>
-					<img src="https://image.aladin.co.kr/product/28446/13/cover/8966074081_1.jpg" />								
-				</div>
-				<div class="m-text-div">
-					<span>🌼 시작 인증 사진 올리세요 지금</span>
-					<span>🌼 미션 제목입니다</span>
-					<span>🌼 미션 제목입니다</span>
-				</div>
-			</div>	
-			<div class="mCard">
-				<div class='m-img-div'>
-					<img src="https://image.aladin.co.kr/product/28446/13/cover/8966074081_1.jpg" />								
-				</div>
-				<div class="m-text-div">
-					<span>🌼 시작 인증 사진 올리세요 지금 당장</span>
-					<span>🌼 미션 제목입니다</span>
-					<span>🌼 미션 제목입니다</span>
-				</div>
-			</div>
+			
+			<c:forEach items="${club.bookList}" var="book" varStatus="vs">
+				<div class="mCard" data-no="${book.itemId}" onclick="openDetailMission(this);">
+					<div class='m-img-div'>
+						<img src="${fn:replace(book.imgSrc, 'covermini', 'cover')}" value="${book.itemId}" onclick="bookEnroll(this);">								
+					</div>
+					<div class="m-text-div">
+						<table>
+							<tbody>
+								<tr id="bookMission${book.itemId}">
+									<td></td>
+								</tr>
+								
+							</tbody>
+						</table>
+					</div>
+				</div>								
+			</c:forEach>
+			
 		</div>
 	
 	</div>
 	<%-- 미션 끝 --%>
+	
+	<c:forEach items="${club.missionList}" var="mission">
+		${mission.title}
+	</c:forEach>
+	
+	
+	<br />
+	
+	<%-- 미션 모달 --%>
+	<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+	  <div class="modal-dialog modal-lg">
+	    <div class="modal-content">
+	      ...
+	    </div>
+	  </div>
+	</div>
+	<%-- 미션 모달 끝 --%>
+
 	
 
 		${club}
@@ -155,6 +164,24 @@ const bookEnroll = (e) => {
 	const isbn13 = $(e).attr('value');
 	location.href = "${pageContext.request.contextPath}/search/bookEnroll.do?isbn13=" + isbn13;
 };
+
+
+/********** 미션 디테일 모달 열어 ***************/
+window.addEventListener('load', (e) => {
+	document.querySelectorAll(".mCard").forEach((mission) => {
+		mission.addEventListener('click', (e) => {
+			console.log(e);
+		});
+	});
+
+
+
+	
+	
+	
+});
+
+
 
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

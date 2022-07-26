@@ -128,14 +128,14 @@
 				 	<label for="언어">언어</label>	
 				 	<input type="checkbox" name="interests" value="취미"/>
 				 	<label for="취미">취미</label>	
-				 	<input type="checkbox" name="interests" value="정치사회"/>
-				 	<label for="정치사회">정치사회</label>	
+				 	<input type="checkbox" name="interests" value="에세이"/>
+				 	<label for="에세이">에세이</label>	
 				 	<input type="checkbox" name="interests" value="예술"/>
 				 	<label for="예술">예술</label>	
 				 	<input type="checkbox" name="interests" value="교육"/>
 				 	<label for="교육">교육</label>	
-				 	<input type="checkbox" name="interests" value="만화"/>
-				 	<label for="만화">만화</label>	
+				 	<input type="checkbox" name="interests" value="인문학"/>
+				 	<label for="인문학">인문학</label>	
 				 	<input type="checkbox" name="interests" value="종교"/>
 				 	<label for="종교">종교</label>	
 				 	<input type="checkbox" name="interests" value="기타"/>

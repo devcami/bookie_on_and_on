@@ -37,5 +37,6 @@ public class ClubEntity {
 	protected int minimumNop;
 	protected int deposit;
 	protected String interest;
+	protected String missionCnt;
 	
 }
