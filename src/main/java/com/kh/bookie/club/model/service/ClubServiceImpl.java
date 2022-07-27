@@ -1,6 +1,8 @@
 package com.kh.bookie.club.model.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,7 +71,23 @@ public class ClubServiceImpl implements ClubService {
 
 	@Override
 	public Club selectOneClub(int clubNo) {
-		return clubDao.selectOneClub(clubNo);
+		
+		// 1. 클럽 찾아와
+		Club club = clubDao.selectOneClub(clubNo);
+		
+		log.debug("1. club = {}", club);
+		
+		for(int i = 0; i < club.getBookList().size(); i++) {
+			String itemId = club.getBookList().get(i).getItemId();
+			Map<String, Object> map = new HashMap<>();
+			map.put("itemId", itemId);
+			map.put("clubNo", clubNo);
+			club.getBookList().set(i, clubDao.selectBookMission(map));
+		}
+		
+		log.debug("2. club = {}", club);
+		
+		return club; 
 	}
 
 }

@@ -4,15 +4,14 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -108,11 +107,25 @@ public class ClubController {
 				interest += interests.get(m);
 				interest += ",";
 			}
-			
 			interest = interest.substring(0, interest.length()-1);
 			club.setInterest(interest);
 			club.setBookCount(isbn13.size());
+			
+			//
+			if(!mCount.isEmpty()) {
+				String missionCnt = "";			
+				for(int n = 0; n < mCount.size(); n++) {
+					missionCnt += mCount.get(n);
+					missionCnt += ",";
+				}				
+				missionCnt = missionCnt.substring(0, missionCnt.length()-1);
+				club.setMissionCnt(missionCnt);
+			}
+			
+			// 
+			
 
+			
 			for (int i = 0; i < isbn13.size(); i++) {
 				ClubBook book = new ClubBook();
 				book.setItemId(isbn13.get(i));
@@ -120,26 +133,29 @@ public class ClubController {
 
 				bookList.add(book);
 				
-				int mCnt = Integer.parseInt(mCount.get(i));
 				
-				
-				for(int j = 0; j < mCnt; j++) { 
-					 
-					Mission mission = new Mission(); 
-					 
-					mission.setItemId(isbn13.get(i));
-					mission.setContent(missionContent.get(j)); 
-					mission.setPoint(finalDeposit);
-					mission.setTitle(missionName.get(j));
-					mission.setMEndDate(LocalDate.parse(missionDate.get(j).substring(2), DateTimeFormatter.ISO_DATE));
+				if(mCount.size() != 0) {
+					int mCnt = Integer.parseInt(mCount.get(i));
 					
-					missionList.add(mission);
-				}
-				 
-				for(int k = mCnt-1; k >= 0 ; k--) {
-					missionContent.remove(k);
-					missionName.remove(k);
-					missionDate.remove(k);
+					for(int j = 0; j < mCnt; j++) { 
+						
+						Mission mission = new Mission(); 
+						
+						mission.setItemId(isbn13.get(i));
+						mission.setContent(missionContent.get(j)); 
+						mission.setPoint(finalDeposit);
+						mission.setTitle(missionName.get(j));
+						mission.setMEndDate(LocalDate.parse(missionDate.get(j).substring(2), DateTimeFormatter.ISO_DATE));
+						
+						missionList.add(mission);
+					}
+					
+					for(int k = mCnt-1; k >= 0 ; k--) {
+						missionContent.remove(k);
+						missionName.remove(k);
+						missionDate.remove(k);
+					}
+					
 				}
 				 
 
@@ -174,6 +190,30 @@ public class ClubController {
 		try {
 			log.debug("clubNo = {}", clubNo);
 			Club club = clubService.selectOneClub(clubNo);
+
+			log.debug("bookMission = {}", club.getBookList().get(0).getMissionList());
+			
+			
+//			if(club.getMissionCnt() != null || !club.getMissionCnt().isEmpty()) {
+//				String missions[] = club.getMissionCnt().split(",");
+//				log.debug("missions = {}", missions);
+//
+//				
+//				
+//				List<Mission> copyOfMissionList = new ArrayList<>(club.getMissionList());
+//				
+//				for(int i = 0; i < missions.length; i++) {
+//					club.getBookList().get(i);
+//					for(int j = 0; j < Integer.parseInt(missions[i]); j++) {
+//						// 처음 돌릴때 책 담을 리스트 만들고 이름 정해
+//						
+//					}
+//					
+//					
+//					
+//				}
+//			}
+						
 			mav.addObject("club", club);
 			
 		} catch(Exception e) {

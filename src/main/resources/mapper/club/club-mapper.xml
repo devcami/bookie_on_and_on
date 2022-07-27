@@ -19,7 +19,8 @@
 			#{maximumNop},
 			#{minimumNop},
 			#{deposit},
-			#{interest}
+			#{interest},
+			#{missionCnt}
 		)
 		<selectKey keyProperty="clubNo" resultType="_int" order="AFTER">
 			select
@@ -55,6 +56,8 @@
 		<result column="current_nop" property="currentNop"/>
 		<result column="interest" property="interest"/>
 		<result column="likes_cnt" property="likesCnt"/>
+		<result column="mission_cnt" property="missionCnt"/>
+		<result column="book_Count" property="bookCount"/>
 		<collection property="bookList" javaType="arrayList" ofType="clubBook">
 			<id column="item_id" property="itemId"/>
 			<id column="bclub_no" property="clubNo"/>
@@ -68,17 +71,14 @@
 	
 	<select id="selectOneClub" resultMap="selectOneClubCollectionMap">
 		select
-		    c.*,
-		    b.*,
-		    b.club_no bclub_no,
-		    m.*,
-		    m.club_no mclub_no,
-		    (select count(*) from my_club where club_no = c.club_no and c.club_no = #{clubNo}) current_nop,
-		    (select count(*) from likes_club where club_no = c.club_no and c.club_no = #{clubNo}) likesCnt
+			c.*,
+			b.*,
+			b.club_no bclub_no,
+		    (select count(*) from my_club where club_no = #{clubNo}) current_nop,
+		    (select count(*) from likes_club where club_no = #{clubNo}) likes_Cnt
 		from
-		    club c 
-		    	join club_book b on c.club_no = b.club_no
-		    	join mission m on c.club_no = m.club_no
+		    club c
+		    	 join club_book b on c.club_no = b.club_no
 		where 
 			c.club_no = #{clubNo}
 	</select>
@@ -96,11 +96,31 @@
 		<result column="current_nop" property="currentNop"/>
 		<result column="interest" property="interest"/>
 		<result column="likes_cnt" property="likesCnt"/>
+		<result column="mission_cnt" property="missionCnt"/>
+		<result column="book_Count" property="bookCount"/>
 		<collection property="bookList" javaType="arrayList" ofType="clubBook">
+	         <id column="item_id" property="itemId"/>
+	         <id column="bclub_no" property="clubNo"/>
+	         <result column="img_src" property="imgSrc"/>
+	      </collection>
+	</resultMap>
+	
+	
+	<select id="selectBookMission" resultMap="selectMissionCollectionMap">
+		select 
+			b.*,
+			m.*,
+			m.club_no mclub_no
+		from 
+			club_book b 
+				left join mission m on b.item_id = m.m_item_id
+		where 
+            b.club_no = #{clubNo} and m.m_item_id = #{itemId}
+	</select>
+	<resultMap type="clubBook" id="selectMissionCollectionMap">
 			<id column="item_id" property="itemId"/>
-			<id column="bclub_no" property="clubNo"/>
+			<id column="club_no" property="clubNo"/>
 			<result column="img_src" property="imgSrc"/>
-		</collection>
 		<collection property="missionList" javaType="arrayList" ofType="mission">
 			<id column="mission_no" property="missionNo"/>
 			<result column="mclub_no" property="clubNo"/>

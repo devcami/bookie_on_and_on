@@ -49,7 +49,7 @@
 					</div>
 					<div class="img-div">
 						<c:forEach items="${club.bookList}" var="clubBook" varStatus="bs">
-							<img src="${clubBook.imgSrc}" style="widht: 50px;" />												
+							<img src="${clubBook.imgSrc}" />												
 						</c:forEach>
 					</div>
 					<div class="nop-div">
@@ -90,10 +90,10 @@
 					</div>
 					<div class="img-div">
 						<c:forEach items="${club.bookList}" var="clubBook" varStatus="bs">
-							<img src="${clubBook.imgSrc}" style="widht: 50px;" />												
+							<img src="${clubBook.imgSrc}" />												
 						</c:forEach>
 					</div>
-					<div class="nop-div">
+					<div class="nop-div" style="visibility: hidden;">
 						<span class="fa-stack fa-lg" id='h-span'>
 						  <i class="fa fa-heart fa-regular fa-stack-1x front" ></i>
 						</span>
@@ -197,12 +197,6 @@
 		
 
 	}
-	
-	
-	/* const clubLike = (e) => {
-		console.log(e);
-		e.stopPropagation(); 
-	} */
 
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
