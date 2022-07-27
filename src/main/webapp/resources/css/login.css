@@ -1,0 +1,42 @@
+@charset "UTF-8";
+
+html,
+body{
+    height: 100%;
+    background-color:  #222d32 !important ;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+.global-container{
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fe9801 ;
+}
+
+form{
+    padding-top: 10px;
+    font-size: 14px;
+    margin-top: 30px;
+}
+.login-form{
+    width: 300px;
+    height: 450px;
+    margin: 20px;
+   
+}
+
+input[type="loginID"],
+input[type="password"]{
+    background: #e5f0b8 ;
+    border: 2px solid #fe9801;
+    border-radius: 10px;
+    margin-bottom: 25px;
+}
+
+button[type="loginsucess"]{
+    background: #fe9801;
+    border: 2px solid #ecd7b1;
+    box-shadow: #e5f0b8;
+}

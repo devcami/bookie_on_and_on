@@ -35,6 +35,27 @@
 			<artifactId>spring-webmvc</artifactId>
 			<version>${org.springframework-version}</version>
 		</dependency>
+		<!-- 로그인 라이브러리 활용  -->
+				<!-- https://mvnrepository.com/artifact/org.mybatis/mybatis -->
+		<dependency>
+		    <groupId>org.mybatis</groupId>
+			<artifactId>mybatis</artifactId>
+			<version>3.5.4</version>
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/org.mybatis/mybatis-spring -->
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis-spring</artifactId>
+			<version>2.0.4</version>
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-jdbc -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+			<version>${org.springframework-version}</version>
+		</dependency> 
 			
 		<!-- #11. aop 처리를 위한 의존 추가 -->	
 		<!-- AspectJ -->
@@ -215,6 +236,19 @@
 	        <artifactId>jackson-databind</artifactId>
 	        <version>2.9.5</version>
 	    </dependency>
+	    
+	     <!-- #17. websocket 의존 추가 -->
+        <dependency>
+	        <groupId>org.springframework</groupId>
+	        <artifactId>spring-websocket</artifactId>
+	        <version>${org.springframework-version}</version>
+	    </dependency>
+        <dependency>
+	        <groupId>org.springframework</groupId>
+	        <artifactId>spring-messaging</artifactId>
+	        <version>${org.springframework-version}</version>
+	    </dependency>
+	    
 	    
 		<!-- Test -->
 		<dependency>

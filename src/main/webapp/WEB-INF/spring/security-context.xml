@@ -10,4 +10,65 @@
 	<!-- #9.2. bcryptPasswordEncoder bean 등록 -->
 	<beans:bean id="bcryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"></beans:bean>
 	
+		<!-- #9.4. 인증/권한 설정 -->
+	<!-- static 자원은 security filter처리 하지 않음 -->
+	<http security="none" pattern="/resources/**" />
+	<http auto-config="true">
+		<intercept-url pattern="/**" access="permitAll"/>
+		<!-- <intercept-url pattern="/index.jsp" access="permitAll"/>
+		<intercept-url pattern="/board/boardList.do" access="permitAll"/>
+		<intercept-url pattern="/board/boardDetail.do" access="permitAll"/>
+		
+		<intercept-url pattern="/menu/**" access="permitAll"/>
+		<intercept-url pattern="/data/**" access="permitAll"/>
+		
+		<intercept-url pattern="/admin/**" access="hasRole('ADMIN')"/>
+		
+		<intercept-url pattern="/member/memberLogin.do" access="isAnonymous()"/>
+		<intercept-url pattern="/member/memberEnroll.do" access="isAnonymous()"/>
+		<intercept-url pattern="/member/checkIdDuplicate.do" access="isAnonymous()"/>
+		
+		 -->
+		<intercept-url pattern="/**" access="isAuthenticated()"/>
+		
+		<!--
+			login-page GET방식 폼 페이지 요청 (핸들러 작성 필요)
+			login-processing-url POST방식 로그인 처리 요청 (핸들러 작성 생략 가능 - 알아서 처리)
+			authentication-success-forward-url 로그인 성공시 후처리 - 핸들러를 연결
+			authentication-success-handler-ref=""
+			authentication-failure-forward-url="" 로그인 실패시 후처리 ..
+		 -->
+		<form-login login-page="/member/memberLogin.do" 
+					login-processing-url="/member/memberLogin.do"
+					username-parameter="memberId" 
+					password-parameter="password"/>
+		<!-- 
+			logout-url POST logout요청 (핸들러 작성 생략 가능)
+			success-handler-ref="" 로그아웃 성공 시 후처리
+		 -->					
+		<logout logout-url="/member/memberLogout.do"
+				logout-success-url="/"/>
+				
+		<!-- 
+			disabled = true 기본값 -> false : csrf 공격 대비 기능 사용안함
+			csrf : Cross Site Request Forgery 공격 (악성코드를 통해 권한있는 사용자의 폼 제출을 유도하는 공격) 
+				 	관리자를 유도하여 악성코드 심도록 유도
+			모든 POST방식의 폼제출에 csrf 공격대비 토큰 검증
+		 -->
+		<csrf disabled="false"/>
+		
+		<!-- 
+			dataSource : root-context에 작성된 Bean
+			token-validity-seconds 토큰 유효시간(초) 60 * 60 * 24 * 14 (2주)  
+		 -->
+		<remember-me data-source-ref="dataSource" token-validity-seconds="1209600"/>
+		
+	</http>
+	
+	<authentication-manager>
+		<authentication-provider user-service-ref="securityService">
+			<password-encoder ref="bcryptPasswordEncoder"/>
+		</authentication-provider>
+	</authentication-manager>
+	<context:component-scan base-package="com.kh.bookie.security" />
 </beans:beans>
