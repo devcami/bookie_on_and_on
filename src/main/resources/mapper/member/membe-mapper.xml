@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mapper namespace="member">
+<select  id="login_check" resultType="String">
+select name
+from member
+where member_id=#{member_id} and password=#{password}
+</select>
+</mapper>

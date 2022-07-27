@@ -42,7 +42,18 @@
 	<header>
 		<div id="header-container">
 			<img src="${pageContext.request.contextPath}/resources/images/logo.png" alt="북이온앤온로고" width="100px" onclick="location.href='${pageContext.request.contextPath}'"/>
-			<i class="fa-solid fa-user-plus i-login" onclick="location.href='${pageContext.request.contextPath}/member/login.do'"></i>
+			<!-- 상단에 이름 표시  -->
+			<c:if test="${not empty loginMember no }">
+			  <span><a href="#">${loginMember.name }</a>님, 안녕하세요</span>
+			  &nbsp;&nbsp;
+			  <!-- 로그아웃 -->
+			  <button 
+			  type="button" class="btn btn-warning"
+			  onclick="location.href='${pageContext.request.contextPath}/member/memberlogout.do'">로그아웃</button>
+			</c:if>
+			<c:if test="${empty loginMember no }">
+			</c:if>
+			<i class="fa-solid fa-user-plus i-login" onclick="location.href='${pageContext.request.contextPath}/member/memberlogin.do'"></i>
 			<img class="sh-right" src="${pageContext.request.contextPath}/resources/images/icon/search.png" alt="검색" onclick="location.href='${pageContext.request.contextPath}/search/searchForm.do'" />
 			<%-- <img class="sh-right" src="${pageContext.request.contextPath}/resources/images/icon/alarm.png" alt="알림"  /> --%>
 		</div>
