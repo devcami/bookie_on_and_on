@@ -557,3 +557,13 @@ select* from mission where club_no = 43 and m_item_id = 9788963710358;
             
             select count(*) from likes_club where club_no = 26;
             select * from my_club;
+            
+
+select * from club;
+update club set title = '내 마음을 들여다보고 싶을때' where club_no = 44;
+
+select * from club_book;
+alter table club_book add book_title varchar2(3000);
+commit;
+
+select * from mission;
