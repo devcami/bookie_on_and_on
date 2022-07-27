@@ -9,9 +9,9 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/login.css" />
 <fmt:requestEncoding value="utf-8"></fmt:requestEncoding>
-<jsp:include page="/WEB-INF/views/common/header.jsp">
-
+<jsp:include page="/WEB-INF/views/common/header.jsp" >
 <jsp:param value="로그인" name="title"/>
+</jsp:include>
  <div class="global-container">
       <div class="card login form">
         <div class="card-body">
@@ -63,4 +63,4 @@
 
 
 
-<jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
+<jsp:include page="/WEB-INF/views/common/footer.jsp" />
