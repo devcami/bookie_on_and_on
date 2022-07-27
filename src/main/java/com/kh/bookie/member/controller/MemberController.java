@@ -17,7 +17,7 @@ public class MemberController {
 	@Autowired
 	BCryptPasswordEncoder bcryptPasswordEncoder;
 	
-	@GetMapping("/login.do")
+	@RequestMapping("/login.do")
 	public void login() {}
 	
 //	@RequestMapping("login_check.do")
