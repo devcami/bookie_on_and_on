@@ -161,10 +161,12 @@ create table club(
     maximum_nop number not null,
     minimum_nop number not null,
     deposit number not null,
+    interest varchar2(50) not null,
+    mission_Cnt varchar2(30) null,
     constraint pk_club_no primary key(club_no)
 );
+select * from club;
 create sequence seq_club_no;
-
 -- 13. club_book
 create table club_book (
     club_no   number not null,
@@ -522,7 +524,7 @@ select
 		where 
 			c.club_no = 26;
             
-select * from mission where club_no = 26;
+select * from mission;
 
 
 select * from dokoo_comment;
@@ -537,3 +539,21 @@ select * from dokoo;
 				left join dokoo_comment c on d.dokoo_no = c.dokoo_no
 		where
 			d.dokoo_no = 21;
+            
+            
+select* from mission where club_no = 43 and m_item_id = 9788963710358;
+
+		select 
+			*
+		from 
+			club_book b 
+				left join mission m on b.item_id = m.m_item_id
+		where 
+            b.club_no = 43 and m.m_item_id = 9788963710358;
+            
+            select * from club;
+            
+            select * from likes_club;
+            
+            select count(*) from likes_club where club_no = 26;
+            select * from my_club;
