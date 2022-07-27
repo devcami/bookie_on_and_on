@@ -28,8 +28,9 @@
 		<intercept-url pattern="/member/memberEnroll.do" access="isAnonymous()"/>
 		<intercept-url pattern="/member/checkIdDuplicate.do" access="isAnonymous()"/>
 		
+
+		<intercept-url pattern="/**" access="isAuthenticated()"/>
 		 -->
-		<!-- <intercept-url pattern="/**" access="isAuthenticated()"/> -->
 		
 		<!--
 			login-page GET방식 폼 페이지 요청 (핸들러 작성 필요)
