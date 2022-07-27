@@ -39,6 +39,7 @@
 			authentication-success-handler-ref=""
 			authentication-failure-forward-url="" 로그인 실패시 후처리 ..
 		 -->
+		 <!-- 기존 로그인폼을 우리 경로로 변환  -->
 		<form-login login-page="/member/memberLogin.do" 
 					login-processing-url="/member/memberLogin.do"
 					username-parameter="memberId" 
@@ -49,6 +50,10 @@
 		 -->					
 		<logout logout-url="/member/memberLogout.do"
 				logout-success-url="/"/>
+	
+				
+				
+				
 				
 		<!-- 
 			disabled = true 기본값 -> false : csrf 공격 대비 기능 사용안함

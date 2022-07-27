@@ -42,18 +42,23 @@
 	<header>
 		<div id="header-container">
 			<img src="${pageContext.request.contextPath}/resources/images/logo.png" alt="북이온앤온로고" width="100px" onclick="location.href='${pageContext.request.contextPath}'"/>
-<%-- 			<!-- 상단에 이름 표시  -->
-			<c:if test="${not empty loginMember no }">
-			  <span><a href="#">${loginMember.name }</a>님, 안녕하세요</span>
-			  &nbsp;&nbsp;
-			  <!-- 로그아웃 -->
-			  <button 
-			  type="button" class="btn btn-warning"
-			  onclick="location.href='${pageContext.request.contextPath}/member/memberlogout.do'">로그아웃</button>
-			</c:if>
-			<c:if test="${empty loginMember no }">
-			</c:if> --%>
+			<!-- 로그인 한경우 -->
+			<sec:authorize access="isAuthenticated()">
+			    	
+			    		<a href="${pageContext.request.contextPath}/member/memberDetail.do">
+			    			<sec:authentication property="principal.username"/>
+			    			<sec:authentication property="authorities"/>
+			    		</a>
+			    	&nbsp;&nbsp;
+			    	<form:form action="${pageContext.request.contextPath}/member/memberLogout.do" method="post">
+				    	<button 
+					    	class="btn btn-outline-success my-2 my-sm-0" type="submit">로그아웃</button>			    	
+			    	</form:form>
+			    </sec:authorize>
+			<!-- 로그인 하지 않은경우  -->
+			<sec:authorize access="isAnonymous()">		
 			<i class="fa-solid fa-user-plus i-login" onclick="location.href='${pageContext.request.contextPath}/member/login.do'"></i>
+			</sec:authorize>
 			<img class="sh-right" src="${pageContext.request.contextPath}/resources/images/icon/search.png" alt="검색" onclick="location.href='${pageContext.request.contextPath}/search/searchForm.do'" />
 			<%-- <img class="sh-right" src="${pageContext.request.contextPath}/resources/images/icon/alarm.png" alt="알림"  /> --%>
 		</div>

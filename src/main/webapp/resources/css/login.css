@@ -8,7 +8,7 @@ body{
 }
 
 .global-container{
-    height: 100%;
+    width: 500px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -39,4 +39,9 @@ button[type="loginsucess"]{
     background: #fe9801;
     border: 2px solid #ecd7b1;
     box-shadow: #e5f0b8;
+}
+.btn-block {
+    display: block;
+    width: 20%;
+    margin: auto;
 }
