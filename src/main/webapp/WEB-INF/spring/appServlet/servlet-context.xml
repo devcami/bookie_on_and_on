@@ -12,8 +12,12 @@
 	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
 	
 	<!-- Enables the Spring MVC @Controller programming model -->
-	<annotation-driven />
-
+	<!-- #9.5. @AuthenticationPrincipal userDetails 구현체를 전달받기 위한 설정 -->
+	<annotation-driven>
+		<argument-resolvers>
+			<beans:bean class="org.springframework.security.web.method.annotation.AuthenticationPrincipalArgumentResolver" />
+		</argument-resolvers>
+	</annotation-driven>
 	
 	<!-- #15.1. jacksonMessageConverter Bean -->
 	<beans:bean id="jacksonMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
@@ -56,13 +60,6 @@
 			<beans:bean class="com.kh.bookie.common.interceptor.LoggerInterceptor"></beans:bean>
 		</interceptor>
 	</interceptors> 
-		<!-- <interceptor>
-			<mapping path="/member/**" />
-			<mapping path="/board/**" />
-			<exclude-mapping path="/member/memberLogin.do"/>
-			<exclude-mapping path="/board/boardList.do"/>
-			<beans:bean class="com.kh.bookie.common.interceptor.LoginInterceptor"></beans:bean>
-		</interceptor> -->
 	
 	<!-- #11.2. aop관련 어노테이션 등록처리 -->
 	<!-- #13.3. root-context의 transaction aop설정을 servlet-context에 적용 -->

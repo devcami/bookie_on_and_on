@@ -1,9 +1,8 @@
 package com.kh.bookie.member.model.dao;
 
+import org.apache.ibatis.annotations.Mapper;
 
-import com.kh.bookie.member.dto.Memberdto;
-
+@Mapper
 public interface MemberDao {
-	public String loginCheck(Memberdto dto);
 
 }

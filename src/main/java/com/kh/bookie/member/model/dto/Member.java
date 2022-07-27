@@ -47,5 +47,6 @@ public class Member extends MemberEntity implements UserDetails{
 	public boolean isEnabled() {
 		return true;
 	}
+
 	
 }

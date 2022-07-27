@@ -11,7 +11,8 @@
 </jsp:include>
 	<section id="content">
 		<div class="article main-banner">
-			<img src="${pageContext.request.contextPath}/resources/images/main-banner.png" alt="메인배너" />
+			<img src="${pageContext.request.contextPath}/resources/images/main-banner.png" alt="메인배너" 
+					onclick="${pageContext.request.contextPath}/search/intro.do"/>
 		</div>
 		<div class="article book-club-ann">
 			<img src="${pageContext.request.contextPath}/resources/images/book-club-8.png" alt="북클럽공고" />
@@ -28,7 +29,7 @@
 		</div>
 		<div class="article goto">
 			<div class="button d-grid col-12" onclick="location.href='${pageContext.request.contextPath}/search/categoryList.do'" >
-				<p class="col-12 m-0 small">베스트 | 신간</p>
+				<p class="col-12 m-0 small">신간 | 베스트</p>
 				<p><i class="fa-solid fa-hand-point-right"></i></p>
 				<p class="col-12 m-0">분야별 도서 보기</p>
 			</div>
