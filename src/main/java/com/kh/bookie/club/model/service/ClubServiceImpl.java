@@ -90,4 +90,10 @@ public class ClubServiceImpl implements ClubService {
 		return club; 
 	}
 
+	@Override
+	public List<Mission> getMissions(Map<String, Object> param) {
+		
+		return clubDao.getMissions(param);
+	}
+
 }

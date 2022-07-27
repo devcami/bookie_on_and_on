@@ -17,10 +17,10 @@ public interface ClubDao {
 
 	int enrollClub(Club club);
 
-	@Insert("insert into club_book values (#{clubNo}, #{itemId}, #{imgSrc})")
+	@Insert("insert into club_book values (#{clubNo}, #{itemId}, #{imgSrc}, #{bookTitle})")
 	int insertClubBook(ClubBook book);
 
-	@Insert("insert into mission values (#{clubNo}, seq_mission_no.nextval, #{title}, #{content}, #{point}, #{mEndDate}, #{itemId})")
+	@Insert("insert into mission values (#{clubNo}, seq_mission_no.nextval, #{title}, #{content}, #{point}, #{mendDate}, #{itemId})")
 	int insertMission(Mission mission);
 
 	List<Club> selectClubList(RowBounds rowBounds);
@@ -31,5 +31,7 @@ public interface ClubDao {
 	Club selectOneClub(int clubNo);
 
 	ClubBook selectBookMission(Map<String, Object> map);
+
+	List<Mission> getMissions(Map<String, Object> param);
 
 }

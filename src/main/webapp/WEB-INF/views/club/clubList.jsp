@@ -22,7 +22,7 @@
 			    <button 
 			    	id="btn-enroll"
 			    	class="btn btn-sm" 
-			    	onclick="location.href='${pageContext.request.contextPath}/club/enrollClub.do';">북클럽 등록</button>	    	
+			    	onclick="location.href='${pageContext.request.contextPath}/club/enrollClub.do';">나의 북클럽</button>	    	
 			<%-- </sec:authorize> --%>
 			<%-- <sec:authorize access="hasRole('ROLE_USER')"> 
 			    <button 
@@ -194,8 +194,6 @@
 			icon.parentElement.removeChild(icon.parentElement.lastElementChild);
 		}
 		
-		
-
 	}
 
 </script>

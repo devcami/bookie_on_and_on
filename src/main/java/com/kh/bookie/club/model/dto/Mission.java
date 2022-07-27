@@ -21,8 +21,9 @@ public class Mission {
 	private String content;
 	private int point;
 	private String itemId;
-	
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private LocalDate mEndDate ;
+	private LocalDate mendDate;
+	
+
 	
 }

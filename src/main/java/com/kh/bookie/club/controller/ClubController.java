@@ -3,6 +3,7 @@ package com.kh.bookie.club.controller;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,6 +11,8 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -83,7 +86,8 @@ public class ClubController {
 			@RequestParam(required = false) List<String> missionDate,
 			@RequestParam(required = false) List<String> missionContent,
 			@RequestParam(required = false) int finalDeposit, 
-			@RequestParam(required = false) List<String> mCount) {
+			@RequestParam(required = false) List<String> mCount,
+			@RequestParam List<String> bookName) {
 
 		List<ClubBook> bookList = new ArrayList<>();
 		List<Mission> missionList = new ArrayList<>();
@@ -91,14 +95,15 @@ public class ClubController {
 		try {
 
 //			log.debug("club = {}", club);
-//			log.debug("isbn13 = {}", isbn13);
-//			log.debug("bookImg = {}", bookImg);
+			log.debug("isbn13 = {}", isbn13);
+			log.debug("bookImg = {}", bookImg);
 //			log.debug("missionName = {}", missionName);
 //			log.debug("missionDate = {}", missionDate);
 //			log.debug("missionContent = {}", missionContent);
 //			log.debug("missionDeposit = {}", finalDeposit);
 //			log.debug("mCount = {}", mCount);
 //			log.debug("mCount = {}", mCount);
+			log.debug("bookName = {}", bookName);
 
 //			log.debug("interests = {}", interests);
 			String interest = "";
@@ -130,6 +135,7 @@ public class ClubController {
 				ClubBook book = new ClubBook();
 				book.setItemId(isbn13.get(i));
 				book.setImgSrc(bookImg.get(i));
+				book.setBookTitle(bookName.get(i));
 
 				bookList.add(book);
 				
@@ -145,7 +151,7 @@ public class ClubController {
 						mission.setContent(missionContent.get(j)); 
 						mission.setPoint(finalDeposit);
 						mission.setTitle(missionName.get(j));
-						mission.setMEndDate(LocalDate.parse(missionDate.get(j).substring(2), DateTimeFormatter.ISO_DATE));
+						mission.setMendDate(LocalDate.parse(missionDate.get(j).substring(2), DateTimeFormatter.ISO_DATE));
 						
 						missionList.add(mission);
 					}
@@ -192,27 +198,6 @@ public class ClubController {
 			Club club = clubService.selectOneClub(clubNo);
 
 			log.debug("bookMission = {}", club.getBookList().get(0).getMissionList());
-			
-			
-//			if(club.getMissionCnt() != null || !club.getMissionCnt().isEmpty()) {
-//				String missions[] = club.getMissionCnt().split(",");
-//				log.debug("missions = {}", missions);
-//
-//				
-//				
-//				List<Mission> copyOfMissionList = new ArrayList<>(club.getMissionList());
-//				
-//				for(int i = 0; i < missions.length; i++) {
-//					club.getBookList().get(i);
-//					for(int j = 0; j < Integer.parseInt(missions[i]); j++) {
-//						// 처음 돌릴때 책 담을 리스트 만들고 이름 정해
-//						
-//					}
-//					
-//					
-//					
-//				}
-//			}
 						
 			mav.addObject("club", club);
 			
@@ -225,4 +210,32 @@ public class ClubController {
 		return mav;
 	}
 
+	
+	@GetMapping("/getMission.do")
+	public ResponseEntity<?> getMissions(
+			@RequestParam String itemId,
+			@RequestParam int clubNo) {
+		
+		Map<String, Object> map = new HashMap<>();
+
+		try {
+			Map<String, Object> param = new HashMap<>();
+			log.debug("itemId = {}", itemId);
+			log.debug("clubNo = {}", clubNo);
+			
+			param.put("itemId", itemId);
+			param.put("clubNo", clubNo);
+			
+			List<Mission> missionList = clubService.getMissions(param);
+			
+//			log.debug("missionList = {}", missionList);
+			map.put("missionList", missionList);
+		} catch(Exception e) {
+			log.error("선택한 책 미션리스트 불러오기 오류", e);
+			map.put("msg", "선택한 책 미션리스트 불러오기 오류");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(map);
+		}
+		
+		return ResponseEntity.ok(map);
+	}
 }
