@@ -9,8 +9,10 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param value="북클럽리스트" name="title"/>
 </jsp:include>
+<sec:authentication property="principal" var="loginMember"/>
+${loginMember.nickname}
+${loginMember.memberId}
 <section id="content">
-
 	<div id="menu">
 		<h1>북클럽리스트</h1>
 		<div id="menu-left">

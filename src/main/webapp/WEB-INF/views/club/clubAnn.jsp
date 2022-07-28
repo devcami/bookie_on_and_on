@@ -1,3 +1,5 @@
+<%@page import="org.springframework.security.core.context.SecurityContextHolder"%>
+<%@page import="com.kh.bookie.member.model.dto.Member"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -9,6 +11,7 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param value="북클럽리스트" name="title"/>
 </jsp:include>
+
 <div id="title-header" class="" style="display: none;">
 	<div id="header-div">
 		<div id="title-header-left">
