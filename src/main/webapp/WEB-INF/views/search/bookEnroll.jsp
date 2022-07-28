@@ -57,7 +57,7 @@
 			  
 				<button type="button" class="btn btn-sm btn-secondary" id="btn-deselect" onclick="deselect();">선택해제</button>
 			</div>
-			<button class="custom-btn btn-5" onclick="bookEnroll();"><span>등록</span></button>
+			<button class="custom-btn btn-5" data-toggle="modal" data-target="#enrollBookModal"><span>등록</span></button>
 			<!-- <button type="submit" class="btn btn-md btn-outline-primary" id="btn-enroll" onclick="bookEnroll();">저장</button> -->
 		</div>
 	</div>
@@ -67,11 +67,7 @@
 	</div>
 	<div class="line"></div>
 </section>
-<form name="bookEnrollFrm" method="POST">
-	<input type="hidden" name="score" id="book-score" value="0"/>
-	<input type="hidden" name="isbn13" id="book-isbn13" value=""/>
-	<input type="hidden" name="book-status" id="book-status" />
-</form>
+
 <script>
 <%-- 제출 --%>
 const bookEnroll = () => {
@@ -86,13 +82,57 @@ const bookEnroll = () => {
 		alert('책 상태를 선택해주세요.');
 		return;
 	}
-	console.log(document.querySelector("#book-status"));
-	console.log(document.bookEnrollFrm.score);
-	console.log(document.bookEnrollFrm.isbn13);
+	console.log(document.querySelector("#book-status").value);
+	console.log(document.bookEnrollFrm.score.value);
+	console.log(document.bookEnrollFrm.isbn13.value);
+	console.log(document.bookEnrollFrm.content);
 	
 	//document.bookEnrollFrm.submit();
 };
+</script>
+<%-- 책 등록 form modal --%>
+<div class="modal fade" id="enrollBookModal" tabindex="-1" role="dialog" aria-labelledby="enrollBookModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="enrollBookModalLabel">책 등록</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form:form name="bookEnrollFrm">
+          <div class="form-group">
+	            <input type="text" class="form-control" id="nickname" value="${loginMember.nickname}" readonly>
+	            <input type="hidden" class="form-control" id="member_id" value="${loginMember.memberId}">
+	            <input type="hidden" name="score" id="book-score" value="0"/>
+				<input type="hidden" name="isbn13" id="book-isbn13" value=""/>
+				<input type="hidden" name="book-status" id="book-status" />
+          </div>
+          <div class="form-group">
+          	<c:if test="${document.querySelector('#book-status').value != '읽음'}">
+          		<h4 id="modalBookTitle"></h4>
+          	</c:if>
+          	<c:if test="${document.querySelector('#book-status').value == '읽음'}">
+            <label for="content" class="col-form-label">한줄평(250자 이내):</label>
+            <textarea class="form-control" id="content" name="content"></textarea>
+          	</c:if>
+          </div>
+        </form:form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+        <button type="button" class="btn btn-primary" onclick="bookEnroll();">책등록</button>
+      </div>
+    </div>
+  </div>
+</div>
 
+
+
+
+
+<script>
 <%-- 상단 제목 바 --%>
 let imgDiv = document.querySelector(".book-image");
 let header = document.querySelector("#header-container")
@@ -141,6 +181,7 @@ window.addEventListener('load', () => {
 			document.querySelector("#book-isbn13").value = `${isbn13}`;
 			document.querySelector("#title-p").innerHTML +=`\${title}`;
 			document.querySelector("#title").innerText=`\${title}`;
+			document.querySelector("#modalBookTitle").innerText=`\${title}`;
 			document.querySelector("#subTitle").innerText=`\${subTitle}`;
 			const divDescription = `
 				<div class="book-info">
