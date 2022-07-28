@@ -60,7 +60,16 @@ public class ClubServiceImpl implements ClubService {
 		RowBounds rowBounds = new RowBounds(offset, numPerPage);
 		
 		// 1. club 찾아와
-		return clubDao.selectClubList(rowBounds);
+		List<Club> list = clubDao.selectClubList(rowBounds);
+
+		// 2. club에 사진 할당해
+		for(Club club : list) {
+			List<ClubBook> bookList = clubDao.selectClubBook(club.getClubNo());
+			club.setBookList(bookList);
+		}
+		
+		return list;
+		
 	}
 
 	@Override

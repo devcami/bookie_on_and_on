@@ -47,6 +47,8 @@ public class ClubController {
 			ModelAndView mav,
 			HttpServletRequest request) {
 		
+		log.debug("cPage = {}", cPage);
+		
 		try {
 			
 			// 목록 조회

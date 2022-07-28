@@ -34,4 +34,6 @@ public interface ClubDao {
 
 	List<Mission> getMissions(Map<String, Object> param);
 
+	List<ClubBook> selectClubBook(int clubNo);
+
 }

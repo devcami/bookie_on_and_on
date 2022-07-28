@@ -18,14 +18,16 @@
 			<i class="fa-solid fa-angle-left" onclick="location.href='/bookie/club/clubList.do'"></i>
 			<span>[북클럽] ${club.title}</span>					
 		</div>
-		<div id="likeWishDiv">
-			<span class="fa-stack fa-lg" id='h-span'>
-			  <i class="fa fa-heart fa-regular fa-stack-1x front" ></i>
-			</span>
-			<span class="fa-stack fa-lg" id='h-span'>
-			  <i class="fa fa-bookmark fa-regular fa-stack-1x front"></i>
-			</span>
-		</div>
+		<sec:authorize access="hasRole('ROLE_USER')">
+			<div id="likeWishDiv">
+				<span class="fa-stack fa-lg" id='h-span'>
+				  <i class="fa fa-heart fa-regular fa-stack-1x front" ></i>
+				</span>
+				<span class="fa-stack fa-lg" id='h-span'>
+				  <i class="fa fa-bookmark fa-regular fa-stack-1x front"></i>
+				</span>
+			</div>		
+		</sec:authorize>
 	</div>
 </div>
 <section id="content">

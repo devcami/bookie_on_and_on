@@ -17,18 +17,18 @@
 		      <option ${param.searchType eq "newList"? 'selected' : ''} value="newList">최신순</option>
 		      <option ${param.searchType eq "oldList"? 'selected' : ''} value="oldList">마감순</option>
 		    </select>
-			<%-- <sec:authorize access="hasRole('ROLE_ADMIN')"> --%>
+			<sec:authorize access="hasRole('ROLE_ADMIN')">
 			    <button 
 			    	id="btn-enroll"
 			    	class="btn btn-sm" 
 			    	onclick="location.href='${pageContext.request.contextPath}/club/enrollClub.do';">북클럽 등록</button>	    	
-			<%-- </sec:authorize> --%>
-			<%-- <sec:authorize access="hasRole('ROLE_USER')"> 
+			</sec:authorize>
+			<sec:authorize access="hasRole('ROLE_USER')"> 
 			    <button 
 			    	id="btn-enroll"
 			    	class="btn btn-sm" 
 			    	onclick="location.href='${pageContext.request.contextPath}/club/enrollClub.do';">나의 북클럽</button>	    	
-			< </sec:authorize> --%>
+			</sec:authorize>
 			<%-- <sec:authorize access="hasRole('ROLE_CLUB')"> --%>
 			<button 
 			    	id="btn-enroll"
