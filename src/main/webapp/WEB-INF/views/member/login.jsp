@@ -20,9 +20,7 @@
             <form action="/loginPost">
               <div class="form-group">
                 <label for="exampeleInputEmail1">회원 아이디👨‍👩‍👦‍👦</label>
-                <input type="loginID"
-                class="form-control form-control-sm"
-                id="id" name="id" placeholder="User ID...">
+                <input type="loginID" class="form-control form-control-sm" id="id" name="id" placeholder="User ID..." required>
               </div>
               <div class="form-group">
                 <label for="exampeleInputPassword">비밀번호0🔒</label>
@@ -37,10 +35,6 @@
               <button type="submit" class="btn btn-primary btn-block">
                 회원가입
               </button>
-
-             
-
-
             </form>
           </div>
         </div>
