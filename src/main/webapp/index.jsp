@@ -21,7 +21,7 @@
 		</div>
 		<div class="article goto">
 			<div class="button d-grid col-md-12" onclick="">
-				<p class="col-md-12 m-0 small">님을 위한</p>
+				<p class="col-md-12 m-0 small">${loginMember.nickname}님을 위한</p>
 				<p><i class="fa-solid fa-hand-point-right"></i></p>
 				<p class="col-12 m-0">추천 도서</p>
 			</div>
