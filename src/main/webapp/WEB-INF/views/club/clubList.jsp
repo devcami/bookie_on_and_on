@@ -22,7 +22,7 @@
 			    <button 
 			    	id="btn-enroll"
 			    	class="btn btn-sm" 
-			    	onclick="location.href='${pageContext.request.contextPath}/club/enrollClub.do';">나의 북클럽</button>	    	
+			    	onclick="location.href='${pageContext.request.contextPath}/club/enrollClub.do';">북클럽 등록</button>	    	
 			<%-- </sec:authorize> --%>
 			<%-- <sec:authorize access="hasRole('ROLE_USER')"> 
 			    <button 
@@ -30,6 +30,12 @@
 			    	class="btn btn-sm" 
 			    	onclick="location.href='${pageContext.request.contextPath}/club/enrollClub.do';">나의 북클럽</button>	    	
 			< </sec:authorize> --%>
+			<%-- <sec:authorize access="hasRole('ROLE_CLUB')"> --%>
+			<button 
+			    	id="btn-enroll"
+			    	class="btn btn-sm" 
+			    	onclick="location.href=`${pageContext.request.contextPath}/club/45/enrollClub.do`;">북클럽 상세 페이지</button>
+			<%-- </sec:authorize> --%>
 		</div>	
 	</div>
 	<div id="clubListDiv">

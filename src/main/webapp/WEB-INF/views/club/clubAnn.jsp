@@ -12,7 +12,7 @@
 <div id="title-header" class="" style="display: none;">
 	<div id="header-div">
 		<div id="title-header-left">
-			<i class="fa-solid fa-angle-left" onclick="location.href='/bookie/search/searchForm.do'"></i>
+			<i class="fa-solid fa-angle-left" onclick="location.href='/bookie/club/clubList.do'"></i>
 			<span>[북클럽] ${club.title}</span>					
 		</div>
 		<div id="likeWishDiv">
