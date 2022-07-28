@@ -3,16 +3,29 @@ section{
 	min-height: 1000px;
 }
 #intro-container img{
+	margin: 40px 0;
 	width: 100%;
 }
 
 .article{
 	margin: 50px 20px;
 	text-align : center;
+	line-height: 14px;
 }
 
-#intro-article1{
-	
+.article h1{
+	font-size: 50px;
+	color: #FE9801;
+}
+.article h3{
+	font-size: 35px;
+	color : #aeaeae;
+}
+.article span{
+	font-size: 25px;
+	display: block;
+	margin: 20px;
+	color: #697C37;
 }
 .line{
 	width: 100%;
