@@ -1,7 +1,6 @@
 --==============================================
 -- TABLE 26개
 --==============================================
-
 -- 1. member 
 create table member (
     member_id varchar2(200),
@@ -259,54 +258,55 @@ create table report (
     constraint ck_report_category check(category in ('pheed','pheed_comment','dokoo','dokoo_comment'))
 );
 
-create sequence seq_report_no;
 
+create sequence seq_report_no;
 -- 21. 찜하기피드 테이블
 create table wishlist_pheed (
     pheed_no number not null,
     member_id varchar2(200) not null,
-    constraint fk_wishlist_pheed_member_id foreign key(member_id) references member(member_id)
+    constraint fk_wishlist_pheed_member_id foreign key(member_id) references member(member_id) on delete set null
 );
 
 -- 22. 찜하기독후감 테이블
 create table wishlist_dokoo (
     dokoo_no number not null,
     member_id varchar2(200) not null,
-    constraint fk_wishlist_dokoo_member_id foreign key(member_id) references member(member_id)
+    constraint fk_wishlist_dokoo_member_id foreign key(member_id) references member(member_id) on delete set null
 );
 
 -- 23. 찜하기북클럽 테이블
 create table wishlist_club (
     club_no number not null,
     member_id varchar2(200) not null,
-    constraint fk_wishlist_club_member_id foreign key(member_id) references member(member_id)
+    constraint fk_wishlist_club_member_id foreign key(member_id) references member(member_id) on delete set null
 );
 
 -- 24. 좋아요피드 테이블
 create table likes_pheed (
     pheed_no number not null,
     member_id varchar2(200) not null,
-    constraint fk_likes_pheed_member_id foreign key(member_id) references member(member_id)
+    constraint fk_likes_pheed_member_id foreign key(member_id) references member(member_id) on delete set null
 );
 
 -- 25. 좋아요독후감 테이블
 create table likes_dokoo (
     dokoo_no number not null,
     member_id varchar2(200) not null,
-    constraint fk_likes_dokoo_member_id foreign key(member_id) references member(member_id)
+    constraint fk_likes_dokoo_member_id foreign key(member_id) references member(member_id) on delete set null
 );
 
 -- 26. 좋아요북클럽 테이블
 create table likes_club (
     club_no number not null,
     member_id varchar2(200) not null,
-    constraint fk_likes_club_member_id foreign key(member_id) references member(member_id)
+    constraint fk_likes_club_member_id foreign key(member_id) references member(member_id) on delete set null
 );
 
 --==============================================
 -- 조회
 --==============================================
 select * from user_sequences; -- 시퀀스 조회
+delete from member where member_id = 'admin';
 
 select * from member;
 select * from authority;
@@ -342,8 +342,17 @@ create table persistent_logins (
     series varchar(64) primary key, 
     token varchar(64) not null,  -- username, password, expire time을 단방향 암호화한 값
     last_used timestamp not null);
-
 select * from persistent_logins;
+
+
+select
+    *
+from
+    member m 
+        join authority a on m.member_id = a.member_id
+        left join interest i on m.member_id = i.member_id 
+where
+    m.member_id = 'tmddbs';
 
 select 
     * 
@@ -355,55 +364,6 @@ select * from pheed_attachment;
 select * from pheed;
 
 -- sample data
-insert into member
-values(
-    'honggd1',
-    '1234',
-    sysdate,
-    '길동1',
-    '01012341234',
-    'M',
-    to_date('90-12-25','rr-mm-dd'),
-    '안녕하세요 홍길동입니다.',
-    null,
-    null,
-    'https://www.instagram.com/honggd',
-    default
-);
-insert into member
-values(
-    'sinsa',
-    '1234',
-    sysdate,
-    '신사',
-    '01012345678',
-    'F',
-    to_date('90-10-25','rr-mm-dd'),
-    '안녕하세요 신사임당입니다.',
-    null,
-    null,
-    'https://www.instagram.com/sinsa',
-    default
-);
-insert into member
-values(
-    'admin',
-    '1234',
-    sysdate,
-    '빈지노',
-    '01011111234',
-    'M',
-    to_date('87-09-12','rr-mm-dd'),
-    '안녕하세요 관리자입니다.',
-    null,
-    null,
-    'https://www.instagram.com/realisshoman',
-    default
-);
-insert into authority values ('honggd', 'ROLE_USER');
-insert into authority values ('admin', 'ROLE_USER');
-insert into authority values ('admin', 'ROLE_ADMIN');
-insert into interest values ('honggd', '취미, 공학');
 
 insert into pheed values(seq_pheed_no.nextval, 'honggd1', '9791197912412', '23', '피드피드테스트팔로워테스트','O');
 insert into pheed values(seq_pheed_no.nextval, 'honggd', '9791166890871', '55', '피드피드테스트2','F');
@@ -438,6 +398,7 @@ insert into dokoo_comment values(seq_dokooc_no.nextval, 2, '길동', null, sysda
 insert into dokoo_comment values(seq_dokooc_no.nextval, 3, '빈지노', null, sysdate, 'commentTest!!');
 insert into dokoo_comment values(seq_dokooc_no.nextval, 3, '길동1', null, sysdate, 'commentTest!!');
 
+
 alter table mission modify content varchar2(4000);
 commit;
 
@@ -448,8 +409,10 @@ select * from mission;
 select * from my_club;
 select * from member;
 
-
-select * from interest;
+insert into authority values ('admin', 'ROLE_ADMIN');
+select * from authority;
+delete from authority where member_id = 'tmddbs' and auth = 'ROLE_ADMIN';
+commit;
 
 
 insert into my_club values ('25', 'honggd', 5000);
@@ -496,18 +459,11 @@ SELECT
 FROM user_tab_columns; -- 해당 계정에 속한 테이블 
    --  dba_tab_columns 전체 테이블의 경우 
 alter table pheed add enroll_date date default sysdate;
-select * from member;
-select * from likes_club;
-select * from club;
-select * from mission;
 
 insert into likes_club values (22, 'honggd');
 insert into likes_club values (22, 'sinsa');
 insert into likes_club values (26, 'honggd1');
 
-delete from club where club_no = 22;
-
-commit;
 
 select
 		    c.*,
@@ -523,22 +479,7 @@ select
 		    	join mission m on c.club_no = m.club_no
 		where 
 			c.club_no = 26;
-            
-select * from mission;
-
-
-select * from dokoo_comment;
-select * from dokoo;
-		select
-			d.*,
-			m.*,
-			c.*
-		from
-			dokoo d
-				left join member m on d.member_id = m.member_id
-				left join dokoo_comment c on d.dokoo_no = c.dokoo_no
-		where
-			d.dokoo_no = 21;
+    
             
             
 select* from mission where club_no = 43 and m_item_id = 9788963710358;

@@ -180,8 +180,11 @@ document.querySelectorAll(".btn-check").forEach((select) => {
 	if(select.id != 'btnradio3'){
 		select.addEventListener('click' , () => {
 			$('.starRev span').removeClass('on');
-			if(document.querySelector("#book-score").value != "0")
+			if(document.querySelector("#book-score").value != "0"){
 				alert('별점은 다 읽은 책에만 등록할 수 있습니다.');
+				document.querySelector("#book-score").value = "0";
+			}
+			
 		});
 	}
 		
@@ -191,6 +194,7 @@ const deselect = () => {
 	$("input:radio[name='status']").prop('checked', false);
 	$('.starRev span').removeClass('on');
 	document.querySelector("#book-status").value = "";
+	document.querySelector("#book-score").value = "0";
 };
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

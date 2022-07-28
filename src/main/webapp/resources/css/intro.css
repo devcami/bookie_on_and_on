@@ -1,0 +1,21 @@
+@charset "UTF-8";
+section{
+	min-height: 1000px;
+}
+#intro-container img{
+	width: 100%;
+}
+
+.article{
+	margin: 50px 20px;
+	text-align : center;
+}
+
+#intro-article1{
+	
+}
+.line{
+	width: 100%;
+	height: 30px;
+	background-color: #F4EEC7;
+}
