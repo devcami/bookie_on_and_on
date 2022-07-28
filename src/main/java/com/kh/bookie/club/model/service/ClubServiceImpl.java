@@ -57,8 +57,7 @@ public class ClubServiceImpl implements ClubService {
 	@Override
 	public List<Club> selectClubList(int cPage, int numPerPage) {
 		int offset = (cPage - 1) * numPerPage;
-		int limit = numPerPage;
-		RowBounds rowBounds = new RowBounds(offset, limit);
+		RowBounds rowBounds = new RowBounds(offset, numPerPage);
 		
 		// 1. club 찾아와
 		return clubDao.selectClubList(rowBounds);

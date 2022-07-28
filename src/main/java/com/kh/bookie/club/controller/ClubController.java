@@ -50,13 +50,15 @@ public class ClubController {
 		try {
 			
 			// 목록 조회
-			int numPerPage = 5;
+			int numPerPage = 8;
 			List<Club> list = clubService.selectClubList(cPage, numPerPage);
-			log.debug("list = {}", list);
+			log.debug("list = {}", list.size());
 			mav.addObject("list", list);
 			
 			// 페이지 바
 			int totalClub = clubService.selectTotalClub();
+			log.debug("totalClub = {}", totalClub);
+			
 			String url = request.getRequestURI();
 			
 			String pagebar = HelloSpringUtils.getPagebar(cPage, numPerPage, totalClub, url);
@@ -95,15 +97,15 @@ public class ClubController {
 		try {
 
 //			log.debug("club = {}", club);
-			log.debug("isbn13 = {}", isbn13);
-			log.debug("bookImg = {}", bookImg);
+//			log.debug("isbn13 = {}", isbn13);
+//			log.debug("bookImg = {}", bookImg);
 //			log.debug("missionName = {}", missionName);
 //			log.debug("missionDate = {}", missionDate);
 //			log.debug("missionContent = {}", missionContent);
 //			log.debug("missionDeposit = {}", finalDeposit);
 //			log.debug("mCount = {}", mCount);
 //			log.debug("mCount = {}", mCount);
-			log.debug("bookName = {}", bookName);
+//			log.debug("bookName = {}", bookName);
 
 //			log.debug("interests = {}", interests);
 			String interest = "";
