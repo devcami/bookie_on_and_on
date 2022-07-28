@@ -1,16 +1,10 @@
 @charset "UTF-8";
 
-html,
-body{
-    height: 100%;
-    background-color:  #222d32 !important ;
-    font-family: 'Noto Sans KR', sans-serif;
-}
-
 .global-container{
-    height: 100%;
+	background: #FFF;
+    min-height: 100%;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     color: #fe9801 ;
 }
@@ -21,13 +15,13 @@ form{
     margin-top: 30px;
 }
 .login-form{
-    width: 300px;
-    height: 450px;
+    width: 450px;
+    height: 500px;
     margin: 20px;
    
 }
 
-input[type="loginID"],
+input[type="text"],
 input[type="password"]{
     background: #e5f0b8 ;
     border: 2px solid #fe9801;
@@ -35,8 +29,31 @@ input[type="password"]{
     margin-bottom: 25px;
 }
 
-button[type="loginsucess"]{
-    background: #fe9801;
-    border: 2px solid #ecd7b1;
-    box-shadow: #e5f0b8;
+button.btn{
+	background-color: #fe9801;
+	border: none;
+	box-shadow: 0 0 5px #00000040;
+	transition: 0.2s;
 }
+button.btn:hover{
+	background-color: #CCDA46;
+}
+
+
+
+/*********** 회원가입 CSS ***********/
+/* 회원 가입 */
+div#enroll-container { width:700px; }
+div#enroll-container input, div#enroll-container select { margin-bottom:10px; }
+div#enroll-container table th { text-align:right; padding-right:10px; }
+div#enroll-container table td { text-align:left; }
+
+
+/* 중복아이디체크관련 */
+div#memberId-container, div#nickname-container { position:relative; padding:0px; }
+span.guide { display:none; font-size:12px; position:absolute; top:12px; right:10px; }
+span.ok, span.ok1 { color:green; }
+span.error, span.error1 { color:red; }
+
+
+

@@ -10,9 +10,8 @@
 	<jsp:param value="북이온앤온" name="title"/>
 </jsp:include>
 	<section id="content">
-		<div class="article main-banner">
-			<img src="${pageContext.request.contextPath}/resources/images/main-banner.png" alt="메인배너" 
-					onclick="${pageContext.request.contextPath}/search/intro.do"/>
+		<div class="article main-banner" onclick="location.href='${pageContext.request.contextPath}/search/intro.do';">
+			<img src="${pageContext.request.contextPath}/resources/images/main-banner.png" alt="메인배너" />
 		</div>
 		<div class="article book-club-ann">
 			<img src="${pageContext.request.contextPath}/resources/images/book-club-8.png" alt="북클럽공고" />
@@ -22,7 +21,7 @@
 		</div>
 		<div class="article goto">
 			<div class="button d-grid col-md-12" onclick="">
-				<p class="col-md-12 m-0 small">님을 위한</p>
+				<p class="col-md-12 m-0 small">${loginMember.nickname}님을 위한</p>
 				<p><i class="fa-solid fa-hand-point-right"></i></p>
 				<p class="col-12 m-0">추천 도서</p>
 			</div>

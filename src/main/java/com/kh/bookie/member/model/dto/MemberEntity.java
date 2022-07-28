@@ -1,6 +1,9 @@
 package com.kh.bookie.member.model.dto;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,7 +28,9 @@ public class MemberEntity {
 	protected String phone;
 	@NonNull
 	protected Gender gender;
-	protected LocalDateTime birthday;
+	
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	protected LocalDate birthday;
 	protected String introduce;
 	protected String renamedFilename;
 	protected String originalFilename;

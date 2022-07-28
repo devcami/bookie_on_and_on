@@ -35,6 +35,9 @@ public class SearchController {
 	@Autowired
 	ServletContext application;
 	
+	@GetMapping("/intro.do")
+	public void intro() {}
+	
 	@GetMapping("/searchForm.do")
 	public void searchForm() {}
 	

@@ -168,11 +168,12 @@
 						<div id="collapse9" class="collapse"
 							aria-labelledby="heading9" data-parent="#ad9">
 							<div class="card-body">
-						        <p class="card-text" data-category="children">유아/어린이/청소년</p>
+						        <p class="card-text" data-category="baby">유아</p>
+						        <p class="card-text" data-category="children">어린이</p>
+						        <p class="card-text" data-category="teenager">청소년</p>
 						        <p class="card-text" data-category="parent">좋은부모</p>
 						        <p class="card-text" data-category="certification">수험서/자격증</p>
 						        <p class="card-text" data-category="professional">대학교재/전문서적</p>
-						        <p class="card-text" data-category="reference">참고서</p>
 							</div>
 						</div>
 					</div>

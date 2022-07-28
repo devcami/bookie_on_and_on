@@ -15,8 +15,8 @@
 		<h1>분야별 최신 도서</h1> 
 		<p id="resultP" ></p>
 		<div class="btns text-left" >
-			<button type="button" class="btn bg-white btn-lg" onclick="getPage(1, 'itemNewAll');">최신순</button>
-			<button type="button" class="btn bg-white btn-lg" onclick="getPage(1, 'Bestseller');">베스트순</button>
+			<button type="button" class="btn bg-white btn-lg" onclick="getPage(1, 'itemNewAll', categoryId);">최신순</button>
+			<button type="button" class="btn bg-white btn-lg" onclick="getPage(1, 'Bestseller', categoryId);">베스트순</button>
 		</div>
 	</div>
 	<div id="book-container">
@@ -28,41 +28,40 @@
 </section>
 
 <script>
+var categoryId;
 window.addEventListener('load', () => {
 	const p = document.querySelector("#resultP");
 	const category = '${category}';
 	console.log(category);
-	if(category == 'economy') p.innerText = '경제 ➡︎ 경제/경영';
-	if(category == 'computer') p.innerText = '공학 ➡︎ 컴퓨터/모바일';
-	if(category == 'science') p.innerText = '공학 ➡︎ 과학';
-	if(category == 'novel') p.innerText = '문학 ➡︎ 소설/시/희곡';
-	if(category == 'classic') p.innerText = '문학 ➡︎ 고전';
-	if(category == 'fiction') p.innerText = '문학 ➡︎ 장르소설';
-	if(category == 'selfImprovement') p.innerText = '자기계발 ➡︎ 자기계발';
-	if(category == 'language') p.innerText = '언어 ➡︎ 외국어';
-	if(category == 'travel') p.innerText = '취미 ➡︎ 여행';
-	if(category == 'home') p.innerText = '취미 ➡︎ 가정/요리/뷰티';
-	if(category == 'health') p.innerText = '취미 ➡︎ 건강/취미/레저';
-	if(category == 'essay') p.innerText = '에세이 ➡︎ 에세이'
-	if(category == 'art') p.innerText = '예술 ➡︎ 예술/대중문화';
-	if(category == 'children') p.innerText = '교육 ➡︎ 유아/어린이/청소년';
-	if(category == 'parent') p.innerText = '교육 ➡︎ 좋은부모';
-	if(category == 'certification') p.innerText = '교육 ➡︎ 수험서/자격증';
-	if(category == 'professional') p.innerText = '교육 ➡︎ 대학교재/전문서적';
-	if(category == 'reference') p.innerText = '교육 ➡︎ 참고서';
-	if(category == 'history') p.innerText = '인문학 ➡︎ 역사';
-	if(category == 'humanities') p.innerText = '인문학 ➡︎ 인문학';
-	if(category == 'socialScience') p.innerText = '인문학 ➡︎ 사회과학';
-	if(category == 'religion') p.innerText = '종교 ➡︎ 종교/역학';
-	if(category == 'cartoon') p.innerText = '기타 ➡︎ 만화';
-	if(category == 'magazine') p.innerText = '기타 ➡︎ 잡지';
-	if(category == 'etc') p.innerText = '기타 ➡︎ 사전/기타';
-	getPage(1, 'ItemNewAll');
+	if(category == 'economy') {p.innerText = '경제 ➡︎ 경제/경영'; categoryId = 170}
+	if(category == 'computer') {p.innerText = '공학 ➡︎ 컴퓨터/모바일'; categoryId = 351}
+	if(category == 'science') {p.innerText = '공학 ➡︎ 과학'; categoryId = 987}
+	if(category == 'novel') {p.innerText = '문학 ➡︎ 소설/시/희곡'; categoryId = 1}
+	if(category == 'classic') {p.innerText = '문학 ➡︎ 고전'; categoryId = 2105}
+	if(category == 'fiction') {p.innerText = '문학 ➡︎ 장르소설'; categoryId = 112011}
+	if(category == 'selfImprovement') {p.innerText = '자기계발 ➡︎ 자기계발'; categoryId = 336}
+	if(category == 'language') {p.innerText = '언어 ➡︎ 외국어'; categoryId = 1322}
+	if(category == 'travel') {p.innerText = '취미 ➡︎ 여행'; categoryId = 1196}
+	if(category == 'home') {p.innerText = '취미 ➡︎ 가정/요리/뷰티'; categoryId = 1230}
+	if(category == 'health') {p.innerText = '취미 ➡︎ 건강/취미/레저'; categoryId = 55890}
+	if(category == 'essay') {p.innerText = '에세이 ➡︎ 에세이'; categoryId = 55889}
+	if(category == 'art') {p.innerText = '예술 ➡︎ 예술/대중문화'; categoryId = 517}
+	if(category == 'baby') {p.innerText = '교육 ➡︎ 유아'; categoryId = 13789}
+	if(category == 'children') {p.innerText = '교육 ➡︎ 어린이'; categoryId = 1108}
+	if(category == 'teenager') {p.innerText = '교육 ➡︎ 청소년'; categoryId = 1137}
+	if(category == 'parent') {p.innerText = '교육 ➡︎ 좋은부모'; categoryId = 2030}
+	if(category == 'certification') {p.innerText = '교육 ➡︎ 수험서/자격증'; categoryId = 1383}
+	if(category == 'professional') {p.innerText = '교육 ➡︎ 대학교재/전문서적'; categoryId = 8257}
+	if(category == 'history') {p.innerText = '인문학 ➡︎ 역사'; categoryId = 74}
+	if(category == 'humanities') {p.innerText = '인문학 ➡︎ 인문학'; categoryId = 656}
+	if(category == 'socialScience') {p.innerText = '인문학 ➡︎ 사회과학'; categoryId = 798}
+	if(category == 'religion') {p.innerText = '종교 ➡︎ 종교/역학'; categoryId = 2137}
+	if(category == 'cartoon') {p.innerText = '기타 ➡︎ 만화'; categoryId = 2551}
+	if(category == 'magazine') {p.innerText = '기타 ➡︎ 잡지'; categoryId = 2913}
+	if(category == 'etc') {p.innerText = '기타 ➡︎ 사전/기타'; categoryId = 4395}
+	getPage(1, 'ItemNewAll', categoryId);
 });
-const getCategory = () => {
-	
-}
-const getPage = (cPage, sort) => {
+const getPage = (cPage, sort, categoryId) => {
 	//console.log(cPage, maxResult);
 	const container = document.querySelector("#book-container");
 	container.innerHTML = "";
@@ -75,7 +74,7 @@ const getPage = (cPage, sort) => {
 			Output : 'js',
 			Cover : 'mini',
 			Version : '20131101',
-			CategoryId : '3103',
+			CategoryId : categoryId,
 	};
 	$.ajax({
 		url : `${pageContext.request.contextPath}/search/selectBookListByCategory.do`,
