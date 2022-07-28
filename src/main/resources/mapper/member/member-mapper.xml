@@ -4,6 +4,7 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.kh.bookie.member.model.dao.MemberDao">
+<<<<<<< HEAD
 <!--<select  id="loginCheck" resultType="String">
 select name
 from member
@@ -15,4 +16,47 @@ where member_id=#{member_id} and password=#{password}
 		values(
 			#{memberId}, #{auth})	
 	</insert>
+=======
+
+	<insert id="memberEnroll">
+		insert into
+			member
+		values(
+			#{memberId},
+			#{password},
+			default,
+			#{nickname},
+			#{phone},
+			#{gender},
+			#{birthday},
+			#{introduce},
+			null,
+			null,
+			#{sns},			
+			default)
+	</insert>
+	
+	<insert id="insertAuthority">
+		insert into
+			authority
+		values(
+			#{memberId}, #{auth})
+	</insert>
+	<insert id="insertInterest">
+		insert into
+			interest
+		values(
+			#{memberId}, #{interest})
+	</insert>
+
+	<select id="selectOneMember" resultType="member">
+		select * from member where member_id = #{memberId}
+	</select>
+	
+	<select id="selectOneMemberByNickname" resultType="member">
+		select * from member where nickname = #{nickname}
+	</select>
+
+
+>>>>>>> branch 'master' of https://github.com/devcami/bookie_on_and_on.git
 </mapper>

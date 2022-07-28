@@ -30,7 +30,7 @@ public class MemberServiceImpl implements MemberService {
 	public int updateMember(Member member) {
 		// TODO Auto-generated method stub
 		return 0;
-	}0
+	}
 
 	@Override
 	public List<Member> selectMemberList() {

@@ -30,7 +30,6 @@
 
 <!-- 사용자작성 css -->
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/style.css" />
-
 <script>
 <c:if test="${not empty msg}">
 	alert('${msg}');
@@ -38,10 +37,12 @@
 </script>
 </head>
 <body>
+<sec:authentication property="principal" var="loginMember"/>
 <div id="body-container">
 	<header>
 		<div id="header-container">
 			<img src="${pageContext.request.contextPath}/resources/images/logo.png" alt="북이온앤온로고" width="100px" onclick="location.href='${pageContext.request.contextPath}'"/>
+<<<<<<< HEAD
 			<!-- 로그인 한경우 -->
 			<sec:authorize access="isAuthenticated()">
 			    	
@@ -59,6 +60,20 @@
 			<sec:authorize access="isAnonymous()">		
 			<i class="fa-solid fa-user-plus i-login" onclick="location.href='${pageContext.request.contextPath}/member/login.do'"></i>
 			</sec:authorize>
+=======
+			
+			<!-- 로그인 한 경우 -->
+			<sec:authorize access="isAuthenticated()">
+				<form:form id="logout-btn" name="logoutFrm" action="${pageContext.request.contextPath}/member/logout.do" method="post">
+					<i class="fa-solid fa-arrow-right-from-bracket" id="logout-i" onclick="logout();"></i>
+					<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+				</form:form>
+			</sec:authorize>
+			<sec:authorize access="isAnonymous()">
+				<i class="fa-solid fa-user-plus i-login" onclick="location.href='${pageContext.request.contextPath}/member/login.do'"></i>
+			</sec:authorize>
+			
+>>>>>>> branch 'master' of https://github.com/devcami/bookie_on_and_on.git
 			<img class="sh-right" src="${pageContext.request.contextPath}/resources/images/icon/search.png" alt="검색" onclick="location.href='${pageContext.request.contextPath}/search/searchForm.do'" />
 			<%-- <img class="sh-right" src="${pageContext.request.contextPath}/resources/images/icon/alarm.png" alt="알림"  /> --%>
 		</div>
@@ -132,4 +147,10 @@
 		</nav>
 	</header>
 
-
+<script>
+const logout = () => {
+	if(confirm('로그아웃 하시겠습니까?')){
+		document.logoutFrm.submit();
+	} else return;
+}
+</script>

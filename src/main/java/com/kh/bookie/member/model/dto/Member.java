@@ -1,5 +1,7 @@
 package com.kh.bookie.member.model.dto;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -7,17 +9,19 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.NonNull;
 
 @Data
 @NoArgsConstructor
-@ToString(callSuper = true)
+@AllArgsConstructor
 public class Member extends MemberEntity implements UserDetails{
 	List<SimpleGrantedAuthority> authorities;
 	String[] interests;
 
+	
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return authorities;
@@ -47,6 +51,21 @@ public class Member extends MemberEntity implements UserDetails{
 	public boolean isEnabled() {
 		return true;
 	}
+
+	public Member(@NonNull String memberId, @NonNull String password, @NonNull LocalDateTime enrollDate,
+			@NonNull String nickname, @NonNull String phone, @NonNull Gender gender, LocalDate birthday,
+			String introduce, String renamedFilename, String originalFilename, String sns, int point) {
+		super(memberId, password, enrollDate, nickname, phone, gender, birthday, introduce, renamedFilename, originalFilename,
+				sns, point);
+		// TODO Auto-generated constructor stub
+	}
+
+	public Member(@NonNull String memberId, @NonNull String password, @NonNull LocalDateTime enrollDate,
+			@NonNull String nickname, @NonNull String phone, @NonNull Gender gender) {
+		super(memberId, password, enrollDate, nickname, phone, gender);
+		// TODO Auto-generated constructor stub
+	}
+
 
 	
 }

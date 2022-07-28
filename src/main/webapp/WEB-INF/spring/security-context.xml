@@ -15,22 +15,13 @@
 	<http security="none" pattern="/resources/**" />
 	<http auto-config="true">
 		<intercept-url pattern="/**" access="permitAll"/>
-		<!-- <intercept-url pattern="/index.jsp" access="permitAll"/>
-		<intercept-url pattern="/board/boardList.do" access="permitAll"/>
-		<intercept-url pattern="/board/boardDetail.do" access="permitAll"/>
 		
-		<intercept-url pattern="/menu/**" access="permitAll"/>
-		<intercept-url pattern="/data/**" access="permitAll"/>
-		
-		<intercept-url pattern="/admin/**" access="hasRole('ADMIN')"/>
-		
-		<intercept-url pattern="/member/memberLogin.do" access="isAnonymous()"/>
+		<intercept-url pattern="/member/login.do" access="isAnonymous()"/>
 		<intercept-url pattern="/member/memberEnroll.do" access="isAnonymous()"/>
 		<intercept-url pattern="/member/checkIdDuplicate.do" access="isAnonymous()"/>
 		
 
-		<intercept-url pattern="/**" access="isAuthenticated()"/>
-		 -->
+		<!-- <intercept-url pattern="/**" access="isAuthenticated()"/> -->
 		
 		<!--
 			login-page GET방식 폼 페이지 요청 (핸들러 작성 필요)
@@ -39,16 +30,15 @@
 			authentication-success-handler-ref=""
 			authentication-failure-forward-url="" 로그인 실패시 후처리 ..
 		 -->
-		 <!-- 기존 로그인폼을 우리 경로로 변환  -->
-		<form-login login-page="/member/memberLogin.do" 
-					login-processing-url="/member/memberLogin.do"
-					username-parameter="memberId" 
-					password-parameter="password"/>
+
+		<form-login login-page="/member/login.do" 
+					login-processing-url="/member/login.do"
+
 		<!-- 
 			logout-url POST logout요청 (핸들러 작성 생략 가능)
 			success-handler-ref="" 로그아웃 성공 시 후처리
 		 -->					
-		<logout logout-url="/member/memberLogout.do"
+		<logout logout-url="/member/logout.do"
 				logout-success-url="/"/>
 	
 				

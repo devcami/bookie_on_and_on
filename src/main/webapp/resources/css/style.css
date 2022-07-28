@@ -27,6 +27,8 @@ header div#header-container{
    	font-size: 30px;
 	margin: 0 auto;
 	padding: 15px;
+	z-index: 1;
+	
 }
 
 header div#header-container .i-login{
@@ -53,8 +55,24 @@ header div#header-container img:hover{
 header div#header-container img.sh-right{
 	float: right;
 }
+#logout-btn{
+	float: right;
+	display: inline-block;
+}
+#logout-btn #logout-i{
+	font-size: 60px;
+	color: #FE9801;
+	float: right;
+	vertical-align:middle;
+	margin: 18px 10px;
+	text-shadow : 3px 3px 1px #CCDA46;
+}
 
-
+#logout-btn #logout-i:hover{
+	color: #CCDA46 ;
+	cursor: pointer;
+	transform: scale(1.1);
+}
 
 /* navbar 통째 */
 header nav.fixed-bottom{
