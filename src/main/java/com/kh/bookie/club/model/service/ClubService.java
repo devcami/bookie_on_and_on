@@ -18,4 +18,16 @@ public interface ClubService {
 
 	List<Mission> getMissions(Map<String, Object> param);
 
+	List<String> getClubWishListbyMemberId(String username);
+
+	List<String> getClubLikesListbyMemberId(String username);
+
+	int insertClubLike(Map<String, Object> map);
+
+	int insertClubWishList(Map<String, Object> map);
+
+	int deleteClubLike(Map<String, Object> map);
+
+	int deleteClubWishList(Map<String, Object> map);
+
 }

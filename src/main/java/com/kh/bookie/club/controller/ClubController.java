@@ -1,5 +1,6 @@
 package com.kh.bookie.club.controller;
 
+import java.security.Principal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,6 +28,7 @@ import com.kh.bookie.club.model.dto.ClubBook;
 import com.kh.bookie.club.model.dto.Mission;
 import com.kh.bookie.club.model.service.ClubService;
 import com.kh.bookie.common.HelloSpringUtils;
+import com.kh.bookie.member.model.dto.Member;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -45,24 +48,55 @@ public class ClubController {
 	public ModelAndView clubList(
 			@RequestParam(defaultValue = "1") int cPage,
 			ModelAndView mav,
-			HttpServletRequest request) {
+			HttpServletRequest request,
+			Principal principal) {
 		
-		log.debug("cPage = {}", cPage);
 		
 		try {
+			
+			UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken)principal;
+			log.debug("authentication = {} ", authentication);
+			
+			if(authentication != null) {
+				Object _principal = authentication.getPrincipal();
+				Member loginMember = (Member)_principal;					
+				log.debug("있나여? loginMember = {}", loginMember.getUsername());
+				
+				
+				// 멤버 있으면 북클럽 찜 리스트 가져와 
+				List<String> clubWishList = clubService.getClubWishListbyMemberId(loginMember.getUsername());
+//				log.debug("clubWishList = {}", clubWishList);
+				
+				String wishStr = "";
+				for(int i = 0; i < clubWishList.size(); i++) {
+					wishStr += clubWishList.get(i);
+					wishStr +=  ",";
+				}
+				
+				mav.addObject("wishStr", wishStr);
+				
+				// 멤버 있으면 북클럽 하트 리스트 가져와 
+				List<String> clubLikesList = clubService.getClubLikesListbyMemberId(loginMember.getUsername());
+				
+				String likesStr = "";
+				for(int j = 0;  j < clubLikesList.size(); j++) {
+					likesStr += clubLikesList.get(j);
+					likesStr +=  ",";
+				}
+				mav.addObject("likesStr", likesStr);
+				
+			}
+			
+
 			
 			// 목록 조회
 			int numPerPage = 8;
 			List<Club> list = clubService.selectClubList(cPage, numPerPage);
-			log.debug("list = {}", list.size());
 			mav.addObject("list", list);
 			
 			// 페이지 바
 			int totalClub = clubService.selectTotalClub();
-			log.debug("totalClub = {}", totalClub);
-			
 			String url = request.getRequestURI();
-			
 			String pagebar = HelloSpringUtils.getPagebar(cPage, numPerPage, totalClub, url);
 			mav.addObject("pagebar", pagebar);
 			
@@ -242,4 +276,66 @@ public class ClubController {
 		
 		return ResponseEntity.ok(map);
 	}
+	
+	@PostMapping("/insertLikesWish.do")
+	public ResponseEntity<?> insertLikesWish(
+					@RequestParam String shape,
+					@RequestParam String memberId,
+					@RequestParam int clubNo){
+		
+		log.debug("shape = {}", shape);
+		log.debug("memberId = {}", memberId);
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("memberId", memberId);
+		map.put("clubNo", clubNo);		
+		
+		try {
+			if(shape.equals("heart")) {
+				// 하트인경우 하트
+				int result = clubService.insertClubLike(map);
+			}
+			else {
+				int result = clubService.insertClubWishList(map);
+			}
+			
+		} catch(Exception e) {
+			log.error("북클럽 하트/찜 등록 오류", e);
+			
+		}
+		return ResponseEntity.ok(null);
+	}
+	
+	
+	@PostMapping("/deleteLikesWish.do")
+	public ResponseEntity<?> deleteLikesWish(
+					@RequestParam String shape,
+					@RequestParam String memberId,
+					@RequestParam int clubNo){
+		
+		log.debug("shape = {}", shape);
+		log.debug("memberId = {}", memberId);
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("memberId", memberId);
+		map.put("clubNo", clubNo);		
+		
+		try {
+			if(shape.equals("heart")) {
+				// 하트인경우 하트
+				int result = clubService.deleteClubLike(map);
+			}
+			else {
+				int result = clubService.deleteClubWishList(map);
+			}
+			
+		} catch(Exception e) {
+			log.error("북클럽 하트/찜 삭제 오류", e);
+			
+		}
+		return ResponseEntity.ok(null);
+	}
+	
+	
+	
 }

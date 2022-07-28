@@ -104,4 +104,34 @@ public class ClubServiceImpl implements ClubService {
 		return clubDao.getMissions(param);
 	}
 
+	@Override
+	public List<String> getClubWishListbyMemberId(String username) {
+		return clubDao.getgetClubWishListbyMemberId(username);
+	}
+
+	@Override
+	public List<String> getClubLikesListbyMemberId(String username) {
+		return clubDao.getClubLikesListbyMemberId(username);
+	}
+
+	@Override
+	public int insertClubLike(Map<String, Object> map) {
+		return clubDao.insertClubLike(map);
+	}
+
+	@Override
+	public int insertClubWishList(Map<String, Object> map) {
+		return clubDao.insertClubWishList(map);
+	}
+
+	@Override
+	public int deleteClubLike(Map<String, Object> map) {
+		return clubDao.deleteClubLike(map);
+	}
+
+	@Override
+	public int deleteClubWishList(Map<String, Object> map) {
+		return clubDao.deleteClubWishList(map);
+	}
+
 }

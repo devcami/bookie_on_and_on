@@ -11,7 +11,7 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param value="북클럽리스트" name="title"/>
 </jsp:include>
-
+<sec:authentication property="principal" var="loginMember"/>
 <div id="title-header" class="" style="display: none;">
 	<div id="header-div">
 		<div id="title-header-left">
@@ -245,7 +245,7 @@ const openDetailMission = (e) => {
 	// console.log(eNo);
 	// console.log(mCnt);
 	
-	const clubNo = '${club.clubNo}';
+	const clubNo = '${club.clubNo}';	
 
 	$.ajax({
 		url: "${pageContext.request.contextPath}/club/getMission.do",
