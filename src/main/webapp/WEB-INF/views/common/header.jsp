@@ -30,7 +30,6 @@
 
 <!-- 사용자작성 css -->
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/style.css" />
-
 <script>
 <c:if test="${not empty msg}">
 	alert('${msg}');
@@ -38,6 +37,7 @@
 </script>
 </head>
 <body>
+<sec:authentication property="principal" var="loginMember"/>
 <div id="body-container">
 	<header>
 		<div id="header-container">
