@@ -1,8 +1,10 @@
 package com.kh.bookie.club.controller;
 
+import java.security.Principal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,6 +12,9 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,6 +28,7 @@ import com.kh.bookie.club.model.dto.ClubBook;
 import com.kh.bookie.club.model.dto.Mission;
 import com.kh.bookie.club.model.service.ClubService;
 import com.kh.bookie.common.HelloSpringUtils;
+import com.kh.bookie.member.model.dto.Member;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -42,20 +48,55 @@ public class ClubController {
 	public ModelAndView clubList(
 			@RequestParam(defaultValue = "1") int cPage,
 			ModelAndView mav,
-			HttpServletRequest request) {
+			HttpServletRequest request,
+			Principal principal) {
+		
 		
 		try {
 			
+			UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken)principal;
+			log.debug("authentication = {} ", authentication);
+			
+			if(authentication != null) {
+				Object _principal = authentication.getPrincipal();
+				Member loginMember = (Member)_principal;					
+				log.debug("있나여? loginMember = {}", loginMember.getUsername());
+				
+				
+				// 멤버 있으면 북클럽 찜 리스트 가져와 
+				List<String> clubWishList = clubService.getClubWishListbyMemberId(loginMember.getUsername());
+//				log.debug("clubWishList = {}", clubWishList);
+				
+				String wishStr = "";
+				for(int i = 0; i < clubWishList.size(); i++) {
+					wishStr += clubWishList.get(i);
+					wishStr +=  ",";
+				}
+				
+				mav.addObject("wishStr", wishStr);
+				
+				// 멤버 있으면 북클럽 하트 리스트 가져와 
+				List<String> clubLikesList = clubService.getClubLikesListbyMemberId(loginMember.getUsername());
+				
+				String likesStr = "";
+				for(int j = 0;  j < clubLikesList.size(); j++) {
+					likesStr += clubLikesList.get(j);
+					likesStr +=  ",";
+				}
+				mav.addObject("likesStr", likesStr);
+				
+			}
+			
+
+			
 			// 목록 조회
-			int numPerPage = 5;
+			int numPerPage = 8;
 			List<Club> list = clubService.selectClubList(cPage, numPerPage);
-			log.debug("list = {}", list);
 			mav.addObject("list", list);
 			
 			// 페이지 바
 			int totalClub = clubService.selectTotalClub();
 			String url = request.getRequestURI();
-			
 			String pagebar = HelloSpringUtils.getPagebar(cPage, numPerPage, totalClub, url);
 			mav.addObject("pagebar", pagebar);
 			
@@ -83,7 +124,8 @@ public class ClubController {
 			@RequestParam(required = false) List<String> missionDate,
 			@RequestParam(required = false) List<String> missionContent,
 			@RequestParam(required = false) int finalDeposit, 
-			@RequestParam(required = false) List<String> mCount) {
+			@RequestParam(required = false) List<String> mCount,
+			@RequestParam List<String> bookName) {
 
 		List<ClubBook> bookList = new ArrayList<>();
 		List<Mission> missionList = new ArrayList<>();
@@ -99,6 +141,7 @@ public class ClubController {
 //			log.debug("missionDeposit = {}", finalDeposit);
 //			log.debug("mCount = {}", mCount);
 //			log.debug("mCount = {}", mCount);
+//			log.debug("bookName = {}", bookName);
 
 //			log.debug("interests = {}", interests);
 			String interest = "";
@@ -130,6 +173,7 @@ public class ClubController {
 				ClubBook book = new ClubBook();
 				book.setItemId(isbn13.get(i));
 				book.setImgSrc(bookImg.get(i));
+				book.setBookTitle(bookName.get(i));
 
 				bookList.add(book);
 				
@@ -145,7 +189,7 @@ public class ClubController {
 						mission.setContent(missionContent.get(j)); 
 						mission.setPoint(finalDeposit);
 						mission.setTitle(missionName.get(j));
-						mission.setMEndDate(LocalDate.parse(missionDate.get(j).substring(2), DateTimeFormatter.ISO_DATE));
+						mission.setMendDate(LocalDate.parse(missionDate.get(j).substring(2), DateTimeFormatter.ISO_DATE));
 						
 						missionList.add(mission);
 					}
@@ -192,27 +236,6 @@ public class ClubController {
 			Club club = clubService.selectOneClub(clubNo);
 
 			log.debug("bookMission = {}", club.getBookList().get(0).getMissionList());
-			
-			
-//			if(club.getMissionCnt() != null || !club.getMissionCnt().isEmpty()) {
-//				String missions[] = club.getMissionCnt().split(",");
-//				log.debug("missions = {}", missions);
-//
-//				
-//				
-//				List<Mission> copyOfMissionList = new ArrayList<>(club.getMissionList());
-//				
-//				for(int i = 0; i < missions.length; i++) {
-//					club.getBookList().get(i);
-//					for(int j = 0; j < Integer.parseInt(missions[i]); j++) {
-//						// 처음 돌릴때 책 담을 리스트 만들고 이름 정해
-//						
-//					}
-//					
-//					
-//					
-//				}
-//			}
 						
 			mav.addObject("club", club);
 			
@@ -225,4 +248,94 @@ public class ClubController {
 		return mav;
 	}
 
+	
+	@GetMapping("/getMission.do")
+	public ResponseEntity<?> getMissions(
+			@RequestParam String itemId,
+			@RequestParam int clubNo) {
+		
+		Map<String, Object> map = new HashMap<>();
+
+		try {
+			Map<String, Object> param = new HashMap<>();
+			log.debug("itemId = {}", itemId);
+			log.debug("clubNo = {}", clubNo);
+			
+			param.put("itemId", itemId);
+			param.put("clubNo", clubNo);
+			
+			List<Mission> missionList = clubService.getMissions(param);
+			
+//			log.debug("missionList = {}", missionList);
+			map.put("missionList", missionList);
+		} catch(Exception e) {
+			log.error("선택한 책 미션리스트 불러오기 오류", e);
+			map.put("msg", "선택한 책 미션리스트 불러오기 오류");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(map);
+		}
+		
+		return ResponseEntity.ok(map);
+	}
+	
+	@PostMapping("/insertLikesWish.do")
+	public ResponseEntity<?> insertLikesWish(
+					@RequestParam String shape,
+					@RequestParam String memberId,
+					@RequestParam int clubNo){
+		
+		log.debug("shape = {}", shape);
+		log.debug("memberId = {}", memberId);
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("memberId", memberId);
+		map.put("clubNo", clubNo);		
+		
+		try {
+			if(shape.equals("heart")) {
+				// 하트인경우 하트
+				int result = clubService.insertClubLike(map);
+			}
+			else {
+				int result = clubService.insertClubWishList(map);
+			}
+			
+		} catch(Exception e) {
+			log.error("북클럽 하트/찜 등록 오류", e);
+			
+		}
+		return ResponseEntity.ok(null);
+	}
+	
+	
+	@PostMapping("/deleteLikesWish.do")
+	public ResponseEntity<?> deleteLikesWish(
+					@RequestParam String shape,
+					@RequestParam String memberId,
+					@RequestParam int clubNo){
+		
+		log.debug("shape = {}", shape);
+		log.debug("memberId = {}", memberId);
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("memberId", memberId);
+		map.put("clubNo", clubNo);		
+		
+		try {
+			if(shape.equals("heart")) {
+				// 하트인경우 하트
+				int result = clubService.deleteClubLike(map);
+			}
+			else {
+				int result = clubService.deleteClubWishList(map);
+			}
+			
+		} catch(Exception e) {
+			log.error("북클럽 하트/찜 삭제 오류", e);
+			
+		}
+		return ResponseEntity.ok(null);
+	}
+	
+	
+	
 }

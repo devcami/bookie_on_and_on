@@ -57,11 +57,19 @@ public class ClubServiceImpl implements ClubService {
 	@Override
 	public List<Club> selectClubList(int cPage, int numPerPage) {
 		int offset = (cPage - 1) * numPerPage;
-		int limit = numPerPage;
-		RowBounds rowBounds = new RowBounds(offset, limit);
+		RowBounds rowBounds = new RowBounds(offset, numPerPage);
 		
 		// 1. club 찾아와
-		return clubDao.selectClubList(rowBounds);
+		List<Club> list = clubDao.selectClubList(rowBounds);
+
+		// 2. club에 사진 할당해
+		for(Club club : list) {
+			List<ClubBook> bookList = clubDao.selectClubBook(club.getClubNo());
+			club.setBookList(bookList);
+		}
+		
+		return list;
+		
 	}
 
 	@Override
@@ -88,6 +96,42 @@ public class ClubServiceImpl implements ClubService {
 		log.debug("2. club = {}", club);
 		
 		return club; 
+	}
+
+	@Override
+	public List<Mission> getMissions(Map<String, Object> param) {
+		
+		return clubDao.getMissions(param);
+	}
+
+	@Override
+	public List<String> getClubWishListbyMemberId(String username) {
+		return clubDao.getgetClubWishListbyMemberId(username);
+	}
+
+	@Override
+	public List<String> getClubLikesListbyMemberId(String username) {
+		return clubDao.getClubLikesListbyMemberId(username);
+	}
+
+	@Override
+	public int insertClubLike(Map<String, Object> map) {
+		return clubDao.insertClubLike(map);
+	}
+
+	@Override
+	public int insertClubWishList(Map<String, Object> map) {
+		return clubDao.insertClubWishList(map);
+	}
+
+	@Override
+	public int deleteClubLike(Map<String, Object> map) {
+		return clubDao.deleteClubLike(map);
+	}
+
+	@Override
+	public int deleteClubWishList(Map<String, Object> map) {
+		return clubDao.deleteClubWishList(map);
 	}
 
 }

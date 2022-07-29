@@ -30,15 +30,14 @@
 		</selectKey>
 	</insert>
 	
+	
 	<select id="selectClubList" resultMap="clubListCollectionMap">
 		select
 		    c.*,
-		    b.*,
-		    b.club_no bclub_no,
 		    (select count(*) from my_club where club_no = c.club_no) current_nop,
 		    (select count(*) from likes_club where club_no = c.club_no) likes_Cnt
 		from
-		    club c join club_book b on c.club_no = b.club_no
+		    club c
 		order by
 		    recruit_start desc
 	</select>
@@ -58,14 +57,22 @@
 		<result column="likes_cnt" property="likesCnt"/>
 		<result column="mission_cnt" property="missionCnt"/>
 		<result column="book_Count" property="bookCount"/>
-		<collection property="bookList" javaType="arrayList" ofType="clubBook">
-			<id column="item_id" property="itemId"/>
-			<id column="bclub_no" property="clubNo"/>
-			<result column="img_src" property="imgSrc"/>
-		</collection>
 	</resultMap>
 	
-	
+	<select id="selectClubBook" resultMap="selectClubBookResultMap">
+		select
+			*
+		from 
+			club_book
+		where 
+			club_no = #{clubNo}	
+	</select>
+	<resultMap type="clubBook" id="selectClubBookResultMap">
+         <id column="item_id" property="itemId"/>
+         <id column="club_no" property="clubNo"/>
+         <result column="img_src" property="imgSrc"/>
+         <result column="book_title" property="bookTitle"/>
+	</resultMap>
 	
 	
 	
@@ -102,6 +109,7 @@
 	         <id column="item_id" property="itemId"/>
 	         <id column="bclub_no" property="clubNo"/>
 	         <result column="img_src" property="imgSrc"/>
+	         <result column="book_title" property="bookTitle"/>
 	      </collection>
 	</resultMap>
 	
@@ -121,6 +129,7 @@
 			<id column="item_id" property="itemId"/>
 			<id column="club_no" property="clubNo"/>
 			<result column="img_src" property="imgSrc"/>
+			<result column="book_title" property="bookTitle"/>
 		<collection property="missionList" javaType="arrayList" ofType="mission">
 			<id column="mission_no" property="missionNo"/>
 			<result column="mclub_no" property="clubNo"/>
@@ -128,8 +137,26 @@
 			<result column="m_content" property="content"/>
 			<result column="point" property="point"/>
 			<result column="m_Item_Id" property="itemId"/>
-			<result column="m_endDate" property="mEndDate"/>
+			<result column="m_endDate" property="mendDate"/>
 		</collection>
+	</resultMap>
+	
+	<select id="getMissions" resultMap="selectBookMissionMap">
+		select 
+			*
+		from
+			mission
+		where 
+			club_no = #{clubNo} and m_item_id = #{itemId}
+	</select>
+	<resultMap id="selectBookMissionMap" type="mission">
+		<id column="mission_no" property="missionNo"/>
+		<result column="club_no" property="clubNo"/>
+		<result column="m_title" property="title"/>
+		<result column="m_content" property="content"/>
+		<result column="point" property="point"/>
+		<result column="m_Item_Id" property="itemId"/>
+		<result column="m_endDate" property="mendDate"/>
 	</resultMap>
 	
 </mapper>

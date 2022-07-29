@@ -173,6 +173,8 @@ create table club_book (
     constraint pk_item_id primary key(item_id, club_no)
 );
 
+select * from club_book;
+
 -- 14. mission
 create table mission (
     club_no      number not null, 
@@ -497,3 +499,41 @@ select* from mission where club_no = 43 and m_item_id = 9788963710358;
             
             select count(*) from likes_club where club_no = 26;
             select * from my_club;
+            
+
+select * from club;
+update club set title = '내 마음을 들여다보고 싶을때' where club_no = 44;
+
+select * from club_book;
+alter table club_book add book_title varchar2(3000);
+commit;
+
+select * from member;
+
+
+select
+    c.*,
+    b.*,
+    (select count(*) from my_club where club_no = c.club_no) current_nop,
+    (select count(*) from likes_club where club_no = c.club_no) likes_Cnt
+from
+    club c join club_book b on c.club_no = b.club_no
+order by
+    recruit_start desc;
+    
+select * from club order by recruit_start desc;
+
+
+select * from club;
+commit;
+
+delete from club where club_no = 43;
+
+insert into wishlist_club values ('51', 'tmddbs');
+insert into wishlist_club values ('53', 'tmddbs');
+insert into wishlist_club values ('55', 'tmddbs');
+insert into wishlist_club values ('56', 'tmddbs');
+
+select * from wishlist_club;
+select * from likes_club;
+commit;
