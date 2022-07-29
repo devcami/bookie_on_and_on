@@ -534,6 +534,15 @@ insert into wishlist_club values ('53', 'tmddbs');
 insert into wishlist_club values ('55', 'tmddbs');
 insert into wishlist_club values ('56', 'tmddbs');
 
-select * from wishlist_club;
-select * from likes_club;
+select * from my_club;
+select * from member;
 commit;
+
+select point from member where member_id = 'tmddbs';
+
+select * from authority;
+update member set point = 30000 where member_id = 'tmddbs';
+
+select * from my_club;
+select * from member;
+
