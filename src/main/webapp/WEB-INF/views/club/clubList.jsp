@@ -36,7 +36,8 @@
 			<button 
 			    	id="btn-enroll"
 			    	class="btn btn-sm" 
-			    	onclick="location.href=`${pageContext.request.contextPath}/club/45/enrollClub.do`;">북클럽 상세 페이지</button>
+			    	onclick="myBookClubDetail(e);"
+			    	data-club-no="45">북클럽 상세 페이지</button>
 			<%-- </sec:authorize> --%>
 		</div>	
 	</div>
@@ -81,7 +82,7 @@
 						<h5>${club.title}</h5>
 						<div class='likes-div'>						
 							<span>좋아요</span>&nbsp;
-							<span class='likes'>${club.likesCnt}</span>
+							<span class='likes' id="likesCnt${club.clubNo}">${club.likesCnt}</span>
 							<span>개</span>					
 						</div>
 					</div>
@@ -234,6 +235,10 @@
 					if(shape=='heart'){
 						icon.parentElement.insertAdjacentHTML('beforeend', iHeart);
 						
+						// 좋아요 수 1 올려
+						const likesCntId = "#likesCnt" + clubNo;
+						const likesCnt = document.querySelector(likesCntId);
+						likesCnt.innerHTML = Number(likesCnt.innerHTML) + 1;
 					}
 					else{
 						icon.parentElement.insertAdjacentHTML('beforeend', iBookMark);						
@@ -259,6 +264,12 @@
 					
 					icon.parentElement.removeChild(icon.parentElement.lastElementChild);
 					
+					if(shape=="heart"){
+						// 좋아요 수 1 내려
+						const likesCntId = "#likesCnt" + clubNo;
+						const likesCnt = document.querySelector(likesCntId);
+						likesCnt.innerHTML = Number(likesCnt.innerHTML) - 1;
+					}
 					console.log('하트/찜 delete 완료');
 					
 				},
@@ -267,6 +278,10 @@
 		
 		}
 	
+	}
+	
+	const myBookClubDetail = (e) => {
+		
 	}
 
 </script>
