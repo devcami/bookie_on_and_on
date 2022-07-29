@@ -14,7 +14,7 @@ public interface ClubService {
 
 	int selectTotalClub();
 
-	Club selectOneClub(int clubNo);
+	Club selectOneClub(Map<String, Object> param);
 
 	List<Mission> getMissions(Map<String, Object> param);
 
@@ -29,5 +29,9 @@ public interface ClubService {
 	int deleteClubLike(Map<String, Object> map);
 
 	int deleteClubWishList(Map<String, Object> map);
+
+	int checkMyPoint(String memberId);
+
+	int joinClub(Map<String, Object> map);
 
 }

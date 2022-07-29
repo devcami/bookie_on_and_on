@@ -160,7 +160,15 @@
 				const currentCard = $(target).parents('.bookCard');
 				const clubNo = $(currentCard).attr('data-no');
 				
-				location.href = '${pageContext.request.contextPath}/club/clubAnn.do?clubNo=' + clubNo;
+				let memberId = ''; 
+				if('${loginMember}'){
+					memberId = "${loginMember.username}";
+					location.href = '${pageContext.request.contextPath}/club/clubAnn.do?clubNo=' + clubNo + "&memberId=" + memberId;
+				} else {
+					location.href = '${pageContext.request.contextPath}/club/clubAnn.do?clubNo=' + clubNo;					
+				}
+
+				
 				
 				
 			});	
@@ -192,9 +200,6 @@
 		
 		
 	});
-	
-
-	
 	
 	const changeIcon = (icon, shape) => {
 
@@ -281,7 +286,10 @@
 	}
 	
 	const myBookClubDetail = (e) => {
+		console.log(e);
+		console.log(e.dataset.clubNo);
 		
+		location.herf = '${pageContext.request.contextPath}/club/myClubDetail/';
 	}
 
 </script>

@@ -78,19 +78,23 @@ public class ClubServiceImpl implements ClubService {
 	}
 
 	@Override
-	public Club selectOneClub(int clubNo) {
+	public Club selectOneClub(Map<String, Object> param) {
 		
 		// 1. 클럽 찾아와
-		Club club = clubDao.selectOneClub(clubNo);
+		Club club = clubDao.selectOneClub(param.get("clubNo"));
 		
-		log.debug("1. club = {}", club);
+		// log.debug("1. club = {}", club);
 		
 		for(int i = 0; i < club.getBookList().size(); i++) {
 			String itemId = club.getBookList().get(i).getItemId();
 			Map<String, Object> map = new HashMap<>();
 			map.put("itemId", itemId);
-			map.put("clubNo", clubNo);
+			map.put("clubNo", param.get("clubNo"));
 			club.getBookList().set(i, clubDao.selectBookMission(map));
+		}
+		
+		if(param.get("memberId") != null) {
+			club.setIsJoined(clubDao.checkClubJoined(param));
 		}
 		
 		log.debug("2. club = {}", club);
@@ -132,6 +136,27 @@ public class ClubServiceImpl implements ClubService {
 	@Override
 	public int deleteClubWishList(Map<String, Object> map) {
 		return clubDao.deleteClubWishList(map);
+	}
+
+	@Override
+	public int checkMyPoint(String memberId) {
+		return clubDao.checkMyPoint(memberId);
+	}
+
+	@Override
+	public int joinClub(Map<String, Object> map) {
+		// 멤버의 북클럽 신청
+		
+		// 1. my_club에 멤버 넣기
+		int result = clubDao.joinClub(map);
+		
+		// 2. member 테이블 point에서 북클럽 디파짓만큼 금액 까기
+		int restPoint = Integer.parseInt(map.get("myPoint").toString()) - Integer.parseInt(map.get("deposit").toString());
+		
+		map.put("restPoint", restPoint);
+		result = clubDao.updateMyPoint(map);
+		
+		return result;
 	}
 
 }

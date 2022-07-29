@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.bookie.club.model.dto.Club;
 import com.kh.bookie.club.model.dto.ClubBook;
@@ -31,6 +32,7 @@ import com.kh.bookie.common.HelloSpringUtils;
 import com.kh.bookie.member.model.dto.Member;
 
 import lombok.extern.slf4j.Slf4j;
+import oracle.jdbc.proxy.annotation.Post;
 
 @Controller
 @RequestMapping("/club")
@@ -229,11 +231,17 @@ public class ClubController {
 	@GetMapping("/clubAnn.do")
 	public ModelAndView clubAnn(
 			ModelAndView mav,
-			@RequestParam int clubNo) {
+			@RequestParam int clubNo,
+			@RequestParam(required = false) String memberId) {
+
+		Map<String, Object> param = new HashMap<>();
 		
 		try {
-			log.debug("clubNo = {}", clubNo);
-			Club club = clubService.selectOneClub(clubNo);
+			
+			param.put("clubNo", clubNo);
+			param.put("memberId", memberId);
+			
+			Club club = clubService.selectOneClub(param);
 
 			log.debug("bookMission = {}", club.getBookList().get(0).getMissionList());
 						
@@ -336,6 +344,68 @@ public class ClubController {
 		return ResponseEntity.ok(null);
 	}
 	
+	@GetMapping("/checkMyPoint.do")
+	public ResponseEntity<?> checkMyPoint(
+			@RequestParam String memberId,
+			@RequestParam int deposit
+			){
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		try {
+			
+			log.debug("memberId = {}", memberId);
+			log.debug("deposit = {}", deposit);
+			
+			int myPoint = clubService.checkMyPoint(memberId);
+			
+			map.put("myPoint", myPoint);
+			
+			if(myPoint >= deposit) {
+				map.put("result", "enough");
+				map.put("msg", "포인트가 충분합니다 :)");
+			}
+			else {
+				map.put("result", "notEnough");
+				map.put("msg", "포인트가 부족합니다! 마이페이지에서 먼저 포인트를 충전해주세요.");
+			}
+			
+		} catch(Exception e) {
+			log.error("내 디파짓 조회 오류!", e);
+			map.put("errorMsg", "내 포인트 조회 오류");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(map);
+		}
+		return ResponseEntity.ok(map);
+	}
+	
+	@PostMapping("/joinClub.do")
+	public String joinClub(
+			@RequestParam String memberId,
+			@RequestParam int clubNo,
+			@RequestParam int deposit,
+			@RequestParam int myPoint,
+			RedirectAttributes redirectAttr
+			) {
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		try {
+			map.put("memberId", memberId);
+			map.put("clubNo", clubNo);
+			map.put("deposit", deposit);
+			map.put("myPoint", myPoint);
+
+			int result = clubService.joinClub(map);
+			
+			redirectAttr.addFlashAttribute("msg", "북클럽에 신청되었습니다!");
+		} catch(Exception e) {
+			log.error("멤버 북클럽 신청 오류", e);
+			redirectAttr.addFlashAttribute("msg", "북클럽 신청에 실패했습니다!");
+		}
+		
+		return "redirect:/club/clubAnn.do?clubNo=" + clubNo + "&memberId=" + memberId;
+
+	}
 	
 	
 }
