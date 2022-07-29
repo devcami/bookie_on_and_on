@@ -11,7 +11,9 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param value="북클럽리스트" name="title"/>
 </jsp:include>
-<sec:authentication property="principal" var="loginMember"/>
+<sec:authorize access="isAuthenticated()">
+	<sec:authentication property="principal" var="loginMember"/>
+</sec:authorize>
 <div id="title-header" class="" style="display: none;">
 	<div id="header-div">
 		<div id="title-header-left">
@@ -159,8 +161,25 @@
 	
 	
 	<%-- 등록 버튼 --%>
+	<sec:authorize access="isAnonymous()">
+		<p id="plzEnrollMember">🧡이 북클럽이 맘에 드셨나요? 부기온앤온의 회원이 되시면 북클럽 활동이 가능합니다!🧡</p>
+	</sec:authorize>
 	<div id="btn-div">
-		<button>신청하기</button>
+		<sec:authorize access="hasRole('ROLE_ADMIN')">
+			<button style="margin-right: 2px;">수정</button>
+			<button style="margin-left: 2px;">삭제</button>
+		</sec:authorize>
+		<sec:authorize access="isAuthenticated() && !hasRole('ADMIN')">
+			<c:if test="${club.isJoined == 0}">
+				<button onclick="joinClub();">신청하기</button>						
+			</c:if>
+			<c:if test="${club.isJoined == 1}">
+				<button onclick="joinClub();" id="btn-disabled">이미 신청하신 북클럽입니다!</button>						
+			</c:if>
+		</sec:authorize>
+		<sec:authorize access="isAnonymous()">
+			<button>회원가입 하러가기</button>
+		</sec:authorize>
 	</div>
 	<%-- 등록 버튼 끝--%>
 	
@@ -187,9 +206,14 @@
 	  </div>
 	</div>
 	<%-- 미션 모달 끝 --%>
-	<form:form 
-		action="${pageContext.request.contextPath}/club/enrollClub.do">
+	<form:form
+		name="joinClubFrm" 
+		method="POST"
+		action="${pageContext.request.contextPath}/club/joinClub.do">
 		<input type="hidden" name="clubNo" value="${club.clubNo}" />
+		<input type="hidden" name="memberId" value="${loginMember.username}" />
+		<input type="hidden" name="deposit" value="${club.deposit}" />
+		<input type="hidden" name="myPoint" id="myPoint" value="" />
 	</form:form>
 	
 	
@@ -220,7 +244,59 @@ const bookEnroll = (e) => {
 window.addEventListener('load', (e) => {
 	
 	
+	
+	
+	/************* 하트와 찜 *************/
+	// 하트
+		document.querySelectorAll(".fa-heart").forEach((heart) => {
+		heart.addEventListener('click', (e) => {
+			
+			// 부모한테 이벤트 전파하지마셈
+			e.stopPropagation(); 
+			
+			// 클릭할때마다 상태왔다갔다
+			changeIcon(e.target, 'heart');
+		});	
+	});	
+	
+	// 북마크
+	document.querySelectorAll(".fa-bookmark").forEach((heart) => {
+		heart.addEventListener('click', (e) => {
+			
+			// 부모한테 이벤트 전파하지마셈
+			e.stopPropagation(); 
+			
+			// 클릭할때마다 상태왔다갔다
+			changeIcon(e.target, 'bookmark');
+		});	
+	});	
+	
 });
+
+
+const changeIcon = (icon, shape) => {
+
+	let cnt = icon.parentElement.childElementCount;
+	
+	const iHeart = `<i class="fa fa-heart fa-solid fa-stack-1x h-behind"></i>`;
+	const iBookMark = `<i class="fa fa-bookmark fa-solid fa-stack-1x b-behind"></i>`;
+	
+	
+	if(cnt==1) {
+		if(shape == 'heart'){
+			icon.parentElement.insertAdjacentHTML('beforeend', iHeart);
+		}
+		else {
+			icon.parentElement.insertAdjacentHTML('beforeend', iBookMark);
+		}
+	}
+	else {
+		icon.parentElement.removeChild(icon.parentElement.lastElementChild);
+	}
+	
+}
+
+
 
 const cnt = ${club.bookList.get(0).missionList.size()};
 const clubb = '${club.bookList.get(0).missionList.get(0).title}';
@@ -305,55 +381,7 @@ $('#addBookModal').on('hide.bs.modal', function (e) {
 
 
 
-/************* 하트와 찜 *************/
-window.addEventListener('load', (e) => {
-	document.querySelectorAll(".fa-heart").forEach((heart) => {
-		heart.addEventListener('click', (e) => {
-			
-			// 부모한테 이벤트 전파하지마셈
-			e.stopPropagation(); 
-			
-			// 클릭할때마다 상태왔다갔다
-			changeIcon(e.target, 'heart');
-		});	
-	});	
-});
 
-window.addEventListener('load', (e) => {
-	document.querySelectorAll(".fa-bookmark").forEach((heart) => {
-		heart.addEventListener('click', (e) => {
-			
-			// 부모한테 이벤트 전파하지마셈
-			e.stopPropagation(); 
-			
-			// 클릭할때마다 상태왔다갔다
-			changeIcon(e.target, 'bookmark');
-		});	
-	});	
-});
-
-
-const changeIcon = (icon, shape) => {
-
-	let cnt = icon.parentElement.childElementCount;
-	
-	const iHeart = `<i class="fa fa-heart fa-solid fa-stack-1x h-behind"></i>`;
-	const iBookMark = `<i class="fa fa-bookmark fa-solid fa-stack-1x b-behind"></i>`;
-	
-	
-	if(cnt==1) {
-		if(shape == 'heart'){
-			icon.parentElement.insertAdjacentHTML('beforeend', iHeart);
-		}
-		else {
-			icon.parentElement.insertAdjacentHTML('beforeend', iBookMark);
-		}
-	}
-	else {
-		icon.parentElement.removeChild(icon.parentElement.lastElementChild);
-	}
-	
-}
 
 /************** 상단 제목 바 **************/
  let imgDiv = document.querySelector("#head");
@@ -372,6 +400,46 @@ window.onscroll = function () {
 		titlebar.style.display = "none";
 	}
 };
+
+/**************** 회원의 클럽 신청 ***************/
+const joinClub = () => {
+	const clubNo = '${club.clubNo}';
+	const memberId = '${loginMember.username}'
+	const deposit = '${club.deposit}';
+	
+	console.log(clubNo, ' and ', deposit);
+	
+	$.ajax({
+		url: '${pageContext.request.contextPath}/club/checkMyPoint.do',
+		method: "GET",
+		data : {
+			deposit : deposit,
+			memberId : memberId
+		},
+		success(data){
+			const {myPoint, result, msg} = data;
+			
+			if(result == "enough"){
+				// 성공하면 폼 제출
+				const frm = document.joinClubFrm
+				frm.myPoint.value = myPoint
+				frm.submit();
+			}
+			else {
+				alert(msg);
+			}
+			
+		},
+		error(data){
+			console.log(data);
+			console.log('실패');
+			// 실패하면 포인트충전하라는 알람나옴
+		}
+	});
+	
+}
+
+
 
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

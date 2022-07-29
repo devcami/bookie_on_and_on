@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.apache.ibatis.session.RowBounds;
 
 import com.kh.bookie.club.model.dto.Club;
@@ -29,7 +30,7 @@ public interface ClubDao {
 	@Select("select count(*) from club")
 	int selectTotalClub();
 
-	Club selectOneClub(int clubNo);
+	Club selectOneClub(Object clubNo);
 
 	ClubBook selectBookMission(Map<String, Object> map);
 
@@ -54,5 +55,17 @@ public interface ClubDao {
 
 	@Delete("delete from wishList_club where club_no = #{clubNo} and member_id = #{memberId}")
 	int deleteClubWishList(Map<String, Object> map);
+
+	@Select("select point from member where member_id = #{memberId}")
+	int checkMyPoint(String memberId);
+
+	@Select("select count(*) from my_club where club_no = #{clubNo} and member_id = #{memberId}")
+	int checkClubJoined(Map<String, Object> param);
+
+	@Insert("insert into my_club values(#{clubNo}, #{memberId}, #{deposit})")
+	int joinClub(Map<String, Object> map);
+
+	@Update("update member set point = #{restPoint} where member_id = #{memberId}")
+	int updateMyPoint(Map<String, Object> map);
 
 }
