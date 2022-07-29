@@ -39,9 +39,9 @@ public class EmptyPrincipalCheckFilter extends HttpFilter implements Filter {
 	 */
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		System.out.println("authentication = " + authentication); 
-		System.out.println("isAuthenticated() = " + authentication.isAuthenticated()); // always true
-		if(authentication.isAuthenticated()) {
+		//System.out.println("authentication = " + authentication); 
+		//System.out.println("isAuthenticated() = " + authentication.isAuthenticated()); // always true
+		if(authentication != null && authentication.isAuthenticated()) {
 			Object principal = authentication.getPrincipal(); // anonymousAuthentication인 경우 "anonymousUser" 문자열 
 			System.out.println("principal = " + principal);
 			if(principal instanceof String) {
