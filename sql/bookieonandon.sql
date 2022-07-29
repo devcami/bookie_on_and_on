@@ -104,7 +104,6 @@ create table dokoo_comment(
 
 create sequence seq_dokooc_no;
 
-
 -- 9. pheed - 피드 테이블
 create table pheed(
     pheed_no number not null,

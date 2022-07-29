@@ -1,5 +1,6 @@
 package com.kh.bookie.search.controller;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
@@ -8,13 +9,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.kh.bookie.mypage.model.dto.Book;
 import com.kh.bookie.search.model.service.SearchService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -80,10 +85,6 @@ public class SearchController {
 	      return ResponseEntity.ok(resource);
 	   }
 	
-	@GetMapping("/bookEnroll.do")
-	public void bookEnroll(@RequestParam String isbn13, Model model) {
-		model.addAttribute("isbn13", isbn13);
-	}
 	
 	@GetMapping("/selectBook.do")
 	public ResponseEntity<?> selectBook(
@@ -147,6 +148,32 @@ public class SearchController {
 		return ResponseEntity.ok(resource);
 	}
 	
+	@GetMapping("/bookEnroll.do")
+	public void bookEnroll(@RequestParam String isbn13, Model model, @AuthenticationPrincipal com.kh.bookie.member.model.dto.Member member) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("memberId", member.getMemberId());
+		map.put("itemId", isbn13);
+		Book book = searchService.getMyBook(map);
+		if(book != null) {
+			if(book.getItemId().equals(isbn13)) {
+				model.addAttribute("book", book);
+			}
+		}
+		model.addAttribute("isbn13", isbn13);
+	}
+	
+	@PostMapping("/bookEnroll.do")
+	public String bookEnroll(Book book, RedirectAttributes ra) {
+		try {
+			log.debug("book = {}", book);
+			int result = searchService.bookEnroll(book);
+			ra.addFlashAttribute("msg", "책 등록 완료 !");
+		} catch (Exception e) {
+			log.error("내 책 등록 오류", e);
+			throw e;
+		}
+		return "redirect:/search/bookEnroll.do?isbn13=" + book.getItemId();
+	}
 	
 	
 }

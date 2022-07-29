@@ -9,6 +9,7 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param value="책등록" name="title"/>
 </jsp:include>
+<sec:authentication property="principal" var="loginMember"/>
 <div id="title-header" class="" style="display:none">
 	<p id="title-p">
 		<i class="fa-solid fa-angle-left" onclick="location.href='${pageContext.request.contextPath}/search/searchForm.do'"></i>
@@ -36,28 +37,37 @@
 				<span class="star starR2">별4_오른쪽</span>
 				<span class="star starR1">별5_왼쪽</span>
 				<span class="star starR2">별5_오른쪽</span>
-				
 			</div>
 			
 			<div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-			  <input type="radio" class="btn-check" name="status" id="btnradio1" value="읽고 싶은" autocomplete="off">
+			  <input type="radio" class="btn-check" name="status" id="btnradio1" value="읽고 싶은" autocomplete="off"
+			  		${book.status == '읽고 싶은' ? 'checked' : ''}>
 			  <label class="btn btn-outline-primary btn-status" for="btnradio1">읽고 싶은</label>
 			
-			  <input type="radio" class="btn-check" name="status" id="btnradio2" value="읽는 중" autocomplete="off">
+			  <input type="radio" class="btn-check" name="status" id="btnradio2" value="읽는 중" autocomplete="off"
+			  		${book.status == '읽는 중' ? 'checked' : ''}>
 			  <label class="btn btn-outline-primary btn-status" for="btnradio2">읽는 중</label>
 			
-			  <input type="radio" class="btn-check" name="status" id="btnradio3" value="읽음" autocomplete="off">
+			  <input type="radio" class="btn-check" name="status" id="btnradio3" value="읽음" autocomplete="off"
+			  		${book.status == '읽음' ? 'checked' : ''}>
 			  <label class="btn btn-outline-primary btn-status" for="btnradio3">읽음</label>
 			  
-			  <input type="radio" class="btn-check" name="status" id="btnradio4" value="잠시 멈춘" autocomplete="off">
+			  <input type="radio" class="btn-check" name="status" id="btnradio4" value="잠시 멈춘" autocomplete="off"
+			  		${book.status == '잠시 멈춘' ? 'checked' : ''}>
 			  <label class="btn btn-outline-primary btn-status" for="btnradio4">잠시 멈춘</label>
 			  
-			  <input type="radio" class="btn-check" name="status" id="btnradio5" value="중단" autocomplete="off">
+			  <input type="radio" class="btn-check" name="status" id="btnradio5" value="중단" autocomplete="off"
+			  		${book.status == '중단' ? 'checked' : ''}>
 			  <label class="btn btn-outline-primary btn-status" for="btnradio5">중단</label>
 			  
 				<button type="button" class="btn btn-sm btn-secondary" id="btn-deselect" onclick="deselect();">선택해제</button>
 			</div>
-			<button class="custom-btn btn-5" data-toggle="modal" data-target="#enrollBookModal"><span>등록</span></button>
+			<c:if test="${book == null}">
+				<button class="custom-btn btn-5" data-toggle="modal" data-target="#enrollBookModal" onclick="setStatus();"><span>등록</span></button>
+			</c:if>
+			<c:if test="${book != null}">
+				<button class="custom-btn btn-5" data-toggle="modal" data-target="#updateBookModal" onclick="setStatus();"><span>책 상태 변경</span></button>
+			</c:if>
 			<!-- <button type="submit" class="btn btn-md btn-outline-primary" id="btn-enroll" onclick="bookEnroll();">저장</button> -->
 		</div>
 	</div>
@@ -69,25 +79,53 @@
 </section>
 
 <script>
-<%-- 제출 --%>
-const bookEnroll = () => {
+const setStatus = () => {
+	let cont = Array.from(document.querySelectorAll(".form-content"));
+	cont.forEach((c) => c.innerHTML = '');
 	Array.from(document.querySelectorAll("[name=status]")).forEach((status) => {
 		if(status.checked){
 			// console.log(status.value);
 			document.querySelector("#book-status").value = status.value;
+			document.querySelector("#book-status-update").value = status.value;
 		}
 	});
 	
+	const statusVal = document.querySelector("#book-status").value;
+	const statusUpdateVal = document.querySelector("#book-status-update").value;
+	
+	const div = `
+		<label for="content" class="col-form-label">한줄평(250자 이내):</label>
+<textarea class="form-control" id="content" name="content">
+<c:if test="${book != null}">${book.content}</c:if>
+</textarea>`;
+	if(statusVal == '읽음' || statusUpdateVal =='읽음'){
+		cont.forEach((c) => {
+			c.insertAdjacentHTML('beforeend', div);
+		});
+	}
+};
+<%-- 제출 --%>
+const bookEnroll = () => {
 	if(document.querySelector("#book-status").value == ""){
 		alert('책 상태를 선택해주세요.');
 		return;
 	}
-	console.log(document.querySelector("#book-status").value);
-	console.log(document.bookEnrollFrm.score.value);
-	console.log(document.bookEnrollFrm.isbn13.value);
-	console.log(document.bookEnrollFrm.content);
-	
-	//document.bookEnrollFrm.submit();
+/* 	console.log(document.bookEnrollFrm.score.value);
+	console.log(document.bookEnrollFrm.itemId.value);
+	console.log(document.bookEnrollFrm.content); */
+	document.bookEnrollFrm.submit();
+};
+const bookUpdate = () => {
+	if(document.querySelector("#book-status-update").value == ""){
+		alert('책 상태를 선택해주세요.');
+		return;
+	}
+	document.bookUpdateFrm.submit();
+};
+const bookDelete = () => {
+	if(confirm('내 책에서 삭제하시겠습니까? \n한번 삭제된 정보는 되돌릴 수 없습니다.')){
+		
+	}
 };
 </script>
 <%-- 책 등록 form modal --%>
@@ -101,23 +139,16 @@ const bookEnroll = () => {
         </button>
       </div>
       <div class="modal-body">
-        <form:form name="bookEnrollFrm">
+        <form:form name="bookEnrollFrm" action="${pageContext.request.contextPath}/search/bookEnroll.do" method="post">
           <div class="form-group">
-	            <input type="text" class="form-control" id="nickname" value="${loginMember.nickname}" readonly>
-	            <input type="hidden" class="form-control" id="member_id" value="${loginMember.memberId}">
+	            <input type="text" class="form-control" name="nickname" value="${loginMember.nickname}" readonly>
+	            <input type="hidden" class="form-control" name="memberId" value="${loginMember.memberId}">
+	            <input type="hidden" class="form-control" name="itemId" value="${param.itemId}">
 	            <input type="hidden" name="score" id="book-score" value="0"/>
-				<input type="hidden" name="isbn13" id="book-isbn13" value=""/>
-				<input type="hidden" name="book-status" id="book-status" />
+				<input type="text"  class="form-control" name="status" id="book-status" readonly />
           </div>
-          <div class="form-group">
-          	<c:if test="${document.querySelector('#book-status').value != '읽음'}">
-          		<h4 id="modalBookTitle"></h4>
-          	</c:if>
-          	<c:if test="${document.querySelector('#book-status').value == '읽음'}">
-            <label for="content" class="col-form-label">한줄평(250자 이내):</label>
-            <textarea class="form-control" id="content" name="content"></textarea>
-          	</c:if>
-          </div>
+			<h4 id="modalBookTitle"></h4>
+			<div class="form-group form-content"></div>
         </form:form>
       </div>
       <div class="modal-footer">
@@ -129,6 +160,77 @@ const bookEnroll = () => {
 </div>
 
 
+<%-- 책 수정 | 삭제 form modal --%>
+<div class="modal fade" id="updateBookModal" tabindex="-1" role="dialog" aria-labelledby="updateBookModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="updateBookModalLabel">책 수정 및 삭제</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form:form name="bookUpdateFrm" action="${pageContext.request.contextPath}/search/bookUpdate.do" method="post">
+          <div class="form-group">
+	            <input type="text" class="form-control" name="nickname" value="${loginMember.nickname}" readonly>
+	            <input type="hidden" class="form-control" name="memberId" value="${loginMember.memberId}">
+	            <input type="hidden" class="form-control" name="itemId" value="${book.itemId}">
+	            <input type="hidden" name="score" value="${book.score}"/>
+				<input type="text"  class="form-control" name="status" id="book-status-update" readonly />
+          </div>
+			<h4 id="modalBookUpdateTitle"></h4>
+			<div class="form-group form-content"></div>
+        </form:form>
+      </div>
+      <div class="modal-footer">
+      	<button class="custom-btn btn-5 close" data-dismiss="modal" aria-label="Close"  data-toggle="modal" data-target="#moreReadModal"><span>완독일 추가</span></button>
+      	
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+        <button type="button" class="btn btn-primary" onclick="bookUpdate();">수정</button>
+        <button type="button" class="btn btn-danger" onclick="bookDelete();">삭제</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="moreReadModal" tabindex="-1" role="dialog" aria-labelledby="moreReadModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="moreReadModalLabel">완독일 추가</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form:form name="moreReadFrm" action="${pageContext.request.contextPath}/search/moreRead.do" method="post">
+          <div class="form-group">
+	            <input type="hidden" class="form-control" name="memberId" value="${loginMember.memberId}">
+	            <input type="hidden" class="form-control" name="itemId" id="itemId" value="${param.itemId}">
+	            <label for="startedAt">시작일</label>
+	            <input type="date" name="startedAt" id="startedAt" />
+	            <br />
+	            <label for="endedAt">종료일</label>
+	            <input type="date" name="startedAt" id="endedAt" />
+	            <input type="hidden" name="score" value="${book.score}"/>
+				<input type="text"  class="form-control" name="status" value="읽음" readonly/>
+          </div>
+			<h4 id="modalBookTitle"></h4>
+			<div class="form-group">
+				<label for="content" class="col-form-label">한줄평(250자 이내):</label>
+				<textarea class="form-control" name="content" readonly><c:if test="${book != null}">${book.content}</c:if>
+				</textarea>
+			</div>
+        </form:form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+        <button type="button" class="btn btn-primary" onclick="document.moreReadFrm.submit();">완독일 추가</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 
@@ -178,10 +280,11 @@ window.addEventListener('load', () => {
 			const img = document.querySelector("#book-image");
 			img.src = `\${cover}`;
 			
-			document.querySelector("#book-isbn13").value = `${isbn13}`;
+			document.querySelector("#itemId").value = `${isbn13}`;
 			document.querySelector("#title-p").innerHTML +=`\${title}`;
 			document.querySelector("#title").innerText=`\${title}`;
 			document.querySelector("#modalBookTitle").innerText=`\${title}`;
+			document.querySelector("#modalBookUpdateTitle").innerText=`\${title}`;
 			document.querySelector("#subTitle").innerText=`\${subTitle}`;
 			const divDescription = `
 				<div class="book-info">
@@ -215,6 +318,15 @@ $('.starRev span').click(function(){
 	btnradio3.checked="true";
 	
 	return false;
+});
+
+window.addEventListener('load', () => {
+	//console.log('${book.score}');
+	const des = Array.from(document.querySelectorAll(".starRev span"));
+	//console.log(des);
+	for(let i = 0; i < ${book.score}; i++){
+		des[i].classList.add('on');
+	}
 });
 
 document.querySelectorAll(".btn-check").forEach((select) => {
