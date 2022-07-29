@@ -3,5 +3,36 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kh.bookie.search.model.dao.SearchDao">
-
+	<insert id="bookEnroll">
+	insert into
+		book
+	values(
+		#{itemId},
+		#{memberId},
+		#{status},
+		#{score},
+		#{content},
+		default)
+	</insert>
+	
+	<insert id="bookIngEnroll">
+	insert into
+		book_ing
+	values(
+		seq_book_ing_no.nextval,
+		#{itemId},
+		#{memberId},
+		default,
+		<if test="status == '읽음'">
+		sysdate
+		</if>
+		<if test="status != '읽음'">
+		null
+		</if>
+	)
+	</insert>
+	
+	<select id="getMyBook" resultType="book">
+	select * from book where member_id = #{memberId} and item_id = #{itemId}
+	</select>
 </mapper>
