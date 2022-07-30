@@ -546,3 +546,9 @@ update member set point = 30000 where member_id = 'tmddbs';
 select * from my_club;
 select * from member;
 
+select * from club;
+
+delete from club where club_no = 58;
+
+commit;
+

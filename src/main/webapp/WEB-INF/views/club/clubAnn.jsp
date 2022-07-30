@@ -95,6 +95,18 @@
 		</div>
 		<div class="divs">
 			<div class="label-div">
+				<!-- <i class="fa-solid fa-user-group"></i> -->
+				<label class="my-1" for="inlineFormCustomSelectPref">‍‍😊 모집된 인원</label>
+			</div>
+			<div>
+				<span>${club.currentNop}명 / ${club.maximumNop}명</span>
+				<c:if test="${club.maximumNop eq club.currentNop}">
+					<span class="redText" style="margin-left: 10px;">!마감되었습니다!</span>				
+				</c:if>
+			</div>
+		</div>
+		<div class="divs">
+			<div class="label-div">
 				<!-- <i class="fa-solid fa-sack-dollar"></i> -->
 				<label class="my-1" for="inlineFormCustomSelectPref">💰 디파짓</label>
 			</div>
@@ -159,7 +171,8 @@
 	</div>
 	<%-- 미션 끝 --%>
 	
-	
+	<jsp:useBean id="today" class="java.util.Date" />
+	<fmt:formatDate value='${today}' pattern='yyyy-MM-dd' var="nowDate"/>
 	<%-- 등록 버튼 --%>
 	<sec:authorize access="isAnonymous()">
 		<p id="plzEnrollMember">🧡이 북클럽이 맘에 드셨나요? 부기온앤온의 회원이 되시면 북클럽 활동이 가능합니다!🧡</p>
@@ -170,11 +183,25 @@
 			<button style="margin-left: 2px;">삭제</button>
 		</sec:authorize>
 		<sec:authorize access="isAuthenticated() && !hasRole('ADMIN')">
-			<c:if test="${club.isJoined == 0}">
-				<button onclick="joinClub();">신청하기</button>						
+			<!-- 모집중인 경우 -->
+			<c:if test="${club.recruitEnd ge nowDate}">
+				<!--  아직 인원이 차지 않은 경우 -->
+				<c:if test="${club.maximumNop gt club.currentNop}">
+					<c:if test="${club.isJoined == 0}">
+						<button onclick="joinClub();">신청하기</button>						
+					</c:if>
+					<c:if test="${club.isJoined == 1}">
+						<button onclick="joinClub();" id="btn-disabled">이미 신청하신 북클럽입니다!</button>						
+					</c:if>							
+				</c:if>
+				<!-- 모집중이면서 인원이 다 찬 경우 -->
+				<c:if test="${club.maximumNop eq club.currentNop}">
+					<button id="btn-disabled">인원이 다 찼습니다😥</button>						
+				</c:if>
 			</c:if>
-			<c:if test="${club.isJoined == 1}">
-				<button onclick="joinClub();" id="btn-disabled">이미 신청하신 북클럽입니다!</button>						
+			<!-- 날짜가 지난 북클럽일때 -->			
+			<c:if test="${club.recruitEnd lt nowDate}">
+				<button id="btn-disabled">이미 마감된 북클럽입니다😥</button>
 			</c:if>
 		</sec:authorize>
 		<sec:authorize access="isAnonymous()">
