@@ -19,5 +19,11 @@ public interface SearchService {
 
 	int bookDelete(Book book);
 
+	int moreReadEnroll(Book book);
+
+	int moreReadDelete(Book book);
+
+	int moreReadUpdate(Book book);
+
 
 }

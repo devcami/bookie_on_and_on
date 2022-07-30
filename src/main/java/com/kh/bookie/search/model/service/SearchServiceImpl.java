@@ -53,7 +53,7 @@ public class SearchServiceImpl implements SearchService {
 		int result = searchDao.bookUpdate(book);
 		
 		// book_ing
-		
+		book.setIngNo(beforeBook.getIngNo());
 		String status = book.getStatus();
 		switch(beforeBook.getStatus()) {
 		case "읽고 싶은" : 
@@ -74,9 +74,14 @@ public class SearchServiceImpl implements SearchService {
 			}
 		case "읽음" : 
 			// 읽는 중
-			if(status.equals("읽는 중"))
+			if(status.equals("읽는 중")) {
 				result = searchDao.bookIngEnroll(book);
-			break;
+				break;
+			}
+			if(status.equals("읽음")) {
+				result = searchDao.bookIngUpdate(book);
+				break;
+			}
 		case "잠시 멈춘" : 
 			// -> 읽음, 읽는 중
 			if(status.equals("읽음") || status.equals("읽는 중"))
@@ -113,5 +118,27 @@ public class SearchServiceImpl implements SearchService {
 			result = searchDao.bookStatusUpdate(book);
 		}
 		return result;
+	}
+	
+	@Override
+	public int moreReadEnroll(Book book) {
+		// 완독일 추가 - book_ing에만 새로 추가. book의 상태에는 변경 없다 
+		return searchDao.moreReadEnroll(book);
+	}
+	
+	@Override
+	public int moreReadDelete(Book book) {
+		// 완독일 삭제 - list 가져와서 1개일 경우 book에서도 삭제
+		int totalBook = searchDao.totalBook(book);
+		if(totalBook == 1) {
+			searchDao.bookDelete(book);
+		}
+		return searchDao.moreReadDelete(book.getIngNo());
+	}
+	
+	@Override
+	public int moreReadUpdate(Book book) {
+		// 완독일 수정 - book-ing 날짜만 수정
+		return searchDao.moreReadUpdate(book);
 	}
 }

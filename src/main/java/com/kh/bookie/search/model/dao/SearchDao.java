@@ -34,4 +34,10 @@ public interface SearchDao {
 
 	int bookIngDeleteByNo(int ingNo);
 
+	int moreReadEnroll(Book book);
+
+	int moreReadDelete(int ingNo);
+
+	int moreReadUpdate(Book book);
+
 }

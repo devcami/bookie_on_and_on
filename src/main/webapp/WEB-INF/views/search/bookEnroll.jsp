@@ -187,8 +187,9 @@
 	            <input type="date" name="startedAt" class="m-2 " id="startedAt" />
 	            ~
 	            <label for="endedAt" class="m-0">종료일</label>
-	            <input type="date" name="startedAt" class="m-2 " id="endedAt" />
+	            <input type="date" name="endedAt" class="m-2 " id="endedAt" />
 	            <input type="hidden" name="score" value="${book.score}"/>
+	            <input type="hidden" name="ingNo" value="${book.ingNo}"/>
 	            <br />
 				<input type="text"  class="form-control" name="status" value="읽음" readonly/>
           </div>
@@ -253,12 +254,12 @@ const setStatus = () => {
 };
 <%-- 제출 --%>
 const bookEnroll = () => {
+	const content = document.querySelector("#textbox");
 	if(document.querySelector("#book-status").value == ""){
 		alert('책 상태를 선택해주세요.');
 		return false;
 	} else if(document.querySelector("#book-status").value == "읽음"){
 		//한줄평 유효성검사
-		const content = document.querySelector("#textbox");
 		if(content.value.length > 250){
 			alert('250자 이상 입력할 수 없습니다.')
 			return false;
@@ -267,7 +268,9 @@ const bookEnroll = () => {
 	
  	console.log(document.bookEnrollFrm.score.value);
 	console.log(document.bookEnrollFrm.itemId.value);
-	console.log(document.bookEnrollFrm.content); 
+	content.value.replace(/\"/g,"&quot;");
+	console.log(content.value);
+	
 	document.bookEnrollFrm.submit();
 };
 const bookUpdate = () => {
@@ -407,7 +410,7 @@ window.addEventListener('load', () => {
 			
 			resp.forEach((read) => {
 				const {startedAt, endedAt, ingNo} = read;
-				console.log(startedAt, endedAt, ingNo);
+				// console.log(startedAt, endedAt, ingNo);
 				if(startedAt.monthValue < 10) startedAt.monthValue = '0' + startedAt.monthValue; 
 				if(startedAt.dayOfMonth < 10) startedAt.dayOfMonth = '0' + startedAt.dayOfMonth; 
 				if(endedAt.monthValue < 10) endedAt.monthValue = '0' + endedAt.monthValue; 
@@ -416,9 +419,9 @@ window.addEventListener('load', () => {
 				const started = `\${startedAt.year}-\${startedAt.monthValue}-\${startedAt.dayOfMonth}`; 
 				const ended = `\${endedAt.year}-\${endedAt.monthValue}-\${endedAt.dayOfMonth}`; 
 				
-				const li = `<li class="list-group-item" data-ingNo='\${ingNo}'>\${started} 시작 ~ \${ended} 완독 
-							<span class="badge badge-pill badge-secondary bdg-delete float-right ml-2 mt-1">삭제</span> 
-							<span class="badge badge-pill bdg-update float-right ml-2 mt-1">수정</span> </li>`;
+				const li = `<li class="list-group-item item" data-ingNo='\${ingNo}' data-started='\${started}' data-ended='\${ended}'>\${started} 시작 ~ \${ended} 완독 
+							<span class="badge badge-pill badge-secondary bdg-delete float-right ml-2 mt-1" onclick="moreReadDelete(this);">삭제</span> 
+							<span class="badge badge-pill bdg-update float-right ml-2 mt-1" onclick="moreReadUpdate(this);">수정</span> </li>`;
 				container.insertAdjacentHTML('beforeend', li);
 			});
 		},
@@ -427,6 +430,132 @@ window.addEventListener('load', () => {
 });
 
 <%-- 완독일 수정 --%>
+const moreReadUpdate = (e) => {
+	if(document.querySelector(".list-group-item.inner-item")){
+		document.querySelector(".list-group-item.inner-item").remove();
+	}
+	//<label for="endedAt" class="m-0">종료일</label>
+	//<input type="date" name="startedAt" class="m-2 " id="startedAt" />
+	const ingNo = e.parentElement.dataset.ingno;
+	const sta = e.parentElement.dataset.started;
+	const end = e.parentElement.dataset.ended;
+	console.log(sta,end);
+	const li = `<li class="list-group-item inner-item">
+				<label for="moreReadStartedAt" class="m-0">시작일</label>
+				<input type="date" name="moreReadStartedAt" id="read-update-start" class="m-2" value='\${sta}'/>
+				<label for="moreReadStartedAt" class="m-0">종료일</label>
+				<input type="date" name="moreReadEndedAt" id="read-update-end" class="m-2" value='\${end}' />
+				<input type="hidden" name="moreReadIngNo" id="read-update-ingNo" value='\${ingNo}' />
+				<button type="button" class="btn btn-outline-success btn-sm" onclick="updateDate();">변경</button>
+				</li>`;
+	// 새로운 li추가
+ 	e.parentElement.insertAdjacentHTML('afterend', li);
+}
+
+const updateDate = () => {
+	
+	let ingNo = document.querySelector("#read-update-ingNo").value;
+	let startedAt = document.querySelector("#read-update-start").value;
+	let endedAt = document.querySelector("#read-update-end").value;
+	console.log(ingNo, startedAt, endedAt);
+	
+	
+	const csrfHeader = '${_csrf.headerName}';
+	const csrfToken = '${_csrf.token}';
+	const headers = {};
+	headers[csrfHeader] = csrfToken; // 전송하는 헤더에 추가하여 전송 
+	
+	
+	//`<li class="list-group-item" data-ingNo='\${ingNo}' 
+	// 			data-started='\${started}' data-ended='\${ended}'>\${started} 시작 ~ \${ended} 완독 
+	
+	$.ajax({
+		url : '${pageContext.request.contextPath}/search/moreReadUpdate.do',
+		method : 'POST',
+		headers,
+		data : {
+			ingNo,
+			startedAt,
+			endedAt
+		},
+		success(resp){
+			console.log(resp);
+			const {book} = resp;
+			const newStartedAt = book.startedAt;
+			const newEndedAt = book.endedAt;
+			const thisIngNo = book.ingNo;
+			const originli = document.querySelector("#read-update-ingNo").parentElement.previousElementSibling;
+			
+			
+			if(newStartedAt.monthValue < 10) newStartedAt.monthValue = '0' + newStartedAt.monthValue; 
+			if(newStartedAt.dayOfMonth < 10) newStartedAt.dayOfMonth = '0' + newStartedAt.dayOfMonth; 
+			if(newEndedAt.monthValue < 10) newEndedAt.monthValue = '0' + newEndedAt.monthValue; 
+			if(newEndedAt.dayOfMonth < 10) newEndedAt.dayOfMonth = '0' + newEndedAt.dayOfMonth; 
+			
+			const startFmt = `\${newStartedAt.year}-\${newStartedAt.monthValue}-\${newStartedAt.dayOfMonth}`; 
+			const endFmt = `\${newEndedAt.year}-\${newEndedAt.monthValue}-\${newEndedAt.dayOfMonth}`; 
+			
+			originli.dataset.started = startFmt;
+			originli.dataset.ended = endFmt;
+			originli.innerHTML = `\${startFmt} 시작 ~ \${endFmt} 완독
+				<span class="badge badge-pill badge-secondary bdg-delete float-right ml-2 mt-1" onclick="moreReadDelete(this);">삭제</span> 
+				<span class="badge badge-pill bdg-update float-right ml-2 mt-1" onclick="moreReadUpdate(this);">수정</span>`;
+			document.querySelector(".list-group-item.inner-item").remove();
+			
+			
+			// 현재 책을 수정한 경우 책 수정에서 날짜 변경
+			console.log('현재 책상태 : ',${book.ingNo} == thisIngNo);
+			console.log('날짜 포맷 : ', startFmt, endFmt);
+			if(${book.ingNo} == thisIngNo){
+				console.log('(전)수정- 시작일', document.querySelector("[name=bookUpdateFrm] [name=startedAt]").value);
+				console.log('(전)수정- 종료일', document.querySelector("[name=bookUpdateFrm] [name=endedAt]").value);
+				document.querySelector("[name=bookUpdateFrm] [name=startedAt]").value = startFmt;
+				document.querySelector("[name=bookUpdateFrm] [name=endedAt]").value = endFmt;
+				console.log('(후)수정- 시작일', document.querySelector("[name=bookUpdateFrm] [name=startedAt]").value);
+				console.log('(후)수정- 종료일', document.querySelector("[name=bookUpdateFrm] [name=endedAt]").value);
+			}
+			
+		},
+		error : console.log
+	});	
+};
+
+<%-- 완독일 삭제 --%>
+const moreReadDelete = (e) => {
+	const ingNo = e.parentElement.dataset.ingno;
+	const memberId = '${loginMember.memberId}';
+	const itemId = '${param.isbn13}';
+	console.log(ingNo, memberId, itemId);
+	
+	const csrfHeader = '${_csrf.headerName}';
+	const csrfToken = '${_csrf.token}';
+	const headers = {};
+	headers[csrfHeader] = csrfToken; // 전송하는 헤더에 추가하여 전송 
+	
+	$.ajax({
+		url : '${pageContext.request.contextPath}/search/moreReadDelete.do',
+		method : 'POST',
+		headers,
+		data : {
+			ingNo : ingNo,
+			itemId : itemId,
+			memberId : memberId
+		},
+		success(resp){
+			console.log(resp);
+			const {msg} = resp; 
+			e.parentElement.remove();
+			// 현재 책을 삭제한 경우 reload
+			if(ingNo == ${book.ingNo}){
+				alert(`\${msg}`);
+				window.location.reload();
+			}
+		},
+		error : console.log
+	});
+};
+
+
 
 document.querySelectorAll(".btn-check").forEach((select) => {
 	if(select.id != 'btnradio3'){

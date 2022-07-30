@@ -279,7 +279,6 @@ section#content div.line{
 	border-radius: 10px
 } 
 
-
 /* 책등록 수정 삭제 모달 */
 input.form-control[readonly]{
 	background-color: #FFF;

@@ -47,16 +47,18 @@
 	</insert>
 	
 	<select id="getMyBook" resultType="book">
-	select 
-		b.*,
-        i.started_at started_at,
-        i.ended_at ended_at,
-        i.ing_no ing_no
-	from 
-        book b right join 
-        		(select * from book_ing order by add_date desc) i
-            on b.member_id = i.member_id
-	where b.member_id = #{memberId} and b.item_id = #{itemId} and rownum = 1
+	select *
+	from book b right join
+	(select
+	    ing_no, item_id, member_id, started_at, ended_at, add_date
+	    , row_number() over(order by add_date desc) rnum
+	from
+	    book_ing
+	where 
+	    member_id = #{memberId} and item_id = #{itemId}) 
+	    i on b.member_id = i.member_id
+	where
+	    b.member_id = #{memberId} and b.item_id = #{itemId} and i.rnum = 1
 	</select>
 	
 	<update id="bookStatusUpdate">
@@ -82,20 +84,11 @@
 	<update id="bookIngUpdate">
 	update
 		book_ing
-	<!-- 읽음 -> 읽는중 -->
-	set 
-		<if test="status == '읽음'">
+	set
+		started_at = #{startedAt},
 		ended_at = #{endedAt}
-		</if>
-	
-	<!-- 읽는중 -> 읽음 -->
 	where
-		<if test="status == '읽음'">
-		ended_at is null
-		and
-		</if>		
-		item_id = #{itemId} and member_id = #{memberId}
-		
+		ing_no = #{ingNo}
 	</update>
 	
 	<delete id="bookIngDelete">
@@ -117,4 +110,31 @@
 		<result column="started_at" property="startedAt"/>
 		<result column="ended_at" property="endedAt"/>
 	</resultMap>
+	
+	<insert id="moreReadEnroll">
+	insert into
+		book_ing
+	values(
+		seq_book_ing_no.nextval,
+		#{itemId},
+		#{memberId},
+		#{startedAt},
+		#{endedAt},
+		sysdate
+	)
+	</insert>
+	
+	<delete id="moreReadDelete">
+	delete from book_ing where ing_no = #{ingNo}
+	</delete>
+	
+	<update id="moreReadUpdate">
+	update 
+		book_ing
+	set
+		started_at = #{startedAt},
+		ended_at = #{endedAt}
+	where
+		ing_no = #{ingNo}
+	</update>
 </mapper>

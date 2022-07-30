@@ -1,6 +1,5 @@
 package com.kh.bookie.search.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +9,9 @@ import javax.servlet.ServletContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -43,12 +44,17 @@ public class SearchController {
 	@Autowired
 	ServletContext application;
 	
+	// 소개페이지 연결
 	@GetMapping("/intro.do")
 	public void intro() {}
 	
+	// 책 검색 페이지 연결
 	@GetMapping("/searchForm.do")
 	public void searchForm() {}
 	
+	/**
+	 * 알라딘 API - 베스트 셀러 가져오기 
+	 */
 	@GetMapping("/selectBookList.do")
 	   public ResponseEntity<?> selectBestSeller(
 	         @RequestParam String ttbkey, 
@@ -89,6 +95,9 @@ public class SearchController {
 	   }
 	
 	
+	/**
+	 * 알라딘 API - 검색한 한권 정보 가져오기 
+	 */
 	@GetMapping("/selectBook.do")
 	public ResponseEntity<?> selectBook(
 									@RequestParam String ttbkey,
@@ -107,15 +116,19 @@ public class SearchController {
 		return ResponseEntity.ok(resource);
 	}
 	
-	
+	// 카테고리 선택 페이지 가져오기
 	@GetMapping("/categoryList.do")
 	public void categoryList() {}
 	
+	// 카테고리 별 챍 리스트 페이지 가져오기
 	@GetMapping("/bookListByCategory.do")
 	public void bookListByCategory(Model model, @RequestParam String category) {
 		model.addAttribute("category", category);
 	}
 	
+	/**
+	 * 알라딘 API - 카테고리별 책 리스트 가져오기 
+	 */
 	@GetMapping("selectBookListByCategory.do")
 	public ResponseEntity<?> selectBookListByCategory(
 											@RequestParam String ttbkey, 
@@ -151,6 +164,9 @@ public class SearchController {
 		return ResponseEntity.ok(resource);
 	}
 	
+	/**
+	 * 내 책 등록 페이지 요청 + 책번호 모델로 전송
+	 */
 	@GetMapping("/bookEnroll.do")
 	public void bookEnroll(@RequestParam String isbn13, Model model, @AuthenticationPrincipal com.kh.bookie.member.model.dto.Member member) {
 		Map<String, Object> map = new HashMap<>();
@@ -165,6 +181,9 @@ public class SearchController {
 		model.addAttribute("isbn13", isbn13);
 	}
 	
+	/**
+	 * 완독일 리스트 가져오기
+	 */
 	@GetMapping("/selectReadList.do")
 	public ResponseEntity<?> selectReadList(@RequestParam String itemId, @RequestParam String memberId){
 		try {
@@ -183,6 +202,9 @@ public class SearchController {
 		}
 	}
 	
+	/**
+	 * 내 책 등록
+	 */
 	@PostMapping("/bookEnroll.do")
 	public String bookEnroll(Book book, RedirectAttributes ra) {
 		try {
@@ -196,6 +218,9 @@ public class SearchController {
 		return "redirect:/search/bookEnroll.do?isbn13=" + book.getItemId();
 	}
 	
+	/**
+	 * 내 책 수정
+	 */
 	@PostMapping("/bookUpdate.do")
 	public String bookUpdate(Book book, RedirectAttributes ra) {
 		try {
@@ -209,6 +234,10 @@ public class SearchController {
 		}
 		return "redirect:/search/bookEnroll.do?isbn13=" + book.getItemId();
 	}
+	
+	/**
+	 * 내 책 삭제
+	 */
 	@PostMapping("/bookDelete.do")
 	public String bookDelete(Book book, RedirectAttributes ra) {
 		try {
@@ -223,4 +252,67 @@ public class SearchController {
 		return "redirect:/search/bookEnroll.do?isbn13=" + book.getItemId();
 	}
 	
+	/**
+	 * 완독일 추가
+	 * @return
+	 */
+	@PostMapping("/moreRead.do")
+	public String moreRead(Book book, RedirectAttributes ra) {
+		try {
+			log.debug("book = {}", book); //memberId itemId startedAt endedAt score status content ingNo
+			int result = searchService.moreReadEnroll(book);
+			ra.addFlashAttribute("msg", "완독일 추가 등록 완료 !");
+		} catch (Exception e) {
+			log.error("완독일 추가 등록 오류", e);
+			throw e;
+		}
+		return "redirect:/search/bookEnroll.do?isbn13=" + book.getItemId();
+	}
+	
+	/**
+	 * 완독일 삭제
+	 */
+	@PostMapping("/moreReadDelete.do")
+	public ResponseEntity<?> moreReadDelete(@RequestParam String itemId, @RequestParam String memberId, @RequestParam int ingNo){
+		Map<String, Object> map = new HashMap<>();
+		log.debug("itemId = {} , memberId = {}", itemId, memberId);
+		log.debug("ingNo = {}",ingNo);
+		try {
+			
+			Book book = new Book();
+			book.setIngNo(ingNo);
+			book.setItemId(itemId);
+			book.setMemberId(memberId);
+			
+			int result = searchService.moreReadDelete(book);
+			map.put("msg", "완독일 삭제 완료");
+			return ResponseEntity.ok(map);
+		} catch (Exception e) {
+			log.error("완독일 삭제 오류", e);
+			map.put("msg", "완독일 삭제 오류");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE)
+					.body(map);
+		}
+	}
+	
+	/**
+	 * 완독일 수정
+	 */
+	@PostMapping("/moreReadUpdate.do")
+	public ResponseEntity<?> moreReadUpdate(Book book){
+		Map<String, Object> map = new HashMap<>();
+		log.debug("book = {}",book);
+		try {
+			int result = searchService.moreReadUpdate(book);
+			map.put("book", book);
+			return ResponseEntity.ok(map);
+		} catch (Exception e) {
+			log.error("완독일 삭제 오류", e);
+			map.put("msg", "완독일 삭제 오류");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE)
+					.body(map);
+		}
+	}
 }

@@ -346,6 +346,31 @@ create table persistent_logins (
     last_used timestamp not null);
 select * from persistent_logins;
 
+select *
+from book b right join
+(select
+    ing_no, item_id, member_id, started_at, ended_at, add_date
+    , row_number() over(order by add_date desc) rnum
+from
+    book_ing
+where 
+    member_id = 'tmddbs' and item_id = '9788932474755') 
+    i on b.member_id = i.member_id
+where
+    b.member_id = 'tmddbs' and b.item_id = '9788932474755' and i.rnum = 1;
+    
+select 
+    b.*,
+    i.started_at started_at,
+    i.ended_at ended_at,
+    i.ing_no ing_no
+from 
+    book b join 
+            (select ing_no, item_id, member_id, started_at, ended_at, add_date, row_number() over(order by i2.add_date desc) rnum from book_ing i2) i
+        on b.member_id = i.member_id and b.item_id = i.item_id
+where b.member_id = 'tmddbs' and b.item_id = '9788932474755'; and i.rownum = 1;
+
+select * from book_ing where member_id = 'tmddbs' and item_id = '9788932474755';
 
 select
     *
