@@ -66,7 +66,8 @@
 				<button class="custom-btn btn-5" data-toggle="modal" data-target="#enrollBookModal" onclick="setStatus();"><span>등록</span></button>
 			</c:if>
 			<c:if test="${book != null}">
-				<button class="custom-btn btn-5" data-toggle="modal" data-target="#updateBookModal" onclick="setStatus();"><span>책 상태 변경</span></button>
+				<button class="custom-btn btn-5 " data-toggle="modal" data-target="#updateBookModal" onclick="setStatus();"><span>책 상태 변경</span></button>
+				<button class="custom-btn btn-5 " data-toggle="modal" data-target="#recentReadModal" onclick="setStatus();"><span>최근 완독일</span></button>
 			</c:if>
 			<!-- <button type="submit" class="btn btn-md btn-outline-primary" id="btn-enroll" onclick="bookEnroll();">저장</button> -->
 		</div>
@@ -78,56 +79,6 @@
 	<div class="line"></div>
 </section>
 
-<script>
-const setStatus = () => {
-	let cont = Array.from(document.querySelectorAll(".form-content"));
-	cont.forEach((c) => c.innerHTML = '');
-	Array.from(document.querySelectorAll("[name=status]")).forEach((status) => {
-		if(status.checked){
-			// console.log(status.value);
-			document.querySelector("#book-status").value = status.value;
-			document.querySelector("#book-status-update").value = status.value;
-		}
-	});
-	
-	const statusVal = document.querySelector("#book-status").value;
-	const statusUpdateVal = document.querySelector("#book-status-update").value;
-	
-	const div = `
-		<label for="content" class="col-form-label">한줄평(250자 이내):</label>
-<textarea class="form-control" id="content" name="content">
-<c:if test="${book != null}">${book.content}</c:if>
-</textarea>`;
-	if(statusVal == '읽음' || statusUpdateVal =='읽음'){
-		cont.forEach((c) => {
-			c.insertAdjacentHTML('beforeend', div);
-		});
-	}
-};
-<%-- 제출 --%>
-const bookEnroll = () => {
-	if(document.querySelector("#book-status").value == ""){
-		alert('책 상태를 선택해주세요.');
-		return;
-	}
-/* 	console.log(document.bookEnrollFrm.score.value);
-	console.log(document.bookEnrollFrm.itemId.value);
-	console.log(document.bookEnrollFrm.content); */
-	document.bookEnrollFrm.submit();
-};
-const bookUpdate = () => {
-	if(document.querySelector("#book-status-update").value == ""){
-		alert('책 상태를 선택해주세요.');
-		return;
-	}
-	document.bookUpdateFrm.submit();
-};
-const bookDelete = () => {
-	if(confirm('내 책에서 삭제하시겠습니까? \n한번 삭제된 정보는 되돌릴 수 없습니다.')){
-		
-	}
-};
-</script>
 <%-- 책 등록 form modal --%>
 <div class="modal fade" id="enrollBookModal" tabindex="-1" role="dialog" aria-labelledby="enrollBookModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -143,17 +94,17 @@ const bookDelete = () => {
           <div class="form-group">
 	            <input type="text" class="form-control" name="nickname" value="${loginMember.nickname}" readonly>
 	            <input type="hidden" class="form-control" name="memberId" value="${loginMember.memberId}">
-	            <input type="hidden" class="form-control" name="itemId" value="${param.itemId}">
+	            <input type="hidden" class="form-control" name="itemId" value="${param.isbn13}">
 	            <input type="hidden" name="score" id="book-score" value="0"/>
 				<input type="text"  class="form-control" name="status" id="book-status" readonly />
           </div>
-			<h4 id="modalBookTitle"></h4>
+			<h4 class="ml-2" id="modalBookTitle"></h4>
 			<div class="form-group form-content"></div>
         </form:form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
-        <button type="button" class="btn btn-primary" onclick="bookEnroll();">책등록</button>
+        <button type="button" class="custom-btn btn-5" onclick="bookEnroll();">책등록</button>
       </div>
     </div>
   </div>
@@ -179,21 +130,45 @@ const bookDelete = () => {
 	            <input type="hidden" name="score" value="${book.score}"/>
 				<input type="text"  class="form-control" name="status" id="book-status-update" readonly />
           </div>
-			<h4 id="modalBookUpdateTitle"></h4>
+			<h4 class="ml-2" id="modalBookUpdateTitle"></h4>
 			<div class="form-group form-content"></div>
         </form:form>
       </div>
+
       <div class="modal-footer">
-      	<button class="custom-btn btn-5 close" data-dismiss="modal" aria-label="Close"  data-toggle="modal" data-target="#moreReadModal"><span>완독일 추가</span></button>
-      	
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
-        <button type="button" class="btn btn-primary" onclick="bookUpdate();">수정</button>
-        <button type="button" class="btn btn-danger" onclick="bookDelete();">삭제</button>
+        <button type="button" class="custom-btn btn-5" onclick="bookUpdate();">수정완료</button>
+        <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">취소</button>
+        <c:if test="${book.status != '읽음'}">
+	        <button type="button" class="btn btn-sm btn-danger" onclick="bookDelete();">삭제</button>
+        </c:if>
       </div>
     </div>
   </div>
 </div>
 
+<!-- 완독일 리스트 모달 -->
+<div class="modal fade" id="recentReadModal" tabindex="-1" role="dialog" aria-labelledby="recentReadModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="recentReadModalLabel">완독일 수정</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body m-2 p-2" id="recentReadList">
+		<ul class="list-group">
+		</ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+        <button type="button" class="btn btn-outline-success " data-dismiss="modal" aria-label="Close" data-toggle="modal" data-target="#moreReadModal">완독일 추가</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 완독일 추가 모달 -->
 <div class="modal fade" id="moreReadModal" tabindex="-1" role="dialog" aria-labelledby="moreReadModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -208,15 +183,16 @@ const bookDelete = () => {
           <div class="form-group">
 	            <input type="hidden" class="form-control" name="memberId" value="${loginMember.memberId}">
 	            <input type="hidden" class="form-control" name="itemId" id="itemId" value="${param.itemId}">
-	            <label for="startedAt">시작일</label>
-	            <input type="date" name="startedAt" id="startedAt" />
-	            <br />
-	            <label for="endedAt">종료일</label>
-	            <input type="date" name="startedAt" id="endedAt" />
+	            <label for="startedAt" class="m-0">시작일</label>
+	            <input type="date" name="startedAt" class="m-2 " id="startedAt" />
+	            ~
+	            <label for="endedAt" class="m-0">종료일</label>
+	            <input type="date" name="startedAt" class="m-2 " id="endedAt" />
 	            <input type="hidden" name="score" value="${book.score}"/>
+	            <br />
 				<input type="text"  class="form-control" name="status" value="읽음" readonly/>
           </div>
-			<h4 id="modalBookTitle"></h4>
+			<h4 class="ml-2" id="moreReadBookTitle"></h4>
 			<div class="form-group">
 				<label for="content" class="col-form-label">한줄평(250자 이내):</label>
 				<textarea class="form-control" name="content" readonly><c:if test="${book != null}">${book.content}</c:if>
@@ -225,14 +201,101 @@ const bookDelete = () => {
         </form:form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
-        <button type="button" class="btn btn-primary" onclick="document.moreReadFrm.submit();">완독일 추가</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close"  data-toggle="modal" data-target="#recentReadModal">이전으로</button>
+        <button type="button" class="btn btn-outline-success " onclick="document.moreReadFrm.submit();">완독일 추가</button>
       </div>
     </div>
   </div>
 </div>
 
+<script>
+const setStatus = () => {
+	let cont = Array.from(document.querySelectorAll(".form-content"));
+	cont.forEach((c) => c.innerHTML = '');
+	
+	let statusVal = document.querySelector("#book-status").value;
+	let statusUpdateVal = document.querySelector("#book-status-update").value;
+	Array.from(document.querySelectorAll("[name=status]")).forEach((status) => {
+		if(status.checked){
+			document.querySelector("#book-status").value = status.value;
+			document.querySelector("#book-status-update").value = status.value;
+			statusVal = status.value;
+			statusUpdateVal = status.value;
+		}
+	});
+	
+	const div = `
+		<label for="content" class="col-form-label">한줄평(250자 이내):</label>
+<textarea class="form-control" id="textbox" name="content">
+<c:if test="${book != null}">${book.content}</c:if>
+</textarea>`;
 
+	/* <label for="startedAt" class="m-0">시작일</label> */
+	/* <input type="date" name="startedAt" class="m-2 " id="endedAt" /> */
+	
+	const startedAtDiv = `<label for="startedAt" class="m-0">시작일</label><input type="date" name='startedAt' class='m-2' value="${book.startedAt}"/>`;
+	const endedAtDiv = `<label for="endedAt" class="m-0">종료일</label><input type="date" name='endedAt' class='m-2' value="${book.endedAt}"/>`;
+
+	/* 읽음 선택 시 시작 완독 날짜추가 */
+	if(statusVal == '읽음' || statusUpdateVal =='읽음'){
+		cont.forEach((c) => {
+			c.insertAdjacentHTML('beforeend', startedAtDiv);
+			c.insertAdjacentHTML('beforeend', endedAtDiv);
+			c.insertAdjacentHTML('beforeend', div);
+		});
+	}
+	/* 읽는 중 선택 시 시작 날짜추가 */
+	if(statusVal == '읽는 증' || statusUpdateVal == '읽는 중') {
+		cont.forEach((c) => {
+			c.insertAdjacentHTML('beforeend', startedAtDiv);
+		});
+	}
+};
+<%-- 제출 --%>
+const bookEnroll = () => {
+	if(document.querySelector("#book-status").value == ""){
+		alert('책 상태를 선택해주세요.');
+		return false;
+	} else if(document.querySelector("#book-status").value == "읽음"){
+		//한줄평 유효성검사
+		const content = document.querySelector("#textbox");
+		if(content.value.length > 250){
+			alert('250자 이상 입력할 수 없습니다.')
+			return false;
+		}
+	}
+	
+ 	console.log(document.bookEnrollFrm.score.value);
+	console.log(document.bookEnrollFrm.itemId.value);
+	console.log(document.bookEnrollFrm.content); 
+	document.bookEnrollFrm.submit();
+};
+const bookUpdate = () => {
+	const updateStatus = document.querySelector("#book-status-update").value;
+	if(updateStatus == "" || updateStatus == '${book.status}'){
+		if(updateStatus == '읽음'){
+			document.bookUpdateFrm.submit();
+			return;
+		}
+		alert('변경할 책 상태를 선택해주세요.');
+		return false;
+	}
+	document.bookUpdateFrm.submit();
+};
+const bookDelete = () => {
+	if(confirm('내 책에서 삭제하시겠습니까? \n한번 삭제된 정보는 되돌릴 수 없습니다.')){
+		console.log(document.bookDelFrm.ingNo);
+		console.log(document.bookDelFrm.memberId);	
+		console.log(document.bookDelFrm.itemId);	
+		document.bookDelFrm.submit();
+	}
+};
+</script>
+<form:form name="bookDelFrm" method="post" action="${pageContext.request.contextPath}/search/bookDelete.do">
+	<input type="hidden" name="memberId" value="${loginMember.memberId}" />
+	<input type="hidden" name="itemId" value="${param.isbn13}" />
+	<input type="hidden" name="ingNo" value="${book.ingNo}" />
+</form:form>
 
 <script>
 <%-- 상단 제목 바 --%>
@@ -285,6 +348,7 @@ window.addEventListener('load', () => {
 			document.querySelector("#title").innerText=`\${title}`;
 			document.querySelector("#modalBookTitle").innerText=`\${title}`;
 			document.querySelector("#modalBookUpdateTitle").innerText=`\${title}`;
+			document.querySelector("#moreReadBookTitle").innerText=`\${title}`;
 			document.querySelector("#subTitle").innerText=`\${subTitle}`;
 			const divDescription = `
 				<div class="book-info">
@@ -320,14 +384,49 @@ $('.starRev span').click(function(){
 	return false;
 });
 
+<%-- 로드될 때 저장된 별점 기록 채우기 & 완독일 리스트 불러오기 --%>
 window.addEventListener('load', () => {
 	//console.log('${book.score}');
 	const des = Array.from(document.querySelectorAll(".starRev span"));
 	//console.log(des);
-	for(let i = 0; i < ${book.score}; i++){
-		des[i].classList.add('on');
-	}
+	<c:if test="${book != null}">
+		for(let i = 0; i < ${book.score}; i++){
+			des[i].classList.add('on');
+		}
+	</c:if>
+	
+	$.ajax({
+		url : '${pageContext.request.contextPath}/search/selectReadList.do',
+		data : {
+			itemId : '${param.isbn13}',
+			memberId : '${loginMember.memberId}'
+		},
+		success(resp){
+			//console.log(resp);
+			const container = document.querySelector("#recentReadList");
+			
+			resp.forEach((read) => {
+				const {startedAt, endedAt, ingNo} = read;
+				console.log(startedAt, endedAt, ingNo);
+				if(startedAt.monthValue < 10) startedAt.monthValue = '0' + startedAt.monthValue; 
+				if(startedAt.dayOfMonth < 10) startedAt.dayOfMonth = '0' + startedAt.dayOfMonth; 
+				if(endedAt.monthValue < 10) endedAt.monthValue = '0' + endedAt.monthValue; 
+				if(endedAt.dayOfMonth < 10) endedAt.dayOfMonth = '0' + endedAt.dayOfMonth; 
+				
+				const started = `\${startedAt.year}-\${startedAt.monthValue}-\${startedAt.dayOfMonth}`; 
+				const ended = `\${endedAt.year}-\${endedAt.monthValue}-\${endedAt.dayOfMonth}`; 
+				
+				const li = `<li class="list-group-item" data-ingNo='\${ingNo}'>\${started} 시작 ~ \${ended} 완독 
+							<span class="badge badge-pill badge-secondary bdg-delete float-right ml-2 mt-1">삭제</span> 
+							<span class="badge badge-pill bdg-update float-right ml-2 mt-1">수정</span> </li>`;
+				container.insertAdjacentHTML('beforeend', li);
+			});
+		},
+		error: console.log
+	});
 });
+
+<%-- 완독일 수정 --%>
 
 document.querySelectorAll(".btn-check").forEach((select) => {
 	if(select.id != 'btnradio3'){

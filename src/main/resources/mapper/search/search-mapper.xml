@@ -12,8 +12,21 @@
 		#{status},
 		#{score},
 		#{content},
-		default)
+		default,
+		sysdate)
 	</insert>
+	
+	<select id="totalBook" resultType="_int">
+	select count(*) from book_ing where member_id = #{memberId} and item_id = #{itemId}
+	</select>
+	
+	<delete id="bookDelete">
+	delete from book where member_id = #{member_id}
+	</delete>
+
+	<delete id="bookIngDeleteByNo">
+	delete from book_ing where ing_no = #{ingNo}
+	</delete>
 	
 	<insert id="bookIngEnroll">
 	insert into
@@ -22,17 +35,86 @@
 		seq_book_ing_no.nextval,
 		#{itemId},
 		#{memberId},
-		default,
+		#{startedAt},
 		<if test="status == '읽음'">
-		sysdate
+		#{endedAt},
 		</if>
 		<if test="status != '읽음'">
-		null
+		null,
 		</if>
+		sysdate
 	)
 	</insert>
 	
 	<select id="getMyBook" resultType="book">
-	select * from book where member_id = #{memberId} and item_id = #{itemId}
+	select 
+		b.*,
+        i.started_at started_at,
+        i.ended_at ended_at,
+        i.ing_no ing_no
+	from 
+        book b right join 
+        		(select * from book_ing order by add_date desc) i
+            on b.member_id = i.member_id
+	where b.member_id = #{memberId} and b.item_id = #{itemId} and rownum = 1
 	</select>
+	
+	<update id="bookStatusUpdate">
+	update
+		book
+	set
+		status = #{status}
+	where 
+		item_id = #{itemId} and member_id = #{memberId}
+	</update>
+	
+	<update id="bookUpdate">
+	update
+		book
+	set
+		status = #{status},
+		score = #{score},
+		content = #{content}
+	where
+		item_id = #{itemId} and member_id = #{memberId}
+	</update>
+	
+	<update id="bookIngUpdate">
+	update
+		book_ing
+	<!-- 읽음 -> 읽는중 -->
+	set 
+		<if test="status == '읽음'">
+		ended_at = #{endedAt}
+		</if>
+	
+	<!-- 읽는중 -> 읽음 -->
+	where
+		<if test="status == '읽음'">
+		ended_at is null
+		and
+		</if>		
+		item_id = #{itemId} and member_id = #{memberId}
+		
+	</update>
+	
+	<delete id="bookIngDelete">
+	delete from book_ing 
+	where 
+		member_id = #{memberId} and
+		item_id = #{itemId} and
+		ended_at is null
+	</delete>
+	
+	<select id="selectReadList" resultMap="bookIngMap">
+		select * from book_ing where item_id = #{itemId} and member_id = #{memberId} order by started_at
+	</select>
+	
+	<resultMap type="book" id="bookIngMap">
+		<id column="ing_no" property="ingNo"/>
+		<result column="item_id" property="itemId"/>
+		<result column="member_id" property="memberId"/>
+		<result column="started_at" property="startedAt"/>
+		<result column="ended_at" property="endedAt"/>
+	</resultMap>
 </mapper>

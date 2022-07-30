@@ -280,4 +280,30 @@ section#content div.line{
 } 
 
 
+/* 책등록 수정 삭제 모달 */
+input.form-control[readonly]{
+	background-color: #FFF;
+	display: inline;
+	font-size: 25px;
+	width: 49%;
+	text-align: center;
+}
+
+/* 완독일 추가 */
+#recentReadList li.list-group-item {
+	cursor:pointer;
+}
+#recentReadList li.list-group-item:hover{
+	background-color: #cbda465d;
+}
+#recentReadList li.list-group-item span.bdg-delete:hover{
+	background-color: #616161; 
+}
+#recentReadList li.list-group-item span.bdg-update{
+	color:#FFF;
+	background-color: #FE9801; 
+}
+#recentReadList li.list-group-item span.bdg-update:hover{
+	background-color: #b9730a; 
+}
 

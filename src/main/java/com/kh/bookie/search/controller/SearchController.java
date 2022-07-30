@@ -1,6 +1,8 @@
 package com.kh.bookie.search.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
@@ -8,6 +10,7 @@ import javax.servlet.ServletContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -162,6 +165,24 @@ public class SearchController {
 		model.addAttribute("isbn13", isbn13);
 	}
 	
+	@GetMapping("/selectReadList.do")
+	public ResponseEntity<?> selectReadList(@RequestParam String itemId, @RequestParam String memberId){
+		try {
+			log.debug("itemId = {} , memberId = {}", itemId, memberId);
+			Map<String, Object> map = new HashMap<>();
+			map.put("itemId", itemId);
+			map.put("memberId", memberId);
+			
+			List<Book> bookList = searchService.selectReadList(map);
+			log.debug("bookList = {}", bookList);
+			
+			return ResponseEntity.ok(bookList);
+		} catch (Exception e) {
+			log.error("book_ing 책 내역 가져오기 오류", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+	}
+	
 	@PostMapping("/bookEnroll.do")
 	public String bookEnroll(Book book, RedirectAttributes ra) {
 		try {
@@ -175,5 +196,31 @@ public class SearchController {
 		return "redirect:/search/bookEnroll.do?isbn13=" + book.getItemId();
 	}
 	
+	@PostMapping("/bookUpdate.do")
+	public String bookUpdate(Book book, RedirectAttributes ra) {
+		try {
+			log.debug("book = {}", book);
+			log.debug("bookStatus = {}", book.getStatus());
+			int result = searchService.bookUpdate(book);
+			ra.addFlashAttribute("msg", "책 수정 완료 !");
+		} catch (Exception e) {
+			log.error("내 책 수정 오류", e);
+			throw e;
+		}
+		return "redirect:/search/bookEnroll.do?isbn13=" + book.getItemId();
+	}
+	@PostMapping("/bookDelete.do")
+	public String bookDelete(Book book, RedirectAttributes ra) {
+		try {
+			log.debug("book = {}", book);
+			log.debug("bookStatus = {}", book.getStatus());
+			int result = searchService.bookDelete(book);
+			ra.addFlashAttribute("msg", "책 삭제 완료 !");
+		} catch (Exception e) {
+			log.error("내 책 삭제 오류", e);
+			throw e;
+		}
+		return "redirect:/search/bookEnroll.do?isbn13=" + book.getItemId();
+	}
 	
 }
