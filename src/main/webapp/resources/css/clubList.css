@@ -157,3 +157,10 @@ section#content	{
 	color: #6c757d !important;
 	border-radius: 30px !important;
 }
+
+.page-item.active .page-link {
+    z-index: 1;
+    color: #fff !important;
+    background-color: #ffc107 !important;
+    border-color: #ffc107 !important;
+

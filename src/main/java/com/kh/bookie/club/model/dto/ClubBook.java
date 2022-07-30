@@ -18,5 +18,6 @@ public class ClubBook {
 	private int clubNo;
 	private String itemId;
 	private String imgSrc;
+	private String bookTitle;
 	private List<Mission> missionList = new ArrayList<>();
 }

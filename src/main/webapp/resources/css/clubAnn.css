@@ -32,6 +32,88 @@ section#content {
 	margin: 0 !important;
 }
 
+/****** 책 등록폼 ******/
+/* 제목 바 */
+#title-header{
+	top: 0px;
+	width: 800px;
+	font-size: 20px;
+	background-color: #FFF;
+	text-align: center;
+	z-index:1;
+	border-radius: 10px;
+	box-shadow: 1px 2px 3px #5454544a;
+}
+#header-div {
+	display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+#title-header-left{
+	margin-top: 10px;
+	margin-bottom: 10px;
+	display: flex;
+	align-items: center;
+}
+#title-header #title-header-left i{
+	font-size: 40px;
+	margin: 0 40px;
+	cursor: pointer;
+}
+#title-header-left i:hover{
+	color:#;
+}
+#title-header-left span {
+	font-size: 32px;
+}
+#title-header.drop {
+  position: fixed;
+  animation: dropHeader 0.3s;
+}
+@keyframes dropHeader {
+  0% {
+    top: -5rem;
+  }
+  100% {
+    top: 0;
+  }
+}
+
+
+#likeWishDiv {
+	display: flex;
+    justify-content: flex-end;
+    margin-right: 15px;
+}
+.fa-lg {
+	font-size: unset !important;
+}
+.fa-stack {
+	width: 1.7em !important;
+	cursor: pointer;
+}
+.fa-heart, .fa-bookmark {
+	font-size: 34px;
+	margin: 0 3px;
+}
+#h-span {
+	margin-right: 6px;
+}
+.front {
+	color: black;
+	z-index: 1 !important;
+}
+.h-behind {
+	color: #F10086;
+    font-size: 29px;
+}
+
+.b-behind {
+	color: #FFC46B;
+    font-size: 29px;
+}
+
+
 /* 공통 */
 .divs{
 	font-size: 27px;
@@ -99,6 +181,10 @@ section#content {
 }
 
 /*********** 미션 **************/
+#mDiv {
+	border-bottom: 1px solid grey;
+	padding-bottom: 30px;
+}
 #mission-head {
 	margin-bottom: 3px !important;
  	font-size: 45px;
@@ -176,16 +262,111 @@ section#content {
     cursor: pointer;
 }
 
+/************** 마지막 등록 버튼 ****************/
+#btn-div {
+	display: flex;
+    justify-content: flex-end;
+	margin-top: 15px;
+	
+}
+#btn-div button {
+	width: 100%;
+	background: none;
+    border-radius: 10px;
+    color: #FE9801;
+    border: 1px solid #FE9801;
+    transition: .1s ease-in-out;	
+    padding: 5px 20px;
+    font-size: 25px;
+    cursor: pointer;
+    letter-spacing: 15px;
+}
+#btn-div button:hover {
+	
+	background-color: #FE9801;
+    color: #fff;
+    box-shadow: 0px 0px 4px #5454544a;
+    
+}
+#btn-div button:focus, #btn-div button:focus-visible {
+	outline: unset !important;
+}
 
+#btn-disabled {
+	background-color: #e9e9e9 !important;
+	border: 1px solid #e9e9e9 !important;
+    color: black !important;
+    cursor: default !important; 
+}
 
-
-#bottom{
-	position: fixed;
-	bottom: 100px;
-	right: 100px;
+#btn-disabled:hover, #btn-disabled:focus-visible,  #btn-disabled:focus{
+	box-shadow: unset !important;
+	outline: unset !important;
+	
 }
 
 
+/********* 미션 모달 *************/
+
+.modal-title{
+	margin: auto !important;
+	transform: translateX(10px);
+}
+.modal-header button {
+	padding: 0 !important;
+	margin: 0 !important
+}
+.modalDiv {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+.modalDiv:first-child {
+	margin-top: 20px;
+}
+.modalDiv:not(:first-of-type) {
+	margin-top: 40px;	
+}
+/* .modalDiv:after {
+	content: "";
+    display: block;
+    width: 80px;
+    border-bottom: 1px solid #bcbcbc;
+    margin: 20px auto;
+} */
+.missionNo {
+	padding: 5px 10px;
+	color: white;
+	background-color: orange;
+	border-radius: 20px;
+}
+.mTitle {
+	font-size: xx-large !important;
+	margin-top: 5px !important;
+	margin-bottom: 0 !important;
+}
+
+.mSpan {
+	font-size: 25px;
+}
+
+.mDate {
+	
+}
+.mDeposit {
+	
+}
+.mContent {
+	margin-top: 10px;
+}
+
+
+#plzEnrollMember {
+	margin-bottom: 0;
+    text-align: center;
+    font-size: large;
+    margin-top: 10px;
+}
 
 
 
