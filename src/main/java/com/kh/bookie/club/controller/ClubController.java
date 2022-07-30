@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -116,8 +117,8 @@ public class ClubController {
 	}
 
 	@PostMapping("/enrollClub.do")
-	public ModelAndView enrollClub(
-			ModelAndView mav, 
+	public String enrollClub(
+			RedirectAttributes redirectAttr, 
 			Club club, 
 			@RequestParam List<String> isbn13,
 			@RequestParam List<String> bookImg, 
@@ -214,17 +215,16 @@ public class ClubController {
 //			log.debug("missionList = {}", club.getMissionList());
 			
 			int result = clubService.enrollClub(club);
-			mav.addObject("club", club);
-			mav.addObject("msg", "북클럽이 등록되었습니다!");
-			mav.setViewName("club/clubAnn");
+			redirectAttr.addAttribute("clubNo", club.getClubNo());
+			redirectAttr.addFlashAttribute("msg", "북클럽이 등록되었습니다!");
 
 		} catch (Exception e) {
 			log.error("북클럽 등록 오류!!", e);
-			mav.addObject("msg", "북클럽 등록에 실패했습니다!");
+			redirectAttr.addFlashAttribute("msg", "북클럽 등록에 실패했습니다!");
 			throw e;
 		}
 
-		return mav;
+		return "redirect:/club/clubAnn.do";
 	}
 
 
@@ -407,5 +407,60 @@ public class ClubController {
 
 	}
 	
+	@GetMapping("/myClubDetail.do")
+	public ModelAndView myClubDetail(
+			@RequestParam int clubNo,
+			ModelAndView mav
+			) {		
+		try {
+			log.debug("clubNo = {}", clubNo);		
+			
+			mav.addObject("clubNo", clubNo);
+			mav.setViewName("club/clubDetail");
+			
+		
+		} catch(Exception e) {
+			log.error("북클럽 상세페이지 조회 오류!", e);
+			mav.addObject("msg", "북클럽 상세페이지 조회에 실패했습니다!");
+			throw e;
+		}
+		
+		
+		return mav;
+	}
+	
+	@GetMapping("/clubBoard.do/{clubNo}")
+	public ModelAndView clubBoard(
+			ModelAndView mav,
+			@PathVariable String clubNo) {
+		
+		try {
+			
+			log.debug("clubNo = {}", clubNo);
+			mav.setViewName("club/clubBoard");
+			
+		} catch(Exception e) {
+			log.error("북클럽 게시판 조회 오류", e);
+			
+		}
+		return mav;
+	}
+	
+	@GetMapping("/clubBoardEnroll.do")
+	public String clubBoardEnroll(
+			@RequestParam String memberId,
+			@RequestParam int clubNo			
+			) {
+		try {
+			
+			log.debug("memberId = {}", memberId);
+			log.debug("clubNo = {}", clubNo);
+			
+		} catch(Exception e) {
+			
+		}
+		
+		return "club/clubBoardEnroll";
+	}
 	
 }

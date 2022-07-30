@@ -998,7 +998,11 @@ const enrollMission = () => {
 	// 모든 칸이 입력됐으니까 변수 받아오고
 	   	const mName = $('#mName').val();
 		mEndDate = $('#mEndDate').val();
-		const mContent = $('#mContent').val();
+		let mContent = $('#mContent').val();
+
+		mContent = mContent.replace(/\"/g, '&quot;');
+		
+		
 
 	if(status == 'enroll'){
 
@@ -1119,6 +1123,8 @@ const deleteMission = (e) => {
 	
 }
 
+
+// 폼이 제출되기 전에!! 
 const frmSubmit = () => {
 	
 	const frm = document.clubEnrollFrm;
@@ -1147,6 +1153,10 @@ const frmSubmit = () => {
 		
 	});
 	
+	
+	// 따옴표 검사해서 바꿔치기해
+	$('#title').val().replace(/\"/g, '&quot;');
+	$('#content').val().replace(/\"/g, '&quot;');
 	
 	
  	frm.action = `${pageContext.request.contextPath}/club/enrollClub.do`
