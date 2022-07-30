@@ -261,6 +261,9 @@ section#content {
     color: #fff;
     cursor: pointer;
 }
+.redText {
+	color: red;
+}
 
 /************** 마지막 등록 버튼 ****************/
 #btn-div {

@@ -36,7 +36,7 @@
 			<button 
 			    	id="btn-enroll"
 			    	class="btn btn-sm" 
-			    	onclick="myBookClubDetail(e);"
+			    	onclick="myBookClubDetail(this);"
 			    	data-club-no="45">북클럽 상세 페이지</button>
 			<%-- </sec:authorize> --%>
 		</div>	
@@ -289,7 +289,9 @@
 		console.log(e);
 		console.log(e.dataset.clubNo);
 		
-		location.herf = '${pageContext.request.contextPath}/club/myClubDetail/';
+		const clubNo = e.dataset.clubNo;
+		
+		location.href = '${pageContext.request.contextPath}/club/myClubDetail.do' + "?clubNo=" + clubNo;
 	}
 
 </script>

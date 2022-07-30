@@ -1,0 +1,71 @@
+@charset "UTF-8";
+section#content	{
+	margin: 0 auto;
+	padding: 20px 71px 20px 95px;
+	min-height:600px;
+	border-radius: 5px;
+}
+
+#clubBook-container {
+	background-image: url(/bookie/resources/images/clubBoardBackground.png) !important;
+	background-repeat: no-repeat;
+    background-position: top;
+    background-attachment: scroll;
+    background-size: 98%;
+}
+
+/***** 테이블 위 제목과 추가 버튼 *****/
+section#content #title {
+    margin-top: 150px;
+    margin-bottom: 60px;
+}
+#title h1 {
+	font-size: xx-large !important;
+} 
+#clubBoard-enroll {
+    height: 50px;
+    position: relative;
+    right: 10px;
+    top: -10px;
+    text-decoration: none;
+    color: #FE9801;
+    float: right;
+    border-radius: 50%;
+}
+
+#clubBoard-enroll .fa-plus {
+    font-size: 25px;
+}
+
+/******** 테이블 ********/
+
+#table-div table {
+	border-radius: 10px;
+    text-align: center;
+    font-size: 19px;
+    
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 1rem;
+    background-color: transparent;
+    
+    border-collapse: separate;
+  	border-spacing: 0 15px;
+	margin: 18px;
+    width: 95% !important;
+}
+
+
+thead tr {
+	line-height: 2rem;
+}
+
+thead tr th {
+	color: #febe56;
+    border-bottom: 1px solid #1d2124;
+    font-size: 1.2rem;
+}
+tbody tr {
+	cursor: pointer
+}
+

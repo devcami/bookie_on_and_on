@@ -1,0 +1,27 @@
+@charset "UTF-8";
+section#content	{
+	margin: 0 auto;
+	padding: 20px 71px 20px 95px;
+	min-height:600px;
+	border-radius: 5px;
+}
+
+#clubBook-container {
+	background-image: url(/bookie/resources/images/boardBack.png) !important;
+	background-repeat: no-repeat;
+    background-position: top;
+    background-attachment: scroll;
+    background-size: 85%;
+}
+
+/***** 테이블 위 제목과 추가 버튼 *****/
+section#content #title {
+    margin-top: 70px;
+    margin-bottom: 60px;
+    padding-bottom: 20px;
+    border-bottom: 2px dashed grey;
+}
+#title h1 {
+	font-size: xx-large !important;
+} 
+
