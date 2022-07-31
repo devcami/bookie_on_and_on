@@ -557,4 +557,9 @@ select * from chat_comment;
 
 commit;
 
+update club_chat set enroll_date = (sysdate - 4) where chat_no = 1;
+update club_chat set enroll_date = (sysdate - 3) where chat_no = 4;
+update club_chat set enroll_date = (sysdate - 2) where chat_no = 5;
+update club_chat set enroll_date = (sysdate - 1) where chat_no = 6;
 
+select * from club_chat order by enroll_date desc;
