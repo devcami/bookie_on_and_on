@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.bookie.club.model.dao.ClubDao;
+import com.kh.bookie.club.model.dto.Chat;
+import com.kh.bookie.club.model.dto.ChatAttachment;
 import com.kh.bookie.club.model.dto.Club;
 import com.kh.bookie.club.model.dto.ClubBook;
 import com.kh.bookie.club.model.dto.Mission;
@@ -157,6 +159,36 @@ public class ClubServiceImpl implements ClubService {
 		result = clubDao.updateMyPoint(map);
 		
 		return result;
+	}
+
+	@Override
+	public int insertClubBoard(Chat clubBoard) {
+		// 1. clubBoard 먼저 insert
+		int result = clubDao.insertClubBoard(clubBoard);
+		int chatNo = clubBoard.getChatNo();
+		log.debug("chatNo = {}", chatNo);
+		
+		// 2. 첨부파일 삽입
+		List<ChatAttachment> attachments = clubBoard.getChatAttachments();
+		if(!attachments.isEmpty()) {
+			for(ChatAttachment attach : attachments) {
+				attach.setChatNo(chatNo);
+				result = clubDao.insertClubBoardAttachment(attach);
+			}
+		}
+		
+		
+		return result;
+	}
+
+	@Override
+	public Chat selectOneBoardCollection(int chatNo) {
+		return clubDao.selectOneBoardCollection(chatNo);
+	}
+
+	@Override
+	public List<Chat> selectClubBoardList(int clubNo) {
+		return clubDao.selectClubBoardList(clubNo);
 	}
 
 }

@@ -117,6 +117,8 @@ create table pheed(
     constraint ck_pheed_is_opened check(is_opened in ('O', 'F', 'C'))
 );
 
+select * from pheed;
+
 create sequence seq_pheed_no;
 
 -- 10. pheed_attachment - 피드 첨부파일 테이블
@@ -217,10 +219,13 @@ create table club_chat(
     club_no      number not null,
     title          varchar2(1500) not null,
     content      varchar2(4000) not null,
+    enroll_date date default sysdate,
     constraint pk_club_chat_no primary key(chat_no),
     constraint fk_club_chat_club_no foreign key(club_no) references club(club_no) on delete cascade
 );
 
+alter table club_chat add enroll_date date default sysdate;
+commit;
 create sequence seq_club_chat_no;
 
 -- 18. chat_attachment
@@ -546,9 +551,10 @@ update member set point = 30000 where member_id = 'tmddbs';
 select * from my_club;
 select * from member;
 
-select * from club;
-
-delete from club where club_no = 58;
+select * from club_chat;
+select * from chat_attachment;
+select * from chat_comment;
 
 commit;
+
 

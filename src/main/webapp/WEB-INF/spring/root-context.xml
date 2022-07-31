@@ -44,4 +44,5 @@
 	<!-- #13.2. @Transactional annotation이 붙은 메소드 대상으로 Transaction Advice (aop)적용 -->
 	<tx:annotation-driven transaction-manager="transactionManager"/>
 	
+	
 </beans>
