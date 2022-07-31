@@ -147,6 +147,7 @@
 </section>
 
 <script>
+	
 	// hello-spring boardList.jsp에서 가져와
 
 
@@ -290,6 +291,7 @@
 		console.log(e.dataset.clubNo);
 		
 		const clubNo = e.dataset.clubNo;
+		
 		
 		location.href = '${pageContext.request.contextPath}/club/myClubDetail.do' + "?clubNo=" + clubNo;
 	}

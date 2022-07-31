@@ -10,6 +10,8 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.apache.ibatis.session.RowBounds;
 
+import com.kh.bookie.club.model.dto.Chat;
+import com.kh.bookie.club.model.dto.ChatAttachment;
 import com.kh.bookie.club.model.dto.Club;
 import com.kh.bookie.club.model.dto.ClubBook;
 import com.kh.bookie.club.model.dto.Mission;
@@ -67,5 +69,15 @@ public interface ClubDao {
 
 	@Update("update member set point = #{restPoint} where member_id = #{memberId}")
 	int updateMyPoint(Map<String, Object> map);
+
+	int insertClubBoard(Chat clubBoard);
+
+	@Insert("insert into chat_attachment values(seq_chat_attachment_no.nextval, #{chatNo}, #{originalFilename}, #{renamedFilename}, sysdate)")
+	int insertClubBoardAttachment(ChatAttachment attach);
+
+	Chat selectOneBoardCollection(int chatNo);
+
+	@Select("select * from club_chat where club_no = #{clubNo} order by enroll_date desc")
+	List<Chat> selectClubBoardList(int clubNo);
 
 }

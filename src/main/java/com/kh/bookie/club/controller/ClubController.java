@@ -1,5 +1,7 @@
 package com.kh.bookie.club.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -12,6 +14,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,9 +25,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.kh.bookie.club.model.dto.Chat;
+import com.kh.bookie.club.model.dto.ChatAttachment;
 import com.kh.bookie.club.model.dto.Club;
 import com.kh.bookie.club.model.dto.ClubBook;
 import com.kh.bookie.club.model.dto.Mission;
@@ -33,7 +39,6 @@ import com.kh.bookie.common.HelloSpringUtils;
 import com.kh.bookie.member.model.dto.Member;
 
 import lombok.extern.slf4j.Slf4j;
-import oracle.jdbc.proxy.annotation.Post;
 
 @Controller
 @RequestMapping("/club")
@@ -46,6 +51,9 @@ public class ClubController {
 
 	@Autowired
 	ServletContext application;
+	
+	@Autowired
+	ResourceLoader resourceLoader;
 
 	@GetMapping("/clubList.do")
 	public ModelAndView clubList(
@@ -432,35 +440,116 @@ public class ClubController {
 	@GetMapping("/clubBoard.do/{clubNo}")
 	public ModelAndView clubBoard(
 			ModelAndView mav,
-			@PathVariable String clubNo) {
+			@PathVariable int clubNo) {
 		
 		try {
 			
-			log.debug("clubNo = {}", clubNo);
+//			log.debug("clubNo = {}", clubNo);
+			
+			List<Chat> list = clubService.selectClubBoardList(clubNo);
+			
+			log.debug("list = {}", list);
+			
+			mav.addObject("list", list);
 			mav.setViewName("club/clubBoard");
 			
 		} catch(Exception e) {
 			log.error("북클럽 게시판 조회 오류", e);
+			throw e;
 			
 		}
 		return mav;
 	}
 	
-	@GetMapping("/clubBoardEnroll.do")
-	public String clubBoardEnroll(
+	@GetMapping("/clubBoardForm.do")
+	public ModelAndView clubBoardEnroll(
 			@RequestParam String memberId,
-			@RequestParam int clubNo			
+			@RequestParam int clubNo,
+			ModelAndView mav
 			) {
 		try {
 			
-			log.debug("memberId = {}", memberId);
-			log.debug("clubNo = {}", clubNo);
+//			log.debug("memberId = {}", memberId);
+//			log.debug("clubNo = {}", clubNo);
+			
+			mav.addObject("clubNo", clubNo);
+			mav.setViewName("club/clubBoardEnroll");
+			
 			
 		} catch(Exception e) {
-			
+			log.error("북클럽 게시판 글 작성 폼 불러오기 오류", e);
+			throw e;
 		}
 		
-		return "club/clubBoardEnroll";
+		return mav;
+	}
+	
+	@PostMapping("/clubBoardEnroll.do")
+	public String boardEnroll(
+			Chat clubBoard,
+			@RequestParam("upFile") MultipartFile[] upFiles,
+			RedirectAttributes redirectAttr
+			) throws IOException {
+
+		try {
+			log.debug("clubBoard = {}", clubBoard);
+			
+			String saveDirectory = application.getRealPath("/resources/upload/club");
+			
+			// 업로드한 파일 저장
+			for(MultipartFile upFile : upFiles) {
+				if(upFile.getSize() > 0) {
+					// 파일명 재지정
+					String originalFilename = upFile.getOriginalFilename();
+					String renamedFilename = HelloSpringUtils.getRenamedFilename(originalFilename);
+					log.debug("renamedFilename = {}", renamedFilename);
+				
+					// 파일 저장
+					File destFile = new File(saveDirectory, renamedFilename);
+					upFile.transferTo(destFile);
+					
+					// ChatAttachment 객체로 만들어서 => club
+					ChatAttachment attach = new ChatAttachment();
+					attach.setOriginalFilename(originalFilename);
+					attach.setRenamedFilename(renamedFilename);
+					clubBoard.addAttachment(attach);
+					
+				}
+				
+			}
+			
+			int result = clubService.insertClubBoard(clubBoard);
+			redirectAttr.addFlashAttribute("msg", "게시글을 성공적으로 등록했습니다!");
+			
+		} catch(Exception e) {
+			log.error("북클럽 게시글 등록 오류", e);
+			throw e;
+		}
+		
+		return "redirect:/club/clubBoardDetail.do?chatNo=" + clubBoard.getChatNo();
+	}
+	
+	@GetMapping("/clubBoardDetail.do")
+	public ModelAndView clubBoardDetail(
+			@RequestParam int chatNo,
+			ModelAndView mav) {
+		
+		try {
+			
+			
+			Chat clubBoard = clubService.selectOneBoardCollection(chatNo);
+			
+			log.debug("clubBoard = {}", clubBoard);
+			
+			mav.addObject("clubBoard", clubBoard);
+			mav.setViewName("club/clubBoardDetail");
+			
+		} catch(Exception e) {
+			log.error("북클럽 게시판 조회 오류", e);
+			throw e;
+			
+		}
+		return mav;
 	}
 	
 }
