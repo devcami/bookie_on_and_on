@@ -61,6 +61,7 @@ create table book(
     constraint fk_book_member_id foreign key(member_id) references member(member_id) on delete cascade,
     constraint ck_book_score check (score between 1 and 10)
 );
+alter table book add constraint ck_book_score check (score between 0 and 10);
 
 -- 6. book_ing
 create table book_ing(
@@ -350,6 +351,31 @@ create table persistent_logins (
     last_used timestamp not null);
 select * from persistent_logins;
 
+select *
+from book b right join
+(select
+    ing_no, item_id, member_id, started_at, ended_at, add_date
+    , row_number() over(order by add_date desc) rnum
+from
+    book_ing
+where 
+    member_id = 'tmddbs' and item_id = '9788932474755') 
+    i on b.member_id = i.member_id
+where
+    b.member_id = 'tmddbs' and b.item_id = '9788932474755' and i.rnum = 1;
+    
+select 
+    b.*,
+    i.started_at started_at,
+    i.ended_at ended_at,
+    i.ing_no ing_no
+from 
+    book b join 
+            (select ing_no, item_id, member_id, started_at, ended_at, add_date, row_number() over(order by i2.add_date desc) rnum from book_ing i2) i
+        on b.member_id = i.member_id and b.item_id = i.item_id
+where b.member_id = 'tmddbs' and b.item_id = '9788932474755'; and i.rownum = 1;
+
+select * from book_ing where member_id = 'tmddbs' and item_id = '9788932474755';
 
 select
     *
@@ -505,6 +531,26 @@ select* from mission where club_no = 43 and m_item_id = 9788963710358;
             select count(*) from likes_club where club_no = 26;
             select * from my_club;
             
+            
+select * from book;
+
+alter table book modify enroll_date timestamp default sysdate;
+alter table book_ing add add_date timestamp default sysdate;
+select * from book_ing; 
+delete from book_ing where item_id = '9788917238549';
+select * from book b1 join book_ing i1 on b1.member_id = i1.member_id;
+
+select * from (select *,rownum  from book_ing order by add_date desc);
+	select 
+		b.*,
+        i.started_at started_at,
+        i.ended_at ended_at
+	from 
+        book b right join (select * from book_ing order by add_date desc) i
+            on b.member_id = i.member_id
+	where b.member_id = 'tmddbs' and b.item_id = '9788932474755' 
+    
+delete from book_ing where member_id='tmddbs' and item_id = '9788932474755' and 
 
 select * from club;
 update club set title = '내 마음을 들여다보고 싶을때' where club_no = 44;
@@ -528,8 +574,8 @@ order by
     
 select * from club order by recruit_start desc;
 
-
 select * from club;
+select * from mission where club_no = 58;
 commit;
 
 delete from club where club_no = 43;
@@ -542,7 +588,6 @@ insert into wishlist_club values ('56', 'tmddbs');
 select * from my_club;
 select * from member;
 commit;
-
 select point from member where member_id = 'tmddbs';
 
 select * from authority;
