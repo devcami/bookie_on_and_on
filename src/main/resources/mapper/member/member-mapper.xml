@@ -43,6 +43,22 @@
 	<select id="selectOneMemberByNickname" resultType="member">
 		select * from member where nickname = #{nickname}
 	</select>
-
+	
+	<update id="deleteMemberProfile">
+		update member set renamed_filename = null, original_filename = null where nickname = #{nickname}
+	</update>
+	
+	<update id="miniUpdateMember">
+		update 
+			member 
+		set 
+			nickname = #{nickname}, 
+			introduce = #{introduce}, 
+			sns = #{sns}, 
+			original_filename = #{originalFilename}, 
+			renamed_filename = #{renamedFilename} 
+		where 
+			member_id = #{memberId} 
+	</update>
 
 </mapper>

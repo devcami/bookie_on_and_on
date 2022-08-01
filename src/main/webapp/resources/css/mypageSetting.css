@@ -37,11 +37,13 @@
 }
 .form-label{
   margin-bottom: 5px;
+  margin-top: 10px;
+  color: orange;
 }
 
 .gravatar{
   width:200px;
   height:200px;
-  padding-top:30px;
+  padding-top: 0px;
   margin:0 auto;
 }
