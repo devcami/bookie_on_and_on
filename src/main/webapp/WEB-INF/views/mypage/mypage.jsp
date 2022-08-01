@@ -4,7 +4,20 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/mypage.css" />
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/mypage.css"/>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/main.css" />
+<script src='${pageContext.request.contextPath}/resources/js/main.js'></script>
+<script>
+      document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+          initialView: 'dayGridMonth'
+        });
+        calendar.render();
+      });
+
+</script>
+
 <fmt:requestEncoding value="utf-8"></fmt:requestEncoding>
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param value="내서재" name="title"/>
@@ -16,8 +29,6 @@
 	<h1 style="display:inline;">내서재</h1>
 	<a href="${pageContext.request.contextPath}/mypage/mypageSetting.do" style="color: grey;"><i class="fa-solid fa-gear" style="float: right; font-size: 25;  padding-top: 6px;"></i></a>
 </div> 
-
-
 <div class="container">
 	<div class="profile">
 	<!-- 	
@@ -25,7 +36,6 @@
 			<img src="${pageContext.request.contextPath}/resources/images/icon/none-profile.png" alt="">
 		</div>
 	-->
-		
 		<div class="profile-image">
 			<img src="https://images.unsplash.com/photo-1513721032312-6a18a42c8763?w=152&h=152&fit=crop&crop=faces" alt="">
 		</div> 
@@ -66,6 +76,21 @@
 <div class="start-mypage" style="white-space: nowrap; padding: 10 20 10 20;">
 <h1>기록</h1>
 </div>
+<div>
+	<a class="record" href="${pageContext.request.contextPath}" style="color:black">
+		<img src="${pageContext.request.contextPath}/resources/images/icon/mypage_booking.png" alt="내서재책"/ style="width: 70px; height : 80px;">
+		<span>책</span>
+    </a>
+    <a class="record" href="${pageContext.request.contextPath}" style="color:black">
+		<img src="${pageContext.request.contextPath}/resources/images/icon/scrap.png" alt="스크랩"/ style="width: 70px; height : 80px;">
+		<span>스크랩</span>
+    </a>
+    <a class="record" href="${pageContext.request.contextPath}" style="color:black">
+		<img src="${pageContext.request.contextPath}/resources/images/icon/bookclub.png" alt="북클럽"/ style="width: 70px; height : 80px;">
+		<span>북클럽</span>
+    </a>
+</div>
+
 
 <hr class="bar" style="border: solid 10px #f6f5f5; margin-top: 3rem;">
 
@@ -88,6 +113,10 @@
 <div class="start-mypage" style="white-space: nowrap; padding: 10 20 10 20;">
 <h1>독서달력</h1>
 </div>
+<!-- calendar 태그 -->
+<div id='calendar-container'>    
+	<div id='calendar'></div>  
+</div>  
 
 <hr class="bar" style="border: solid 10px #f6f5f5; margin-top: 3rem;">
 
