@@ -40,4 +40,14 @@ public class MemberServiceImpl implements MemberService {
 		result = memberDao.insertInterest(map);
 		return result;
 	}
+
+	@Override
+	public int deleteMemberProfile(String nickname) {
+		return memberDao.deleteMemberProfile(nickname);
+	}
+
+	@Override
+	public int miniUpdateMember(Member logingMember) {
+		return memberDao.miniUpdateMember(logingMember);
+	}
 }

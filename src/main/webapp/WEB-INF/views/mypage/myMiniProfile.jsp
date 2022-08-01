@@ -5,163 +5,126 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/miniProfile.css" />
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/clubList.css" />
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/clubAnn.css" />
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/mypageSetting.css" />
+<sec:authentication property="principal" var="loginMember" scope="page"/>
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param value="미니프로필" name="title"/>
 </jsp:include>
+
+<style>
+/* 중복아이디체크관련 */
+div# { position:relative; padding:0px; }
+span.guide { display:none; font-size:12px; position:absolute; top:12px; right:10px; }
+span.ok, span.ok { color:green; }
+span.error, span.error { color:red; }
+</style>
+<div id="title-header" class="">
+	<div id="header-div">
+		<div id="title-header-left">
+			<i class="fa-solid fa-angle-left" onclick="location.href='/bookie/mypage/mypage.do'"></i>		
+		</div>
+	</div>
+</div>
 <section id="content">
-	<div id="menu">
-		<h1 style="text-align: center;">미니프로필</h1>	
-	</div>
-	<div class="wrapper">
-	  <div class="student-details expanded">
-	    <div class="gravatar">
-	      <a href="">
-		      <img src="${pageContext.request.contextPath}/resources/images/book-club-8.png" alt="내사진" width="200" height="200"/>
-	      </a>
-	    </div>
+    <div class="quiz-wrapper" >
+    	<form:form 
+    		id="quiz-form"
+    		action="${pageContext.request.contextPath}/mypage/myMiniProfileUpdate.do" 
+			method="POST"
+			enctype="multipart/form-data">
+	     <h3 style="text-align: center;">Mini Profile</h3>	    
+	    	<div class="gravatar" style="padding-top: 0px;">
+		      <c:if test="${empty loginMember.originalFilename}">
+		      <img id="img-satya" src="${pageContext.request.contextPath}/resources/images/icon/non-profile.png" alt="사진이없어요~"  width="200" height="200">
+			  </c:if>
+			  <c:if test="${not empty loginMember.originalFilename}">
+			  <img src="${pageContext.request.contextPath}/resources/upload/profile/${loginMember.renamedFilename}" alt="멋지고이쁜내사진"  width="200" height="200" style="border-radius: 50%;">
+			  <input type="hidden" id="delFile" name="delFile" value="${nickname}">
+			  </c:if>
+	    	</div>
+			<div class="input-group mb-3" style="padding-top:10px;">
+			  <div class="custom-file">
+			    <input type="file" class="custom-file-input" name="upFile" id="upFile">
+			    <label class="custom-file-label" for="upFile">${loginMember.originalFilename}</label>
+			  </div>
+			</div>
+		  <div id="nickname-container">
+	      <p class="form-label" style="margin-top: 10px; color: orange;">닉네임 : </p>
+	        <input class="form-field" id="form-nickname" name="newNickname" type="text" onblur="nickChech();" value="${loginMember.nickname}" required>
+			<span class="guide ok" id="nickok">이 닉네임은 사용 가능합니다.</span>
+			<span class="guide error" id="nickerror">이 닉네임은 이미 사용중입니다.</span>
+			<input type="hidden" id="nicknameValid" value="0" /> <%-- 사용불가 0 사용가능 중복검사 통과 시 1 --%>
+		  </div>
+	      <p class="form-label" style="margin-top: 10px; color: orange;">소개 : </p>
+	          <input class="form-field" id="form-introduce" name="introduce" type="text" value="${loginMember.introduce}">
+	      <p class="form-label" style="margin-top: 10px; color: orange;">SNS : </p>
+	          <input class="form-field" id="form-sns" name="sns" type="url" value="${loginMember.sns}">
+	      <div id="submit-btn">
+	          <input type="submit" value="정보수정">
+	      </div>
+    	</form:form>
 	  </div>
-	  
-	  <div class="forms">
-	    <div class="tabs edit-profile">
-	      <h3>Edit Profile</h3>
-	    </div>
-	    <div class="tab-content edit-profile-form-wrap">
-	      <form class="edit-profile-form">
-	        <div class="form-control first-name">
-	          <label for="first-name">Nickname</label>
-	          <input type="text" class="textbox" id="first-name" value="꼬두마리">
-	        </div>
-	        <div class="form-control email">
-	          <label for="email">소개</label>
-	          <input type="text" class="textbox" id="email" value="한줄소개하이하이">
-	        </div>
-	        <div class="form-buttons">
-	          <button type="submit" class="primary-btn" value="Update Profile">완료</button>
-	          <!-- <button type="button" class="secondary-btn cancel" value="Cancel">Cancel</button> -->
-	        </div>
-	      </form>
-	    </div>
-	    <div class="tabs change-password">
-	      <h3>Change Password</h3>
-	    </div>
-	    <div class="tab-content change-password-form-wrap">
-	      <!--  --><form class="edit-profile-form">
-	        <div class="form-control first-name">
-	          <label for="current-password">Current Password&#58;</label>
-	          <input type="text" class="textbox" id="current-password">
-	        </div>
-	        <div class="form-control first-name">
-	          <label for="new-password">New Password&#58;</label>
-	          <input type="text" class="textbox" id="new-password">
-	        </div>
-	        <div class="form-control email">
-	          <label for="confirm-password">Confirm New Password&#58;</label>
-	          <input type="text" class="textbox" id="confirm-password">
-	        </div>
-	        <div class="form-buttons">
-	          <button type="submit" class="primary-btn" value="Change Password">Change Password</button>
-	          <!-- <button type="button" class="secondary-btn cancel" value="Cancel">Cancel</button> -->
-	        </div>
-	      </form>
-	    </div>
-	  </div>
-	  
-	</div>
 </section>
 
 <script>
-var profileStates = {
-		  editProfile: false,
-		  changePassword: false,
-		  showDetails:true
+/* 아이디 중복검사 */
+function nickChech() {
+	const nickVal = document.querySelector("#form-nickname").value;
+	console.log(nickVal);
+	if(!nickVal){
+		return false;
+	}	
+	// 닉네임 중복체크 비동기화
+		if(nickVal){
+			const nickname = document.querySelector("#form-nickname").value;
+			console.log(nickname);
+			$.ajax({
+				url : "${pageContext.request.contextPath}/mypage/nicknameCheck.do",
+				method : "GET",
+				data : {
+					nickname
+				},
+				dataType: "text",
+				success(resp) {
+					console.log(resp);
+					const {nickname, available} = resp;
+					if(available){
+						nickerror.style.display = "none";	
+						nickok.style.display = "inline";	
+						nicknameValid.value = "1";
+					}
+					else{
+						nickerror.style.display = "inline";	
+						nickok.style.display = "none";	
+						nicknameValid.value = "0";
+						alert("이건안돼요!");
+						return false;
+					}
+				},
+				error : console.log
+			});
 		}
+	
+	return true;
+};
 
-		$('.tabs').on('click', function(e) {
-		  e.stopPropagation();
-		  tabHandler(e.currentTarget);
-		})
+/*
+const openCheckId = () => {
+	const useridVal = document.querySelector("#id").value;
+	if(!useridVal) {
+		alert("아이디가 입력되지 않았습니다.");
+	      return false;
+	}
+    if(!/^[a-zA-Z0-9ㄱ-ㅎ|ㅏ-ㅣ|가-힣]{2,10}$/.test(useridVal)){
+        alert('닉네임을 2-10자 사이의 문자(숫자 포함 가능)로 만들어 주세요.');
+        return false;
+    }
+};
+*/
 
-		$('.cancel').on('click', function(e) {
-		  e.stopPropagation();
-		  e.preventDefault();
-		  pageReset();
-		});
-
-		function tabHandler(tab){
-		  var editProfileTab = $(tab).hasClass('edit-profile');
-		  var changePassTab = $(tab).hasClass('change-password');
-		  
-		  switch (true) {
-
-		    // if Tab is Edit Profile and Edit Profile is not showing
-		    case (editProfileTab && !isEditProfileShowing()):
-		      // Check to see if Profile Details are showing. Hide if they are.
-		      if (isDetailsShowing()) {
-		        profileStates.showDetails = false;
-		        $('.student-details').removeClass('expanded');
-		      }
-
-		      // Remove .expanded from all content wrappers
-		      $('.tab-content').removeClass('expanded');
-
-		      // Add .expanded to edit profile content wrapper
-		      $('.edit-profile-form-wrap').addClass('expanded');
-		      
-		      profileStates.editProfile = true;
-		      profileStates.changePassword = false;
-		      break;
-
-		    // if Tab is Change Password and Detail is Showing
-		    case (changePassTab && !isChangePasswordShowing()):
-		      // Check to see if Profile Details are showing. Hide if they are.
-		      if (isDetailsShowing()) {
-		        profileStates.showDetails = false;
-		        $('.student-details').removeClass('expanded');
-		      }
-
-		      // Remove .expanded from all content wrappers
-		      $('.tab-content').removeClass('expanded');
-
-		      // Add .expanded to edit profile content wrapper
-		      $('.change-password-form-wrap').addClass('expanded');
-		      profileStates.editProfile = false;
-		      profileStates.changePassword = true;
-		      break;
-
-		    // if Tab is Edit Profile and Edit Profile is Showing
-		    case (editProfileTab && isEditProfileShowing()):
-		      pageReset();
-		      break;
-		    // if Tab is Change Password and Change Password is Shwoing
-		    case (changePassTab && isChangePasswordShowing()):
-		      pageReset();
-		      break;
-		  }
-		}
-
-		// Reset page to default state
-		function pageReset() {
-		  $('.tab-content').removeClass('expanded');
-		  $('.student-details').addClass('expanded');
-		  profileStates.showDetails = true;
-		  profileStates.editProfile = false;
-		  profileStates.changePassword = false;
-		}
-
-		// Check to see if Student Details are being shown
-		function isDetailsShowing() {
-		  return profileStates.showDetails;
-		}
-
-		// Check to see if Change Password form is showing
-		function isChangePasswordShowing() {
-		  return profileStates.changePassword;
-		}
-
-		// Check to see if Edit Profil form is showing
-		function isEditProfileShowing() {
-		  return profileStates.editProfile;
-		}
+		
 </script>
+
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
