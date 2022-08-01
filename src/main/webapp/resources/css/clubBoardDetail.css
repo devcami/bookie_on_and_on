@@ -1,0 +1,117 @@
+@charset "UTF-8";
+section#content	{
+	margin: 0 auto;
+	padding: 20px 80px 20px 85px;
+	min-height:600px;
+	border-radius: 5px;
+	
+/* 	background-image: url(/bookie/resources/images/boardBack.png) !important;
+	background-repeat: no-repeat;
+	background-position: top;
+    background-attachment: scroll;
+    background-size: contain; */
+}
+
+#clubBook-container {
+	background-image: url(/bookie/resources/images/boardBack.png) !important;
+	background-repeat: no-repeat;
+    background-position: top;
+    background-attachment: scroll;
+    background-size: 85%;
+} 
+
+section label {
+	margin-bottom: 0 !important;
+	font-size: x-large;
+}
+input:focus-visible {
+	outline: none !important;
+}
+input:not(input[type=file]) {
+	border: none;
+    height: 40px;
+    font-size: large !important;
+    padding-left: 10px;
+}
+
+/***** title, 작성일, 작성자 *****/
+section#content #top-title {
+    margin-top: 70px;
+}
+#top-title h1 {
+	font-size: xx-large !important;
+}
+
+#date-writer-div {
+	display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-top: 20px;
+    align-items: flex-end;
+    font-size: large;
+}
+
+/********* 파일 ************/
+#file-div {
+	display: flex;
+	flex-direction: column;
+	margin-top: 20px;
+}
+#file-div-title {
+	display: flex;
+	align-items: flex-end;
+}
+
+#file-div-title span {
+	margin-left: 10px;
+	font-size: medium !important;
+	color: grey;
+}
+
+#file-div input {
+	margin: 5px 0;
+	width: 60%;
+}
+
+input::file-selector-button {
+  background-color: #FFBC80;
+  border: none;
+  border-radius: 0.3rem;
+  padding: 4px;
+  color: white;
+  cursor: pointer;
+}
+input::file-selector-button:hover {
+  background-color: #FFBC80;
+  cursor: pointer;
+}
+
+/********* 내용 **********/
+
+#content-div p{
+	margin: 0 !important;	
+}
+
+
+/****** 버튼 *********/
+#btn-div {
+	display: flex;
+    justify-content: flex-end;
+}
+#btn-div button {
+    background-color: #FFBC80;
+    border: none;
+    border-radius: 0.3rem;
+    padding: 4px;
+    color: white;
+    cursor: pointer;
+    width: 20%;
+    font-size: medium;
+    margin: 0 2px;
+}
+#btn-div button:hover {
+	box-shadow: 4px 4px 6px 1px rgb(0 0 0 / 20%);
+}
+
+
+
