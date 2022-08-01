@@ -599,7 +599,7 @@ select * from member;
 select * from club_chat;
 select * from chat_attachment;
 select * from chat_comment;
-
+delete from club_chat where chat_no = 7;
 commit;
 
 update club_chat set enroll_date = (sysdate - 4) where chat_no = 1;
@@ -608,3 +608,5 @@ update club_chat set enroll_date = (sysdate - 2) where chat_no = 5;
 update club_chat set enroll_date = (sysdate - 1) where chat_no = 6;
 
 select * from club_chat order by enroll_date desc;
+
+
