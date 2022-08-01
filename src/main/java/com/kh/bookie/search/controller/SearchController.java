@@ -169,6 +169,7 @@ public class SearchController {
 	 */
 	@GetMapping("/bookEnroll.do")
 	public void bookEnroll(@RequestParam String isbn13, Model model, @AuthenticationPrincipal com.kh.bookie.member.model.dto.Member member) {
+		log.debug("member = {}", member);
 		Map<String, Object> map = new HashMap<>();
 		map.put("memberId", member.getMemberId());
 		map.put("itemId", isbn13);

@@ -9,6 +9,7 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param value="책등록" name="title"/>
 </jsp:include>
+
 <sec:authentication property="principal" var="loginMember"/>
 <div id="title-header" class="" style="display:none">
 	<p id="title-p">
@@ -210,6 +211,23 @@
 </div>
 
 <script>
+let wpqkf = formatDate('1996-10-15');
+let tlwkr = formatDate('1996-10-15');
+function formatDate(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) 
+        month = '0' + month;
+    if (day.length < 2) 
+        day = '0' + day;
+
+    return [year, month, day].join('-');
+}
+
+
 const setStatus = () => {
 	let cont = Array.from(document.querySelectorAll(".form-content"));
 	cont.forEach((c) => c.innerHTML = '');
@@ -234,9 +252,26 @@ const setStatus = () => {
 	/* <label for="startedAt" class="m-0">시작일</label> */
 	/* <input type="date" name="startedAt" class="m-2 " id="endedAt" /> */
 	
-	const startedAtDiv = `<label for="startedAt" class="m-0">시작일</label><input type="date" name='startedAt' class='m-2' value="${book.startedAt}"/>`;
-	const endedAtDiv = `<label for="endedAt" class="m-0">종료일</label><input type="date" name='endedAt' class='m-2' value="${book.endedAt}"/>`;
+	var realEnd;
+	var realStart;
+	if(wpqkf == "1996-10-15") {
+		realEnd = '${book.endedAt}' 
+	}
+	else {
+		realEnd = wpqkf;
+	}
+	
+	if(tlwkr == "1996-10-15"){
+		realStart = '${book.startedAt}' 
+	}
+	else {
+		realStart = tlwkr;
+	}
+	
+	const startedAtDiv = `<label for="startedAt" class="m-0">시작일</label><input type="date" id="startedVal" name='startedAt' class='m-2' value="\${realStart}"/>`;
+	const endedAtDiv = `<label for='endedAt' class='m-0'>종료일</label><input type='date' id="endedVal" name='endedAt' class='m-2' value='\${realEnd}' />`;
 
+	
 	/* 읽음 선택 시 시작 완독 날짜추가 */
 	if(statusVal == '읽음' || statusUpdateVal =='읽음'){
 		cont.forEach((c) => {
@@ -251,6 +286,8 @@ const setStatus = () => {
 			c.insertAdjacentHTML('beforeend', startedAtDiv);
 		});
 	}
+	
+
 };
 <%-- 제출 --%>
 const bookEnroll = () => {
@@ -493,7 +530,7 @@ const updateDate = () => {
 			if(newEndedAt.dayOfMonth < 10) newEndedAt.dayOfMonth = '0' + newEndedAt.dayOfMonth; 
 			
 			const startFmt = `\${newStartedAt.year}-\${newStartedAt.monthValue}-\${newStartedAt.dayOfMonth}`; 
-			const endFmt = `\${newEndedAt.year}-\${newEndedAt.monthValue}-\${newEndedAt.dayOfMonth}`; 
+			endFmt = `\${newEndedAt.year}-\${newEndedAt.monthValue}-\${newEndedAt.dayOfMonth}`; 
 			
 			originli.dataset.started = startFmt;
 			originli.dataset.ended = endFmt;
@@ -513,6 +550,8 @@ const updateDate = () => {
 				document.querySelector("[name=bookUpdateFrm] [name=endedAt]").value = endFmt;
 				console.log('(후)수정- 시작일', document.querySelector("[name=bookUpdateFrm] [name=startedAt]").value);
 				console.log('(후)수정- 종료일', document.querySelector("[name=bookUpdateFrm] [name=endedAt]").value);
+				wpqkf = formatDate(endFmt);
+				tlwkr = formatDate(startFmt);
 			}
 			
 		},
