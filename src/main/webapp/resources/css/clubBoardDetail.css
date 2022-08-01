@@ -1,24 +1,27 @@
 @charset "UTF-8";
 section#content	{
 	margin: 0 auto;
-	padding: 20px 80px 20px 85px;
-	min-height:600px;
-	border-radius: 5px;
-	
-/* 	background-image: url(/bookie/resources/images/boardBack.png) !important;
+    padding: 20px 50px 20px 50px;
+    min-height: 600px;
+    border-radius: 5px;
+
+
+}
+#board-div {
+	display: flex;
+    flex-direction: column;
+}
+#content-top {
+	background-image: url(/bookie/resources/images/boardTop.png) !important;
 	background-repeat: no-repeat;
 	background-position: top;
     background-attachment: scroll;
-    background-size: contain; */
+    background-size: cover;
 }
-
-#clubBook-container {
-	background-image: url(/bookie/resources/images/boardBack.png) !important;
-	background-repeat: no-repeat;
-    background-position: top;
-    background-attachment: scroll;
-    background-size: 85%;
-} 
+ #content-bottom{
+  background-color: #fffce2;
+  border-radius: 0px 0px 20px 20px;
+ }
 
 section label {
 	margin-bottom: 0 !important;
@@ -35,8 +38,9 @@ input:not(input[type=file]) {
 }
 
 /***** title, 작성일, 작성자 *****/
-section#content #top-title {
-    margin-top: 70px;
+
+#top-title {
+	padding-top: 90px;
 }
 #top-title h1 {
 	font-size: xx-large !important;
@@ -49,45 +53,30 @@ section#content #top-title {
     margin-top: 20px;
     align-items: flex-end;
     font-size: large;
+    margin-right: 20px;
 }
-
+#date-writer-div span:last-child {
+	transform: translateY(-8px);
+}
 /********* 파일 ************/
 #file-div {
 	display: flex;
 	flex-direction: column;
-	margin-top: 20px;
-}
-#file-div-title {
-	display: flex;
-	align-items: flex-end;
+	align-items: center;
+	padding-top: 20px;
 }
 
-#file-div-title span {
-	margin-left: 10px;
-	font-size: medium !important;
-	color: grey;
+.imgs {
+	width: 300px;
+	margin: 5px;
 }
 
-#file-div input {
-	margin: 5px 0;
-	width: 60%;
-}
 
-input::file-selector-button {
-  background-color: #FFBC80;
-  border: none;
-  border-radius: 0.3rem;
-  padding: 4px;
-  color: white;
-  cursor: pointer;
-}
-input::file-selector-button:hover {
-  background-color: #FFBC80;
-  cursor: pointer;
-}
 
 /********* 내용 **********/
-
+#content-div {
+	margin: 20px 25px;
+}
 #content-div p{
 	margin: 0 !important;	
 }
@@ -97,6 +86,7 @@ input::file-selector-button:hover {
 #btn-div {
 	display: flex;
     justify-content: flex-end;
+    padding: 20px 20px;
 }
 #btn-div button {
     background-color: #FFBC80;

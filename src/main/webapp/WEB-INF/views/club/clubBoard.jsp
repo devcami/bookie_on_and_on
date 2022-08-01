@@ -10,7 +10,6 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param value="북클럽 게시판" name="title"/>
 </jsp:include>
-${clubNo}
 <sec:authorize access="isAuthenticated()">
 	<sec:authentication property="principal" var="loginMember"/>
 </sec:authorize>

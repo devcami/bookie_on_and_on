@@ -8,10 +8,9 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/clubMenu.css" />
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/clubBoardDetail.css" />
 <jsp:include page="/WEB-INF/views/common/header.jsp">
-	<jsp:param value="북클럽 게시판 글 작성" name="title"/>
+	<jsp:param value="북클럽 게시판 글" name="title"/>
 </jsp:include>
-<span>여긴아니지롱</span>
-<%-- <sec:authentication property="principal" var="loginMember"/> --%>
+<sec:authentication property="principal" var="loginMember"/>
 <div id="clubBook-container">
 	<section id="content">
 		<div id="menuDiv">
@@ -23,35 +22,65 @@
 				<li id="fifth-li" class="menu-li" style="background-color: #D9534F;"><a href="${pageContext.request.contextPath}/club/clubChat.do/${club.clubNo}">채팅..?</a></li>		
 			</ul>
 		</div>
- 		<div id="top-title" class="text-center">
-			<h1>${clubBoard.title}</h1>
+		<div id="board-div">
+			 <div id="content-top">
+		 		<div id="top-title" class="text-center">
+					<h1>${clubBoard.title}</h1>
+				</div> 		
+				<div id="date-writer-div">
+					<span>${clubBoard.enrollDate}</span>
+					<span>by ${clubBoard.nickname}</span>
+				</div>
+	 		</div>
+	 		<div id="content-bottom">
+				<div id="file-div">
+					<c:forEach items="${clubBoard.chatAttachments}" var="attach">		
+						<img src="${pageContext.request.contextPath}/resources/upload/club/${attach.renamedFilename}" class="imgs" />
+					</c:forEach>
+				</div>
+				<div id="content-div">
+					${clubBoard.content}	
+				</div>
+	 			<c:if test="${loginMember.nickname eq clubBoard.nickname}">
+					<div id="btn-div">
+						<button type="button" onclick="updateClubBoard();">수정</button>
+						<button type="button" onclick="deleteClubBoard();">삭제</button>
+					</div>								
+				</c:if>
+				
+	 		</div>
 		</div>
 		
-		<div id="date-writer-div">
-			<span>${clubBoard.enrollDate}</span>
-			<span>by ${clubBoard.nickname}</span>
-		</div>
-		
-		<div id="file-div">
-			<c:forEach items="${clubBoard.chatAttachments}" var="attach">		
-				<img src="${pageContext.request.contextPath}/resources/upload/club/${attach.renamedFilename}" />
-			</c:forEach>
-		</div>
-		
-		<div id="content-div">
-			${clubBoard.content}	
-		</div>
-		
-		<div id="btn-div">
-			<button type="button" onclick="">수정</button>
-			<button type="button" onclick="">삭제</button>
-		</div>
+		<div id="comment-div">
+ 			
+ 		</div>
+
 	</section>
 
 </div>
 
+<form:form
+	name="deleteClubBoardFrm"
+	action="${pageContext.request.contextPath}/club/deleteClubBoard.do"
+	method="POST">
+	<input type="hidden" name="chatNo" value="${clubBoard.chatNo}" />
+	<input type="hidden" name="clubNo" value="${clubBoard.clubNo}" />
+</form:form>
+
 
 <script>
+
+const deleteClubBoard = () => {
+
+	document.deleteClubBoardFrm.submit();
+}
+
+const updateClubBoard = () => {
+	
+	const chatNo = "${clubBoard.chatNo}";
+	
+	location.href = `${pageContext.request.contextPath}/club/updateClubBoard.do/\${chatNo}`;
+}
 
 </script>
 

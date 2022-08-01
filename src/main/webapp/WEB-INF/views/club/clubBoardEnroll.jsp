@@ -120,8 +120,6 @@ ${clubNo}
 		
 		
 		
-	 	frm.action = `${pageContext.request.contextPath}/club/clubBoardEnroll.do`
-	 	frm.method = "POST";
 	 	frm.submit();
 		
 	}

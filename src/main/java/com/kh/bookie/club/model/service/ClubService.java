@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.kh.bookie.club.model.dto.Chat;
+import com.kh.bookie.club.model.dto.ChatAttachment;
 import com.kh.bookie.club.model.dto.Club;
 import com.kh.bookie.club.model.dto.Mission;
 
@@ -11,7 +12,7 @@ public interface ClubService {
 
 	int enrollClub(Club club);
 
-	List<Club> selectClubList(int cPage, int numPerPage);
+	List<Club> selectClubList(int cPage, int numPerPage, String sortType);
 
 	int selectTotalClub();
 
@@ -40,5 +41,19 @@ public interface ClubService {
 	Chat selectOneBoardCollection(int chatNo);
 
 	List<Chat> selectClubBoardList(int clubNo);
+
+	int deleteClubBoard(int chatNo);
+
+	List<ChatAttachment> findAllClubBoardAttachByChatNo(int chatNo);
+
+	int deleteAttachment(int attachNo);
+
+	ChatAttachment findOneClubBoardAttachByAttachNo(int attachNo);
+
+	int updateClubBoard(Chat clubBoard);
+
+	int insertClubChatAttach(ChatAttachment attach);
+
+	
 
 }
