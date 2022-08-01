@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.kh.bookie.member.model.dto.Member;
 import com.kh.bookie.mypage.model.dto.Book;
 import com.kh.bookie.search.model.service.SearchService;
 
@@ -168,7 +169,7 @@ public class SearchController {
 	 * 내 책 등록 페이지 요청 + 책번호 모델로 전송
 	 */
 	@GetMapping("/bookEnroll.do")
-	public void bookEnroll(@RequestParam String isbn13, Model model, @AuthenticationPrincipal com.kh.bookie.member.model.dto.Member member) {
+	public void bookEnroll(@RequestParam String isbn13, Model model, @AuthenticationPrincipal Member member) {
 		log.debug("member = {}", member);
 		Map<String, Object> map = new HashMap<>();
 		map.put("memberId", member.getMemberId());
