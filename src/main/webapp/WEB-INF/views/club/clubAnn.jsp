@@ -1,3 +1,5 @@
+<%@page import="org.springframework.security.core.context.SecurityContextHolder"%>
+<%@page import="com.kh.bookie.member.model.dto.Member"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -9,9 +11,28 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param value="북클럽리스트" name="title"/>
 </jsp:include>
+<sec:authorize access="isAuthenticated()">
+	<sec:authentication property="principal" var="loginMember"/>
+</sec:authorize>
+<div id="title-header" class="" style="display: none;">
+	<div id="header-div">
+		<div id="title-header-left">
+			<i class="fa-solid fa-angle-left" onclick="location.href='/bookie/club/clubList.do'"></i>
+			<span>[북클럽] ${club.title}</span>					
+		</div>
+		<sec:authorize access="hasRole('ROLE_USER')">
+			<div id="likeWishDiv">
+				<span class="fa-stack fa-lg" id='h-span'>
+				  <i class="fa fa-heart fa-regular fa-stack-1x front" ></i>
+				</span>
+				<span class="fa-stack fa-lg" id='h-span'>
+				  <i class="fa fa-bookmark fa-regular fa-stack-1x front"></i>
+				</span>
+			</div>		
+		</sec:authorize>
+	</div>
+</div>
 <section id="content">
-	
-
 	<div id="head">
 		<div id="head-img">
 			<c:forEach items="${club.bookList}" var="book" varStatus="vs">
@@ -74,6 +95,18 @@
 		</div>
 		<div class="divs">
 			<div class="label-div">
+				<!-- <i class="fa-solid fa-user-group"></i> -->
+				<label class="my-1" for="inlineFormCustomSelectPref">‍‍😊 모집된 인원</label>
+			</div>
+			<div>
+				<span>${club.currentNop}명 / ${club.maximumNop}명</span>
+				<c:if test="${club.maximumNop eq club.currentNop}">
+					<span class="redText" style="margin-left: 10px;">!마감되었습니다!</span>				
+				</c:if>
+			</div>
+		</div>
+		<div class="divs">
+			<div class="label-div">
 				<!-- <i class="fa-solid fa-sack-dollar"></i> -->
 				<label class="my-1" for="inlineFormCustomSelectPref">💰 디파짓</label>
 			</div>
@@ -104,7 +137,7 @@
 	
 
 	<%-- 미션 --%>
-	<div>
+	<div id="mDiv">
 		<div id="mission-head">
 			<strong>미션</strong>
 			<span id="heart-span">🧡</span>
@@ -114,16 +147,19 @@
 			
 			<c:forEach items="${club.bookList}" var="book" varStatus="vs">
 				<div class="mCard" data-no="${book.itemId}" onclick="openDetailMission(this);">
-					<div class='m-img-div'>
-						<img src="${fn:replace(book.imgSrc, 'covermini', 'cover')}" value="${book.itemId}" onclick="bookEnroll(this);">								
+					<div class='m-img-div' data-no="${vs.count}">
+						<img src="${fn:replace(book.imgSrc, 'covermini', 'cover')}" value="${book.itemId}">								
 					</div>
 					<div class="m-text-div">
 						<table>
-							<tbody>
-								<tr id="bookMission${book.itemId}">
-									<td></td>
-								</tr>
-								
+							<tbody id="tbody${book.itemId}">
+								<c:forEach items="${book.missionList}" var="mission" varStatus="vs">
+									<tr id="bookMission${book.itemId}">
+										<td>🌼${mission.title}</td>									
+										<td><fmt:formatNumber value="${mission.point}" pattern="#,###" />원</td>									
+								        <td>${mission.mendDate}</td>
+									</tr>									         								
+								</c:forEach>
 							</tbody>
 						</table>
 					</div>
@@ -135,26 +171,81 @@
 	</div>
 	<%-- 미션 끝 --%>
 	
-	<c:forEach items="${club.missionList}" var="mission">
-		${mission.title}
-	</c:forEach>
+	<jsp:useBean id="today" class="java.util.Date" />
+	<fmt:formatDate value='${today}' pattern='yyyy-MM-dd' var="nowDate"/>
+	<%-- 등록 버튼 --%>
+	<sec:authorize access="isAnonymous()">
+		<p id="plzEnrollMember">🧡이 북클럽이 맘에 드셨나요? 부기온앤온의 회원이 되시면 북클럽 활동이 가능합니다!🧡</p>
+	</sec:authorize>
+	<div id="btn-div">
+		<sec:authorize access="hasRole('ROLE_ADMIN')">
+			<button style="margin-right: 2px;">수정</button>
+			<button style="margin-left: 2px;">삭제</button>
+		</sec:authorize>
+		<sec:authorize access="isAuthenticated() && !hasRole('ADMIN')">
+			<!-- 모집중인 경우 -->
+			<c:if test="${club.recruitEnd ge nowDate}">
+				<!--  아직 인원이 차지 않은 경우 -->
+				<c:if test="${club.maximumNop gt club.currentNop}">
+					<c:if test="${club.isJoined == 0}">
+						<button onclick="joinClub();">신청하기</button>						
+					</c:if>
+					<c:if test="${club.isJoined == 1}">
+						<button onclick="joinClub();" id="btn-disabled">이미 신청하신 북클럽입니다!</button>						
+					</c:if>							
+				</c:if>
+				<!-- 모집중이면서 인원이 다 찬 경우 -->
+				<c:if test="${club.maximumNop eq club.currentNop}">
+					<button id="btn-disabled">인원이 다 찼습니다😥</button>						
+				</c:if>
+			</c:if>
+			<!-- 날짜가 지난 북클럽일때 -->			
+			<c:if test="${club.recruitEnd lt nowDate}">
+				<button id="btn-disabled">이미 마감된 북클럽입니다😥</button>
+			</c:if>
+		</sec:authorize>
+		<sec:authorize access="isAnonymous()">
+			<button>회원가입 하러가기</button>
+		</sec:authorize>
+	</div>
+	<%-- 등록 버튼 끝--%>
 	
-	
-	<br />
 	
 	<%-- 미션 모달 --%>
-	<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-	  <div class="modal-dialog modal-lg">
+	<div class="modal fade" id="missionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
 	    <div class="modal-content">
-	      ...
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="exampleModalLabel">📕월급쟁이 부자로 은퇴하라</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body" id="modalMissionWrapper">
+	      <%--
+	      	여기에 미션이 하나씩 추가됨
+	       --%>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+	      </div>
 	    </div>
 	  </div>
 	</div>
 	<%-- 미션 모달 끝 --%>
-
+	<form:form
+		name="joinClubFrm" 
+		method="POST"
+		action="${pageContext.request.contextPath}/club/joinClub.do">
+		<input type="hidden" name="clubNo" value="${club.clubNo}" />
+		<input type="hidden" name="memberId" value="${loginMember.username}" />
+		<input type="hidden" name="deposit" value="${club.deposit}" />
+		<input type="hidden" name="myPoint" id="myPoint" value="" />
+	</form:form>
+	
 	
 
-		${club}
+	
 </section>
 
 <script>
@@ -166,20 +257,214 @@ const bookEnroll = (e) => {
 };
 
 
-/********** 미션 디테일 모달 열어 ***************/
-window.addEventListener('load', (e) => {
+/* window.addEventListener('load', (e) => {
 	document.querySelectorAll(".mCard").forEach((mission) => {
 		mission.addEventListener('click', (e) => {
-			console.log(e);
+			console.log(e.target);
 		});
 	});
+	
+	
+	
+}); */
+
+window.addEventListener('load', (e) => {
+	
+	
+	
+	
+	/************* 하트와 찜 *************/
+	// 하트
+		document.querySelectorAll(".fa-heart").forEach((heart) => {
+		heart.addEventListener('click', (e) => {
+			
+			// 부모한테 이벤트 전파하지마셈
+			e.stopPropagation(); 
+			
+			// 클릭할때마다 상태왔다갔다
+			changeIcon(e.target, 'heart');
+		});	
+	});	
+	
+	// 북마크
+	document.querySelectorAll(".fa-bookmark").forEach((heart) => {
+		heart.addEventListener('click', (e) => {
+			
+			// 부모한테 이벤트 전파하지마셈
+			e.stopPropagation(); 
+			
+			// 클릭할때마다 상태왔다갔다
+			changeIcon(e.target, 'bookmark');
+		});	
+	});	
+	
+});
+
+
+const changeIcon = (icon, shape) => {
+
+	let cnt = icon.parentElement.childElementCount;
+	
+	const iHeart = `<i class="fa fa-heart fa-solid fa-stack-1x h-behind"></i>`;
+	const iBookMark = `<i class="fa fa-bookmark fa-solid fa-stack-1x b-behind"></i>`;
+	
+	
+	if(cnt==1) {
+		if(shape == 'heart'){
+			icon.parentElement.insertAdjacentHTML('beforeend', iHeart);
+		}
+		else {
+			icon.parentElement.insertAdjacentHTML('beforeend', iBookMark);
+		}
+	}
+	else {
+		icon.parentElement.removeChild(icon.parentElement.lastElementChild);
+	}
+	
+}
 
 
 
+const cnt = ${club.bookList.get(0).missionList.size()};
+const clubb = '${club.bookList.get(0).missionList.get(0).title}';
+
+
+
+/********** 미션 디테일 모달 열어 ***************/
+const openDetailMission = (e) => {
+	const container = document.querySelector('#modalMissionWrapper');	
+	
+	// 미션 모달 안에 내용 전부 비워
+	while (container.hasChildNodes()) {	// 부모노드가 자식이 있는지 여부를 알아낸다
+			container.removeChild(
+				container.firstChild
+		  );
+		}
+	
+	const itemId = e.dataset.no;
+	const eNo = e.firstElementChild.dataset.no - 1;
+	const tbodyId = "#tbody" + itemId;
+	const mCnt = $(e).find(tbodyId).children().length;
+	// console.log(eNo);
+	// console.log(mCnt);
+	
+	const clubNo = '${club.clubNo}';	
+
+	$.ajax({
+		url: "${pageContext.request.contextPath}/club/getMission.do",
+		data : {
+			itemId : itemId,
+			clubNo : clubNo
+		},
+		method : "GET",
+		success(mList){
+			// console.log(mList);
+			
+			const {missionList} = mList;
+			// console.log(missionList);
+			
+			if(missionList.length == 0){
+				// 미션없는 경우
+			} 
+			else {
+				missionList.forEach((mission, index) => {
+					const year = mission.mendDate.year;
+					const month = mission.mendDate.monthValue;
+					const day = mission.mendDate.dayOfMonth;
+					const mEndDate = year + "." + month + "." + day;
+					
+					const div = `
+				        <div id="m\${mission.missionNo}" class="modalDiv">
+					    	<span class="missionNo">미션 \${index + 1}</span>
+					    	<p class="mTitle">\${mission.title}</p>
+					    	<span class="mDate mSpan">~ \${mEndDate}</span>
+					    	<span class="mDeposit mSpan">\${mission.point}원</span>
+					    	<span class="mContent">\${mission.content}</span>
+				    	</div>`;	
+				    
+				    container.insertAdjacentHTML('beforeend', div);
+				    	
+				})
+				
+			}
+			
+		},
+		error: console.log
+	});
+	
+	$('#missionModal').modal('show');
+
+}
+
+
+/************** 모달 닫길때 이벤트 ****************/
+$('#addBookModal').on('hide.bs.modal', function (e) {
+	
+	// 모달 닫길때 이벤트
 	
 	
 	
 });
+
+
+
+
+
+/************** 상단 제목 바 **************/
+ let imgDiv = document.querySelector("#head");
+ let header = document.querySelector("#header-container")
+ let headerHeight = header.clientHeight;
+ let imgDivHeight = imgDiv.clientHeight;
+const titlebar = document.querySelector("#title-header");
+window.onscroll = function () {
+	let windowTop = window.scrollY;
+	if (windowTop >= imgDivHeight + headerHeight) {
+		titlebar.classList.add("drop");
+		titlebar.style.display = "inline";
+	} 
+	else {
+		titlebar.classList.remove("drop");
+		titlebar.style.display = "none";
+	}
+};
+
+/**************** 회원의 클럽 신청 ***************/
+const joinClub = () => {
+	const clubNo = '${club.clubNo}';
+	const memberId = '${loginMember.username}'
+	const deposit = '${club.deposit}';
+	
+	console.log(clubNo, ' and ', deposit);
+	
+	$.ajax({
+		url: '${pageContext.request.contextPath}/club/checkMyPoint.do',
+		method: "GET",
+		data : {
+			deposit : deposit,
+			memberId : memberId
+		},
+		success(data){
+			const {myPoint, result, msg} = data;
+			
+			if(result == "enough"){
+				// 성공하면 폼 제출
+				const frm = document.joinClubFrm
+				frm.myPoint.value = myPoint
+				frm.submit();
+			}
+			else {
+				alert(msg);
+			}
+			
+		},
+		error(data){
+			console.log(data);
+			console.log('실패');
+			// 실패하면 포인트충전하라는 알람나옴
+		}
+	});
+	
+}
 
 
 

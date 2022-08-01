@@ -10,20 +10,16 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Data
-@ToString
-@NoArgsConstructor
 @AllArgsConstructor
-public class Mission {
-	
-	private int clubNo;
-	private int missionNo;
-	private String title;
-	private String content;
-	private int point;
-	private String itemId;
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private LocalDate mendDate;
-	
+@NoArgsConstructor
+@ToString
+public class ChatAttachment {
 
+	private int attachNo;
+	private int chatNo;
+	private String originalFilename;
+	private String renamedFilename;
 	
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private LocalDate createdAt;
 }

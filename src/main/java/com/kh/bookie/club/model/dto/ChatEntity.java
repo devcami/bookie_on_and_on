@@ -10,20 +10,17 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Data
-@ToString
-@NoArgsConstructor
 @AllArgsConstructor
-public class Mission {
-	
-	private int clubNo;
-	private int missionNo;
-	private String title;
-	private String content;
-	private int point;
-	private String itemId;
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private LocalDate mendDate;
-	
+@NoArgsConstructor
+@ToString
+public class ChatEntity {
 
-	
+	protected int chatNo;
+	protected String nickname;
+	protected int clubNo;
+	protected String title;
+	protected String content;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	protected LocalDate enrollDate;
+		
 }

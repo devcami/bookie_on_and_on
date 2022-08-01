@@ -117,6 +117,8 @@ create table pheed(
     constraint ck_pheed_is_opened check(is_opened in ('O', 'F', 'C'))
 );
 
+select * from pheed;
+
 create sequence seq_pheed_no;
 
 -- 10. pheed_attachment - 피드 첨부파일 테이블
@@ -173,6 +175,8 @@ create table club_book (
     constraint pk_item_id primary key(item_id, club_no)
 );
 
+select * from club_book;
+
 -- 14. mission
 create table mission (
     club_no      number not null, 
@@ -215,10 +219,13 @@ create table club_chat(
     club_no      number not null,
     title          varchar2(1500) not null,
     content      varchar2(4000) not null,
+    enroll_date date default sysdate,
     constraint pk_club_chat_no primary key(chat_no),
     constraint fk_club_chat_club_no foreign key(club_no) references club(club_no) on delete cascade
 );
 
+alter table club_chat add enroll_date date default sysdate;
+commit;
 create sequence seq_club_chat_no;
 
 -- 18. chat_attachment
@@ -497,3 +504,62 @@ select* from mission where club_no = 43 and m_item_id = 9788963710358;
             
             select count(*) from likes_club where club_no = 26;
             select * from my_club;
+            
+
+select * from club;
+update club set title = '내 마음을 들여다보고 싶을때' where club_no = 44;
+
+select * from club_book;
+alter table club_book add book_title varchar2(3000);
+commit;
+
+select * from member;
+
+
+select
+    c.*,
+    b.*,
+    (select count(*) from my_club where club_no = c.club_no) current_nop,
+    (select count(*) from likes_club where club_no = c.club_no) likes_Cnt
+from
+    club c join club_book b on c.club_no = b.club_no
+order by
+    recruit_start desc;
+    
+select * from club order by recruit_start desc;
+
+
+select * from club;
+commit;
+
+delete from club where club_no = 43;
+
+insert into wishlist_club values ('51', 'tmddbs');
+insert into wishlist_club values ('53', 'tmddbs');
+insert into wishlist_club values ('55', 'tmddbs');
+insert into wishlist_club values ('56', 'tmddbs');
+
+select * from my_club;
+select * from member;
+commit;
+
+select point from member where member_id = 'tmddbs';
+
+select * from authority;
+update member set point = 30000 where member_id = 'tmddbs';
+
+select * from my_club;
+select * from member;
+
+select * from club_chat;
+select * from chat_attachment;
+select * from chat_comment;
+
+commit;
+
+update club_chat set enroll_date = (sysdate - 4) where chat_no = 1;
+update club_chat set enroll_date = (sysdate - 3) where chat_no = 4;
+update club_chat set enroll_date = (sysdate - 2) where chat_no = 5;
+update club_chat set enroll_date = (sysdate - 1) where chat_no = 6;
+
+select * from club_chat order by enroll_date desc;

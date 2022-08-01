@@ -35,8 +35,11 @@
 		<intercept-url pattern="/dokoo/**" access="isAuthenticated()"/>
 		
 		<!-- 북클럽 -->
-		
-		
+		<intercept-url pattern="/club/enrollClub.do" access="hasRole('ADMIN')" />
+		<intercept-url pattern="/club/clubList.do" access="permitAll" />
+		<intercept-url pattern="/club/clubAnn.do" access="permitAll" />
+		<intercept-url pattern="/club/clubBoardEnroll.do" access="isAuthenticated()" />
+      	<intercept-url pattern="/club/clubBoardDetail.do" access="isAuthenticated()" />
 		
 		<!-- 마이페이지 -->
 		
