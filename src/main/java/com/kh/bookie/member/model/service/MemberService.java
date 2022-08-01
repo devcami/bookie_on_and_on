@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
+
 import com.kh.bookie.member.model.dao.MemberDao;
 import com.kh.bookie.member.model.dto.Member;
 
@@ -18,6 +19,17 @@ public interface MemberService {
 	Member selectOneMemberByNickname(String nickname);
 
 	int memberEnroll(Member member);
+
+	Member selectOneMemberByTel(String telNum);
+
+
+
+
+	
+
+	
+
+	
 
 
 }

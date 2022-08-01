@@ -44,6 +44,10 @@
 	<select id="selectOneMemberByNickname" resultType="member">
 		select * from member where nickname = #{nickname}
 	</select>
+	
+	<select id="selectOnePhone" resultType="member">
+		select * from member where phone = #{phone}
+	</select>
 
 
 

@@ -14,36 +14,14 @@
 	<!-- static 자원은 security filter처리 하지 않음 -->
 	<http security="none" pattern="/resources/**" />
 	<http auto-config="true">
-		<!-- 홈 -->
-		<intercept-url pattern="/" access="permitAll"/>
-		<intercept-url pattern="/index.jsp" access="permitAll"/>
+		<intercept-url pattern="/**" access="permitAll"/>
 		
-		<!-- 로그인 회원가입 -->
 		<intercept-url pattern="/member/login.do" access="isAnonymous()"/>
 		<intercept-url pattern="/member/memberEnroll.do" access="isAnonymous()"/>
 		<intercept-url pattern="/member/checkIdDuplicate.do" access="isAnonymous()"/>
 		
-		<!--  책검색, 등록 -->
-		<intercept-url pattern="/search/bookEnroll.do" access="isAuthenticated()"/>
-		<intercept-url pattern="/search/**" access="permitAll"/>
-		
-		
-		<!-- 피드 -->
-		<intercept-url pattern="/pheed/**" access="isAuthenticated()"/>
-		
-		<!-- 독후감 -->
-		<intercept-url pattern="/dokoo/**" access="isAuthenticated()"/>
-		
-		<!-- 북클럽 -->
-		
-		
-		
-		<!-- 마이페이지 -->
-		
-		
-		
-		
-		
+
+		<!-- <intercept-url pattern="/**" access="isAuthenticated()"/> -->
 		
 		<!--
 			login-page GET방식 폼 페이지 요청 (핸들러 작성 필요)
@@ -54,7 +32,7 @@
 		 -->
 
 		<form-login login-page="/member/login.do" 
-					login-processing-url="/member/login.do"
+					login-processing-url="/member/login.do"></form-login>
 
 		<!-- 
 			logout-url POST logout요청 (핸들러 작성 생략 가능)

@@ -109,18 +109,29 @@ public class MemberController {
 					.body(map);
 	}
 	
-	@GetMapping("/checkNicknameDuplicate.do")
-	public ResponseEntity<?> checkNicknameDuplicate(@RequestParam String nickname) {
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	@GetMapping("/checkTelDuplicate.do")
+	public ResponseEntity<?> checkTelDuplicate(@RequestParam String telNum) {
 		Map<String, Object> map = new HashMap<>();
 		try {
-			Member member = memberService.selectOneMemberByNickname(nickname);
+			Member member = memberService.selectOneMemberByTel(telNum);
 			boolean available = member == null; // 조회결과가 없으면 true | 있으면 false
 			
-			map.put("nickname", nickname);
+			map.put("telNum", telNum);
 			map.put("available", available);
 			
 		} catch (Exception e) {
-			log.error("아이디 중복체크 오류", e);
+			log.error("핸드폰 번호 중복 오류 ", e);
 			map.put("error", e.getMessage());
 			map.put("msg", "이용에 불편을 드려 죄송합니다.");
 			return ResponseEntity
@@ -134,6 +145,10 @@ public class MemberController {
 				.body(map);
 
 	}
+	
+
+	
+	
 
 
 }

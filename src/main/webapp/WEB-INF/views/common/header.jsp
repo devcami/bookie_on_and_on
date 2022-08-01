@@ -42,25 +42,7 @@
 	<header>
 		<div id="header-container">
 			<img src="${pageContext.request.contextPath}/resources/images/logo.png" alt="북이온앤온로고" width="100px" onclick="location.href='${pageContext.request.contextPath}'"/>
-<<<<<<< HEAD
-			<!-- 로그인 한경우 -->
-			<sec:authorize access="isAuthenticated()">
-			    	
-			    		<a href="${pageContext.request.contextPath}/member/memberDetail.do">
-			    			<sec:authentication property="principal.username"/>
-			    			<sec:authentication property="authorities"/>
-			    		</a>
-			    	&nbsp;&nbsp;
-			    	<form:form action="${pageContext.request.contextPath}/member/memberLogout.do" method="post">
-				    	<button 
-					    	class="btn btn-outline-success my-2 my-sm-0" type="submit">로그아웃</button>			    	
-			    	</form:form>
-			    </sec:authorize>
-			<!-- 로그인 하지 않은경우  -->
-			<sec:authorize access="isAnonymous()">		
-			<i class="fa-solid fa-user-plus i-login" onclick="location.href='${pageContext.request.contextPath}/member/login.do'"></i>
-			</sec:authorize>
-=======
+
 			
 			<!-- 로그인 한 경우 -->
 			<sec:authorize access="isAuthenticated()">
@@ -73,7 +55,7 @@
 				<i class="fa-solid fa-user-plus i-login" onclick="location.href='${pageContext.request.contextPath}/member/login.do'"></i>
 			</sec:authorize>
 			
->>>>>>> branch 'master' of https://github.com/devcami/bookie_on_and_on.git
+
 			<img class="sh-right" src="${pageContext.request.contextPath}/resources/images/icon/search.png" alt="검색" onclick="location.href='${pageContext.request.contextPath}/search/searchForm.do'" />
 			<%-- <img class="sh-right" src="${pageContext.request.contextPath}/resources/images/icon/alarm.png" alt="알림"  /> --%>
 		</div>
