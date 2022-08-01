@@ -16,9 +16,9 @@
 	<div id="menu">
 		<h1>북클럽리스트</h1>
 		<div id="menu-left">
-			<select id="searchType" name="searchType" class="form-control d-inline form-select">
-		      <option ${param.searchType eq "newList"? 'selected' : ''} value="newList">최신순</option>
-		      <option ${param.searchType eq "oldList"? 'selected' : ''} value="oldList">마감순</option>
+			<select id="sortType" name="sortType" class="form-control d-inline form-select">
+		      <option ${sortType eq null ? 'selected' : ''} value="newList">최신순</option>
+		      <option ${sortType eq "oldList" ? 'selected' : ''} value="oldList">마감순</option>
 		    </select>
 			<sec:authorize access="hasRole('ROLE_ADMIN')">
 			    <button 
@@ -30,7 +30,11 @@
 			    <button 
 			    	id="btn-enroll"
 			    	class="btn btn-sm" 
-			    	onclick="location.href='${pageContext.request.contextPath}/club/enrollClub.do';">나의 북클럽</button>	    	
+			    	onclick="location.href='${pageContext.request.contextPath}/club/enrollClub.do';">나의 북클럽</button>
+			    <button 
+			    	id="btn-enroll"
+			    	class="btn btn-sm" 
+			    	onclick="location.href='${pageContext.request.contextPath}/club/oldClubList.do;">마감된 북클럽</button>   	
 			</sec:authorize>
 			<%-- <sec:authorize access="hasRole('ROLE_CLUB')"> --%>
 			<button 
@@ -102,7 +106,7 @@
 			<div class="bookCard" id="card${club.clubNo}" data-no="${club.clubNo}">
 				<div class="card-top" style="background-color: #dee2e6;">
 					<div class='badge-div'>
-						<h6><span class="badge badge-pill badge-secondary alert-badge">모집마감</span></h6>
+						<h6><span class="badge badge-pill badge-secondary alert-badge">인원마감</span></h6>
 					</div>
 					<div class="img-div">
 						<c:forEach items="${club.bookList}" var="clubBook" varStatus="bs">
@@ -129,7 +133,7 @@
 							<span>개</span>					
 						</div>
 					</div>
-						<span class="text-status">모집마감</span>			
+						<span class="text-status">인원마감</span>			
 					<div class="date-div">
 						<span class="text-date">${club.recruitStart}</span>
 						<span class="text-date">~</span>
@@ -147,6 +151,21 @@
 </section>
 
 <script>
+	
+	
+	document.querySelector("#sortType").addEventListener('change', (e) => {
+		console.log(e.target.value);
+		
+		const selected = e.target.value;
+		
+		if(selected == 'oldList'){
+			location.href = `${pageContext.request.contextPath}/club/clubList.do?sortType=\${selected}`;
+		}
+		else{
+			location.href = "${pageContext.request.contextPath}/club/clubList.do";
+		}
+	});
+	
 	
 	// hello-spring boardList.jsp에서 가져와
 

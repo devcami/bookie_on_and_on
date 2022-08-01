@@ -58,12 +58,16 @@ public class ClubController {
 	@GetMapping("/clubList.do")
 	public ModelAndView clubList(
 			@RequestParam(defaultValue = "1") int cPage,
+			@RequestParam(required = false) String sortType,
 			ModelAndView mav,
 			HttpServletRequest request,
 			Principal principal) {
 		
 		
 		try {
+			
+			log.debug("sortType = {}", sortType);
+			
 			
 			UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken)principal;
 			log.debug("authentication = {} ", authentication);
@@ -98,8 +102,19 @@ public class ClubController {
 				
 			}
 			
-
+			int numPerPage = 8;
+			List<Club> list = clubService.selectClubList(cPage, numPerPage, sortType);
+			mav.addObject("list", list);
 			
+			// 페이지 바
+			int totalClub = clubService.selectTotalClub();
+			String url = request.getRequestURI();
+			String pagebar = HelloSpringUtils.getPagebar(cPage, numPerPage, totalClub, url);
+			mav.addObject("pagebar", pagebar);
+			mav.addObject("sortType", sortType);
+			
+			/**
+			 원래
 			// 목록 조회
 			int numPerPage = 8;
 			List<Club> list = clubService.selectClubList(cPage, numPerPage);
@@ -110,7 +125,7 @@ public class ClubController {
 			String url = request.getRequestURI();
 			String pagebar = HelloSpringUtils.getPagebar(cPage, numPerPage, totalClub, url);
 			mav.addObject("pagebar", pagebar);
-			
+			*/
 		} catch(Exception e) {
 			log.error("북클럽목록 조회 오류!!", e);
 			mav.addObject("msg", "북클럽목록 조회에 실패했습니다!");
@@ -550,6 +565,147 @@ public class ClubController {
 			
 		}
 		return mav;
+	}
+	
+	
+	@PostMapping("/deleteClubBoard.do")
+	public String deleteClubBoard(
+			@RequestParam int chatNo,
+			@RequestParam int clubNo,
+			RedirectAttributes redirectAttr) {
+		
+		try {
+			log.debug("chatNo = {}", chatNo);
+			log.debug("clubNo = {}", clubNo);
+			
+			// 1. 파일 삭제
+			List<ChatAttachment> attachs = clubService.findAllClubBoardAttachByChatNo(chatNo);
+			
+			log.debug("attachs = {}", attachs);
+			
+			if(!attachs.isEmpty()) {
+				String saveDirectory = application.getRealPath("/resources/upload/club");
+				for(ChatAttachment attach : attachs) {
+					// 저장경로에서 삭제
+					File delFile = new File(saveDirectory, attach.getRenamedFilename());
+					if(delFile.exists()) {
+						delFile.delete();
+						log.debug("{}번 {}파일 /upload/club에서 삭제", attach.getAttachNo(), attach.getRenamedFilename());
+					}
+					// DB에서 삭제
+					int result = clubService.deleteAttachment(attach.getAttachNo());
+					log.debug("{}번 ChatAttachment DB에서 삭제", attach.getAttachNo());
+				}
+			}
+			
+			int result = clubService.deleteClubBoard(chatNo);
+			redirectAttr.addFlashAttribute("msg", "게시글이 삭제되었습니다!");
+			
+		} catch(Exception e) {
+			log.error("게시글 삭제 오류", e);
+			redirectAttr.addFlashAttribute("msg", "게시글이 삭제되었습니다!");
+			throw e;
+		}
+		
+		return("redirect:/club/clubBoard.do/" + clubNo);
+		
+	}
+	
+	@GetMapping("/updateClubBoard.do/{chatNo}")
+	public ModelAndView updateClubBoard(
+			@PathVariable int chatNo,
+			ModelAndView mav) {
+		
+		try {
+			
+			Chat chat = clubService.selectOneBoardCollection(chatNo);
+			
+			mav.addObject("clubBoard", chat);
+			mav.setViewName("club/clubBoardUpdate");
+		} catch(Exception e) {
+			log.error("북클럽 게시글 수정 오류!", e);
+			throw e;
+		}
+		return mav;
+		
+	}
+	
+	
+	@PostMapping("/clubBoardUpdate.do")
+	public String boardUpdate(
+			Chat clubBoard,
+			@RequestParam(name = "upFile", required = false) MultipartFile[] upFiles,
+			@RequestParam(name = "delFile", required = false) List<String> delFiles,
+			RedirectAttributes redirectAttr
+			) throws IOException {
+
+		
+		try {
+			int result = 0;
+			
+			log.debug("clubBoard = {}", clubBoard);
+			log.debug("delFiles = {}", delFiles);
+			log.debug("upFiles = {}", upFiles);
+			
+			
+			String saveDirectory = application.getRealPath("/resources/upload/club");
+			
+			
+			// 파일 삭제
+			if(!delFiles.isEmpty()) {
+				for(int i = 0; i < delFiles.size(); i++) {
+					ChatAttachment attach = clubService.findOneClubBoardAttachByAttachNo(Integer.parseInt(delFiles.get(i)));
+					
+					log.debug("attach = {}", attach);
+					// 저장경로에서 삭제
+					File delFile = new File(saveDirectory, attach.getRenamedFilename());
+					if(delFile.exists()) {
+						delFile.delete();
+						log.debug("{}번 {}파일 /upload/club에서 삭제", attach.getAttachNo(), attach.getRenamedFilename());
+					}
+					// DB에서 삭제
+					result = clubService.deleteAttachment(attach.getAttachNo());
+					log.debug("{}번 ChatAttachment DB에서 삭제", attach.getAttachNo());
+
+				}
+
+			}
+			
+			
+			// 업로드한 파일 저장
+			for(MultipartFile upFile : upFiles) {
+				if(upFile.getSize() > 0) {
+					// 파일명 재지정
+					String originalFilename = upFile.getOriginalFilename();
+					String renamedFilename = HelloSpringUtils.getRenamedFilename(originalFilename);
+					log.debug("renamedFilename = {}", renamedFilename);
+				
+					// 파일 저장
+					File destFile = new File(saveDirectory, renamedFilename);
+					upFile.transferTo(destFile);
+					
+					// ChatAttachment 객체로 만들어서 => club
+					ChatAttachment attach = new ChatAttachment();
+					attach.setOriginalFilename(originalFilename);
+					attach.setRenamedFilename(renamedFilename);
+					
+					attach.setChatNo(clubBoard.getChatNo());
+					
+					result = clubService.insertClubChatAttach(attach);
+				}
+				
+			}
+			
+			result = clubService.updateClubBoard(clubBoard);
+			redirectAttr.addFlashAttribute("msg", "게시글을 성공적으로 수정했습니다!");
+			
+		} catch(Exception e) {
+			log.error("북클럽 게시글 수정 오류", e);
+			throw e;
+		}
+			
+//		return "redirect:/club/clubBoard.do/45";
+		return "redirect:/club/clubBoardDetail.do?chatNo=" + clubBoard.getChatNo();
 	}
 	
 }

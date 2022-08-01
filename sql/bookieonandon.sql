@@ -599,8 +599,10 @@ select * from member;
 select * from club_chat;
 select * from chat_attachment;
 select * from chat_comment;
-
+delete from club_chat where chat_no = 7;
 commit;
+
+update club_chat set title = '제목제목제목', content = '하이하이' where chat_no = 1
 
 update club_chat set enroll_date = (sysdate - 4) where chat_no = 1;
 update club_chat set enroll_date = (sysdate - 3) where chat_no = 4;
@@ -608,3 +610,9 @@ update club_chat set enroll_date = (sysdate - 2) where chat_no = 5;
 update club_chat set enroll_date = (sysdate - 1) where chat_no = 6;
 
 select * from club_chat order by enroll_date desc;
+
+delete from club_chat where chat_no in (13, 12, 11, 10);
+
+commit;
+
+select * from club where recruit_end > sysdate order by recruit_end;
