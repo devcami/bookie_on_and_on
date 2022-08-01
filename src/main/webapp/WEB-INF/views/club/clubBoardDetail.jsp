@@ -10,7 +10,8 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param value="북클럽 게시판 글 작성" name="title"/>
 </jsp:include>
-${clubNo}
+<span>여긴아니지롱</span>
+${clubBoard}
 <sec:authentication property="principal" var="loginMember"/>
 <div id="clubBook-container">
 	<section id="content">
@@ -27,10 +28,7 @@ ${clubNo}
 			<h1>📝글 작성📝</h1>
 		</div>
 		<form:form
-			name="boardEnrollFrm"
-			method="POST"
-			enctype="multipart/form-data"
-			action = "${pageContext.request.contextPath}/club/clubBoardEnroll.do">
+			name="boardEnrollFrm">
 		<div id="nickname-div">
 			<label for="nickname">작성자</label>
 			<input type="text" name="nickname" id="nickname" value="${loginMember.nickname}" readonly />
@@ -50,13 +48,13 @@ ${clubNo}
 		</div>
 		<div id="content-div">
 			<label for="editorData">내용</label>
-			<textarea class="summernote" name="content"></textarea>
+			<textarea class="summernote" name="editordata"></textarea>
 		</div>
 
 		<input type="hidden" name="clubNo" value="${clubNo}" />
-		<input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }" />
+		
 		<div id="btn-div">
-			<button>작성</button>
+			<button type="button" onclick="frmSubmit();">작성</button>
 		</div>
 		
 		</form:form>
@@ -117,11 +115,16 @@ ${clubNo}
 			alert("제목을 작성해주세요.")
 			return;
 		}
-		
+		if(!/^(.|\n)+$/.test(content.value)){
+			frm.preventDefault();
+			alert("내용을 작성해주세요.");
+			return;
+		}
 		
 		
 	 	frm.action = `${pageContext.request.contextPath}/club/clubBoardEnroll.do`
 	 	frm.method = "POST";
+	 	frm.enctype="multipart/form-data"
 	 	frm.submit();
 		
 	}

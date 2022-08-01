@@ -159,4 +159,50 @@
 		<result column="m_endDate" property="mendDate"/>
 	</resultMap>
 	
+	
+	<insert id="insertClubBoard">
+		insert into
+			club_chat
+		values (
+			seq_club_chat_no.nextval,
+			#{nickname},
+			#{clubNo},
+			#{title},
+			#{content},
+			default)
+		<selectKey keyProperty="chatNo" resultType="_int" order="AFTER">
+			select
+				seq_club_chat_no.currval
+			from
+				dual
+		</selectKey>
+	</insert>
+	
+	<select id="selectOneBoardCollection" resultMap="clubBoardCollectionMap">
+		select
+			cc.*,
+			ca.*,
+			ca.chat_no ca_chat_no
+		from
+			club_chat cc 
+				join chat_attachment ca on cc.chat_no = ca.chat_no  
+		where
+			cc.chat_no = #{chatNo}
+	</select>
+	<resultMap type="chat" id="clubBoardCollectionMap">
+		<id column="chat_no" property="chatNo"/>
+		<result column="nickname" property="nickname"/>
+		<result column="club_no" property="clubNo"/>
+		<result column="title" property="title"/>
+		<result column="content" property="content"/>
+		<result column="enroll_date" property="enrollDate"/>
+		<collection property="chatAttachments" javaType="arraylist" ofType="chatAttachment">
+			<id column="attach_no" property="attachNo" />
+			<result column="ca_chat_no" property="chatNo"/>
+			<result column="original_filename" property="originalFilename"/>
+			<result column="renamed_filename" property="renamedFilename"/>
+			<result column="created_at" property="createdAt"/>
+		</collection>
+	</resultMap>
+	
 </mapper>

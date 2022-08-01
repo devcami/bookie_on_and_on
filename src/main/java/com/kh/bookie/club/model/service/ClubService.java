@@ -3,6 +3,7 @@ package com.kh.bookie.club.model.service;
 import java.util.List;
 import java.util.Map;
 
+import com.kh.bookie.club.model.dto.Chat;
 import com.kh.bookie.club.model.dto.Club;
 import com.kh.bookie.club.model.dto.Mission;
 
@@ -33,5 +34,11 @@ public interface ClubService {
 	int checkMyPoint(String memberId);
 
 	int joinClub(Map<String, Object> map);
+
+	int insertClubBoard(Chat clubBoard);
+
+	Chat selectOneBoardCollection(int chatNo);
+
+	List<Chat> selectClubBoardList(int clubNo);
 
 }
