@@ -12,6 +12,7 @@
 </jsp:include>
 <sec:authentication property="principal" var="loginMember"/>
 ${clubBoard.member}
+${clubBoard.chatComments}
 <div id="clubBook-container">
 	<section id="content">
 		<div id="menuDiv">
@@ -65,7 +66,7 @@ ${clubBoard.member}
 		
 		<div id="comment-container">
 			<%-- 댓글 입력 창 --%>
-			<div class="input-group p-2 mb-2">
+			<div class="input-group p-2 mb-2" id="comment-input">
 				<input type="text" class="form-control" name="content" id="comment-content" placeholder="댓글을 작성해주세요." aria-label="댓글을 작성해주세요." aria-describedby="button-comment">
 				<div class="input-group-append">
 					<button class="btn" type="button" id="btn-enroll-comment" onclick="enrollComment();">등록</button>
@@ -136,6 +137,79 @@ const updateClubBoard = () => {
 	
 	location.href = `${pageContext.request.contextPath}/club/updateClubBoard.do/\${chatNo}`;
 }
+
+const enrollComment = () => {
+	const commentVal = document.querySelector('#comment-content').value;
+	const csrfHeader = '${_csrf.headerName}';
+	const csrfToken = '${_csrf.token}';
+	const headers = {};
+	headers[csrfHeader] = csrfToken; // 전송하는 헤더에 추가하여 전송 
+	
+	$.ajax({
+		url : '${pageContext.request.contextPath}/club/commentEnroll.do',
+		method : 'post',
+		headers,
+		data : {
+			nickname : '${loginMember.nickname}',
+			chatNo : '${clubBoard.chatNo}',
+			commentContent : commentVal
+		},
+		success(resp){
+			console.log(resp);
+			const {chatNo, commentContent, commentNo} = resp;
+			const container = document.querySelector("#comment-input")
+			
+			var today = new Date();
+
+			var year = today.getFullYear();
+			var month = ('0' + (today.getMonth() + 1)).slice(-2);
+			var day = ('0' + today.getDate()).slice(-2);
+			var hours = ('0' + today.getHours()).slice(-2); 
+			var minutes = ('0' + today.getMinutes()).slice(-2)
+			
+			const createdAt = year + "/" + month + "/" + day + " " + hours + ":" + minutes;
+			
+			const div = `
+				<div class="card shadow comment-one mb-2" id="comment\${commentNo}">
+					<div class="card-body">
+						<div class="d-flex flex-start">
+							<img class="rounded-circle shadow-1-strong m-1" src="" alt="avatar" width="40" height="40">
+							
+							<div class="">
+								<div class="m-1 comment-div d-flex justify-content-between  align-items-start">
+									<h6 class="ml-2 mb-0 comment-nickname d-inline">
+										${loginMember.nickname}
+									</h6>
+									<span class="text-dark" id="comment-content1">\${commentContent}</span>
+									
+									<span class="mb-0 text-secondary">
+										\${createdAt}
+									</span>
+								</div>
+								<div class="text-right mr-2">
+									<p class="small mb-0 pr-2" style="color: #aaa;">
+										<a href="#" class="link-grey" onclick="commentDel(this);" data-dokoocno="23">삭제</a> • 
+										
+										<a href="#!" class="link-grey" onclick="commentUpdate(this);" data-dokoocno="23" data-vs="1">수정</a> • 
+										
+										<a href="#!" class="link-grey" onclick="commentRef(this);" data-dokoocno="23">답글</a>
+									</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>`;
+				
+				container.insertAdjacentHTML('afterend', div);
+				container.value = '';
+					
+			/* location.reload(); */
+		},
+		error:console.log
+	});
+	
+}
+
 
 </script>
 

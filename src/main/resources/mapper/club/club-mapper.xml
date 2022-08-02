@@ -219,4 +219,38 @@
 		</collection>
 	</resultMap>
 	
+	<insert id="commentEnroll">
+		insert into 
+			chat_comment 
+		values 
+			(seq_comment_no.nextval, 
+			#{chatNo}, 
+			#{nickname}, 
+			null, 
+			default, 
+			#{commentContent},
+			default)
+		<selectKey keyProperty="commentNo" resultType="_int" order="AFTER">
+			select
+				seq_comment_no.currval
+			from
+				dual
+		</selectKey>
+	</insert>
+	
+	<select id="selectChatComments" resultType="chatComment">
+		select 
+		    * 
+		from 
+		    chat_comment cc 
+		where 
+		    chat_no = 14 
+		        start with 
+		        	comment_level = 1
+		        connect by 
+		        	prior comment_no = comment_ref 
+		order siblings by 
+			created_at desc
+	</select>
+	
 </mapper>

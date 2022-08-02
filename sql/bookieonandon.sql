@@ -20,6 +20,8 @@ create table member (
     constraint ck_member_gender check (gender in ('M', 'F'))
 );
 
+update member set nickname = '승윤이' where member_id = 'tmddbs';
+
 -- 2. authority
 create table authority(
     member_id varchar2(200),
@@ -89,6 +91,8 @@ create table dokoo(
 );
 
 create sequence seq_dokoo_no;
+
+
 
 
 -- 8. dokoo_comment - 독후감 댓글 테이블
@@ -249,9 +253,11 @@ create table chat_comment(
     nickname varchar2(100) not null,
     comment_ref number,
     created_at date default sysdate not null,
+    comment_content varchar2(1000) not null,
+    comment_level number default 1
     constraint pk_chat_comment_no primary key(comment_no) 
 );
-
+select * from chat_comment;
 create sequence seq_comment_no;
 
 -- 20. 신고테이블
@@ -572,8 +578,41 @@ update club_chat set enroll_date = (sysdate - 1) where chat_no = 6;
 
 select * from club_chat order by enroll_date desc;
 
-delete from club_chat where chat_no in (13, 12, 11, 10);
+select * from member;
 
 commit;
 
 select * from club where recruit_end > sysdate order by recruit_end;
+
+
+
+select
+			cc.*,
+			ca.*,
+            m.*,
+            m.renamed_filename profilePic,
+			ca.chat_no ca_chat_no
+		from
+			club_chat cc 
+				join chat_attachment ca on cc.chat_no = ca.chat_no  
+                join member m on cc.nickname = m.nickname
+		where
+			cc.chat_no = 14;
+            
+            
+select * from chat_comment;
+
+alter table chat_comment add comment_level number default 1;
+ alter table chat_comment add foreign key(nickname) references member(nickname) on delete set null;
+ alter table chat_comment add foreign key(chat_no) references club_chat(chat_no) on delete cascade;
+ alter table chat_comment add foreign key(comment_ref) references chat_comment(comment_no) on delete cascade;
+ 
+ commit;
+
+select 
+    * 
+from 
+    chat_comment cc 
+where 
+    chat_no = 14 
+        start with comment_level = 1 connect by prior no = comment_ref

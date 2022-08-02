@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.kh.bookie.club.model.dto.Chat;
 import com.kh.bookie.club.model.dto.ChatAttachment;
+import com.kh.bookie.club.model.dto.ChatComment;
 import com.kh.bookie.club.model.dto.Club;
 import com.kh.bookie.club.model.dto.Mission;
 
@@ -53,6 +54,8 @@ public interface ClubService {
 	int updateClubBoard(Chat clubBoard);
 
 	int insertClubChatAttach(ChatAttachment attach);
+
+	int commentEnroll(ChatComment cc);
 
 	
 

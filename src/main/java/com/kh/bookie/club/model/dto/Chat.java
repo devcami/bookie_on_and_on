@@ -18,6 +18,7 @@ public class Chat extends ChatEntity {
 
 	private List<ChatAttachment> chatAttachments = new ArrayList<>();
 	private Member member;
+	private List<ChatComment> chatComments;
 	
 	public Chat(int chatNo, String nickname, int clubNo, String title, String content, LocalDateTime enrollDate) {
 		super(chatNo, nickname, clubNo, title, content, enrollDate);
