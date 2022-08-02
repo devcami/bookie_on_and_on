@@ -69,7 +69,7 @@ public class PheedController {
 		try {
 			// 목록 조회
 			int cPage = 1;
-			int numPerPage = 1;
+			int numPerPage = 3;
 			List<Pheed> list = pheedService.selectPheedCList(cPage, numPerPage);
 			log.debug("list = {}", list);
 			mav.addObject("list", list);
@@ -87,7 +87,7 @@ public class PheedController {
 	public ResponseEntity<?> getReadList(@RequestParam int cPage){
 		try {
 			log.debug("cPage = {}", cPage);
-			int numPerPage = 1;
+			int numPerPage = 3;
 			
 			List<Pheed> list = pheedService.selectPheedCList(cPage, numPerPage);
 			log.debug("list = {}", list);
@@ -105,7 +105,7 @@ public class PheedController {
 	public void pheedEnroll() {}
 	
 	@PostMapping("/pheedEnroll.do")
-	public String pheedEnroll(Pheed pheed, RedirectAttributes ra, @RequestParam("upFile") MultipartFile upFile) {
+	public String pheedEnroll(Pheed pheed, RedirectAttributes ra, @RequestParam (required = false) MultipartFile upFile) {
 		try {
 			log.debug("pheed = {}", pheed);
 			String saveDirectory = application.getRealPath("/resources/upload/pheed");

@@ -57,8 +57,10 @@ public class PheedServiceImpl implements PheedService{
 		
 		// 첨부파일 insert
 		PheedAttachment attach = pheed.getAttach();
-		attach.setPheedNo(pheed.getPheedNo());
-		result = pheedDao.pheedAttachmentEnroll(attach);
+		if(attach != null) {
+			attach.setPheedNo(pheed.getPheedNo());
+			result = pheedDao.pheedAttachmentEnroll(attach);
+		}
 		
 		return result;
 	}
