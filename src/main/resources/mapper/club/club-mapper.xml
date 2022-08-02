@@ -189,10 +189,13 @@
 		select
 			cc.*,
 			ca.*,
+			m.*,
+            m.renamed_filename profilePic,
 			ca.chat_no ca_chat_no
 		from
 			club_chat cc 
-				join chat_attachment ca on cc.chat_no = ca.chat_no  
+				join chat_attachment ca on cc.chat_no = ca.chat_no 
+				join member m on cc.nickname = m.nickname 
 		where
 			cc.chat_no = #{chatNo}
 	</select>
@@ -203,6 +206,10 @@
 		<result column="title" property="title"/>
 		<result column="content" property="content"/>
 		<result column="enroll_date" property="enrollDate"/>
+		<association property="member" javaType="member">
+			<id column="member_id" property="memberId"/>
+			<result column="profilePic" property="renamedFilename"/>
+		</association>
 		<collection property="chatAttachments" javaType="arraylist" ofType="chatAttachment">
 			<id column="attach_no" property="attachNo" />
 			<result column="ca_chat_no" property="chatNo"/>

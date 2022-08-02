@@ -51,7 +51,10 @@
 				      <th scope="row">${chat.chatNo}</th>
 				      <td>${chat.title}</td>
 				      <td>${chat.nickname}</td>
-				      <td>${chat.enrollDate}</td>
+				      <td>
+				      	<fmt:parseDate value="${chat.enrollDate}" pattern="yyyy-MM-dd'T'HH:mm" var="enrollDate"/>
+				      	<fmt:formatDate value="${enrollDate}" pattern="yyyy/MM/dd HH:mm"/>
+				     </td>
 				    </tr>
 			  	</c:forEach>
 			  </tbody>

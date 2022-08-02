@@ -1,11 +1,11 @@
 package com.kh.bookie.club.model.dto;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.kh.bookie.member.model.dto.Member;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -16,9 +16,10 @@ import lombok.ToString;
 @ToString(callSuper = true)
 public class Chat extends ChatEntity {
 
-	protected List<ChatAttachment> chatAttachments = new ArrayList<>();
-
-	public Chat(int chatNo, String nickname, int clubNo, String title, String content, LocalDate enrollDate) {
+	private List<ChatAttachment> chatAttachments = new ArrayList<>();
+	private Member member;
+	
+	public Chat(int chatNo, String nickname, int clubNo, String title, String content, LocalDateTime enrollDate) {
 		super(chatNo, nickname, clubNo, title, content, enrollDate);
 		// TODO Auto-generated constructor stub
 	}
