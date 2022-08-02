@@ -51,14 +51,19 @@
 			<div class="dokoo-sns-icons">
 				<div class="btn-group" role="group" aria-label="Basic example">
 					<span class="fa-stack fa-lg" id='h-span'>
-					  <i class="fa fa-heart fa-regular fa-stack-1x front" ></i>
+					  <i class="fa fa-heart fa-regular fa-stack-1x front" id="like" data-dokoo-no="${dokoo.dokooNo}"></i>
 					</span>
 					<span class="fa-stack fa-lg" id='b-span'>
-					  <i class="fa fa-bookmark fa-regular fa-stack-1x front"></i>
+					  <i class="fa fa-bookmark fa-regular fa-stack-1x front" id="bookmark" data-dokoo-no="${dokoo.dokooNo}"></i>
 					</span>
 				  <button type="button" data-toggle="modal" data-target="#reportModal" 
 				  			class="btn" id="btn-report"><i class="fa-solid fa-ellipsis"></i></button>
 				</div>
+			</div>
+			<div class='likes-div'>						
+				<span>좋아요</span>&nbsp;
+				<span class='likes' id="likesCnt"></span>
+				<span>개</span>					
 			</div>
 			<div class="dokoo-sns-cal" id="sns-cal">
 			</div>
@@ -321,29 +326,50 @@ document.querySelector("#report-content").addEventListener('keyup', (e) => {
 
 <%-- heart / bookmark --%>
 window.addEventListener('load', (e) => {
-	document.querySelector("#h-span").addEventListener('click', (e) => {
+	
+	// 로드할때 좋아요, 찜 내역 가져와
+	$.ajax({
+		url : "${pageContext.request.contextPath}/dokoo/getDokooSns.do",
+		data : {
+			dokooNo : ${param.dokooNo},
+			memberId : '${loginMember.memberId}'
+		},
+		success(resp){
+			console.log(resp);
+			const span = document.querySelector('#likesCnt');
+			if(resp == null){
+				span.innerText = "0";
+			}
+		},
+		error : console.log
+	});
+	
+	// 로드할때 하트 클릭 이벤트 줘
+	document.querySelector("#like").addEventListener('click', (e) => {
+		
 			// 부모한테 이벤트 전파하지마셈
 			e.stopPropagation(); 
 			
 			// 클릭할때마다 상태왔다갔다
 			changeIcon(e.target, 'heart');
 	});	
-});
-
-window.addEventListener('load', (e) => {
-	document.querySelector("#b-span").addEventListener('click', (e) => {
+	
+	// 로드할때 북마크 클릭 이벤트 줘
+	document.querySelector("#bookmark").addEventListener('click', (e) => {
+			
 			// 부모한테 이벤트 전파하지마셈
 			e.stopPropagation(); 
 			
 			// 클릭할때마다 상태왔다갔다
 			changeIcon(e.target, 'bookmark');
 	});	
+	
 });
 
 
 const changeIcon = (icon, shape) => {
 	let cnt = icon.parentElement.childElementCount;
-	
+	let clubNo = icon.dataset.clubNo;
 	const iHeart = `<i class="fa fa-heart fa-solid fa-stack-1x h-behind"></i>`;
 	const iBookMark = `<i class="fa fa-bookmark fa-solid fa-stack-1x b-behind"></i>`;
 	

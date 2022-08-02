@@ -1,9 +1,11 @@
 package com.kh.bookie.dokoo.model.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.kh.bookie.dokoo.model.dto.Dokoo;
 import com.kh.bookie.dokoo.model.dto.DokooComment;
+import com.kh.bookie.dokoo.model.dto.DokooSns;
 import com.kh.bookie.mypage.model.dto.Book;
 
 public interface DokooService {
@@ -23,5 +25,7 @@ public interface DokooService {
 	int commentDel(int dokooCNo);
 
 	int commentUpdate(DokooComment dokooComment);
+
+	List<DokooSns> getDokooSns(Map<String, Object> map);
 
 }

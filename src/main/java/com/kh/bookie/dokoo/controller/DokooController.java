@@ -1,6 +1,8 @@
 package com.kh.bookie.dokoo.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -8,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +22,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.kh.bookie.common.HelloSpringUtils;
 import com.kh.bookie.dokoo.model.dto.Dokoo;
 import com.kh.bookie.dokoo.model.dto.DokooComment;
+import com.kh.bookie.dokoo.model.dto.DokooSns;
 import com.kh.bookie.dokoo.model.service.DokooService;
+import com.kh.bookie.member.model.dto.Member;
 import com.kh.bookie.mypage.model.dto.Book;
 
 import lombok.extern.slf4j.Slf4j;
@@ -140,6 +145,27 @@ public class DokooController {
 			throw e;
 		}
 		return "redirect:/dokoo/dokooDetail.do?dokooNo=" + dokooComment.getDokooNo();
+	}
+	
+	@GetMapping("/getDokooSns.do")
+	public ResponseEntity<?> getDokooSns(@RequestParam int dokooNo, @RequestParam String memberId){
+		try {
+			log.debug("dokooNo = {}, loginMember = {}", dokooNo, memberId);
+			Map<String, Object> map = new HashMap<>();
+			map.put("dokooNo", dokooNo);
+			map.put("memberId", memberId);
+			List<DokooSns> dokooSns = dokooService.getDokooSns(map);
+			log.debug("dokooSns = {}", dokooSns);
+			if(dokooSns.isEmpty()) {
+				return ResponseEntity.ok().build();
+			}
+			else {
+				return ResponseEntity.ok(dokooSns);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
 	}
 	
 }

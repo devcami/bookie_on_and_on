@@ -110,4 +110,17 @@
 		where
 			dokooc_no = #{dokooCNo}
 	</update>
+	
+	<select id="getDokooLikes" resultMap="dokooSnsMap">
+		select * from likes_dokoo where dokoo_no = #{dokooNo} and member_id = #{memberId}
+	</select>
+	
+	<select id="getDokooBookmark" resultMap="dokooSnsMap">
+		select * from wishlist_dokoo where dokoo_no = #{dokooNo} and member_id = #{memberId} 
+	</select>
+	
+	<resultMap type="dokooSns" id="dokooSnsMap">
+		<result column="dokoo_no" property="dokooNo"/>
+		<result column="member_id" property="memberId"/>
+	</resultMap>
 </mapper>
