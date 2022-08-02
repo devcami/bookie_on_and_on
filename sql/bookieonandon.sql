@@ -254,7 +254,7 @@ create table chat_comment(
     comment_ref number,
     created_at date default sysdate not null,
     comment_content varchar2(1000) not null,
-    comment_level number default 1
+    comment_level number default 1,
     constraint pk_chat_comment_no primary key(comment_no) 
 );
 select * from chat_comment;
@@ -615,4 +615,8 @@ from
     chat_comment cc 
 where 
     chat_no = 14 
-        start with comment_level = 1 connect by prior no = comment_ref
+        start with comment_level = 1 connect by prior comment_no = comment_ref 
+order siblings by created_at desc;
+
+commit;
+

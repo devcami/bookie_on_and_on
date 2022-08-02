@@ -57,6 +57,10 @@ public interface ClubService {
 
 	int commentEnroll(ChatComment cc);
 
+	int commentDelete(int commentNo);
+
+	int commentUpdate(ChatComment cc);
+
 	
 
 }

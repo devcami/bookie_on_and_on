@@ -721,4 +721,30 @@ public class ClubController {
 		
 	}
 	
+	@PostMapping("/commentDel.do")
+	public ResponseEntity<?> clubBoardCommentDelete(@RequestParam int commentNo){
+		
+		try {
+			log.debug("commentNo = {}", commentNo);
+			int result = clubService.commentDelete(commentNo);
+			return ResponseEntity.ok().build();
+		} catch(Exception e) {
+			log.error("북클럽 게시글 댓글 삭제 오류", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+	}
+	
+	@PostMapping("/commentUpdate.do")
+	public ResponseEntity<?> clubBoardCommentUpdate(ChatComment cc){
+		try {
+			log.debug("ChatComment = {}", cc);
+			int result = clubService.commentUpdate(cc);
+			return ResponseEntity.ok(cc);
+		} catch(Exception e) {
+			log.error("북클럽 게시글 댓글 수정 오류");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+	}
+	
+	
 }
