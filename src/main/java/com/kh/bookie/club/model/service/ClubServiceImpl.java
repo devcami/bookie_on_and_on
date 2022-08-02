@@ -240,6 +240,16 @@ public class ClubServiceImpl implements ClubService {
 		return clubDao.commentEnroll(cc);
 	}
 
+	@Override
+	public int commentDelete(int commentNo) {
+		return clubDao.commentDelete(commentNo);
+	}
+
+	@Override
+	public int commentUpdate(ChatComment cc) {
+		return clubDao.commentUpdate(cc);
+	}
+
 
 	
 
