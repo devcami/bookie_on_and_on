@@ -2,6 +2,7 @@ package com.kh.bookie.pheed.model.service;
 
 import java.util.List;
 
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,8 +32,10 @@ public class PheedServiceImpl implements PheedService{
 	}
 	
 	@Override
-	public List<Pheed> selectPheedCList() {
-		List<Pheed> list = pheedDao.selectPheedCList();
+	public List<Pheed> selectPheedCList(int cPage, int numPerPage) {
+		int offset = (cPage - 1) * numPerPage;
+		RowBounds rowBounds = new RowBounds(offset, numPerPage);
+		List<Pheed> list = pheedDao.selectPheedCList(rowBounds);
 		for(Pheed p : list) {
 			PheedAttachment attach = pheedDao.selectAttachment(p.getPheedNo());
 			p.setAttach(attach);
@@ -45,5 +48,18 @@ public class PheedServiceImpl implements PheedService{
 	@Override
 	public List<PheedComment> selectPheedCommentList(int pheedNo) {
 		return pheedDao.selectPheedCommentList(pheedNo);
+	}
+	
+	@Override
+	public int pheedEnroll(Pheed pheed) {
+		// pheed insert
+		int result = pheedDao.pheedEnroll(pheed);
+		
+		// 첨부파일 insert
+		PheedAttachment attach = pheed.getAttach();
+		attach.setPheedNo(pheed.getPheedNo());
+		result = pheedDao.pheedAttachmentEnroll(attach);
+		
+		return result;
 	}
 }
