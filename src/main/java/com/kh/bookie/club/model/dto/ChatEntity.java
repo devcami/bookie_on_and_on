@@ -1,6 +1,7 @@
 package com.kh.bookie.club.model.dto;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -20,7 +21,8 @@ public class ChatEntity {
 	protected int clubNo;
 	protected String title;
 	protected String content;
+	
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	protected LocalDate enrollDate;
+	protected LocalDateTime enrollDate;
 		
 }

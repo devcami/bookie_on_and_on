@@ -12,6 +12,7 @@ import org.apache.ibatis.session.RowBounds;
 
 import com.kh.bookie.club.model.dto.Chat;
 import com.kh.bookie.club.model.dto.ChatAttachment;
+import com.kh.bookie.club.model.dto.ChatComment;
 import com.kh.bookie.club.model.dto.Club;
 import com.kh.bookie.club.model.dto.ClubBook;
 import com.kh.bookie.club.model.dto.Mission;
@@ -97,6 +98,10 @@ public interface ClubDao {
 
 	@Insert("insert into chat_attachment values (seq_chat_attachment_no.nextval, #{chatNo}, #{originalFilename}, #{renamedFilename}, #{createdAt})")
 	int insertClubChatAttach(ChatAttachment attach);
+
+	int commentEnroll(ChatComment cc);
+
+	List<ChatComment> selectChatComments(int chatNo);
 
 
 }
