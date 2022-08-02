@@ -102,6 +102,8 @@ public class MypageController {
 	/* nicknameCheck */
 	@GetMapping("/nicknameCheck.do")
 	public ResponseEntity<?> nicknameCheck(@RequestParam String nickname){
+		log.debug("nickname = {}", nickname);
+		
 		Map<String, Object> map = new HashMap<>();
 		try {
 			MemberEntity member = memberService.selectOneMemberByNickname(nickname);
@@ -166,8 +168,6 @@ public class MypageController {
 				int result = memberService.deleteMemberProfile(nickname);
 				log.debug("{}의 MemberProfile 레코드 삭제", nickname);
 			}
-			
-			log.debug("여긴온거야?");
 			
 			// 2. 첨부파일 등록 (파일 저장)
 			MultipartFile updateFile = upFile;

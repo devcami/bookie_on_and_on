@@ -14,7 +14,14 @@ section#section	{
     background-attachment: scroll;
     background-size: 85% 94%;
 }
-
+#pheed-enroll-container{
+	background-image: url(/bookie/resources/images/pheedEnrollBack.png) !important;
+	background-repeat: no-repeat;
+    background-position: top;
+    background-attachment: scroll;
+    background-size: 85% 94%;
+	
+}
 form {
 	margin-right: 25px;
 	margin-bottom: 0 !important;
@@ -41,18 +48,58 @@ section#content #top-title {
     border-bottom: 2px dashed grey;
 }
 #top-title h1 {
-	font-size: xx-large !important;
+	margin: 30px 0;
+	font-size: 50px;
 }
 /****** 작성자 *******/
 #nickname-div {
 	display: flex;
     flex-direction: column;
 }
+input#page{
+	background-color: #ffffff53;
+}
+
+/********* 파일 ************/
+#file-div {
+	display: flex;
+	flex-direction: column;
+	margin-top: 20px;
+}
+#file-div-title {
+	display: flex;
+	align-items: flex-end;
+}
+
+#file-div-title span {
+	margin-left: 10px;
+	font-size: medium !important;
+	color: grey;
+}
+
+#file-div input {
+	margin: 5px 0;
+	width: 60%;
+}
+
+input::file-selector-button {
+  background-color: #FE9801;
+  border: none;
+  border-radius: 0.3rem;
+  padding: 4px;
+  color: white;
+  cursor: pointer;
+}
+input::file-selector-button:hover {
+  background-color: #de8500;
+  cursor: pointer;
+}
+
 
 /****** 책등록 ********/
 /* 5 */
 .custom-btn {
-	margin: 20px;
+	margin: 20px 0;
 	width: 130px;
 	height: 40px;
 	color: #fff;

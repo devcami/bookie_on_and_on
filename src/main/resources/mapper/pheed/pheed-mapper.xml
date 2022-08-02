@@ -31,4 +31,30 @@
 	<select id="selectPheedCommentList" resultType="pheedComment">
 		select * from pheed_comment where pheed_no = #{pheedNo} order by created_at
 	</select>
+	
+	<insert id="pheedEnroll">
+		insert into
+			pheed
+		values(
+			seq_pheed_no.nextval,
+			#{memberId},
+			#{itemId},
+			#{page},
+			#{content},
+			#{isOpened},
+			sysdate)
+		<selectKey keyProperty="pheedNo" resultType="_int" order="AFTER">
+			select seq_pheed_no.currval from dual
+		</selectKey>
+	</insert>
+	<insert id="pheedAttachmentEnroll">
+		insert into
+			pheed_attachment
+		values(
+			seq_pheed_attachment_no.nextval,
+			#{pheedNo},
+			#{originalFilename},
+			#{renamedFilename},
+			sysdate)
+	</insert>
 </mapper>

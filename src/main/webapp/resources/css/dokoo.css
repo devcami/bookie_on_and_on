@@ -245,6 +245,27 @@ section#dokoo-content #dokoo-container{
 #comment-container .dokoo-sns .btn-group #btn-report{
 	float: right;
 }
+/* 수정 삭제버튼 */
+.btn-group button.btn-update{
+	background-color : #FE9801;
+	border-radius: 15px;
+	color: #FFF;
+	border : none;
+}
+.btn-group button.btn-update:hover{
+	cursor:pointer;
+	background-color : #d88200;
+}
+.btn-group button.btn-delete:hover{
+	cursor:pointer;
+	background-color : #a61515;
+}
+.btn-group button.btn-delete{
+	border : none;
+	background-color : grey;
+	border-radius: 15px;
+	color: #FFF;
+}
 
 /* 댓글 */
 hr{

@@ -3,6 +3,7 @@ package com.kh.bookie.pheed.model.dao;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.session.RowBounds;
 
 import com.kh.bookie.member.model.dto.Member;
 import com.kh.bookie.pheed.model.dto.Pheed;
@@ -14,12 +15,16 @@ public interface PheedDao {
 
 	List<Pheed> selectPheedFList();
 
-	List<Pheed> selectPheedCList();
+	List<Pheed> selectPheedCList(RowBounds rowBounds);
 
 	PheedAttachment selectAttachment(int pheedNo);
 
 	Member selectMember(String memberId);
 
 	List<PheedComment> selectPheedCommentList(int pheedNo);
+
+	int pheedEnroll(Pheed pheed);
+
+	int pheedAttachmentEnroll(PheedAttachment attach);
 	
 }
