@@ -16,9 +16,9 @@
 <style>
 /* 중복아이디체크관련 */
 div# { position:relative; padding:0px; }
-span.guide { display:none; font-size:12px; position:absolute; top:12px; right:10px; }
-span.ok, span.ok { color:green; }
-span.error, span.error { color:red; }
+span.guide { display:none; font-size:12px; top:12px; right:10px; }
+span.ok { color:green; }
+span.error { color:red; }
 </style>
 <div id="title-header" class="">
 	<div id="header-div">
@@ -55,7 +55,7 @@ span.error, span.error { color:red; }
 	        <input class="form-field" id="form-nickname" name="newNickname" type="text" onblur="nickChech();" value="${loginMember.nickname}" required>
 			<span class="guide ok" id="nickok">이 닉네임은 사용 가능합니다.</span>
 			<span class="guide error" id="nickerror">이 닉네임은 이미 사용중입니다.</span>
-			<input type="hidden" id="nicknameValid" value="0" /> <%-- 사용불가 0 사용가능 중복검사 통과 시 1 --%>
+			<input type="hidden" id="nicknameValid" name="nicknameValid" value="0" /> <%-- 사용불가 0 사용가능 중복검사 통과 시 1 --%>
 		  </div>
 	      <p class="form-label" style="margin-top: 10px; color: orange;">소개 : </p>
 	          <input class="form-field" id="form-introduce" name="introduce" type="text" value="${loginMember.introduce}">
@@ -73,42 +73,50 @@ span.error, span.error { color:red; }
 function nickChech() {
 	const nickVal = document.querySelector("#form-nickname").value;
 	console.log(nickVal);
-	if(!nickVal){
+	if(!nickVal){ // not null
+		alert("닉네임을 입력하세요!");
 		return false;
 	}	
 	// 닉네임 중복체크 비동기화
-		if(nickVal){
-			const nickname = document.querySelector("#form-nickname").value;
-			console.log(nickname);
-			$.ajax({
-				url : "${pageContext.request.contextPath}/mypage/nicknameCheck.do",
-				method : "GET",
-				data : {
-					nickname
-				},
-				dataType: "text",
-				success(resp) {
-					console.log(resp);
-					const {nickname, available} = resp;
-					if(available){
-						nickerror.style.display = "none";	
-						nickok.style.display = "inline";	
-						nicknameValid.value = "1";
-					}
-					else{
-						nickerror.style.display = "inline";	
-						nickok.style.display = "none";	
-						nicknameValid.value = "0";
-						alert("이건안돼요!");
-						return false;
-					}
-				},
-				error : console.log
-			});
-		}
+	if(nickVal){
+		const nickname = document.querySelector("#form-nickname").value;
+		console.log(nickname);
+		$.ajax({
+			url : "${pageContext.request.contextPath}/mypage/nicknameCheck.do",
+			method : "GET",
+			data : {
+				nickname
+			},
+			success(resp) {
+				console.log(resp);
+				const {available} = resp;
+				console.log(available);
+				if(available){
+					document.querySelector("#nickerror").style.display = "none";	
+					document.querySelector("#nickok").style.display = "inline";	
+					document.querySelector("#nicknameValid").value = "1";
+				}
+				else {
+					document.querySelector("#nickerror").style.display = "inline";	
+					document.querySelector("#nickok").style.display = "none";	
+					document.querySelector("#nicknameValid").value = "0";
+					return false;
+				}
+			},
+			error : console.log
+		});
+	}
 	
 	return true;
 };
+
+/* upFile.addEventListener ('change', (e) => {
+	
+}); */
+
+/* quiz-form.addEventListener ('submit', (e) => {
+	e.target.
+}); */
 
 /*
 const openCheckId = () => {
