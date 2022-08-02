@@ -42,8 +42,8 @@
       	<intercept-url pattern="/club/clubBoardDetail.do" access="isAuthenticated()" />
 		
 		<!-- 마이페이지 -->
-		
-		
+		<intercept-url pattern="/mypage/**" access="isAuthenticated()"/>
+		<intercept-url pattern="/mypage/adminPage.do" access="hasRole('ADMIN')" />
 		
 		
 		

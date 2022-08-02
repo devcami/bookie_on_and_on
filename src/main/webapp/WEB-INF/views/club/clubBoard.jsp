@@ -10,7 +10,6 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param value="북클럽 게시판" name="title"/>
 </jsp:include>
-${clubNo}
 <sec:authorize access="isAuthenticated()">
 	<sec:authentication property="principal" var="loginMember"/>
 </sec:authorize>
@@ -48,7 +47,7 @@ ${clubNo}
 			  </thead>
 			  <tbody>
 			  	<c:forEach items="${list}" var="chat" varStatus="vs">
-			  		<tr onclick="">
+			  		<tr onclick="showDetailClubBoard(this)">
 				      <th scope="row">${chat.chatNo}</th>
 				      <td>${chat.title}</td>
 				      <td>${chat.nickname}</td>
@@ -77,6 +76,11 @@ ${clubNo}
 		const frm = document.clubBoardEnrollFrm;
 		frm.submit();
 		
+	}
+	
+	const showDetailClubBoard = (e) => {
+		const chatNo = e.firstElementChild.innerHTML;
+		location.href = `${pageContext.request.contextPath}/club/clubBoardDetail.do?chatNo=` + chatNo;  
 	}
 
 </script>

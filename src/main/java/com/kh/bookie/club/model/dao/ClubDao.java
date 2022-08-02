@@ -27,7 +27,7 @@ public interface ClubDao {
 	@Insert("insert into mission values (#{clubNo}, seq_mission_no.nextval, #{title}, #{content}, #{point}, #{mendDate}, #{itemId})")
 	int insertMission(Mission mission);
 
-	List<Club> selectClubList(RowBounds rowBounds);
+	List<Club> selectClubList(Map<String, Object> map);
 
 	@Select("select count(*) from club")
 	int selectTotalClub();
@@ -41,7 +41,7 @@ public interface ClubDao {
 	List<ClubBook> selectClubBook(int clubNo);
 
 	@Select("select * from wishlist_club where member_id = #{username}")
-	List<String> getgetClubWishListbyMemberId(String username);
+	List<String> getClubWishListbyMemberId(String username);
 
 	@Select("select * from likes_club where member_id = #{username}")
 	List<String> getClubLikesListbyMemberId(String username);
@@ -79,5 +79,24 @@ public interface ClubDao {
 
 	@Select("select * from club_chat where club_no = #{clubNo} order by enroll_date desc")
 	List<Chat> selectClubBoardList(int clubNo);
+
+	@Select("select * from chat_attachment where chat_no = #{chatNo}")
+	List<ChatAttachment> findAllClubBoardAttachByChatNo(int chatNo);
+
+	@Delete("delete from club_chat where chat_no = #{chatNo}")
+	int deleteClubBoard(int chatNo);
+
+	@Delete("delete from chat_attachment where attach_no = #{attachNo}")
+	int deleteAttachment(int attachNo);
+
+	@Select("select * from chat_attachment where attach_no = #{attachNo}")
+	ChatAttachment findOneClubBoardAttachByAttachNo(int attachNo);
+
+	@Update("update club_chat set title = #{title}, content = #{content} where chat_no = #{chatNo}")
+	int updateClubBoard(Chat clubBoard);
+
+	@Insert("insert into chat_attachment values (seq_chat_attachment_no.nextval, #{chatNo}, #{originalFilename}, #{renamedFilename}, #{createdAt})")
+	int insertClubChatAttach(ChatAttachment attach);
+
 
 }

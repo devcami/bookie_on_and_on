@@ -1,0 +1,178 @@
+@charset "UTF-8";
+section#content	{
+	margin: 0 auto;
+	padding: 20px 50px 20px 50px;
+	min-height:600px;
+	border-radius: 5px;
+}
+
+/* #clubBook-container {
+	background-image: url(/bookie/resources/images/boardBack.png) !important;
+	background-repeat: no-repeat;
+    background-position: top;
+    background-attachment: scroll;
+    background-size: 85% 94%;
+} */
+#board-div {
+	display: flex;
+    flex-direction: column;
+}
+#content-top {
+	background-image: url(/bookie/resources/images/boardTop.png) !important;
+	background-repeat: no-repeat;
+	background-position: top;
+    background-attachment: scroll;
+    background-size: cover;
+}
+ #content-bottom{
+  background-color: #fffce2;
+  border-radius: 0px 0px 20px 20px;
+ }
+/* form {
+	margin-right: 25px;
+	margin-bottom: 0 !important;
+} */
+section label {
+	margin-bottom: 0 !important;
+	font-size: x-large;
+}
+input:focus-visible {
+	outline: none !important;
+}
+input:not(input[type=file]) {
+	border: none;
+    height: 40px;
+    font-size: large !important;
+    padding-left: 10px;
+}
+
+/***** 테이블 위 제목과 추가 버튼 *****/
+section#content #top-title {
+	padding-bottom: 20px;
+    padding-top: 90px;
+    border-bottom: 2px dashed grey;
+}
+#top-title h1 {
+	font-size: xx-large !important;
+}
+/****** 작성자 *******/
+#nickname-div {
+	display: flex;
+    flex-direction: column;
+    margin: 20px 20px;
+}
+
+#nickname{
+
+}
+
+
+/****** 제목 ********/
+#title-div {
+	display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 20px 20px 0 20px;
+}
+
+/********* 파일 ************/
+#file-div {
+	display: flex;
+	flex-direction: column;
+	padding: 20px 20px;
+}
+#file-div-title {
+	display: flex;
+	align-items: flex-end;
+}
+.img-div {
+	
+}
+.imgs {
+	width: 300px;
+	margin: 5px;
+}
+#file-div-title span {
+	margin-left: 10px;
+	font-size: medium !important;
+	color: grey;
+}
+.img-del-btn {
+	margin: 5px;
+	 background-color: #FFBC80;
+	 border: none;
+	 border-radius: 0.3rem;
+	 padding: 4px;
+	 color: white;
+	 cursor: pointer;
+	 width: 15%
+}
+
+.img-del-btn:hover {
+	box-shadow: 4px 4px 6px 1px rgb(0 0 0 / 20%);
+}
+
+.img-del-btn:focus-visible, .img-del-btn:focus {
+	outline: unset !important;
+}
+
+#file-div input {
+	margin: 5px 0;
+	width: 60%;
+}
+
+input::file-selector-button {
+  background-color: #FFBC80;
+  border: none;
+  border-radius: 0.3rem;
+  padding: 4px;
+  color: white;
+  cursor: pointer;
+}
+input::file-selector-button:hover {
+  background-color: #FFBC80;
+  cursor: pointer;
+}
+
+
+/********* 썸머노트 **********/
+
+#content-div {
+	padding: 0 20px 0 20px;
+	font-size: 20px !important;
+}
+.note-editor {
+	
+}
+.note-toolbar {
+	background-color: rgba(0,0,0,.03) !important;
+}
+
+.note-editor .note-editable p{
+	margin: 0 !important;
+}
+.note-table, .note-insert {
+	display: none !important;
+}
+
+
+/****** 버튼 *********/
+#btn-div {
+	display: flex;
+    justify-content: flex-end;
+    margin-bottom: 60px;
+    padding: 20px 20px;
+}
+#btn-div button {
+  background-color: #FFBC80;
+  border: none;
+  border-radius: 0.3rem;
+  padding: 4px;
+  color: white;
+  cursor: pointer;
+  width: 100%
+}
+#btn-div button:hover {
+	box-shadow: 4px 4px 6px 1px rgb(0 0 0 / 20%);
+}
+

@@ -38,8 +38,15 @@
 		    (select count(*) from likes_club where club_no = c.club_no) likes_Cnt
 		from
 		    club c
+		where
+			recruit_end > sysdate
 		order by
-		    recruit_start desc
+			<if test="sortType == null">
+			    recruit_start desc	
+			</if>
+			<if test="sortType != null">
+				recruit_end
+			</if>
 	</select>
 	<resultMap type="club" id="clubListCollectionMap">
 		<id column="club_no" property="clubNo"/>

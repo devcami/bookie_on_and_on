@@ -57,13 +57,23 @@ public class ClubServiceImpl implements ClubService {
 	}
 
 	@Override
-	public List<Club> selectClubList(int cPage, int numPerPage) {
+	public List<Club> selectClubList(int cPage, int numPerPage, String sortType) {
 		int offset = (cPage - 1) * numPerPage;
 		RowBounds rowBounds = new RowBounds(offset, numPerPage);
 		
+		// 새로하는거
+		Map<String, Object> map = new HashMap<>();
+		map.put("rowBounds", rowBounds);
+		map.put("sortType", sortType);
+		List<Club> list = clubDao.selectClubList(map);
+		//
+		
+		/**
 		// 1. club 찾아와
 		List<Club> list = clubDao.selectClubList(rowBounds);
-
+		 */
+		
+		
 		// 2. club에 사진 할당해
 		for(Club club : list) {
 			List<ClubBook> bookList = clubDao.selectClubBook(club.getClubNo());
@@ -112,7 +122,7 @@ public class ClubServiceImpl implements ClubService {
 
 	@Override
 	public List<String> getClubWishListbyMemberId(String username) {
-		return clubDao.getgetClubWishListbyMemberId(username);
+		return clubDao.getClubWishListbyMemberId(username);
 	}
 
 	@Override
@@ -190,5 +200,39 @@ public class ClubServiceImpl implements ClubService {
 	public List<Chat> selectClubBoardList(int clubNo) {
 		return clubDao.selectClubBoardList(clubNo);
 	}
+
+	@Override
+	public List<ChatAttachment> findAllClubBoardAttachByChatNo(int chatNo) {
+		return clubDao.findAllClubBoardAttachByChatNo(chatNo);
+	}
+	
+	@Override
+	public int deleteAttachment(int attachNo) {
+		return clubDao.deleteAttachment(attachNo);
+	}
+
+	
+	@Override
+	public int deleteClubBoard(int chatNo) {
+		return clubDao.deleteClubBoard(chatNo);
+	}
+
+	@Override
+	public ChatAttachment findOneClubBoardAttachByAttachNo(int attachNo) {
+		return clubDao.findOneClubBoardAttachByAttachNo(attachNo);
+	}
+
+	@Override
+	public int updateClubBoard(Chat clubBoard) {
+		return clubDao.updateClubBoard(clubBoard);
+	}
+
+	@Override
+	public int insertClubChatAttach(ChatAttachment attach) {
+		return clubDao.insertClubChatAttach(attach);
+	}
+
+
+	
 
 }
