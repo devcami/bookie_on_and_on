@@ -7,19 +7,20 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/dokooEnroll.css" />
 <jsp:include page="/WEB-INF/views/common/header.jsp">
-	<jsp:param value="독후감쓰기" name="title"/>
+	<jsp:param value="피드등록" name="title"/>
 </jsp:include>
 <sec:authentication property="principal" var="loginMember"/>
 <!-- 책선택, 공개여부선택 -->
-<div id="dokoo-enroll-container">
+<div id="pheed-enroll-container">
 <section id="section">
 	<div id="top-title" class="text-center">
-		<h1>📝독후감 쓰기📝</h1>
+		<h1>피드 등록🤳</h1>
 	</div>
-	<form:form
-			name="dokooEnrollFrm"
+		<form:form
+			name="pheedEnrollFrm"
 			method="POST"
-			action = "${pageContext.request.contextPath}/dokoo/dokooEnroll.do">
+			enctype="multipart/form-data"
+			action = "${pageContext.request.contextPath}/pheed/pheedEnroll.do">
 		<div id="nickname-div" class="mb-2">
 			<label for="nickname">작성자</label>
 			<input type="text" name="nickname" id="nickname" value="${loginMember.nickname}" readonly />
@@ -30,10 +31,14 @@
 			<div id="book-info">
 				
 			</div>
+			<label for="page" class="m-2">페이지</label>
+			<input type="number" name="page" id="page" class="form-control w-25 mr-1 d-inline"/>P
 		</div>
-		<div id="title-div">
-			<label for="title">글 제목</label>
-			<input type="text" id="title" name="title"/>
+		<div id="file-div">
+			<div id="file-div-title">
+				<label for="upFile">첨부파일</label>
+			</div>
+			<input type="file" name="upFile" id="upFile" multiple />
 		</div>
 		<div id="content-div">
 			<label for="editorData">내용</label>
@@ -47,6 +52,8 @@
 			<label class="open">공개여부</label>				
 			<input type="checkbox" name="isOpened" value="O" class="ml-5" checked/>
 			<label for="O" class="ml-1">전체공개</label>
+			<input type="checkbox" name="isOpened" value="F" class="ml-5" />
+			<label for="O" class="ml-1">팔로워공개</label>
 			<input type="checkbox" name="isOpened" value="C" class="ml-5"/>
 			<label for="C" class="ml-1">비공개</label>
 		</div>
@@ -59,7 +66,6 @@
 		</form:form>
 </section>
 </div>
-
 <%-- 책 추가 모달 --%>
 <div class="modal fade" id="bookListModal" tabindex="-1" role="dialog" aria-labelledby="bookListModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -142,7 +148,6 @@ const bookSelect = (e) => {
 	// 모달 닫기
 	$('#bookListModal').modal('hide');
 };
-
 $(document).ready(function() {
 	  $('.summernote').summernote();
 	});
@@ -182,8 +187,7 @@ $('.summernote').summernote({
 	});
 
 
-document.dokooEnrollFrm.addEventListener('submit', (e) => {
-	const title = document.querySelector("#title");
+document.pheedEnrollFrm.addEventListener('submit', (e) => {
 	const content = document.querySelector("#content");
 	const bookInfo = document.querySelector("#book-info");
 	
@@ -192,19 +196,14 @@ document.dokooEnrollFrm.addEventListener('submit', (e) => {
 		alert("책을 등록해주세요.")
 		return;
 	}
-	if(!/^.+$/.test(title.value)){
-		e.preventDefault();
-		alert("제목을 작성해주세요.")
-		return;
-	}
 	if(!/^.+$/.test(content.value)){
 		e.preventDefault();
 		alert("내용을 작성해주세요.")
 		return;
 	}
-	if(document.querySelector("#content").value.length > 1000){
+	if(content.value.length > 600){
 		e.preventDefault();
-		alert('1000자 이상 입력할 수 없습니다.')
+		alert('600자 이상 입력할 수 없습니다.')
 		return;
 	}
 	e.submit();

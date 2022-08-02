@@ -9,8 +9,10 @@ public interface PheedService {
 
 	List<Pheed> selectPheedFList();
 
-	List<Pheed> selectPheedCList();
+	List<Pheed> selectPheedCList(int cPage, int numPerPage);
 
 	List<PheedComment> selectPheedCommentList(int pheedNo);
+
+	int pheedEnroll(Pheed pheed);
 
 }
