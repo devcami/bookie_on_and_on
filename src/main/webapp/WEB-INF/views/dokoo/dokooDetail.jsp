@@ -56,8 +56,13 @@
 					<span class="fa-stack fa-lg" id='b-span'>
 					  <i class="fa fa-bookmark fa-regular fa-stack-1x front" id="bookmark" data-dokoo-no="${dokoo.dokooNo}"></i>
 					</span>
-				  <button type="button" data-toggle="modal" data-target="#reportModal" 
-				  			class="btn" id="btn-report"><i class="fa-solid fa-ellipsis"></i></button>
+			
+					<button type="button" data-toggle="modal" data-target="#reportModal" 
+						class="btn" id="btn-report"><i class="fa-solid fa-ellipsis"></i></button>
+					<c:if test="${dokoo.member.nickname eq loginMember.nickname}">
+					<button type="button" class="float-right btn-sm btn-update mr-2" onclick="updateDokoo();">수정</button>	
+					<button type="button" class="float-right btn-sm btn-delete mr-2" onclick="deleteDokoo();">삭제</button>	
+					</c:if>
 				</div>
 			</div>
 			<div class='likes-div'>						
@@ -126,6 +131,9 @@
 		</c:forEach>
 		
 	</div>
+<form:form name="dokooDelFrm" method="post" action="${pageContext.request.contextPath}/dokoo/deleteDokoo.do">
+	<input type="hidden" name="dokooNo" value="${param.dokooNo}" />
+</form:form>
 </section>
 <script>
 let header = document.querySelector("#header-container")
@@ -168,6 +176,19 @@ window.addEventListener('load', () => {
 		error : console.log
 	});
 });
+
+
+<%-- 독후감 수정 폼 요청 --%>
+const updateDokoo = () => {
+	location.href = "${pageContext.request.contextPath}/dokoo/updateDokoo.do?dokooNo=" + ${param.dokooNo};	
+};
+
+<%-- 독후감 삭제 요청 --%>
+const deleteDokoo = () => {
+	if(confirm('삭제된 정보는 되돌이킬 수 없습니다. 정말 삭제하시겠습니까?')){
+		document.dokooDelFrm.submit();
+	}
+};
 
 <%-- 댓글 등록 비동기 --%>
 const enrollComment = () => {
@@ -336,9 +357,30 @@ window.addEventListener('load', (e) => {
 		},
 		success(resp){
 			console.log(resp);
+			const dokooSns = resp[0];
 			const span = document.querySelector('#likesCnt');
-			if(resp == null){
+			if(dokooSns == null){
 				span.innerText = "0";
+			}
+			else{
+				resp.forEach((sns) => {
+					const {memberId, snsType} = sns;
+					if(snsType == 'LIKE'){
+						if(memberId == '${loginMember.memberId}'){
+							const iHeart = `<i class="fa fa-heart fa-solid fa-stack-1x h-behind"></i>`;
+							const hspan = document.querySelector("#h-span");
+							hspan.insertAdjacentHTML('beforeend', iHeart);						
+						}
+						span.innerText = Number(span.innerText) + 1;
+					}
+					if(snsType == 'BOOKMARK'){
+						if(memberId == '${loginMember.memberId}'){
+							const iBookMark = `<i class="fa fa-bookmark fa-solid fa-stack-1x b-behind"></i>`;
+							const bspan = document.querySelector("#b-span");
+							bspan.insertAdjacentHTML('beforeend', iBookMark);						
+						}
+					}
+				});
 			}
 		},
 		error : console.log
@@ -369,24 +411,76 @@ window.addEventListener('load', (e) => {
 
 const changeIcon = (icon, shape) => {
 	let cnt = icon.parentElement.childElementCount;
-	let clubNo = icon.dataset.clubNo;
+	//console.log(cnt);
+	let dokooNo = icon.dataset.dokooNo;
+	//console.log(dokooNo);
 	const iHeart = `<i class="fa fa-heart fa-solid fa-stack-1x h-behind"></i>`;
 	const iBookMark = `<i class="fa fa-bookmark fa-solid fa-stack-1x b-behind"></i>`;
+	let memberId = "";
 	
+	if("${loginMember}"){
+         memberId = "${loginMember.username}";			
+	}
+	
+	// 비동기 처리할 때 security 땜시 token 보내야 함. 
+	const csrfHeader = '${_csrf.headerName}';
+	const csrfToken = '${_csrf.token}';
+	const headers = {};
+	headers[csrfHeader] = csrfToken;
+	
+	const span = document.querySelector('#likesCnt');
 	
 	if(cnt==1) {
-		if(shape == 'heart'){
-			icon.parentElement.insertAdjacentHTML('beforeend', iHeart);
-		}
-		else {
-			icon.parentElement.insertAdjacentHTML('beforeend', iBookMark);
-		}
+		// 비었는데 눌렀는 경우 -> insert
+		$.ajax({
+				url : "${pageContext.request.contextPath}/dokoo/insertLikesWish.do",
+				data : {
+					shape : shape,
+					memberId : memberId,
+					dokooNo : dokooNo
+				},
+				headers,
+				method : "POST",
+				success(data) {
+					
+					if(shape=='heart'){
+						icon.parentElement.insertAdjacentHTML('beforeend', iHeart);
+						
+						// 좋아요 수 1 올려
+						span.innerText = Number(span.innerText) + 1;
+					}
+					else{
+						icon.parentElement.insertAdjacentHTML('beforeend', iBookMark);						
+					}
+					
+				},
+				error: console.log
+			});
 	}
 	else {
-		icon.parentElement.removeChild(icon.parentElement.lastElementChild);
+		// 채워졌었는데 해제한 경우 -> delete
+		$.ajax({
+			url : "${pageContext.request.contextPath}/dokoo/deleteLikesWish.do",
+			data : {
+				shape : shape,
+				memberId : memberId,
+				dokooNo : dokooNo
+			},
+			headers,
+			method : "POST",
+			success(data) {
+				
+				icon.parentElement.removeChild(icon.parentElement.lastElementChild);
+				
+				if(shape=="heart"){
+					// 좋아요 수 1 내려
+					span.innerText = Number(span.innerText) - 1;
+				}
+				
+			},
+			error: console.log
+		});
 	}
-	
-	
 
 }
 

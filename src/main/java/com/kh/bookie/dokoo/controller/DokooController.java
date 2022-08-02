@@ -168,5 +168,103 @@ public class DokooController {
 		}
 	}
 	
+	@PostMapping("/insertLikesWish.do")
+	public ResponseEntity<?> insertLikesWish(
+					@RequestParam String shape,
+					@RequestParam String memberId,
+					@RequestParam int dokooNo){
+		
+		log.debug("shape = {}", shape);
+		log.debug("memberId = {}", memberId);
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("memberId", memberId);
+		map.put("dokooNo", dokooNo);		
+		
+		try {
+			if(shape.equals("heart")) {
+				// 하트인경우 하트
+				int result = dokooService.insertDokooLike(map);
+			}
+			else {
+				int result = dokooService.insertDokooWishList(map);
+			}
+			
+		} catch(Exception e) {
+			log.error("북클럽 하트/찜 등록 오류", e);
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+			
+		}
+		return ResponseEntity.ok(null);
+	}
+	
+	@PostMapping("/deleteLikesWish.do")
+	public ResponseEntity<?> deleteLikesWish(
+					@RequestParam String shape,
+					@RequestParam String memberId,
+					@RequestParam int dokooNo){
+		
+		log.debug("shape = {}", shape);
+		log.debug("memberId = {}", memberId);
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("memberId", memberId);
+		map.put("dokooNo", dokooNo);		
+		
+		try {
+			if(shape.equals("heart")) {
+				// 하트인경우 하트
+				int result = dokooService.deleteDokooLike(map);
+			}
+			else {
+				int result = dokooService.deleteDokooWishList(map);
+			}
+			
+		} catch(Exception e) {
+			log.error("북클럽 하트/찜 등록 오류", e);
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();			
+		}
+		return ResponseEntity.ok(null);
+	}
+	
+	@PostMapping("/deleteDokoo.do")
+	public String deleteDokoo(@RequestParam int dokooNo) {
+		try {
+			log.debug("dokooNo = {}", dokooNo);
+			int result = dokooService.deleteDokoo(dokooNo);
+		} catch (Exception e) {
+			log.error("독후감 삭제 오류", e);
+		}
+		return "redirect:/dokoo/dokooList.do";
+	}
+	
+	@GetMapping("/updateDokoo.do")
+	public ModelAndView updateDokoo(@RequestParam int dokooNo, ModelAndView mav) {
+		try {
+			Dokoo dokoo = dokooService.selectOneDokoo(dokooNo);
+			log.debug("dokoo = {}", dokoo);
+			mav.addObject("dokoo", dokoo);
+			
+			mav.setViewName("dokoo/dokooUpdate");
+		} catch (Exception e) {
+			log.error("독후감 수정 폼 요청 오류", e);
+			mav.addObject("msg", "독후감 수정 폼 요청 오류");
+		}
+		return mav;
+	}
+	
+	@PostMapping("/updateDokoo.do")
+	public String updateDokoo(Dokoo dokoo, RedirectAttributes ra) {
+		try {
+			log.debug("dokoo = {}", dokoo);
+			int result = dokooService.updateDokoo(dokoo);
+		} catch (Exception e) {
+			log.error("독후감 수정 오류", e);
+			throw e;
+		}
+		return "redirect:/dokoo/dokooDetail.do?dokooNo=" + dokoo.getDokooNo();
+	}
 }
 

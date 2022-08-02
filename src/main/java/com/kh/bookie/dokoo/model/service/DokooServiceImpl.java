@@ -84,4 +84,34 @@ public class DokooServiceImpl implements DokooService {
 		dokooSnsList.add(dokooSnsBookmark); // 이 dokoo loginMember가 북마킹 했냐
 		return dokooSnsList;
 	}
+	
+	@Override
+	public int insertDokooLike(Map<String, Object> map) {
+		return dokooDao.insertDokooLike(map);
+	}
+	
+	@Override
+	public int insertDokooWishList(Map<String, Object> map) {
+		return dokooDao.insertDokooWishList(map);
+	}
+	
+	@Override
+	public int deleteDokooLike(Map<String, Object> map) {
+		return dokooDao.deleteDokooLike(map);
+	}
+	
+	@Override
+	public int deleteDokooWishList(Map<String, Object> map) {
+		return dokooDao.deleteDokooWishList(map);
+	}
+	
+	@Override
+	public int deleteDokoo(int dokooNo) {
+		return dokooDao.deleteDokoo(dokooNo);
+	}
+	
+	@Override
+	public int updateDokoo(Dokoo dokoo) {
+		return dokooDao.updateDokoo(dokoo);
+	}
 }

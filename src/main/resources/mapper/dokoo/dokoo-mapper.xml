@@ -112,7 +112,7 @@
 	</update>
 	
 	<select id="getDokooLikes" resultMap="dokooSnsMap">
-		select * from likes_dokoo where dokoo_no = #{dokooNo} and member_id = #{memberId}
+		select * from likes_dokoo where dokoo_no = #{dokooNo}
 	</select>
 	
 	<select id="getDokooBookmark" resultMap="dokooSnsMap">
@@ -123,4 +123,57 @@
 		<result column="dokoo_no" property="dokooNo"/>
 		<result column="member_id" property="memberId"/>
 	</resultMap>
+	
+	<insert id="insertDokooLike">
+		insert into
+			likes_dokoo
+		values(
+			#{dokooNo},
+			#{memberId})			
+	</insert>
+	
+	<insert id="insertDokooWishList">
+		insert into
+			wishlist_dokoo
+		values(
+			#{dokooNo},
+			#{memberId})	
+	</insert>
+	
+	<delete id="deleteDokooLike">
+		delete from
+			likes_dokoo
+		where 
+			dokoo_no = #{dokooNo}
+			and
+			member_id = #{memberId}
+	</delete>
+	
+	<delete id="deleteDokooWishList">
+		delete from
+			wishlist_dokoo
+		where 
+			dokoo_no = #{dokooNo}
+			and
+			member_id = #{memberId}
+	</delete>
+	
+	<delete id="deleteDokoo">
+		delete from
+			dokoo
+		where
+			dokoo_no = #{dokooNo}
+	</delete>
+	
+	<update id="updateDokoo">
+		update
+			dokoo
+		set
+			item_id = #{itemId},
+			title = #{title},
+			content = #{content},
+			is_opened = #{isOpened}
+		where
+			dokoo_no = #{dokooNo}
+	</update>
 </mapper>

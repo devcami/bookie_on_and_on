@@ -28,4 +28,16 @@ public interface DokooService {
 
 	List<DokooSns> getDokooSns(Map<String, Object> map);
 
+	int insertDokooLike(Map<String, Object> map);
+
+	int insertDokooWishList(Map<String, Object> map);
+
+	int deleteDokooLike(Map<String, Object> map);
+
+	int deleteDokooWishList(Map<String, Object> map);
+
+	int deleteDokoo(int dokooNo);
+
+	int updateDokoo(Dokoo dokoo);
+
 }
