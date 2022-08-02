@@ -10,6 +10,8 @@
 		from
 			dokoo d
 				left join member m on d.member_id = m.member_id
+		where
+			is_opened = 'O'
 		order by
 			d.enroll_date desc
 	</select>
@@ -57,4 +59,55 @@
 		<result column="created_at" property="createdAt"/>
 		<result column="content" property="content"/>
 	</resultMap>
+	
+	<select id="getReadBookList" resultType="book">
+		select distinct item_id, member_id from book_ing where member_id = #{memberId} and ended_at is not null
+	</select>
+	
+	<insert id="dokooEnroll">
+		insert into
+			dokoo
+		values(
+			seq_dokoo_no.nextval,
+			#{memberId},
+			#{itemId},
+			#{title},
+			#{content},
+			sysdate,
+			#{isOpened}
+		)
+		<selectKey keyProperty="dokooNo" resultType="_int" order="AFTER">
+			select
+				seq_dokoo_no.currval
+			from
+				dual
+		</selectKey>
+	</insert>
+	
+	<insert id="commentEnroll">
+		insert into
+			dokoo_comment
+		values(
+			seq_dokooc_no.nextval,
+			#{dokooNo},
+			#{nickname},
+			0,
+			default,
+			#{content})
+	</insert>
+	
+	<delete id="commentDel">
+		delete from 
+			dokoo_comment
+		where dokooc_no = #{dokooCNo}
+	</delete>
+	
+	<update id="commentUpdate">
+		update
+			dokoo_comment
+		set
+			content = #{content}
+		where
+			dokooc_no = #{dokooCNo}
+	</update>
 </mapper>

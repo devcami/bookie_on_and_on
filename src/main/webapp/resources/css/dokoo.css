@@ -152,7 +152,7 @@ section#dokoo-content #dokoo-container{
 	font-size: 20px;
 	background-color: #FFF;
 	text-align: center;
-	z-index:1;
+	z-index:2;
 	border-radius: 10px;
 }
 #title-header #title-p{
@@ -250,20 +250,37 @@ section#dokoo-content #dokoo-container{
 hr{
 	border-top: 2px solid #697C37 !important;
 }
-form[name=dokooCommentFrm] .input-group .form-control{
+/*** 프로필 ***/
+.profile{
+	position:relative;
+	width:40px;
+	height:40px;
+	border-radius: 50%;
+	background-color: #c7c7c7;
+}
+.profile i.fa-user-large.user-icon{
+	font-size: 26px;
+	position: relative;
+	left:7px;
+	top: 5px;
+	color: #FFF;
+	text-shadow: 0 0 3px #5454544a;
+}
+
+.input-group .form-control{
 	border-radius: 0.4rem;
 	border-top-right-radius: 0;
     border-bottom-right-radius: 0;
 	border: none;
 }
-form[name=dokooCommentFrm] .input-group .input-group-append .btn{
-	border-radius: 0.4rem;
+.input-group .input-group-append .btn{
+	border-radius: 0.4rem;n
 	border-top-left-radius: 0;
     border-bottom-left-radius: 0;
 	background-color: #FE9801;
 	color: #FFF;
 }
-form[name=dokooCommentFrm] .input-group .input-group-append .btn:hover{
+.input-group .input-group-append .btn:hover{
 	background-color:#FFF;  
 	color: #ff7614;
     text-shadow: 1px 1px 2px #ffda5f;
@@ -272,21 +289,39 @@ form[name=dokooCommentFrm] .input-group .input-group-append .btn:hover{
 #dokoo-content #comment-container{
 	margin: 30px 10px;
 }
-#dokoo-content #comment-container #comment-one{
-	height: 80px;
+#dokoo-content #comment-container .comment-one{
 	border-radius: 20px;
 	border: none;
 	
 }
-#dokoo-content #comment-container #comment-nickname{
+#dokoo-content #comment-container .comment-nickname{
 	font-size: 24px;
 	color: #FE9801;
+	min-width: 60px;
 }
-#dokoo-content #comment-container #comment-nickname span{
+#dokoo-content #comment-container span.text-dark{
 	margin-left: 30px;
 	font-size: 22px;
-	
+	min-width: 325px;
+	max-width: 325px;
 }
+div.comment-div{
+	width: 625px;
+}
+div.comment-div span.text-secondary{
+	width: 130px;
+	float: right;
+}
+
+form[name=commentUpdateFrm]{
+	display: inline-block;
+	width: 400px;
+}
+form[name=commentUpdateFrm] input{
+	display: inline-block;
+	width: 300px;
+}
+
 .link-grey { color: #aaa; } .link-grey:hover { color: #FE9801; }
 
 

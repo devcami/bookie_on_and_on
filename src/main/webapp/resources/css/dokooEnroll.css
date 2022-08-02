@@ -1,0 +1,175 @@
+@charset "UTF-8";
+@charset "UTF-8";
+section#section	{
+	margin: 0 auto;
+	padding: 20px 71px 20px 95px;
+	min-height:600px;
+	border-radius: 5px;
+}
+
+#clubBook-container {
+	background-image: url(/bookie/resources/images/boardBack.png) !important;
+	background-repeat: no-repeat;
+    background-position: top;
+    background-attachment: scroll;
+    background-size: 85% 94%;
+}
+
+form {
+	margin-right: 25px;
+	margin-bottom: 0 !important;
+}
+section label {
+	margin-bottom: 0 !important;
+	font-size: x-large;
+}
+input:focus-visible {
+	outline: none !important;
+}
+input:not(input[type=file]) {
+	border: none;
+    height: 40px;
+    font-size: large !important;
+    padding-left: 10px;
+}
+
+/***** 테이블 위 제목과 추가 버튼 *****/
+section#content #top-title {
+    margin-top: 70px;
+    margin-bottom: 60px;
+    padding-bottom: 20px;
+    border-bottom: 2px dashed grey;
+}
+#top-title h1 {
+	font-size: xx-large !important;
+}
+/****** 작성자 *******/
+#nickname-div {
+	display: flex;
+    flex-direction: column;
+}
+
+/****** 책등록 ********/
+/* 5 */
+.custom-btn {
+	margin: 20px;
+	width: 130px;
+	height: 40px;
+	color: #fff;
+	border-radius: 5px;
+	padding: 10px 25px;
+	background: transparent;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	position: relative;
+	display: inline-block;
+	box-shadow:inset 
+			2px 2px 2px 0px rgba(255,255,255,.5),
+			7px 7px 20px 0px rgba(0,0,0,.1),
+			4px 4px 5px 0px rgba(0,0,0,.1);
+	outline: none;
+}
+
+.btn-5 {
+	width: 130px;
+	height: 40px;
+	line-height: 42px;
+	padding: 0;
+	border: none;
+    background: linear-gradient(0deg, #FE9801 0%, #ff7614 100%);
+}
+.btn-5:hover {
+	color: #FE9801;
+	background: transparent;
+ 	box-shadow:none;
+}
+.btn-5:before,
+.btn-5:after{
+	content:'';
+	position:absolute;
+	top:0;
+	right:0;
+	height:2px;
+	width:0;
+	background: #FE9801;
+	box-shadow:
+	 -1px -1px 5px 0px #fff,
+	 7px 7px 20px 0px #0003,
+	 4px 4px 5px 0px #0002;
+	transition:400ms ease all;
+}
+.btn-5:after{
+	right:inherit;
+	top:inherit;
+	left:0;
+	bottom:0;
+}
+.btn-5:hover:before,
+.btn-5:hover:after{
+	width:100%;
+	transition:800ms ease all;
+}
+
+
+/****** 제목 ********/
+#title-div {
+	display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+/********* 공개여부 **********/
+.open{
+	font-size : 35px;
+	color : #FE9801;
+}
+#open-div {
+	display: flex;
+    margin: 10px 0;
+    align-items: center;
+}
+
+
+/********* 썸머노트 **********/
+
+#content-div {
+	margin-top: 20px;
+	margin-bottom: 20px;
+	font-size: 20px !important;
+}
+.note-editor {
+	
+}
+.note-toolbar {
+	background-color: rgba(0,0,0,.03) !important;
+}
+
+.note-editor .note-editable p{
+	margin: 0 !important;
+}
+.note-table, .note-insert {
+	display: none !important;
+}
+
+
+/****** 버튼 *********/
+#btn-div {
+	display: flex;
+    justify-content: flex-end;
+    margin-bottom: 100px;
+}
+#btn-div button {
+  background-color: #FE9801;
+  border: none;
+  border-radius: 0.3rem;
+  padding: 4px;
+  color: white;
+  cursor: pointer;
+  width: 100%
+}
+
+#btn-div button:hover {
+	box-shadow: 4px 4px 6px 1px rgb(0 0 0 / 20%);
+}
+
