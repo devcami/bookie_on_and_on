@@ -7,8 +7,8 @@ section#section	{
 	border-radius: 5px;
 }
 
-#clubBook-container {
-	background-image: url(/bookie/resources/images/boardBack.png) !important;
+#dokoo-enroll-container {
+	background-image: url(/bookie/resources/images/dokooBack.png) !important;
 	background-repeat: no-repeat;
     background-position: top;
     background-attachment: scroll;
@@ -108,6 +108,11 @@ section#content #top-title {
 .btn-5:hover:after{
 	width:100%;
 	transition:800ms ease all;
+}
+
+li.list-group-item:hover{
+	background-color : #cbda469d;
+	cursor: pointer;
 }
 
 
