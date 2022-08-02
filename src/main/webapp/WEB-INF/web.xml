@@ -26,7 +26,7 @@
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
 		<init-param>
 			<param-name>contextConfigLocation</param-name>
-			<param-value>/WEB-INF/spring/appServlet/servlet-context.xml</param-value>
+			<param-value>/WEB-INF/spring/appServlet/*-context.xml</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
@@ -54,6 +54,20 @@
         <filter-name>encodingFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
+    
+    
+    <!-- 파일 전송 관련 -->
+    <filter>
+     <display-name>springMultipartFilter</display-name>
+     <filter-name>springMultipartFilter</filter-name>
+     <filter-class>org.springframework.web.multipart.support.MultipartFilter</filter-class>
+  </filter>
+  <filter-mapping>
+     <filter-name>springMultipartFilter</filter-name>
+     <url-pattern>/*</url-pattern>
+  </filter-mapping>
+    
+    
     
     <!-- #9.3. Security Filter 등록 -->
     <!-- 여기를 주석하면 바로~ 사용하지 않을 수 있음 -->

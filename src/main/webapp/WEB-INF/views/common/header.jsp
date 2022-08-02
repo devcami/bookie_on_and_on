@@ -20,8 +20,12 @@
 <!-- bootstrap css -->
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
 
-
+<!-- 썸머노트 -->
+ <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
+ <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
 <script src="https://kit.fontawesome.com/1c396dc14f.js" crossorigin="anonymous"></script>
+
+
 
 <!-- 글꼴 -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -115,6 +119,19 @@
                     </li>
                     <li class="nav-item">
 			    		<!-- 내서재 링크 /mypage/로 시작 -->
+						<%-- 
+						<sec:authorize access="hasRole('ROLE_ADMIN')"> 
+                    	<a class="nav-link" href="${pageContext.request.contextPath}/admin/adminPage.do">
+			    			<c:if test="${fn:contains(uri, '/bookie/WEB-INF/views/mypage')}">
+                    		<img src="${pageContext.request.contextPath}/resources/images/icon/i_adminpage_on.png" alt="mypageicon" />관리자
+			    			</c:if>
+			    			<c:if test="${!fn:contains(uri, '/bookie/WEB-INF/views/mypage/')}">
+                    		<img src="${pageContext.request.contextPath}/resources/images/icon/i_adminpage.png" alt="mypageicon" />관리자
+			    			</c:if>
+                    	</a>
+                    	</sec:authorize> 
+                    	<sec:authorize access="hasRole('ROLE_USER')"> 
+                    	--%>
                     	<a class="nav-link" href="${pageContext.request.contextPath}/mypage/mypage.do">
 			    			<c:if test="${fn:contains(uri, '/bookie/WEB-INF/views/mypage')}">
                     		<img src="${pageContext.request.contextPath}/resources/images/icon/i_mypage_on.png" alt="mypageicon" />내서재
@@ -123,6 +140,7 @@
                     		<img src="${pageContext.request.contextPath}/resources/images/icon/i_mypage.png" alt="mypageicon" />내서재
 			    			</c:if>
                     	</a>
+                    	<%-- </sec:authorize> --%>
                     </li>
 			    </ul>
 			 </div>

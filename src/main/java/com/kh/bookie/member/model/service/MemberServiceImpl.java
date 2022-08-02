@@ -39,10 +39,14 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public int updateMemberRole(String memberId, List<String> authorities) {
-		// TODO Auto-generated method stub
-		return 0;
+
+	public int deleteMemberProfile(String nickname) {
+		return memberDao.deleteMemberProfile(nickname);
 	}
 
+	@Override
+	public int miniUpdateMember(Member logingMember) {
+		return memberDao.miniUpdateMember(logingMember);
+	}
 
 }

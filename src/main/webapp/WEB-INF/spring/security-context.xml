@@ -21,7 +21,31 @@
 		<intercept-url pattern="/member/checkIdDuplicate.do" access="isAnonymous()"/>
 		
 
-		<!-- <intercept-url pattern="/**" access="isAuthenticated()"/> -->
+		<!--  책검색, 등록 -->
+		<intercept-url pattern="/search/bookEnroll.do" access="isAuthenticated()"/>
+		<intercept-url pattern="/search/**" access="permitAll"/>
+		
+		
+		<!-- 피드 -->
+		<intercept-url pattern="/pheed/**" access="isAuthenticated()"/>
+		
+		<!-- 독후감 -->
+		<intercept-url pattern="/dokoo/**" access="isAuthenticated()"/>
+		
+		<!-- 북클럽 -->
+		<intercept-url pattern="/club/enrollClub.do" access="hasRole('ADMIN')" />
+		<intercept-url pattern="/club/clubList.do" access="permitAll" />
+		<intercept-url pattern="/club/clubAnn.do" access="permitAll" />
+		<intercept-url pattern="/club/clubBoardEnroll.do" access="isAuthenticated()" />
+      	<intercept-url pattern="/club/clubBoardDetail.do" access="isAuthenticated()" />
+		
+		<!-- 마이페이지 -->
+		<intercept-url pattern="/mypage/**" access="isAuthenticated()"/>
+		<intercept-url pattern="/mypage/adminPage.do" access="hasRole('ADMIN')" />
+		
+		
+		
+
 		
 		<!--
 			login-page GET방식 폼 페이지 요청 (핸들러 작성 필요)

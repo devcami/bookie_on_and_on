@@ -14,7 +14,7 @@
 		<h1>북클럽 등록</h1>	
 		<!-- <button id="btn-enroll" class="mybtn">등 록</button> -->	  
 	</div>
-	<form name="clubEnrollFrm" >
+	<form:form name="clubEnrollFrm" >
 		<div id="intro-div" class="divs">
 		  <div class="form-group">
 		  	<i class="fa-solid fa-tag"></i>
@@ -148,7 +148,7 @@
 		<div id="book-div" class="divs">
 			<p id="books-p"><strong>읽는 책</strong></p>
 			<small id="books-small" class="form-text text-muted">등록 가능한 책은 최대 4권 입니다.</small>
-			<p id="mLabel" style="font-size: medium; margin-top: 10px !important;">📋 기본정보를 먼저 입력해주세요!</p>
+			<p id="bLabel" style="font-size: medium; margin-top: 10px !important;">📋 기본정보를 먼저 입력해주세요!</p>
 			
 			<div id="bookWrapper">
 			<!--
@@ -212,7 +212,7 @@
 		</div>
 
 		
-	</form>
+	</form:form>
 </section>
 	
 	<!-- 책 추가 Modal -->
@@ -677,7 +677,8 @@ const delBook = (isbn) => {
 
 const modalDeleteBook = (e) => {
 	
-	// console.log("삭제전", booksDiv);
+//	console.log("삭제전",booksDiv);
+//	console.log("삭제전",selectedBooks);
 	
 	const isbn = e.value;
 	const container = document.querySelector("#modal-header-bottom");
@@ -696,12 +697,22 @@ const modalDeleteBook = (e) => {
 	if(bDiv.length == 1){
 		$(divId).remove();
 	}
+	
+	const mdivId = "#m" + isbn;
+	const mDiv = $('#missionContainer').children(mdivId);
+	
+	// 바깥 미션 있으면 삭제해라
+	if(mDiv.length == 1){
+		$(mdivId).remove();
+	}
 
 	// 배열하고 객체에서 싹 지워
 	delBook(isbn);
 	
 	
-	// console.log("삭제후",booksDiv);
+//	console.log("삭제후",booksDiv);
+//	console.log("삭제후",selectedBooks);
+	
 };
 
 
@@ -716,7 +727,7 @@ const ckSelectedBook = (isbn, divId) => {
 			  div.firstElementChild.classList.add('noclick');
 			  div.firstElementChild.disabled = 'disabled';
 		  }
-		}
+	}
 }
 
 
@@ -800,8 +811,11 @@ const enrollBook = () => {
 		const divId = "m" + isbn;
 		
 		if(document.getElementById(divId) == null) {
-			
 			document.querySelector('#mLabel').style.display = 'none';
+			
+			// 기본정보 다 입력했는지 확인후
+			document.querySelector('#bLabel').style.display = 'none';
+			
 			const headId = "head" + isbn;
 			const collapseId = "col" + isbn;
 			
@@ -984,7 +998,11 @@ const enrollMission = () => {
 	// 모든 칸이 입력됐으니까 변수 받아오고
 	   	const mName = $('#mName').val();
 		mEndDate = $('#mEndDate').val();
-		const mContent = $('#mContent').val();
+		let mContent = $('#mContent').val();
+
+		mContent = mContent.replace(/\"/g, '&quot;');
+		
+		
 
 	if(status == 'enroll'){
 
@@ -1105,6 +1123,8 @@ const deleteMission = (e) => {
 	
 }
 
+
+// 폼이 제출되기 전에!! 
 const frmSubmit = () => {
 	
 	const frm = document.clubEnrollFrm;
@@ -1120,8 +1140,26 @@ const frmSubmit = () => {
 		additionalInfo.insertAdjacentHTML('beforeend', mInput);
 	});
 
-
-	frm.action = `${pageContext.request.contextPath}/club/enrollClub.do`
+	const divs = Object.values(booksDiv);
+	divs.forEach((div) => {
+		const bookName = $(div).find('.book-title')[0].innerText;
+		console.log(bookName);
+		
+		const nameInput = `
+			<input type="hidden" name="bookName" value="\${bookName}" />
+		`;
+		
+		additionalInfo.insertAdjacentHTML('beforeend', nameInput);
+		
+	});
+	
+	
+	// 따옴표 검사해서 바꿔치기해
+	$('#title').val().replace(/\"/g, '&quot;');
+	$('#content').val().replace(/\"/g, '&quot;');
+	
+	
+ 	frm.action = `${pageContext.request.contextPath}/club/enrollClub.do`
 	frm.method = "POST";
 	frm.submit();
 	

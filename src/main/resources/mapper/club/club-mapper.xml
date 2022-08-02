@@ -30,17 +30,23 @@
 		</selectKey>
 	</insert>
 	
+	
 	<select id="selectClubList" resultMap="clubListCollectionMap">
 		select
 		    c.*,
-		    b.*,
-		    b.club_no bclub_no,
 		    (select count(*) from my_club where club_no = c.club_no) current_nop,
 		    (select count(*) from likes_club where club_no = c.club_no) likes_Cnt
 		from
-		    club c join club_book b on c.club_no = b.club_no
+		    club c
+		where
+			recruit_end > sysdate
 		order by
-		    recruit_start desc
+			<if test="sortType == null">
+			    recruit_start desc	
+			</if>
+			<if test="sortType != null">
+				recruit_end
+			</if>
 	</select>
 	<resultMap type="club" id="clubListCollectionMap">
 		<id column="club_no" property="clubNo"/>
@@ -58,14 +64,22 @@
 		<result column="likes_cnt" property="likesCnt"/>
 		<result column="mission_cnt" property="missionCnt"/>
 		<result column="book_Count" property="bookCount"/>
-		<collection property="bookList" javaType="arrayList" ofType="clubBook">
-			<id column="item_id" property="itemId"/>
-			<id column="bclub_no" property="clubNo"/>
-			<result column="img_src" property="imgSrc"/>
-		</collection>
 	</resultMap>
 	
-	
+	<select id="selectClubBook" resultMap="selectClubBookResultMap">
+		select
+			*
+		from 
+			club_book
+		where 
+			club_no = #{clubNo}	
+	</select>
+	<resultMap type="clubBook" id="selectClubBookResultMap">
+         <id column="item_id" property="itemId"/>
+         <id column="club_no" property="clubNo"/>
+         <result column="img_src" property="imgSrc"/>
+         <result column="book_title" property="bookTitle"/>
+	</resultMap>
 	
 	
 	
@@ -102,6 +116,7 @@
 	         <id column="item_id" property="itemId"/>
 	         <id column="bclub_no" property="clubNo"/>
 	         <result column="img_src" property="imgSrc"/>
+	         <result column="book_title" property="bookTitle"/>
 	      </collection>
 	</resultMap>
 	
@@ -121,6 +136,7 @@
 			<id column="item_id" property="itemId"/>
 			<id column="club_no" property="clubNo"/>
 			<result column="img_src" property="imgSrc"/>
+			<result column="book_title" property="bookTitle"/>
 		<collection property="missionList" javaType="arrayList" ofType="mission">
 			<id column="mission_no" property="missionNo"/>
 			<result column="mclub_no" property="clubNo"/>
@@ -128,7 +144,71 @@
 			<result column="m_content" property="content"/>
 			<result column="point" property="point"/>
 			<result column="m_Item_Id" property="itemId"/>
-			<result column="m_endDate" property="mEndDate"/>
+			<result column="m_endDate" property="mendDate"/>
+		</collection>
+	</resultMap>
+	
+	<select id="getMissions" resultMap="selectBookMissionMap">
+		select 
+			*
+		from
+			mission
+		where 
+			club_no = #{clubNo} and m_item_id = #{itemId}
+	</select>
+	<resultMap id="selectBookMissionMap" type="mission">
+		<id column="mission_no" property="missionNo"/>
+		<result column="club_no" property="clubNo"/>
+		<result column="m_title" property="title"/>
+		<result column="m_content" property="content"/>
+		<result column="point" property="point"/>
+		<result column="m_Item_Id" property="itemId"/>
+		<result column="m_endDate" property="mendDate"/>
+	</resultMap>
+	
+	
+	<insert id="insertClubBoard">
+		insert into
+			club_chat
+		values (
+			seq_club_chat_no.nextval,
+			#{nickname},
+			#{clubNo},
+			#{title},
+			#{content},
+			default)
+		<selectKey keyProperty="chatNo" resultType="_int" order="AFTER">
+			select
+				seq_club_chat_no.currval
+			from
+				dual
+		</selectKey>
+	</insert>
+	
+	<select id="selectOneBoardCollection" resultMap="clubBoardCollectionMap">
+		select
+			cc.*,
+			ca.*,
+			ca.chat_no ca_chat_no
+		from
+			club_chat cc 
+				join chat_attachment ca on cc.chat_no = ca.chat_no  
+		where
+			cc.chat_no = #{chatNo}
+	</select>
+	<resultMap type="chat" id="clubBoardCollectionMap">
+		<id column="chat_no" property="chatNo"/>
+		<result column="nickname" property="nickname"/>
+		<result column="club_no" property="clubNo"/>
+		<result column="title" property="title"/>
+		<result column="content" property="content"/>
+		<result column="enroll_date" property="enrollDate"/>
+		<collection property="chatAttachments" javaType="arraylist" ofType="chatAttachment">
+			<id column="attach_no" property="attachNo" />
+			<result column="ca_chat_no" property="chatNo"/>
+			<result column="original_filename" property="originalFilename"/>
+			<result column="renamed_filename" property="renamedFilename"/>
+			<result column="created_at" property="createdAt"/>
 		</collection>
 	</resultMap>
 	

@@ -11,7 +11,7 @@ body {
 	margin:0 auto;
 	width: 800px;
 	background-color: #ffc36a;
-	
+	padding: 0 !important;
 }
 
 /********** 전체컨테이너 **********/

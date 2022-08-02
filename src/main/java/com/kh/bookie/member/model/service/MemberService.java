@@ -20,16 +20,13 @@ public interface MemberService {
 
 	int memberEnroll(Member member);
 
+
+	int deleteMemberProfile(String nickname);
+
+	int miniUpdateMember(Member logingMember);
+
 	Member selectOneMemberByTel(String telNum);
 
-
-
-
-	
-
-	
-
-	
 
 
 }

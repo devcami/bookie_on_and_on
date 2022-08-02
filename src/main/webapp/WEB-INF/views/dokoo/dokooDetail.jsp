@@ -9,6 +9,7 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param value="독후감" name="title"/>
 </jsp:include>
+<sec:authentication property="principal" var="loginMember"/>
 <div id="title-header" class="" style="display:none">
 	<p id="title-p">
 		<i class="fa-solid fa-angle-left" onclick="location.href='${pageContext.request.contextPath}/dokoo/dokooList.do'"></i>
@@ -64,51 +65,62 @@
 		</div>
 		
 		<!-- 댓글작성폼 -->
-		<form name="dokooCommentFrm">
-			<div class="input-group p-2 mb-2">
-				<input type="hidden" class="form-control" name="memberId" value="loginMemberId">
-				<input type="text" class="form-control" name="content" placeholder="댓글을 작성해주세요." aria-label="댓글을 작성해주세요." aria-describedby="button-comment">
-				<div class="input-group-append">
-					<button class="btn" type="button" id="btn-enroll-comment" onclick="enrollComment();">등록</button>
-				</div>
-	    	</div>
-		</form>
+		<div class="input-group p-2 mb-2">
+			<input type="text" class="form-control" name="content" id="comment-content" placeholder="댓글을 작성해주세요." aria-label="댓글을 작성해주세요." aria-describedby="button-comment">
+			<div class="input-group-append">
+				<button class="btn" type="button" id="btn-enroll-comment" onclick="enrollComment();">등록</button>
+			</div>
+    	</div>
 		
 		<!-- 댓글 확인 -->
 		<c:forEach items="${dokoo.dokooComments}" var="comment" varStatus="vs">
-			<div class="card m-2 shadow" id="comment-one">
-				<div class="card-body p-3">
+			<!-- 일반 댓글 -->
+			<c:if test="${comment.commentRef == 0}"> 
+			<div class="card shadow comment-one mb-2" id="comment${vs.count}">
+				<div class="card-body">
 					<div class="d-flex flex-start">
+						<c:if test="${loginMember.renamedFilename == null}">
+						<div class="d-inline profile">
+							<i class="fa-solid fa-user-large user-icon"></i>
+						</div>
+						</c:if>
+						<c:if test="${loginMember.renamedFilename != null}">
 						<img class="rounded-circle shadow-1-strong m-1"
-							src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(26).webp"
+							src="${pageContext.request.contextPath}/resources/upload/profile/${loginMember.renamedFilename}"
 							alt="avatar" width="40" height="40" />
-						<div class="w-100">
+						</c:if>
+						<div class="">
 							<div
-								class="d-flex justify-content-between align-items-center m-1">
-								<h6 class="ml-2 mb-0" id="comment-nickname">
-									${comment.nickname} <span class="text-dark">${comment.content}</span>
+								class="m-1 comment-div d-flex justify-content-between  align-items-start" >
+								<h6 class="ml-2 mb-0 comment-nickname d-inline">
+									${comment.nickname} 
 								</h6>
+								<span class="text-dark" id="comment-content${vs.count}">${comment.content}</span>
 								<fmt:parseDate value="${comment.createdAt}" pattern="yyyy-MM-dd'T'HH:mm" var="createdAt"/>
-								<p class="mb-0 text-secondary">
+								<span class="mb-0 text-secondary">
 									<fmt:formatDate value="${createdAt}" pattern="yyyy/MM/dd HH:mm"/>
-								</p>
+								</span>
 							</div>
-							<div class="text-right m-1">
-								<p class="small mb-0" style="color: #aaa;">
-									<a href="#!" class="link-grey">삭제</a> • 
-									<a href="#!" class="link-grey">답글</a>
+							<div class="text-right mr-2">
+								<p class="small mb-0 pr-2" style="color: #aaa;">
+									<a href="#" class="link-grey" onclick="commentDel(this);" data-dokoocno="${comment.dokooCNo}">삭제</a> • 
+									<c:if test="${comment.nickname == loginMember.nickname}">
+									<a href="#!" class="link-grey" onclick="commentUpdate(this);" data-dokoocno="${comment.dokooCNo}" data-vs="${vs.count}">수정</a> • 
+									</c:if>
+									<a href="#!" class="link-grey" onclick="commentRef(this);" data-dokoocno="${comment.dokooCNo}">답글</a>
 								</p>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-
-
+			</c:if>
+			<!-- 답글 -->
+			<c:if test="${comment.commentRef != 0}">
+			</c:if>
 		</c:forEach>
 		
 	</div>
-	
 </section>
 <script>
 let header = document.querySelector("#header-container")
@@ -152,6 +164,99 @@ window.addEventListener('load', () => {
 	});
 });
 
+<%-- 댓글 등록 비동기 --%>
+const enrollComment = () => {
+	const commentVal = document.querySelector('#comment-content').value;
+	const csrfHeader = '${_csrf.headerName}';
+	const csrfToken = '${_csrf.token}';
+	const headers = {};
+	headers[csrfHeader] = csrfToken; // 전송하는 헤더에 추가하여 전송 
+	
+	$.ajax({
+		url : '${pageContext.request.contextPath}/dokoo/commentEnroll.do',
+		method : 'post',
+		headers,
+		data : {
+			nickname : '${loginMember.nickname}',
+			dokooNo : '${param.dokooNo}',
+			content : commentVal
+		},
+		success(resp){
+			console.log(resp);
+			location.reload();
+		},
+		error:console.log
+	});
+};
+
+<%-- 댓글 삭제 --%>
+const commentDel = (e) => {
+	console.log(e.dataset.dokoocno);	
+	
+	const csrfHeader = '${_csrf.headerName}';
+	const csrfToken = '${_csrf.token}';
+	const headers = {};
+	headers[csrfHeader] = csrfToken; // 전송하는 헤더에 추가하여 전송 
+	
+	if(confirm('댓글을 삭제하시겠습니까?')){
+		$.ajax({
+			url : '${pageContext.request.contextPath}/dokoo/commentDel.do',
+			method : 'post',
+			headers,
+			data : {
+				dokooCNo : e.dataset.dokoocno,
+			},
+			success(resp){
+				location.reload();
+			},
+			error:console.log
+		});
+	}
+};
+
+<%-- 댓글 수정 --%>
+let originalComment;
+const commentUpdate = (e) => {
+	const id = '#comment-content' + e.dataset.vs;
+	//console.log(id);
+	const dokooCNo = e.dataset.dokoocno;
+	const dokooNo = '${param.dokooNo}';
+	//console.log(dokoocno);
+	const content = document.querySelector(id);
+	
+	if(e.innerText == '수정'){
+		const contentInnerText = content.innerText;
+		//console.log(contentInnerText);
+		originalComment = contentInnerText;
+		//console.log("e.innerText == 수정", e.innerText == '수정');
+		const input = `<form:form name="commentUpdateFrm" action="${pageContext.request.contextPath}/dokoo/commentUpdate.do" method="post" class="m-0">
+							<input type="text" name="content" id="commentText" value="\${content.innerText}"/>
+							<input type="hidden" name="dokooCNo" value="\${dokooCNo}"/>
+							<input type="hidden" name="dokooNo" value="\${dokooNo}"/>
+							<button class="btn" type="submit" id="btn-update-comment">수정</button>
+						</form:form>`;
+		content.innerHTML = "";
+		content.insertAdjacentHTML('beforeend', input);
+		
+		e.innerText="취소";	
+	}
+	else{
+		//console.log(content);
+		content.innerHTML = originalComment;
+		e.innerText = "수정";	
+	}
+	const p = document.querySelector(".text-right.mr-2");
+	p.style.position = 'relative';
+	p.style.bottom = '7px';
+};
+
+<%-- 답글 --%>
+const commentRef = (e) => {
+	const dokooCNo = e.dataset.dokoocno;
+	const div = ``;
+};
+
+
 </script>
 <%-- 신고창 모달 --%>
 <div class="modal fade" id="reportModal" tabindex="-1" role="dialog" aria-labelledby="reportModalLabel" aria-hidden="true">
@@ -164,10 +269,10 @@ window.addEventListener('load', () => {
         </button>
       </div>
       <div class="modal-body">
-      	<form name="dokooReportFrm" method="post" action="${pageContext.request.contextPath}/pheed/pheedReport.do">
+      	<form:form name="dokooReportFrm" method="post" action="${pageContext.request.contextPath}/pheed/pheedReport.do">
           <div class="form-group">
             <label for="recipient-name" class="col-form-label">작성자</label>
-            <input type="text" class="form-control" id="memberId" value="로긴멤버아이디" readonly>
+            <input type="text" class="form-control" id="memberId" value="${loginMember.memberId}" readonly>
             <input type="hidden" class="form-control" id="category" value="dokoo"/>          
           </div>
           <div class="form-group">
@@ -180,7 +285,7 @@ window.addEventListener('load', () => {
 			</div>
             <textarea class="form-control" id="report-content" placeholder="신고 내용을 작성해주세요."></textarea>
           </div>
-        </form>
+        </form:form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>

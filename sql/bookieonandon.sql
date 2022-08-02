@@ -61,6 +61,7 @@ create table book(
     constraint fk_book_member_id foreign key(member_id) references member(member_id) on delete cascade,
     constraint ck_book_score check (score between 1 and 10)
 );
+alter table book add constraint ck_book_score check (score between 0 and 10);
 
 -- 6. book_ing
 create table book_ing(
@@ -104,7 +105,6 @@ create table dokoo_comment(
 
 create sequence seq_dokooc_no;
 
-
 -- 9. pheed - 피드 테이블
 create table pheed(
     pheed_no number not null,
@@ -117,6 +117,8 @@ create table pheed(
     constraint fk_pheed_member_id foreign key(member_id) references member(member_id) on delete cascade,
     constraint ck_pheed_is_opened check(is_opened in ('O', 'F', 'C'))
 );
+
+select * from pheed;
 
 create sequence seq_pheed_no;
 
@@ -174,6 +176,8 @@ create table club_book (
     constraint pk_item_id primary key(item_id, club_no)
 );
 
+select * from club_book;
+
 -- 14. mission
 create table mission (
     club_no      number not null, 
@@ -216,10 +220,13 @@ create table club_chat(
     club_no      number not null,
     title          varchar2(1500) not null,
     content      varchar2(4000) not null,
+    enroll_date date default sysdate,
     constraint pk_club_chat_no primary key(chat_no),
     constraint fk_club_chat_club_no foreign key(club_no) references club(club_no) on delete cascade
 );
 
+alter table club_chat add enroll_date date default sysdate;
+commit;
 create sequence seq_club_chat_no;
 
 -- 18. chat_attachment
@@ -344,6 +351,31 @@ create table persistent_logins (
     last_used timestamp not null);
 select * from persistent_logins;
 
+select *
+from book b right join
+(select
+    ing_no, item_id, member_id, started_at, ended_at, add_date
+    , row_number() over(order by add_date desc) rnum
+from
+    book_ing
+where 
+    member_id = 'tmddbs' and item_id = '9788932474755') 
+    i on b.member_id = i.member_id
+where
+    b.member_id = 'tmddbs' and b.item_id = '9788932474755' and i.rnum = 1;
+    
+select 
+    b.*,
+    i.started_at started_at,
+    i.ended_at ended_at,
+    i.ing_no ing_no
+from 
+    book b join 
+            (select ing_no, item_id, member_id, started_at, ended_at, add_date, row_number() over(order by i2.add_date desc) rnum from book_ing i2) i
+        on b.member_id = i.member_id and b.item_id = i.item_id
+where b.member_id = 'tmddbs' and b.item_id = '9788932474755'; and i.rownum = 1;
+
+select * from book_ing where member_id = 'tmddbs' and item_id = '9788932474755';
 
 select
     *
@@ -354,50 +386,11 @@ from
 where
     m.member_id = 'tmddbs';
 
-select 
-    * 
-from 
-    pheed p left join pheed_attachment a
-        on p.pheed_no = a.pheed_no
-order by 1 desc ;
-select * from pheed_attachment;
-select * from pheed;
+
+select distinct item_id, member_id from book_ing where member_id = 'tmddbs' and ended_at is not null;
+select * from dokoo;
 
 -- sample data
-
-insert into pheed values(seq_pheed_no.nextval, 'honggd1', '9791197912412', '23', '피드피드테스트팔로워테스트','O');
-insert into pheed values(seq_pheed_no.nextval, 'honggd', '9791166890871', '55', '피드피드테스트2','F');
-
-insert into pheed_attachment values(seq_pheed_attachment_no.nextval, '1', 'attach1.jpg', 'attach1.jpg', sysdate);
-insert into pheed_attachment values(seq_pheed_attachment_no.nextval, '2', 'attach2.jpg', 'attach2.jpg', sysdate);
-
-
-insert into dokoo values(seq_dokoo_no.nextval, 'honggd1', '9791164064410', '독후감테스트', '내용은 몇글자가 들어가야될까요 안녕하세요  뭐요 뭘봐 견뎌 홍길동동주렁주렁', sysdate,'O');
-insert into dokoo values(seq_dokoo_no.nextval, 'honggd', '9791191824001', '지구어쩌구온실', '테스트입니다. 내용은 몇글자가 들어가야될까요 안녕하세요  뭐요 뭘봐 견뎌 홍길동동주렁주렁', sysdate,'O');
-insert into dokoo values(seq_dokoo_no.nextval, 'honggd', '9791191824001', '테스트 페이지바 ! 1', ' 독후감을 써보자 테스트입니다. 내용은 몇글자가 들어가야될까요 안녕하세요  뭐요 뭘봐 견뎌 홍길동동주렁주렁', sysdate,'O');
-insert into dokoo values(seq_dokoo_no.nextval, 'honggd', '9791191824001', '똑같은 책 페이지바 2', ' 독후감을 써보자 테스트입니다. 내용은 몇글자가 들어가야될까요 안녕하세요  뭐요 뭘봐 견뎌 홍길동동주렁주렁', sysdate,'O');
-insert into dokoo values(seq_dokoo_no.nextval, 'honggd', '9791191824001', '홍길동동주렁주렁', ' 독후감을 써보자 테스트입니다. 내용은 몇글자가 들어가야될까요 안녕하세요  뭐요 뭘봐 견뎌 홍길동동주렁주렁', sysdate,'O');
-insert into dokoo values(seq_dokoo_no.nextval, 'honggd', '9791191824001', '홍홍길길동동주주렁렁주주렁렁', ' 독후감을 써보자 테스트입니다. 내용은 몇글자가 들어가야될까요 안녕하세요  뭐요 뭘봐 견뎌 홍길동동주렁주렁', sysdate,'O');
-insert into dokoo values(seq_dokoo_no.nextval, 'sinsa', '9791191824001', '다음페이지에있는놈을 봐주세요', ' 독후감을 써보자 테스트입니다. 내용은 몇글자가 들어가야될까요 안녕하세요  뭐요 뭘봐 견뎌 홍길동동주렁주렁', sysdate,'O');
-insert into dokoo values(seq_dokoo_no.nextval, 'admin', '9791191824001', 'dj샘플데이터를언제까지 추가해야되냐?', ' 독후감을 써보자 테스트입니다. 내용은 몇글자가 들어가야될까요 안녕하세요  뭐요 뭘봐 견뎌 홍길동동주렁주렁', sysdate,'O');
-insert into dokoo values(seq_dokoo_no.nextval, 'sinsa', '9791191824001', '왜요오', ' 독후감을 써보자 테스트입니다. 내용은 몇글자가 들어가야될까요 안녕하세요  뭐요 뭘봐 견뎌 홍길동동주렁주렁', sysdate,'C');
-insert into dokoo values(seq_dokoo_no.nextval, 'honggd1', '9791191824001', '내글을 읽어봐 넌 행복해지고', ' 독후감을 써보자 테스트입니다. 내용은 몇글자가 들어가야될까요 안녕하세요  뭐요 뭘봐 견뎌 홍길동동주렁주렁', sysdate,'O');
-insert into dokoo values(seq_dokoo_no.nextval, 'admin', '9791191824001', '다른책 ㄱ추가하기 너무 귀찮아', ' 독후감을 써보자 테스트입니다. 내용은 몇글자가 들어가야될까요 안녕하세요  뭐요 뭘봐 견뎌 홍길동동주렁주렁', sysdate,'O');
-insert into dokoo values(seq_dokoo_no.nextval, 'honggd', '9791191824001', '책을읽읍시다.', ' 독후감을 써보자 테스트입니다. 내용은 몇글자가 들어가야될까요 안녕하세요  뭐요 뭘봐 견뎌 홍길동동주렁주렁', sysdate,'O');
-insert into dokoo values(seq_dokoo_no.nextval, 'sinsa', '9791191824001', '콜라먹고싶은데 일어나기 귀찮아', ' 독후감을 써보자 테스트입니다. 내용은 몇글자가 들어가야될까요 안녕하세요  뭐요 뭘봐 견뎌 홍길동동주렁주렁', sysdate,'O');
-insert into dokoo values(seq_dokoo_no.nextval, 'admin', '9791191824001', '빈지노빈진호', ' 독후감을 써보자 테스트입니다. 내용은 몇글자가 들어가야될까요 안녕하세요  뭐요 뭘봐 견뎌 홍길동동주렁주렁', sysdate,'O');
-insert into dokoo values(seq_dokoo_no.nextval, 'sinsa', '9791191824001', '지금은 5시 25분', ' 독후감을 써보자 테스트입니다. 내용은 몇글자가 들어가야될까요 안녕하세요  뭐요 뭘봐 견뎌 홍길동동주렁주렁', sysdate,'O');
-insert into dokoo values(seq_dokoo_no.nextval, 'honggd', '9791191824001', '똑같은 ', ' 독후감을 써보자 테스트입니다. 내용은 몇글자가 들어가야될까요 안녕하세요  뭐요 뭘봐 견뎌 홍길동동주렁주렁', sysdate,'F');
-insert into dokoo values(seq_dokoo_no.nextval, 'honggd1', '9791191824001', '독후감독후감', ' 독후감을 써보자 테스트입니다. 내용은 몇글자가 들어가야될까요 안녕하세요  뭐요 뭘봐 견뎌 홍길동동주렁주렁', sysdate,'O');
-
-insert into dokoo_comment values(seq_dokooc_no.nextval, 1, '길동1', null, sysdate, 'ㅎㅇ');
-insert into dokoo_comment values(seq_dokooc_no.nextval, 1, '길동', null, sysdate, 'ㅎㅇㅎㅇ');
-insert into dokoo_comment values(seq_dokooc_no.nextval, 2, '빈지노', null, sysdate, 'test!');
-insert into dokoo_comment values(seq_dokooc_no.nextval, 2, '신사', null, sysdate, 'commentTest!!');
-insert into dokoo_comment values(seq_dokooc_no.nextval, 2, '길동', null, sysdate, 'commentTest!!');
-insert into dokoo_comment values(seq_dokooc_no.nextval, 3, '빈지노', null, sysdate, 'commentTest!!');
-insert into dokoo_comment values(seq_dokooc_no.nextval, 3, '길동1', null, sysdate, 'commentTest!!');
-
 
 alter table mission modify content varchar2(4000);
 commit;
@@ -498,3 +491,89 @@ select* from mission where club_no = 43 and m_item_id = 9788963710358;
             
             select count(*) from likes_club where club_no = 26;
             select * from my_club;
+            
+            
+select * from book;
+
+alter table book modify enroll_date timestamp default sysdate;
+alter table book_ing add add_date timestamp default sysdate;
+select * from book_ing; 
+delete from book_ing where item_id = '9788917238549';
+select * from book b1 join book_ing i1 on b1.member_id = i1.member_id;
+
+select * from (select *,rownum  from book_ing order by add_date desc);
+	select 
+		b.*,
+        i.started_at started_at,
+        i.ended_at ended_at
+	from 
+        book b right join (select * from book_ing order by add_date desc) i
+            on b.member_id = i.member_id
+	where b.member_id = 'tmddbs' and b.item_id = '9788932474755' 
+    
+delete from book_ing where member_id='tmddbs' and item_id = '9788932474755' and 
+
+select * from club;
+update club set title = '내 마음을 들여다보고 싶을때' where club_no = 44;
+
+select * from club_book;
+alter table club_book add book_title varchar2(3000);
+commit;
+
+select * from member;
+
+
+select
+    c.*,
+    b.*,
+    (select count(*) from my_club where club_no = c.club_no) current_nop,
+    (select count(*) from likes_club where club_no = c.club_no) likes_Cnt
+from
+    club c join club_book b on c.club_no = b.club_no
+order by
+    recruit_start desc;
+    
+select * from club order by recruit_start desc;
+
+select * from club;
+select * from mission where club_no = 58;
+commit;
+
+delete from club where club_no = 43;
+
+insert into wishlist_club values ('51', 'tmddbs');
+insert into wishlist_club values ('53', 'tmddbs');
+insert into wishlist_club values ('55', 'tmddbs');
+insert into wishlist_club values ('56', 'tmddbs');
+
+select * from my_club;
+select * from member;
+commit;
+select point from member where member_id = 'tmddbs';
+
+select * from authority;
+update member set point = 30000 where member_id = 'tmddbs';
+
+select * from my_club;
+select * from member;
+
+select * from club_chat;
+select * from chat_attachment;
+select * from chat_comment;
+delete from club_chat where chat_no = 7;
+commit;
+
+update club_chat set title = '제목제목제목', content = '하이하이' where chat_no = 1
+
+update club_chat set enroll_date = (sysdate - 4) where chat_no = 1;
+update club_chat set enroll_date = (sysdate - 3) where chat_no = 4;
+update club_chat set enroll_date = (sysdate - 2) where chat_no = 5;
+update club_chat set enroll_date = (sysdate - 1) where chat_no = 6;
+
+select * from club_chat order by enroll_date desc;
+
+delete from club_chat where chat_no in (13, 12, 11, 10);
+
+commit;
+
+select * from club where recruit_end > sysdate order by recruit_end;

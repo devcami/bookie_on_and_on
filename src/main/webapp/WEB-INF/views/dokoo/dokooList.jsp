@@ -13,7 +13,9 @@
 	<section id="content" class="">
 		<div id="title" class="text-center">
 			<h1>📙 독후감 📙</h1>
-			<button type="button" class="btn btn-lg btn-link" id="btn-dokoo-enroll"><i class="fa-solid fa-plus"></i></button>
+			<button type="button" class="btn btn-lg btn-link" id="btn-dokoo-enroll" onclick="location.href='${pageContext.request.contextPath}/dokoo/dokooEnroll.do';">
+				<i class="fa-solid fa-plus"></i>
+			</button>
 		</div>
 		<div class="dokoo-list">
 			<table class="table table-hover">
