@@ -27,10 +27,10 @@
 		<div class="pheed-container shadow bg-white">
 			<div class="pheed-writer">
 				<div class="profile">
-					<c:if test="${pheed.member.originalFilename != null}">
-						<img src="" alt="프로필사진" />
+					<c:if test="${pheed.member.renamedFilename != null}">
+						<img src="${pageContext.request.contextPath}/resources/upload/profile/${loginMember.renamedFilename}" alt="프로필사진" />
 					</c:if>
-					<c:if test="${pheed.member.originalFilename == null}">
+					<c:if test="${pheed.member.renamedFilename == null}">
 						<i class="fa-solid fa-user-large user-icon"></i>
 					</c:if>
 				</div>

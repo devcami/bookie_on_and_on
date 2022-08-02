@@ -305,8 +305,10 @@ const bookEnroll = () => {
 	
  	console.log(document.bookEnrollFrm.score.value);
 	console.log(document.bookEnrollFrm.itemId.value);
-	content.value.replace(/\"/g,"&quot;");
-	console.log(content.value);
+	if(content){
+		content.value.replace(/\"/g,"&quot;");
+		console.log(content.value);
+	}
 	
 	document.bookEnrollFrm.submit();
 };
@@ -541,8 +543,8 @@ const updateDate = () => {
 			
 			
 			// 현재 책을 수정한 경우 책 수정에서 날짜 변경
-			console.log('현재 책상태 : ',${book.ingNo} == thisIngNo);
-			console.log('날짜 포맷 : ', startFmt, endFmt);
+			<c:if test="${not empty book}">
+				
 			if(${book.ingNo} == thisIngNo){
 				console.log('(전)수정- 시작일', document.querySelector("[name=bookUpdateFrm] [name=startedAt]").value);
 				console.log('(전)수정- 종료일', document.querySelector("[name=bookUpdateFrm] [name=endedAt]").value);
@@ -553,6 +555,7 @@ const updateDate = () => {
 				wpqkf = formatDate(endFmt);
 				tlwkr = formatDate(startFmt);
 			}
+			</c:if>
 			
 		},
 		error : console.log
@@ -585,10 +588,12 @@ const moreReadDelete = (e) => {
 			const {msg} = resp; 
 			e.parentElement.remove();
 			// 현재 책을 삭제한 경우 reload
+			<c:if test="${not empty book}">
 			if(ingNo == ${book.ingNo}){
 				alert(`\${msg}`);
 				window.location.reload();
 			}
+			</c:if>
 		},
 		error : console.log
 	});
