@@ -98,14 +98,4 @@ public class PheedServiceImpl implements PheedService{
 	public int deletePheedWishList(Map<String, Object> map) {
 		return pheedDao.deletePheedWishList(map);
 	}
-	
-	@Override
-	public int deletePheed(int pheedNo) {
-		return pheedDao.deletePheed(pheedNo);
-	}
-	
-	@Override
-	public Pheed selectOnePheed(int pheedNo) {
-		return pheedDao.selectOnePheed(pheedNo);
-	}
 }

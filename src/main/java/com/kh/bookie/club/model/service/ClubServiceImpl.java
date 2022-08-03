@@ -250,11 +250,6 @@ public class ClubServiceImpl implements ClubService {
 		return clubDao.commentUpdate(cc);
 	}
 
-	@Override
-	public int commentRefEnroll(ChatComment cc) {
-		return clubDao.commentRefEnroll(cc);
-	}
-
 
 	
 

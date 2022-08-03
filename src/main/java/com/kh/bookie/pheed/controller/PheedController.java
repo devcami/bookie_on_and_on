@@ -14,7 +14,6 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,7 +25,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.bookie.common.HelloSpringUtils;
-import com.kh.bookie.dokoo.model.dto.Dokoo;
 import com.kh.bookie.member.model.dto.Member;
 import com.kh.bookie.pheed.model.dto.Pheed;
 import com.kh.bookie.pheed.model.dto.PheedAttachment;
@@ -70,17 +68,20 @@ public class PheedController {
 	}
 	
 	@GetMapping("/pheedCList.do")
-	public ModelAndView pheedCList(ModelAndView mav, @AuthenticationPrincipal Member loginMember) {
+	public ModelAndView pheedCList(ModelAndView mav, Principal principal) {
 		Map<String, Object> map = new HashMap<>();
 		try {
 			
-			log.debug("authentication member = {} ", loginMember);
-			log.debug("authentication member = {} ", loginMember.getNickname());
+			UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken)principal;
+			log.debug("authentication = {} ", authentication);
 			
-			if(loginMember != null) {
+			if(authentication != null) {
+				Object _principal = authentication.getPrincipal();
+				Member loginMember = (Member)_principal;					
+				log.debug("있나여? loginMember = {}", loginMember.getUsername());
 				
 				// 멤버 있으면 북클럽 찜 리스트 가져와 
-				List<String> pheedWishList = pheedService.getPheedWishListbyMemberId(loginMember.getMemberId());
+				List<String> pheedWishList = pheedService.getPheedWishListbyMemberId(loginMember.getUsername());
 				
 				String wishStr = "";
 				for(int i = 0; i < pheedWishList.size(); i++) {
@@ -91,7 +92,7 @@ public class PheedController {
 				mav.addObject("wishStr", wishStr);
 				
 				// 멤버 있으면 북클럽 하트 리스트 가져와 
-				List<String> pheedLikesList = pheedService.getPheedLikesListbyMemberId(loginMember.getMemberId());
+				List<String> pheedLikesList = pheedService.getPheedLikesListbyMemberId(loginMember.getUsername());
 				
 				String likesStr = "";
 				for(int j = 0;  j < pheedLikesList.size(); j++) {
@@ -123,16 +124,19 @@ public class PheedController {
 	}
 	
 	@GetMapping("/getReadList.do")
-	public ResponseEntity<?> getReadList(@RequestParam int cPage, @AuthenticationPrincipal Member loginMember){
+	public ResponseEntity<?> getReadList(@RequestParam int cPage, Principal principal){
 		try {
 			Map<String, Object> map = new HashMap<>();
-			log.debug("authentication member = {} ", loginMember);
-			log.debug("authentication member = {} ", loginMember.getNickname());
+			UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken)principal;
+			log.debug("authentication = {} ", authentication);
 			
-			if(loginMember != null) {
+			if(authentication != null) {
+				Object _principal = authentication.getPrincipal();
+				Member loginMember = (Member)_principal;					
+				log.debug("있나여? loginMember = {}", loginMember.getUsername());
 				
 				// 멤버 있으면 북클럽 찜 리스트 가져와 
-				List<String> pheedWishList = pheedService.getPheedWishListbyMemberId(loginMember.getMemberId());
+				List<String> pheedWishList = pheedService.getPheedWishListbyMemberId(loginMember.getUsername());
 				
 				String wishStr = "";
 				for(int i = 0; i < pheedWishList.size(); i++) {
@@ -143,7 +147,7 @@ public class PheedController {
 				map.put("wishStr", wishStr);
 				
 				// 멤버 있으면 북클럽 하트 리스트 가져와 
-				List<String> pheedLikesList = pheedService.getPheedLikesListbyMemberId(loginMember.getMemberId());
+				List<String> pheedLikesList = pheedService.getPheedLikesListbyMemberId(loginMember.getUsername());
 				
 				String likesStr = "";
 				for(int j = 0;  j < pheedLikesList.size(); j++) {
@@ -312,70 +316,6 @@ public class PheedController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(map);
 		}
 		return ResponseEntity.ok(null);
-	}
-	
-	@PostMapping("/deletePheed.do")
-	public ResponseEntity<?> deletePheed(@RequestParam int pheedNo){
-		Map<String, Object> map = new HashMap<>();
-		try {
-			int result = pheedService.deletePheed(pheedNo);
-			map.put("msg", "삭제가 완료되었습니다.");
-		} catch(Exception e) {
-			log.error("피드 삭제 오류", e);
-			map.put("msg", "피드 삭제 오류");
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(map);
-		}
-		return ResponseEntity.ok(map);
-	}
-	
-	@GetMapping("/pheedUpdate.do")
-	public ModelAndView pheedUpdate (@RequestParam int pheedNo, ModelAndView mav) {
-		try {
-			Pheed pheed = pheedService.selectOnePheed(pheedNo);
-			log.debug("pheed = {}", pheed);
-			mav.addObject("pheed", pheed);
-			
-			mav.setViewName("pheed/pheedUpdate");
-		} catch (Exception e) {
-			log.error("피드 수정 폼 요청 오류", e);
-			mav.addObject("msg", "피드 수정 폼 요청 오류");
-		}
-		return mav;
-	}
-	
-	@PostMapping("/pheedUpdate.do")
-	public String pheedUpdate(Pheed pheed, RedirectAttributes ra, @RequestParam (required = false) MultipartFile upFile) {
-		try {
-			log.debug("pheed = {}", pheed);
-			String saveDirectory = application.getRealPath("/resources/upload/pheed");
-			
-			//업로드한 파일 저장
-			if(upFile.getSize() > 0) {
-				// 파일명 재지정
-				String originalFilename = upFile.getOriginalFilename();
-				String renamedFilename = HelloSpringUtils.getRenamedFilename(originalFilename);
-				log.debug("renamedFilename = {}", renamedFilename);
-			
-				// 파일 저장
-				File destFile = new File(saveDirectory, renamedFilename);
-				upFile.transferTo(destFile);
-				
-				// ChatAttachment 객체로 만들어서 => club
-				PheedAttachment attach = new PheedAttachment();
-				attach.setOriginalFilename(originalFilename);
-				attach.setRenamedFilename(renamedFilename);
-				pheed.setAttach(attach);
-				
-			}
-			
-			//int result = pheedService.pheedUpdate(pheed);
-			
-			ra.addFlashAttribute("msg", "피드 수정 완료 !");	
-		} catch (Exception e) {
-			log.error("피드 수정 오류", e);
-			e.printStackTrace();
-		}
-		return "redirect:/pheed/pheedCList.do";
 	}
 	
 }
