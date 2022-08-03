@@ -247,7 +247,7 @@ public class ClubController {
 		return "redirect:/club/clubAnn.do";
 	}
 
-
+ 
 	@GetMapping("/clubAnn.do")
 	public ModelAndView clubAnn(
 			ModelAndView mav,
