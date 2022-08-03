@@ -228,6 +228,19 @@
 	        <version>${org.springframework-version}</version>
 	    </dependency>
 	    
+	    <!-- #18. 이메일 본인인증 의존 추가 -->
+	    <!-- #18. https://mvnrepository.com/artifact/javax.mail/mail -->
+		<dependency>
+		    <groupId>javax.mail</groupId>
+		    <artifactId>mail</artifactId>
+		    <version>1.4.7</version>
+		</dependency>
+		<!-- #18. https://mvnrepository.com/artifact/org.springframework/spring-context-support -->
+		<dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-context-support</artifactId>
+		    <version>${org.springframework-version}</version>
+		</dependency>
 	    
 		<!-- Test -->
 		<dependency>
