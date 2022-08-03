@@ -1,6 +1,7 @@
 package com.kh.bookie.pheed.controller;
 
 import java.io.File;
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,6 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.bookie.common.HelloSpringUtils;
+import com.kh.bookie.member.model.dto.Member;
 import com.kh.bookie.pheed.model.dto.Pheed;
 import com.kh.bookie.pheed.model.dto.PheedAttachment;
 import com.kh.bookie.pheed.model.dto.PheedComment;
@@ -65,12 +68,49 @@ public class PheedController {
 	}
 	
 	@GetMapping("/pheedCList.do")
-	public ModelAndView pheedCList(ModelAndView mav) {
+	public ModelAndView pheedCList(ModelAndView mav, Principal principal) {
+		Map<String, Object> map = new HashMap<>();
 		try {
+			
+			UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken)principal;
+			log.debug("authentication = {} ", authentication);
+			
+			if(authentication != null) {
+				Object _principal = authentication.getPrincipal();
+				Member loginMember = (Member)_principal;					
+				log.debug("있나여? loginMember = {}", loginMember.getUsername());
+				
+				// 멤버 있으면 북클럽 찜 리스트 가져와 
+				List<String> pheedWishList = pheedService.getPheedWishListbyMemberId(loginMember.getUsername());
+				
+				String wishStr = "";
+				for(int i = 0; i < pheedWishList.size(); i++) {
+					wishStr += pheedWishList.get(i);
+					wishStr +=  ",";
+				}
+				
+				mav.addObject("wishStr", wishStr);
+				
+				// 멤버 있으면 북클럽 하트 리스트 가져와 
+				List<String> pheedLikesList = pheedService.getPheedLikesListbyMemberId(loginMember.getUsername());
+				
+				String likesStr = "";
+				for(int j = 0;  j < pheedLikesList.size(); j++) {
+					likesStr += pheedLikesList.get(j);
+					likesStr +=  ",";
+				}
+				mav.addObject("likesStr", likesStr);
+			}
+			
+			
+			
 			// 목록 조회
 			int cPage = 1;
-			int numPerPage = 1;
-			List<Pheed> list = pheedService.selectPheedCList(cPage, numPerPage);
+			int numPerPage = 3;
+			map.put("cPage", cPage);
+			map.put("numPerPage", numPerPage);
+			
+			List<Pheed> list = pheedService.selectPheedCList(map);
 			log.debug("list = {}", list);
 			mav.addObject("list", list);
 			
@@ -84,15 +124,53 @@ public class PheedController {
 	}
 	
 	@GetMapping("/getReadList.do")
-	public ResponseEntity<?> getReadList(@RequestParam int cPage){
+	public ResponseEntity<?> getReadList(@RequestParam int cPage, Principal principal){
 		try {
-			log.debug("cPage = {}", cPage);
-			int numPerPage = 1;
+			Map<String, Object> map = new HashMap<>();
+			UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken)principal;
+			log.debug("authentication = {} ", authentication);
 			
-			List<Pheed> list = pheedService.selectPheedCList(cPage, numPerPage);
+			if(authentication != null) {
+				Object _principal = authentication.getPrincipal();
+				Member loginMember = (Member)_principal;					
+				log.debug("있나여? loginMember = {}", loginMember.getUsername());
+				
+				// 멤버 있으면 북클럽 찜 리스트 가져와 
+				List<String> pheedWishList = pheedService.getPheedWishListbyMemberId(loginMember.getUsername());
+				
+				String wishStr = "";
+				for(int i = 0; i < pheedWishList.size(); i++) {
+					wishStr += pheedWishList.get(i);
+					wishStr +=  ",";
+				}
+				
+				map.put("wishStr", wishStr);
+				
+				// 멤버 있으면 북클럽 하트 리스트 가져와 
+				List<String> pheedLikesList = pheedService.getPheedLikesListbyMemberId(loginMember.getUsername());
+				
+				String likesStr = "";
+				for(int j = 0;  j < pheedLikesList.size(); j++) {
+					likesStr += pheedLikesList.get(j);
+					likesStr +=  ",";
+				}
+				map.put("likesStr", likesStr);
+			}
+			
+			
+			// cPage = 2 -> 4~6
+			// cPage = 3 -> 7~9 ...
+			log.debug("cPage = {}", cPage);
+			cPage = (cPage - 1) * 3 + 1;
+			int numPerPage = cPage * 3;
+			map.put("cPage", cPage);
+			map.put("numPerPage", numPerPage);
+			List<Pheed> list = pheedService.selectPheedCList(map);
 			log.debug("list = {}", list);
-			if(list != null)
-				return ResponseEntity.ok(list);
+			if(list != null) {
+				map.put("list", list);
+				return ResponseEntity.ok(map);
+			}
 			else
 				return ResponseEntity.ok(null);
 		} catch (Exception e) {
@@ -105,7 +183,7 @@ public class PheedController {
 	public void pheedEnroll() {}
 	
 	@PostMapping("/pheedEnroll.do")
-	public String pheedEnroll(Pheed pheed, RedirectAttributes ra, @RequestParam("upFile") MultipartFile upFile) {
+	public String pheedEnroll(Pheed pheed, RedirectAttributes ra, @RequestParam (required = false) MultipartFile upFile) {
 		try {
 			log.debug("pheed = {}", pheed);
 			String saveDirectory = application.getRealPath("/resources/upload/pheed");
@@ -153,6 +231,91 @@ public class PheedController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(map);
 		}
 		return ResponseEntity.ok(map);
+	}
+	
+	@PostMapping("/pheedReport.do")
+	public ResponseEntity<?> report(@RequestParam String memberId, 
+						 			@RequestParam String category,
+					 				@RequestParam String content,
+					 				@RequestParam int beenziNo) {
+		Map<String, Object> map = new HashMap<>();
+		try {
+			log.debug("memberId = {}", memberId);
+			log.debug("category = {}", category);
+			log.debug("content = {}", content);
+			log.debug("beenziNo = {}", beenziNo);
+			map.put("memberId", memberId);
+			map.put("category", category);
+			map.put("content", content);
+			map.put("beenziNo", beenziNo);
+			
+			int result = pheedService.report(map);
+			map.put("msg", "신고 접수가 완료되었습니다.");
+		} catch (Exception e) {
+			log.error("신고 접수 오류", e);
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(map);
+		}
+		return ResponseEntity.ok(map);
+		
+	}
+	
+	@PostMapping("/insertLikesWish.do")
+	public ResponseEntity<?> insertLikesWish(
+					@RequestParam String shape,
+					@RequestParam String memberId,
+					@RequestParam int pheedNo){
+		
+		log.debug("shape = {}", shape);
+		log.debug("memberId = {}", memberId);
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("memberId", memberId);
+		map.put("pheedNo", pheedNo);		
+		
+		try {
+			if(shape.equals("heart")) {
+				// 하트인경우 좋아요 인서트
+				int result = pheedService.insertPheedLike(map);
+			}
+			else {
+				int result = pheedService.insertPheedWishList(map);
+			}
+			
+		} catch(Exception e) {
+			log.error("피드 하트/찜 등록 오류", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(map);
+		}
+		return ResponseEntity.ok(null);
+	}
+	
+	@PostMapping("/deleteLikesWish.do")
+	public ResponseEntity<?> deleteLikesWish(
+					@RequestParam String shape,
+					@RequestParam String memberId,
+					@RequestParam int pheedNo){
+		
+		log.debug("shape = {}", shape);
+		log.debug("memberId = {}", memberId);
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("memberId", memberId);
+		map.put("pheedNo", pheedNo);		
+		
+		try {
+			if(shape.equals("heart")) {
+				// 하트인경우 하트
+				int result = pheedService.deletePheedLike(map);
+			}
+			else {
+				int result = pheedService.deletePheedWishList(map);
+			}
+			
+		} catch(Exception e) {
+			log.error("피드 하트/찜 삭제 오류", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(map);
+		}
+		return ResponseEntity.ok(null);
 	}
 	
 }

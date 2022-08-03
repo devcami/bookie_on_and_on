@@ -59,11 +59,11 @@ create table book(
     score number,
     content varchar2(1500),
     my_pick number default 0 not null,
+    enroll_date timestamp default sysdate,
     constraint pk_book_item_id primary key(item_id, member_id),
     constraint fk_book_member_id foreign key(member_id) references member(member_id) on delete cascade,
     constraint ck_book_score check (score between 1 and 10)
 );
-alter table book add constraint ck_book_score check (score between 0 and 10);
 
 -- 6. book_ing
 create table book_ing(
@@ -72,6 +72,7 @@ create table book_ing(
     member_id varchar2(200) not null,
     started_at date default sysdate,
     ended_at date,
+    add_date timestamp default sysdate,
     constraint pk_book_ing_no primary key(ing_no),
     constraint fk_book_ing_member_id foreign key(member_id) references member(member_id) on delete cascade
 );
@@ -86,13 +87,13 @@ create table dokoo(
     item_id varchar2(30) not null,
     title varchar2(1500) not null,
     content varchar2(4000) not null,
+    is_opened char(1) not null,
     constraint pk_dokoo_no primary key(dokoo_no),
+    constraint ck_dokoo_is_opened check(is_opened in ('O', 'F', 'C')),
     constraint fk_dokoo_member_id foreign key(member_id) references member(member_id) on delete cascade
 );
 
 create sequence seq_dokoo_no;
-
-
 
 
 -- 8. dokoo_comment - 독후감 댓글 테이블
@@ -102,8 +103,11 @@ create table dokoo_comment(
     nickname varchar2(100) not null,
     comment_ref number,
     created_at date default sysdate,
+    content varchar2(1000) not null,
+    comment_level number default 1,
     constraint pk_dokooc_no primary key(dokooc_no),
     constraint fk_dokoo_comment_dokoo_no foreign key(dokoo_no) references dokoo(dokoo_no) on delete cascade,
+    constraint fk_dokoo_comment_ref foreign key(comment_ref) references dokoo_comment(dokooc_no) on delete cascade,
     constraint fk_dokoo_comment_nickname foreign key(nickname) references member(nickname) on delete set null
 );
 
@@ -117,12 +121,11 @@ create table pheed(
     page number not null,
     content varchar2(3000) not null,
     is_opened char(1) not null,
+    enroll_date date default sysdate,
     constraint pk_pheed_no primary key(pheed_no),
     constraint fk_pheed_member_id foreign key(member_id) references member(member_id) on delete cascade,
     constraint ck_pheed_is_opened check(is_opened in ('O', 'F', 'C'))
 );
-
-select * from pheed;
 
 create sequence seq_pheed_no;
 
@@ -147,10 +150,13 @@ create table pheed_comment(
     content varchar2(1000) not null,
     comment_ref number,
     created_at date default sysdate not null,
+    comment_level number default 1,
     constraint pk_pheedc_no primary key(pheedc_no),
     constraint fk_pheed_comment_pheed_no foreign key(pheed_no) references pheed(pheed_no) on delete cascade,
+    constraint fk_pheed_comment_ref foreign key(comment_ref) references pheed_comment(pheedc_no) on delete cascade,
     constraint fk_pheed_comment_nickname foreign key(nickname) references member(nickname) on delete set null
 );
+
 create sequence seq_pheed_comment_no;
 
 -- 12. club - 북클럽 테이블 
@@ -170,8 +176,8 @@ create table club(
     mission_Cnt varchar2(30) null,
     constraint pk_club_no primary key(club_no)
 );
-select * from club;
 create sequence seq_club_no;
+
 -- 13. club_book
 create table club_book (
     club_no   number not null,
@@ -229,8 +235,6 @@ create table club_chat(
     constraint fk_club_chat_club_no foreign key(club_no) references club(club_no) on delete cascade
 );
 
-alter table club_chat add enroll_date date default sysdate;
-commit;
 create sequence seq_club_chat_no;
 
 -- 18. chat_attachment
@@ -255,7 +259,11 @@ create table chat_comment(
     created_at date default sysdate not null,
     comment_content varchar2(1000) not null,
     comment_level number default 1,
+<<<<<<< HEAD
+    constraint pk_chat_comment_no primary key(comment_no)
+=======
     constraint pk_chat_comment_no primary key(comment_no) 
+>>>>>>> branch 'master' of https://github.com/devcami/bookie_on_and_on.git
 );
 select * from chat_comment;
 create sequence seq_comment_no;
@@ -266,11 +274,11 @@ create table report (
     member_id varchar2(200) not null,
     category varchar2(30) not null,
     beenzi_no number not null,
-    status varchar2(200) not null,
+    status varchar2(200) not null, -- U(아직처리안됨) or E(처리완료)
+    content varchar2(1000),
     constraint pk_report_no primary key(report_no),
     constraint ck_report_category check(category in ('pheed','pheed_comment','dokoo','dokoo_comment'))
 );
-
 
 create sequence seq_report_no;
 -- 21. 찜하기피드 테이블
@@ -315,11 +323,18 @@ create table likes_club (
     constraint fk_likes_club_member_id foreign key(member_id) references member(member_id) on delete set null
 );
 
+-- remeber-me table
+create table persistent_logins (
+    username varchar(64) not null, 
+    series varchar(64) primary key, 
+    token varchar(64) not null,  -- username, password, expire time을 단방향 암호화한 값
+    last_used timestamp not null);
+    
+
 --==============================================
 -- 조회
 --==============================================
 select * from user_sequences; -- 시퀀스 조회
-delete from member where member_id = 'admin';
 
 select * from member;
 select * from authority;
@@ -348,14 +363,21 @@ select * from likes_pheed;
 select * from likes_dokoo;
 select * from likes_club;
 
-
--- remeber-me table
-create table persistent_logins (
-    username varchar(64) not null, 
-    series varchar(64) primary key, 
-    token varchar(64) not null,  -- username, password, expire time을 단방향 암호화한 값
-    last_used timestamp not null);
 select * from persistent_logins;
+
+SELECT 
+    TABLE_NAME
+    ,COLUMN_NAME    -- 컬럼 명
+    ,DATA_TYPE      -- 유형
+    ,DATA_LENGTH    -- 데이터 길이
+    ,DATA_PRECISION -- NUMBER 전체 자릿수
+    ,DATA_SCALE     -- NUMBER 소수점이하 표현 자릿수
+    ,NULLABLE       -- NULL 여부
+    ,COLUMN_ID      -- 컬럼 순서
+    ,DATA_DEFAULT   -- 기본 값   
+FROM user_tab_columns; -- 해당 계정에 속한 테이블 
+   --  dba_tab_columns 전체 테이블의 경우 
+
 
 select *
 from book b right join
@@ -379,7 +401,7 @@ from
     book b join 
             (select ing_no, item_id, member_id, started_at, ended_at, add_date, row_number() over(order by i2.add_date desc) rnum from book_ing i2) i
         on b.member_id = i.member_id and b.item_id = i.item_id
-where b.member_id = 'tmddbs' and b.item_id = '9788932474755'; and i.rownum = 1;
+where b.member_id = 'tmddbs' and b.item_id = '9788932474755' and i.rownum = 1;
 
 select * from book_ing where member_id = 'tmddbs' and item_id = '9788932474755';
 
@@ -398,9 +420,11 @@ select * from dokoo;
 
 -- sample data
 
-alter table mission modify content varchar2(4000);
-commit;
+-------------------------
+-- club <<은성>>
+-------------------------
 
+alter table mission modify content varchar2(4000);
 
 select * from club;
 select * from club_book;
@@ -410,20 +434,15 @@ select * from member;
 
 insert into authority values ('admin', 'ROLE_ADMIN');
 select * from authority;
-delete from authority where member_id = 'tmddbs' and auth = 'ROLE_ADMIN';
-commit;
-
 
 insert into my_club values ('25', 'honggd', 5000);
 insert into my_club values ('25', 'sinsa', 5000);
 insert into my_club values ('23', 'sinsa', 5000);
 
-commit;
 
 alter table club_book add IMG_SRC varchar2(4000);
 alter table mission add item_id varchar2(30);
 ALTER TABLE mission RENAME COLUMN m_end_Date TO m_endDate;
-commit;
 
 select
     c.*,
@@ -435,29 +454,6 @@ from
     club c join club_book b on c.club_no = b.club_no
 order by
     recruit_start desc;
-
-insert into pheed_comment values(seq_pheed_comment_no.nextval, 5, '길동', 'test!', null, sysdate);
-insert into pheed_comment values(seq_pheed_comment_no.nextval, 5, '길동', 'commentTest!!', 1, sysdate);
-commit;
-
-alter table dokoo add is_opened char(1) not null ;
-alter table dokoo_comment add content varchar2(1000) not null ;
-alter table dokoo add constraint ck_dokoo_is_opened check(is_opened in ('O', 'F', 'C'));
-select * from dokoo_comment;
-select * from dokoo;
-SELECT 
-    TABLE_NAME
-    ,COLUMN_NAME    -- 컬럼 명
-    ,DATA_TYPE      -- 유형
-    ,DATA_LENGTH    -- 데이터 길이
-    ,DATA_PRECISION -- NUMBER 전체 자릿수
-    ,DATA_SCALE     -- NUMBER 소수점이하 표현 자릿수
-    ,NULLABLE       -- NULL 여부
-    ,COLUMN_ID      -- 컬럼 순서
-    ,DATA_DEFAULT   -- 기본 값   
-FROM user_tab_columns; -- 해당 계정에 속한 테이블 
-   --  dba_tab_columns 전체 테이블의 경우 
-alter table pheed add enroll_date date default sysdate;
 
 insert into likes_club values (22, 'honggd');
 insert into likes_club values (22, 'sinsa');
@@ -498,37 +494,6 @@ select* from mission where club_no = 43 and m_item_id = 9788963710358;
             select count(*) from likes_club where club_no = 26;
             select * from my_club;
             
-            
-select * from book;
-
-alter table book modify enroll_date timestamp default sysdate;
-alter table book_ing add add_date timestamp default sysdate;
-select * from book_ing; 
-delete from book_ing where item_id = '9788917238549';
-select * from book b1 join book_ing i1 on b1.member_id = i1.member_id;
-
-select * from (select *,rownum  from book_ing order by add_date desc);
-	select 
-		b.*,
-        i.started_at started_at,
-        i.ended_at ended_at
-	from 
-        book b right join (select * from book_ing order by add_date desc) i
-            on b.member_id = i.member_id
-	where b.member_id = 'tmddbs' and b.item_id = '9788932474755' 
-    
-delete from book_ing where member_id='tmddbs' and item_id = '9788932474755' and 
-
-select * from club;
-update club set title = '내 마음을 들여다보고 싶을때' where club_no = 44;
-
-select * from club_book;
-alter table club_book add book_title varchar2(3000);
-commit;
-
-select * from member;
-
-
 select
     c.*,
     b.*,
@@ -543,7 +508,6 @@ select * from club order by recruit_start desc;
 
 select * from club;
 select * from mission where club_no = 58;
-commit;
 
 delete from club where club_no = 43;
 
@@ -554,7 +518,51 @@ insert into wishlist_club values ('56', 'tmddbs');
 
 select * from my_club;
 select * from member;
-commit;
+select point from member where member_id = 'tmddbs';
+
+select * from authority;
+update member set point = 30000 where member_id = 'tmddbs';
+
+select * from club_chat;
+select * from chat_attachment;
+select * from chat_comment;
+delete from club_chat where chat_no = 7;
+
+update club_chat set title = '제목제목제목', content = '하이하이' where chat_no = 1;
+
+update club_chat set enroll_date = (sysdate - 4) where chat_no = 1;
+update club_chat set enroll_date = (sysdate - 3) where chat_no = 4;
+update club_chat set enroll_date = (sysdate - 2) where chat_no = 5;
+update club_chat set enroll_date = (sysdate - 1) where chat_no = 6;
+
+select * from club_chat order by enroll_date desc;
+
+delete from club_chat where chat_no in (13, 12, 11, 10);
+
+select * from club where recruit_end > sysdate order by recruit_end;select
+    c.*,
+    b.*,
+    (select count(*) from my_club where club_no = c.club_no) current_nop,
+    (select count(*) from likes_club where club_no = c.club_no) likes_Cnt
+from
+    club c join club_book b on c.club_no = b.club_no
+order by
+    recruit_start desc;
+    
+select * from club order by recruit_start desc;
+
+select * from club;
+select * from mission where club_no = 58;
+
+delete from club where club_no = 43;
+
+insert into wishlist_club values ('51', 'tmddbs');
+insert into wishlist_club values ('53', 'tmddbs');
+insert into wishlist_club values ('55', 'tmddbs');
+insert into wishlist_club values ('56', 'tmddbs');
+
+select * from my_club;
+select * from member;
 select point from member where member_id = 'tmddbs';
 
 select * from authority;
@@ -569,7 +577,7 @@ select * from chat_comment;
 delete from club_chat where chat_no = 7;
 commit;
 
-update club_chat set title = '제목제목제목', content = '하이하이' where chat_no = 1
+update club_chat set title = '제목제목제목', content = '하이하이' where chat_no = 1;
 
 update club_chat set enroll_date = (sysdate - 4) where chat_no = 1;
 update club_chat set enroll_date = (sysdate - 3) where chat_no = 4;
@@ -580,38 +588,41 @@ select * from club_chat order by enroll_date desc;
 
 select * from member;
 
-commit;
+select * from club where recruit_end > sysdate order by recruit_end;       
 
-select * from club where recruit_end > sysdate order by recruit_end;
-
-
-
-select
-			cc.*,
-			ca.*,
-            m.*,
-            m.renamed_filename profilePic,
-			ca.chat_no ca_chat_no
-		from
-			club_chat cc 
-				join chat_attachment ca on cc.chat_no = ca.chat_no  
-                join member m on cc.nickname = m.nickname
-		where
-			cc.chat_no = 14;
-            
-            
-select * from chat_comment;
-
-alter table chat_comment add comment_level number default 1;
- alter table chat_comment add foreign key(nickname) references member(nickname) on delete set null;
- alter table chat_comment add foreign key(chat_no) references club_chat(chat_no) on delete cascade;
- alter table chat_comment add foreign key(comment_ref) references chat_comment(comment_no) on delete cascade;
- 
- commit;
+---------------------------------
+-- book <<은민>>
+---------------------------------
 
 select 
-    * 
+    b.*,
+    i.started_at started_at,
+    i.ended_at ended_at
 from 
+<<<<<<< HEAD
+    book b right join (select * from book_ing order by add_date desc) i
+        on b.member_id = i.member_id
+where b.member_id = 'tmddbs' and b.item_id = '9788932474755' ;
+
+
+-- 1~3
+select * 
+from 
+    (select row_number() over (order by enroll_date desc) rnum, p.* 
+    from pheed p where is_opened = 'O')
+where
+    rnum between 1 and 3;
+select
+    *
+from(
+    select 
+        row_number () over(order by no desc) rnum,
+        b.*
+    from
+        board b)
+where
+    rnum between 11 and 15;
+=======
     chat_comment cc 
 where 
     chat_no = 14 
@@ -620,3 +631,4 @@ order siblings by created_at desc;
 
 commit;
 
+>>>>>>> branch 'master' of https://github.com/devcami/bookie_on_and_on.git

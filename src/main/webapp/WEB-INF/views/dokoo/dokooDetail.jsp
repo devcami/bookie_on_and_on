@@ -57,10 +57,12 @@
 					  <i class="fa fa-bookmark fa-regular fa-stack-1x front" id="bookmark" data-dokoo-no="${dokoo.dokooNo}"></i>
 					</span>
 			
-					<button type="button" data-toggle="modal" data-target="#reportModal" 
+					<button type="button" data-no="${dokoo.dokooNo}"  onclick="openReportModal(this);" 
 						class="btn" id="btn-report"><i class="fa-solid fa-ellipsis"></i></button>
 					<c:if test="${dokoo.member.nickname eq loginMember.nickname}">
 					<button type="button" class="float-right btn-sm btn-update mr-2" onclick="updateDokoo();">수정</button>	
+					</c:if>
+					<c:if test="${dokoo.member.nickname eq loginMember.nickname || loginMember.memberId eq 'admin'}">
 					<button type="button" class="float-right btn-sm btn-delete mr-2" onclick="deleteDokoo();">삭제</button>	
 					</c:if>
 				</div>
@@ -69,8 +71,6 @@
 				<span>좋아요</span>&nbsp;
 				<span class='likes' id="likesCnt"></span>
 				<span>개</span>					
-			</div>
-			<div class="dokoo-sns-cal" id="sns-cal">
 			</div>
 		</div>
 		
@@ -136,6 +136,8 @@
 </form:form>
 </section>
 <script>
+
+
 let header = document.querySelector("#header-container")
 let headerHeight = header.clientHeight;
 const titlebar = document.querySelector("#title-header");
@@ -300,10 +302,11 @@ const commentRef = (e) => {
             <label for="recipient-name" class="col-form-label">작성자</label>
             <input type="text" class="form-control" id="memberId" value="${loginMember.memberId}" readonly>
             <input type="hidden" class="form-control" id="category" value="dokoo"/>          
+             <input type="hidden" class="form-control" id="dokooNo" value=""/>
           </div>
           <div class="form-group">
             <p class="col-form-label">신고 내용</p>
-          	<div class="alert alert-danger alert-dismissible fade show" role="alert" id="alert" style="display:none">
+          	<div class="alert alert-danger alert-dismissible fade show" role="alert" id="alert-note" style="display:none">
 			  내용을 10자 이상 작성해주세요 !
 				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
@@ -320,19 +323,52 @@ const commentRef = (e) => {
     </div>
   </div>
 </div>
-<%-- 신고창 폼 제출 --%>
 <script>
+<%-- 신고창 열기 --%>
+function openReportModal(e){
+	console.log(e.dataset.no);
+	$('#dokooNo').val(e.dataset.no);
+	$('#reportModal').modal('show');
+}
+
+<%-- 신고창 폼 제출 --%>
 const report = () => {
+	const category = document.querySelector("#category").value;
+	const memberId = document.querySelector('#memberId').value;
 	const content = document.querySelector("#report-content").value;
-	//console.log(content);
-	const alert = document.querySelector("#alert");
+	const dokooNo = document.querySelector('#dokooNo').value;
+	
+	const csrfHeader = '${_csrf.headerName}';
+	const csrfToken = '${_csrf.token}';
+	const headers = {};
+	headers[csrfHeader] = csrfToken; // 전송하는 헤더에 추가하여 전송 
+	
+	
+	console.log(content);
 	if(!/.{10,}$/.test(content)){
-		alert.style.display = "block";
+		document.querySelector("#alert-note").style.display = "block";
 		return;
 	}
 	if(confirm('신고를 제출하시겠습니까?')){
-		document.dokooReportFrm.submit();	
-		document.dokooReportFrm.reset();
+		$.ajax({
+			url : "${pageContext.request.contextPath}/pheed/pheedReport.do",
+			method : 'post',
+			headers,
+			data : {
+				category,
+				memberId,
+				content,
+				beenziNo : dokooNo
+			},
+			success(resp){
+				const {msg} = resp;
+				alert(msg);
+				$('#content').val(''); //폼 초기화
+				$('#reportModal').modal('hide');
+			},
+			error : console.log
+			
+		});
 	}else{
 		return;
 	}
@@ -341,7 +377,7 @@ const report = () => {
 document.querySelector("#report-content").addEventListener('keyup', (e) => {
 	const val = e.target.value;
 	if(val.length > 10){
-		document.querySelector("#alert").style.display = "none";
+		document.querySelector("#alert-note").style.display = "none";
 	}
 });
 
@@ -357,6 +393,7 @@ window.addEventListener('load', (e) => {
 		},
 		success(resp){
 			console.log(resp);
+			
 			const dokooSns = resp[0];
 			const span = document.querySelector('#likesCnt');
 			if(dokooSns == null){
@@ -364,6 +401,8 @@ window.addEventListener('load', (e) => {
 			}
 			else{
 				resp.forEach((sns) => {
+					if(sns != null){
+						
 					const {memberId, snsType} = sns;
 					if(snsType == 'LIKE'){
 						if(memberId == '${loginMember.memberId}'){
@@ -373,12 +412,14 @@ window.addEventListener('load', (e) => {
 						}
 						span.innerText = Number(span.innerText) + 1;
 					}
-					if(snsType == 'BOOKMARK'){
+					else if(snsType == 'BOOKMARK'){
 						if(memberId == '${loginMember.memberId}'){
 							const iBookMark = `<i class="fa fa-bookmark fa-solid fa-stack-1x b-behind"></i>`;
 							const bspan = document.querySelector("#b-span");
 							bspan.insertAdjacentHTML('beforeend', iBookMark);						
 						}
+					}
+						
 					}
 				});
 			}
