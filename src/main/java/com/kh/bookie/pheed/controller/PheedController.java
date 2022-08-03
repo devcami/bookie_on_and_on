@@ -61,16 +61,16 @@ public class PheedController {
 	
 	@GetMapping("/pheedCList.do")
 	public ModelAndView pheedCList(ModelAndView mav, @AuthenticationPrincipal Member loginMember) {
-		Map<String, Object> map = new HashMap<>();
 		try {
-			
-			log.debug("authentication member = {} ", loginMember);
-			log.debug("authentication member = {} ", loginMember.getNickname());
+			Map<String, Object> map = new HashMap<>();
+	        log.debug("authentication member = {} ", loginMember);
+	        log.debug("authentication member = {} ", loginMember.getNickname());
+	          
 			
 			if(loginMember != null) {
 				
 				// 멤버 있으면 북클럽 찜 리스트 가져와 
-				List<String> pheedWishList = pheedService.getPheedWishListbyMemberId(loginMember.getMemberId());
+				List<String> pheedWishList = pheedService.getPheedWishListbyMemberId(loginMember.getUsername());
 				
 				String wishStr = "";
 				for(int i = 0; i < pheedWishList.size(); i++) {
@@ -81,7 +81,7 @@ public class PheedController {
 				mav.addObject("wishStr", wishStr);
 				
 				// 멤버 있으면 북클럽 하트 리스트 가져와 
-				List<String> pheedLikesList = pheedService.getPheedLikesListbyMemberId(loginMember.getMemberId());
+				List<String> pheedLikesList = pheedService.getPheedLikesListbyMemberId(loginMember.getUsername());
 				
 				String likesStr = "";
 				for(int j = 0;  j < pheedLikesList.size(); j++) {
@@ -114,15 +114,14 @@ public class PheedController {
 	
 	@GetMapping("/getReadList.do")
 	public ResponseEntity<?> getReadList(@RequestParam int cPage, @AuthenticationPrincipal Member loginMember){
-		try {
-			Map<String, Object> map = new HashMap<>();
-			log.debug("authentication member = {} ", loginMember);
-			log.debug("authentication member = {} ", loginMember.getNickname());
-			
-			if(loginMember != null) {
-				
+	      try {
+	          Map<String, Object> map = new HashMap<>();
+	          log.debug("authentication member = {} ", loginMember);
+	          log.debug("authentication member = {} ", loginMember.getNickname());
+	          
+	          if(loginMember != null) {
 				// 멤버 있으면 북클럽 찜 리스트 가져와 
-				List<String> pheedWishList = pheedService.getPheedWishListbyMemberId(loginMember.getMemberId());
+				List<String> pheedWishList = pheedService.getPheedWishListbyMemberId(loginMember.getUsername());
 				
 				String wishStr = "";
 				for(int i = 0; i < pheedWishList.size(); i++) {
@@ -133,7 +132,7 @@ public class PheedController {
 				map.put("wishStr", wishStr);
 				
 				// 멤버 있으면 북클럽 하트 리스트 가져와 
-				List<String> pheedLikesList = pheedService.getPheedLikesListbyMemberId(loginMember.getMemberId());
+				List<String> pheedLikesList = pheedService.getPheedLikesListbyMemberId(loginMember.getUsername());
 				
 				String likesStr = "";
 				for(int j = 0;  j < pheedLikesList.size(); j++) {

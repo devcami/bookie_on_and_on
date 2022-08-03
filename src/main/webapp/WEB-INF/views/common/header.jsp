@@ -34,10 +34,12 @@
 
 <!-- 사용자작성 css -->
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/style.css" />
+
 <script>
 <c:if test="${not empty msg}">
 	alert('${msg}');
 </c:if>
+
 </script>
 </head>
 <body>
@@ -125,6 +127,7 @@
                     		</a>
                     	</sec:authorize> 
                     	<sec:authorize access="hasRole('ROLE_USER')"> 
+                    		
                     		<c:if test="${loginMember.memberId != 'admin'}">
                     		<a class="nav-link" href="${pageContext.request.contextPath}/mypage/mypage.do">
 				    			<c:if test="${fn:contains(uri, '/bookie/WEB-INF/views/mypage')}">
@@ -135,6 +138,7 @@
 				    			</c:if>
                     		</a>
                     		</c:if>
+                    		
                     		<c:if test="${loginMember.memberId == 'admin'}">
                     		<a class="nav-link" href="${pageContext.request.contextPath}/admin/admin.do">
 				    			<c:if test="${fn:contains(uri, '/bookie/WEB-INF/views/admin')}">

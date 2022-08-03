@@ -238,25 +238,6 @@
 		</selectKey>
 	</insert>
 	
-	<insert id="commentRefEnroll">
-		insert into 
-			chat_comment 
-		values 
-			(seq_comment_no.nextval, 
-			#{chatNo}, 
-			#{nickname}, 
-			#{commentRef}, 
-			default, 
-			#{commentContent},
-			2)
-		<selectKey keyProperty="commentNo" resultType="_int" order="AFTER">
-			select
-				seq_comment_no.currval
-			from
-				dual
-		</selectKey>
-	</insert>
-	
 	<select id="selectChatComments" resultType="chatComment">
 		select 
 		    * 
