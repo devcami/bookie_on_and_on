@@ -1,6 +1,7 @@
 package com.kh.bookie.pheed.model.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,10 +33,8 @@ public class PheedServiceImpl implements PheedService{
 	}
 	
 	@Override
-	public List<Pheed> selectPheedCList(int cPage, int numPerPage) {
-		int offset = (cPage - 1) * numPerPage;
-		RowBounds rowBounds = new RowBounds(offset, numPerPage);
-		List<Pheed> list = pheedDao.selectPheedCList(rowBounds);
+	public List<Pheed> selectPheedCList(Map<String, Object> map) {
+		List<Pheed> list = pheedDao.selectPheedCList(map);
 		for(Pheed p : list) {
 			PheedAttachment attach = pheedDao.selectAttachment(p.getPheedNo());
 			p.setAttach(attach);
@@ -63,5 +62,40 @@ public class PheedServiceImpl implements PheedService{
 		}
 		
 		return result;
+	}
+	
+	@Override
+	public int report(Map<String, Object> map) {
+		return pheedDao.report(map);
+	}
+	
+	@Override
+	public List<String> getPheedLikesListbyMemberId(String username) {
+		return pheedDao.getPheedLikesListbyMemberId(username);
+	}
+	
+	@Override
+	public List<String> getPheedWishListbyMemberId(String username) {
+		return pheedDao.getPheedWishListbyMemberId(username);
+	}
+	
+	@Override
+	public int insertPheedLike(Map<String, Object> map) {
+		return pheedDao.insertPheedLike(map);
+	}
+	
+	@Override
+	public int insertPheedWishList(Map<String, Object> map) {
+		return pheedDao.insertPheedWishList(map);
+	}
+	
+	@Override
+	public int deletePheedLike(Map<String, Object> map) {
+		return pheedDao.deletePheedLike(map);
+	}
+	
+	@Override
+	public int deletePheedWishList(Map<String, Object> map) {
+		return pheedDao.deletePheedWishList(map);
 	}
 }

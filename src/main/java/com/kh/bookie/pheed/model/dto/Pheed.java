@@ -14,6 +14,6 @@ import lombok.ToString;
 public class Pheed extends PheedEntity{
 	private PheedAttachment attach;
 	Member member;
-
+	private int likesCnt;
 	
 }

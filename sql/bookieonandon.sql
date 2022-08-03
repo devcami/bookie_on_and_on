@@ -20,6 +20,8 @@ create table member (
     constraint ck_member_gender check (gender in ('M', 'F'))
 );
 
+update member set nickname = '승윤이' where member_id = 'tmddbs';
+
 -- 2. authority
 create table authority(
     member_id varchar2(200),
@@ -92,6 +94,7 @@ create table dokoo(
 );
 
 create sequence seq_dokoo_no;
+
 
 -- 8. dokoo_comment - 독후감 댓글 테이블
 create table dokoo_comment(
@@ -254,9 +257,11 @@ create table chat_comment(
     nickname varchar2(100) not null,
     comment_ref number,
     created_at date default sysdate not null,
-    constraint pk_chat_comment_no primary key(comment_no) 
+    comment_content varchar2(1000) not null,
+    comment_level number default 1,
+    constraint pk_chat_comment_no primary key(comment_no)
 );
-
+select * from chat_comment;
 create sequence seq_comment_no;
 
 -- 20. 신고테이블
@@ -265,11 +270,11 @@ create table report (
     member_id varchar2(200) not null,
     category varchar2(30) not null,
     beenzi_no number not null,
-    status varchar2(200) not null,
+    status varchar2(200) not null, -- U(아직처리안됨) or E(처리완료)
+    content varchar2(1000),
     constraint pk_report_no primary key(report_no),
     constraint ck_report_category check(category in ('pheed','pheed_comment','dokoo','dokoo_comment'))
 );
-
 
 create sequence seq_report_no;
 -- 21. 찜하기피드 테이블
@@ -392,7 +397,7 @@ from
     book b join 
             (select ing_no, item_id, member_id, started_at, ended_at, add_date, row_number() over(order by i2.add_date desc) rnum from book_ing i2) i
         on b.member_id = i.member_id and b.item_id = i.item_id
-where b.member_id = 'tmddbs' and b.item_id = '9788932474755'; and i.rownum = 1;
+where b.member_id = 'tmddbs' and b.item_id = '9788932474755' and i.rownum = 1;
 
 select * from book_ing where member_id = 'tmddbs' and item_id = '9788932474755';
 
@@ -519,7 +524,7 @@ select * from chat_attachment;
 select * from chat_comment;
 delete from club_chat where chat_no = 7;
 
-update club_chat set title = '제목제목제목', content = '하이하이' where chat_no = 1
+update club_chat set title = '제목제목제목', content = '하이하이' where chat_no = 1;
 
 update club_chat set enroll_date = (sysdate - 4) where chat_no = 1;
 update club_chat set enroll_date = (sysdate - 3) where chat_no = 4;
@@ -568,7 +573,7 @@ select * from chat_comment;
 delete from club_chat where chat_no = 7;
 commit;
 
-update club_chat set title = '제목제목제목', content = '하이하이' where chat_no = 1
+update club_chat set title = '제목제목제목', content = '하이하이' where chat_no = 1;
 
 update club_chat set enroll_date = (sysdate - 4) where chat_no = 1;
 update club_chat set enroll_date = (sysdate - 3) where chat_no = 4;
@@ -577,7 +582,7 @@ update club_chat set enroll_date = (sysdate - 1) where chat_no = 6;
 
 select * from club_chat order by enroll_date desc;
 
-delete from club_chat where chat_no in (13, 12, 11, 10);
+select * from member;
 
 select * from club where recruit_end > sysdate order by recruit_end;       
 
@@ -592,5 +597,23 @@ select
 from 
     book b right join (select * from book_ing order by add_date desc) i
         on b.member_id = i.member_id
-where b.member_id = 'tmddbs' and b.item_id = '9788932474755' 
-    
+where b.member_id = 'tmddbs' and b.item_id = '9788932474755' ;
+
+
+-- 1~3
+select * 
+from 
+    (select row_number() over (order by enroll_date desc) rnum, p.* 
+    from pheed p where is_opened = 'O')
+where
+    rnum between 1 and 3;
+select
+    *
+from(
+    select 
+        row_number () over(order by no desc) rnum,
+        b.*
+    from
+        board b)
+where
+    rnum between 11 and 15;
