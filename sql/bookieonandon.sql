@@ -585,37 +585,4 @@ select * from member;
 
 select * from club where recruit_end > sysdate order by recruit_end;       
 
----------------------------------
--- book <<은민>>
----------------------------------
-
-select 
-    b.*,
-    i.started_at started_at,
-    i.ended_at ended_at
-from 
-
--- 1~3
-select * 
-from 
-    (select row_number() over (order by enroll_date desc) rnum, p.* 
-    from pheed p where is_opened = 'O')
-where
-    rnum between 1 and 3;
-select
-    *
-from(
-    select 
-        row_number () over(order by no desc) rnum,
-        b.*
-    from
-        board b)
-where
-    rnum between 11 and 15;
-    chat_comment cc 
-where 
-    chat_no = 14 
-        start with comment_level = 1 connect by prior comment_no = comment_ref 
-order siblings by created_at desc;
-
 
