@@ -74,37 +74,50 @@ ${clubBoard.chatComments}
 	    	</div>
 	    	
 	    	<%-- 일반 댓글 --%>
-	    	<div class="card shadow comment-one mb-2" id="comment1">
-				<div class="card-body">
-					<div class="d-flex flex-start">
-						
-						
-						<img class="rounded-circle shadow-1-strong m-1" src="" alt="avatar" width="40" height="40">
-						
-						<div class="">
-							<div class="m-1 comment-div d-flex justify-content-between  align-items-start">
-								<h6 class="ml-2 mb-0 comment-nickname d-inline">
-									승윤 
-								</h6>
-								<span class="text-dark" id="comment-content1">엄청 길게 댓글을 작성한 다음에 수정하려고 하면 폼의 상태는 어떻게 될것인지 ? 정말 모르겟다 . 그래서 테스트를 해보려 한다.</span>
-								
-								<span class="mb-0 text-secondary">
-									2022/08/01 22:09
-								</span>
+	    	<c:forEach items="${clubBoard.chatComments}" var="comment" varStatus="vs">
+		    	<div class="card shadow comment-one mb-2" id="comment${comment.commentNo}">
+					<div class="card-body">
+						<div class="d-flex flex-start">
+							
+							<%-- <c:if test="${loginMember.renamedFilename != null}"> --%>
+							<img 
+								class="rounded-circle shadow-1-strong m-1" 
+								src="${pageContext.request.contextPath}/resources/upload/profile/${loginMember.renamedFilename}" 
+								alt="avatar" width="40" height="40">
+							<%-- </c:if> --%>
+							<div class="">
+								<div class="m-1 comment-div d-flex justify-content-between  align-items-start">
+									<h6 class="ml-2 mb-0 comment-nickname d-inline">
+										${comment.nickname} 
+									</h6>
+									<span class="text-dark" id="comment-content${comment.commentNo}">${comment.commentContent}</span>
+									<fmt:parseDate value="${comment.createdAt}" pattern="yyyy-MM-dd'T'HH:mm" var="createdAt"/>
+									<span class="mb-0 text-secondary">
+										<fmt:formatDate value="${createdAt}" pattern="yyyy/MM/dd HH:mm"/>
+									</span>
+								</div>
+								<div class="text-right mr-2">
+									<p class="small mb-0 pr-2" style="color: #aaa;">
+									<c:if test="${comment.nickname == loginMember.nickname}">
+										<a href="#!" class="link-grey" onclick="commentDel(this);" data-comment-no="${comment.commentNo}">삭제</a> • 
+										
+										<a href="#!" id="updateBtn${comment.commentNo}" class="link-grey" onclick="showCommentUpdate(this);" data-comment-no="${comment.commentNo}">수정</a> • 
+									</c:if>
+										<a href="#!" class="link-grey" onclick="commentRef(this);" data-comment-no="${comment.commentNo}">답글</a>
+									</p>
+								</div>
 							</div>
-							<div class="text-right mr-2">
-								<p class="small mb-0 pr-2" style="color: #aaa;">
-									<a href="#" class="link-grey" onclick="commentDel(this);" data-dokoocno="23">삭제</a> • 
-									
-									<a href="#!" class="link-grey" onclick="commentUpdate(this);" data-dokoocno="23" data-vs="1">수정</a> • 
-									
-									<a href="#!" class="link-grey" onclick="commentRef(this);" data-dokoocno="23">답글</a>
-								</p>
-							</div>
+						</div>
+						<div class="coCommentDiv">
+							
 						</div>
 					</div>
 				</div>
-			</div>
+	    	
+	    	
+	    	
+	    	</c:forEach>
+	    	
 			
 			
 			<%-- 답글 --%>
@@ -126,11 +139,14 @@ ${clubBoard.chatComments}
 
 <script>
 
+<%-- 게시글 삭제 요청 --%>
 const deleteClubBoard = () => {
-
-	document.deleteClubBoardFrm.submit();
+	if(confirm("정말 삭제하시겠습니까?")){
+		document.deleteClubBoardFrm.submit();	
+	}
 }
 
+<%-- 게시글 수정 요청 --%>
 const updateClubBoard = () => {
 	
 	const chatNo = "${clubBoard.chatNo}";
@@ -138,6 +154,7 @@ const updateClubBoard = () => {
 	location.href = `${pageContext.request.contextPath}/club/updateClubBoard.do/\${chatNo}`;
 }
 
+<%-- 댓글 등록 비동기 --%>
 const enrollComment = () => {
 	const commentVal = document.querySelector('#comment-content').value;
 	const csrfHeader = '${_csrf.headerName}';
@@ -180,7 +197,7 @@ const enrollComment = () => {
 									<h6 class="ml-2 mb-0 comment-nickname d-inline">
 										${loginMember.nickname}
 									</h6>
-									<span class="text-dark" id="comment-content1">\${commentContent}</span>
+									<span class="text-dark" id="comment-content\${commentNo}">\${commentContent}</span>
 									
 									<span class="mb-0 text-secondary">
 										\${createdAt}
@@ -188,11 +205,11 @@ const enrollComment = () => {
 								</div>
 								<div class="text-right mr-2">
 									<p class="small mb-0 pr-2" style="color: #aaa;">
-										<a href="#" class="link-grey" onclick="commentDel(this);" data-dokoocno="23">삭제</a> • 
+										<a href="#!" class="link-grey" onclick="commentDel(this);" data-comment-no="\${commentNo}">삭제</a> • 
 										
-										<a href="#!" class="link-grey" onclick="commentUpdate(this);" data-dokoocno="23" data-vs="1">수정</a> • 
-										
-										<a href="#!" class="link-grey" onclick="commentRef(this);" data-dokoocno="23">답글</a>
+										<a href="#!" class="link-grey" id="updateBtn\${commentNo}" onclick="showCommentUpdate(this);" data-comment-no="\${commentNo}">수정</a> • 
+
+										<a href="#!" class="link-grey" onclick="commentRef(this);" data-comment-no="\${commentNo}">답글</a>
 									</p>
 								</div>
 							</div>
@@ -210,6 +227,122 @@ const enrollComment = () => {
 	
 }
 
+<%-- 댓글 삭제 --%>
+const commentDel = (e) => {
+	console.log(e.dataset.commentNo);
+	const commentNo = e.dataset.commentNo;
+	
+	const csrfHeader = '${_csrf.headerName}';
+	const csrfToken = '${_csrf.token}';
+	const headers = {};
+	headers[csrfHeader] = csrfToken; // 전송하는 헤더에 추가하여 전송 
+	
+	if(confirm('댓글을 삭제하시겠습니까?')){
+		$.ajax({
+			url : '${pageContext.request.contextPath}/club/commentDel.do',
+			method : 'post',
+			headers,
+			data : {
+				commentNo : commentNo,
+			},
+			success(resp){
+				const deleteCommentId = "#comment" + commentNo;
+				$(deleteCommentId).remove();
+				
+			},
+			error:console.log
+		});
+	}
+};
+
+
+<%-- 댓글 수정 화면 바꿔 --%>
+let originalComment;
+const showCommentUpdate = (e) => {
+	const commentNo = e.dataset.commentNo;
+	const id = '#comment-content' + commentNo
+	// console.log(id);
+	const chatNo = '${param.chatNo}';
+	// console.log(chatNo);
+	const content = document.querySelector(id);
+	// console.log(content);
+	
+ 	if(e.innerText == '수정'){
+		const contentInnerText = content.innerText;
+		//console.log(contentInnerText);
+		originalComment = contentInnerText;
+		//console.log("e.innerText == 수정", e.innerText == '수정');
+		const input = `<input type="text" name="content" id="commentText\${commentNo}" value="\${content.innerText}" class="updateCommentInput"/>
+					   <button class="btn" type="button" id="btn-update-comment\${commentNo}" onclick="updateComment(this)" data-comment-no="\${commentNo}">수정</button>`;
+		content.innerHTML = "";
+		content.insertAdjacentHTML('beforeend', input);
+		
+		e.innerText="취소";	
+	}
+	else{
+		//console.log(content);
+		content.innerHTML = originalComment;
+		e.innerText = "수정";	
+	}
+	const p = document.querySelector(".text-right.mr-2");
+	p.style.position = 'relative';
+	p.style.bottom = '7px';
+};
+
+<%-- 댓글 수정 비동기 --%>
+const updateComment = (e) => {
+	const commentNo = e.dataset.commentNo
+	
+	const originalDivId = '#comment-content' + commentNo
+	
+	// 원래 댓글 담기는 곳
+	const container = document.querySelector(originalDivId);
+	// console.log(container);
+	
+	const inputId = "#commentText" + commentNo; 
+	const btnId = "#btn-update-comment" + commentNo;
+
+	// 수정한 내용 들고와
+	const commentContent = document.querySelector(inputId).value;
+	// console.log("수정한 내용 = ", commentContent);
+
+	
+	const csrfHeader = '${_csrf.headerName}';
+	const csrfToken = '${_csrf.token}';
+	const headers = {};
+	headers[csrfHeader] = csrfToken; // 전송하는 헤더에 추가하여 전송 
+	
+	$.ajax({
+		url: "${pageContext.request.contextPath}/club/commentUpdate.do",
+		method : "POST",
+		headers,
+		data : {
+			commentNo : commentNo,
+			commentContent : commentContent
+		},
+		success(resp){
+			console.log(resp);
+			// Input 지워
+			$(inputId).remove();
+			// 버튼 지워
+			$(btnId).remove();
+			// 원래 내용 추가해
+			container.innerHTML = commentContent;
+			
+			// 취소로 바꿔
+			document.getElementById(`updateBtn\${commentNo}`).innerHTML = '수정';
+		},
+		error: console.log
+	});
+	
+	
+}
+
+<%-- 답글 --%>
+const commentRef = (e) => {
+	const commentNo = e.dataset.commentNo;
+	const div = ``;
+};
 
 </script>
 

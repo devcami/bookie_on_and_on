@@ -70,8 +70,14 @@
 								  	<i class="fa fa-bookmark fa-solid fa-stack-1x b-behind" data-pheed-no="${pheed.pheedNo}"></i>
 								</c:if>
 							</span>
-						  <button type="button" 
-						  			class="btn btn-report float-right" data-no="${pheed.pheedNo}" onclick="openReportModal(this);"><i class="fa-solid fa-ellipsis"></i></button>
+						  	<button type="button" 
+						  			class="btn btn-report float-right m-2" data-no="${pheed.pheedNo}" onclick="openReportModal(this);"><i class="fa-solid fa-ellipsis"></i></button>
+							<c:if test="${pheed.member.nickname eq loginMember.nickname}">
+							<button type="button" class="float-right btn-sm btn-update mt-3 mb-3 mr-2" onclick="updatePheed();">수정</button>	
+							</c:if>
+							<c:if test="${pheed.member.nickname eq loginMember.nickname || loginMember.memberId eq 'admin'}">
+							<button type="button" class="float-right btn-sm btn-delete mt-3 mb-3 mr-2" onclick="deletePheed();">삭제</button>	
+							</c:if>
 						</div>
 					</div>
 					<div class='likes-div'>						
@@ -182,8 +188,15 @@ function getReadList(cPage) {
 												  }					  		
 										div+=`  
     										</span>
-    									  <button type="button" 
-    									  			class="btn btn-report float-right" data-no="\${pheedNo}"  onclick="openReportModal(this);"><i class="fa-solid fa-ellipsis"></i></button>
+    									  	<button type="button" 
+    									  			class="btn btn-report float-right" data-no="\${pheedNo}"  onclick="openReportModal(this);"><i class="fa-solid fa-ellipsis"></i></button>`;
+    									  	if(nickname == '${loginMember.nickname}'){
+    									  		div += `<button type="button" class="float-right btn-sm btn-update mt-3 mb-3 mr-2" onclick="updatePheed();">수정</button>`;	
+    									  	}
+    									  	if(nickname == '${loginMember.nickname}' || ${loginMember.memberId == 'admin'}){
+												div += `<button type="button" class="float-right btn-sm btn-delete mt-3 mb-3 mr-2" onclick="deletePheed();">삭제</button>`;	
+    									  	}
+    									 div+=`
     									</div>
     								</div>
     								<div class='likes-div'>						
@@ -340,6 +353,18 @@ window.onscroll = function () {
 		pheedHeader.classList.remove("drop");
 	}
 };
+
+
+<%-- 피드 삭제 --%>
+const deletePheed = () => {
+	
+};
+
+<%-- 피드 수정 --%>
+const updatePheed = () => {
+	
+};
+
 
 </script>
 

@@ -103,5 +103,11 @@ public interface ClubDao {
 
 	List<ChatComment> selectChatComments(int chatNo);
 
+	@Delete("delete from chat_comment where comment_no = #{commentNo}")
+	int commentDelete(int commentNo);
+
+	@Update("update chat_comment set comment_content = #{commentContent} where comment_no = #{commentNo}")
+	int commentUpdate(ChatComment cc);
+
 
 }

@@ -61,6 +61,8 @@
 						class="btn" id="btn-report"><i class="fa-solid fa-ellipsis"></i></button>
 					<c:if test="${dokoo.member.nickname eq loginMember.nickname}">
 					<button type="button" class="float-right btn-sm btn-update mr-2" onclick="updateDokoo();">수정</button>	
+					</c:if>
+					<c:if test="${dokoo.member.nickname eq loginMember.nickname || loginMember.memberId eq 'admin'}">
 					<button type="button" class="float-right btn-sm btn-delete mr-2" onclick="deleteDokoo();">삭제</button>	
 					</c:if>
 				</div>
@@ -391,6 +393,7 @@ window.addEventListener('load', (e) => {
 		},
 		success(resp){
 			console.log(resp);
+			
 			const dokooSns = resp[0];
 			const span = document.querySelector('#likesCnt');
 			if(dokooSns == null){
@@ -398,6 +401,8 @@ window.addEventListener('load', (e) => {
 			}
 			else{
 				resp.forEach((sns) => {
+					if(sns != null){
+						
 					const {memberId, snsType} = sns;
 					if(snsType == 'LIKE'){
 						if(memberId == '${loginMember.memberId}'){
@@ -407,12 +412,14 @@ window.addEventListener('load', (e) => {
 						}
 						span.innerText = Number(span.innerText) + 1;
 					}
-					if(snsType == 'BOOKMARK'){
+					else if(snsType == 'BOOKMARK'){
 						if(memberId == '${loginMember.memberId}'){
 							const iBookMark = `<i class="fa fa-bookmark fa-solid fa-stack-1x b-behind"></i>`;
 							const bspan = document.querySelector("#b-span");
 							bspan.insertAdjacentHTML('beforeend', iBookMark);						
 						}
+					}
+						
 					}
 				});
 			}
