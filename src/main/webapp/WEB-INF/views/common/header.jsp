@@ -119,9 +119,8 @@
                     	</a>
                     </li>
                     <li class="nav-item">
-                    
                     	<c:if test="${not empty loginMember}">
-                    		<a class="nav-link" href="${pageContext.request.contextPath}/mypage/mypage.do?memberId=${loginMember.username}">
+                    		<a class="nav-link" href="${pageContext.request.contextPath}/mypage/mypage.do">
 				    			<c:if test="${fn:contains(uri, '/bookie/WEB-INF/views/mypage')}">
 	                    		<img src="${pageContext.request.contextPath}/resources/images/icon/i_mypage_on.png" alt="mypageicon" />내서재
 				    			</c:if>
