@@ -104,7 +104,7 @@ ${clubBoard.chatComments}
 	                              
 	                              <a href="#!" id="updateBtn${comment.commentNo}" class="link-grey" onclick="showCommentUpdate(this);" data-comment-no="${comment.commentNo}">수정</a> • 
 	                           </c:if>
-	                              <a href="#!" class="link-grey" onclick="showCommentRefInput(this);" data-comment-no="${comment.commentNo}">답글</a>
+	                              <a href="#!" id="commentRefBtn${comment.commentNo}" class="link-grey" onclick="showCommentRefInput(this);" data-comment-no="${comment.commentNo}">답글</a>
 	                           </p>
 	                        </div>
 						</div>							
@@ -475,6 +475,11 @@ const enrollCommentRef = (e) => {
 			// 답댓글 input이랑 btn 담긴 div 삭제하셈
 			const coRefDivId = "#coRefDiv" + commentRef;
 			$(coRefDivId).remove();
+			
+			// 답글 버튼 취소에서 다시 답글로 바꾸기 
+			const commentRefBtnId = "#commentRefBtn" + commentRef;
+			const commentRefBtn = document.querySelector(commentRefBtnId);
+			commentRefBtn.innerText = '답글';
 		},
 		error : console.log
 	});
