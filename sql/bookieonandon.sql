@@ -378,7 +378,6 @@ SELECT
 FROM user_tab_columns; -- 해당 계정에 속한 테이블 
    --  dba_tab_columns 전체 테이블의 경우 
 
-
 select *
 from book b right join
 (select

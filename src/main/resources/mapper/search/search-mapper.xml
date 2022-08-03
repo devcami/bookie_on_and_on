@@ -137,4 +137,32 @@
 	where
 		ing_no = #{ingNo}
 	</update>
+	
+	<select id="selectOneMember" resultMap="memberInterestMap">
+	select 
+	    m.*,
+	    (select interest from interest where member_id = #{memberId}) interest
+	from 
+	    member m 
+	where
+		m.member_id = #{memberId} 
+	</select>
+	
+	<resultMap type="member" id="memberInterestMap">
+		<id column="member_id" property="memberId"/>
+		<result column="password" property="password"/>
+		<result column="enroll_date" property="enrollDate"/>
+		<result column="nickname" property="nickname"/>
+		<result column="phone" property="phone"/>
+		<result column="gender" property="gender"/>
+		<result column="birthday" property="birthday"/>
+		<result column="introduce" property="introduce"/>
+		<result column="renamed_filename" property="renamedFilename"/>
+		<result column="original_filename" property="originalFilename"/>
+		<result column="sns" property="sns"/>
+		<result column="point" property="point"/>
+		<result column="email" property="email"/>
+		<result column="interest" property="interest"/>
+	</resultMap>
+	
 </mapper>
