@@ -34,10 +34,12 @@
 
 <!-- 사용자작성 css -->
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/style.css" />
+
 <script>
 <c:if test="${not empty msg}">
 	alert('${msg}');
 </c:if>
+
 </script>
 </head>
 <body>
@@ -130,7 +132,12 @@
                     	</sec:authorize> 
                     	<sec:authorize access="hasRole('ROLE_USER')"> 
                     	--%>
-                    	<a class="nav-link" href="${pageContext.request.contextPath}/mypage/mypage.do">
+                    	<c:if test="${not empty loginMember}">
+                    	<a class="nav-link" href="${pageContext.request.contextPath}/mypage/mypage.do?memberId=${loginMember.username}">
+                    	</c:if>
+                    	<c:if test="${empty loginMember}">
+                    	<a class="nav-link" href="${pageContext.request.contextPath}/member/login.do">
+                    	</c:if>
 			    			<c:if test="${fn:contains(uri, '/bookie/WEB-INF/views/mypage')}">
                     		<img src="${pageContext.request.contextPath}/resources/images/icon/i_mypage_on.png" alt="mypageicon" />내서재
 			    			</c:if>
