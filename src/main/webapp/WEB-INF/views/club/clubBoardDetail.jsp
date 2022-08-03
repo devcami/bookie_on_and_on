@@ -11,17 +11,15 @@
 	<jsp:param value="북클럽 게시판 글" name="title"/>
 </jsp:include>
 <sec:authentication property="principal" var="loginMember"/>
-${clubBoard.member}
-${clubBoard.chatComments}
 <div id="clubBook-container">
 	<section id="content">
 		<div id="menuDiv">
 			<ul>
-				<li id="first-li" class="menu-li" style="background-color: #F76E11;"><a href="${pageContext.request.contextPath}/club/clubStory.do/${club.clubNo}">메인페이지</a></li>
-				<li id="second-li" class="menu-li" style="background-color: #FF9F45;"><a href="${pageContext.request.contextPath}/club/clubStory.do/${club.clubNo}">북클럽 스토리</a></li>
-				<li id="third-li" class="menu-li nowPage" style="background-color: #FFBC80;"><a href="${pageContext.request.contextPath}/club/clubBoard.do/${clubNo}">게시판</a></li>
-				<li id="fourth-li" class="menu-li" style="background-color: #FC4F4F;"><a href="${pageContext.request.contextPath}/club/clubMission.do/${club.clubNo}/${loginMember.username}">미션</a></li>
-				<li id="fifth-li" class="menu-li" style="background-color: #D9534F;"><a href="${pageContext.request.contextPath}/club/clubChat.do/${club.clubNo}">채팅..?</a></li>		
+				<li id="first-li" class="menu-li" style="background-color: #F76E11;"><a href="${pageContext.request.contextPath}/club/clubStory.do/${clubBoard.clubNo}">메인페이지</a></li>
+				<li id="second-li" class="menu-li" style="background-color: #FF9F45;"><a href="${pageContext.request.contextPath}/club/clubStory.do/${clubBoard.clubNo}">북클럽 스토리</a></li>
+				<li id="third-li" class="menu-li nowPage" style="background-color: #FFBC80;"><a href="${pageContext.request.contextPath}/club/clubBoard.do/${clubBoard.clubNo}">게시판</a></li>
+				<li id="fourth-li" class="menu-li" style="background-color: #FC4F4F;"><a href="${pageContext.request.contextPath}/club/clubMission.do/${clubBoard.clubNo}/${loginMember.username}">미션</a></li>
+				<li id="fifth-li" class="menu-li" style="background-color: #D9534F;"><a href="${pageContext.request.contextPath}/club/clubChat.do/${clubBoard.clubNo}">채팅..?</a></li>		
 			</ul>
 		</div>
 		<div id="board-div">
@@ -66,82 +64,84 @@ ${clubBoard.chatComments}
 		
 		<div id="comment-container">
 			<%-- 댓글 입력 창 --%>
-			<div class="input-group p-2 mb-2" id="comment-input">
+			<div class="input-group p-2 mb-2">
 				<input type="text" class="form-control" name="content" id="comment-content" placeholder="댓글을 작성해주세요." aria-label="댓글을 작성해주세요." aria-describedby="button-comment">
 				<div class="input-group-append">
 					<button class="btn" type="button" id="btn-enroll-comment" onclick="enrollComment();">등록</button>
 				</div>
 	    	</div>
 	    	
-	    	<%-- 일반 댓글 --%>
-             <c:forEach items="${clubBoard.chatComments}" var="comment" varStatus="vs">
+	    	<div id="comment-wrapper" class="p-2">
+	    		<%-- 일반 댓글 --%>
+		    	<c:forEach items="${clubBoard.chatComments}" var="comment" varStatus="vs">
 
-               <%-- 댓글인 경우 --%>
-               <c:if test="${comment.commentRef eq 0}">
-               <div class="co-div flex-center comment-div" id="comment${comment.commentNo}">
-                  <div class="co-left flex-center">
-                     <div class="co-writer flex-center">
-                        <img 
-                           class="rounded-circle shadow-1-strong m-1" 
-                           src="${pageContext.request.contextPath}/resources/upload/profile/${loginMember.renamedFilename}" 
-                           alt="avatar" width="40" height="40">
-                        <span>${comment.nickname}</span>
-                     </div>
-                     <div class="co-Content" id="contentDiv${comment.commentNo}">
-                           <span id="contentSpan${comment.commentNo}">${comment.commentContent}</span>      
-                     </div>
-                  </div>
-                  <div class="co-right">
-                     <span class="text-secondary">
-                        <fmt:parseDate value="${comment.createdAt}" pattern="yyyy-MM-dd'T'HH:mm" var="createdAt"/>
-                        <fmt:formatDate value="${createdAt}" pattern="yyyy/MM/dd HH:mm"/>
-                     </span>
-                     <div class="text-right">
-                        <p class="small mb-0" style="color: #aaa;">
-                        <c:if test="${comment.nickname == loginMember.nickname}">
-                           <a href="#!" class="link-grey" onclick="commentDel(this);" data-comment-no="${comment.commentNo}">삭제</a> • 
-                           
-                           <a href="#!" id="updateBtn${comment.commentNo}" class="link-grey" onclick="showCommentUpdate(this);" data-comment-no="${comment.commentNo}">수정</a> • 
-                        </c:if>
-                           <a href="#!" id="commentRefBtn${comment.commentNo}" class="link-grey" onclick="showCommentRefInput(this);" data-comment-no="${comment.commentNo}">답글</a>
-                        </p>
-                     </div>
-                  </div>                     
-               </div>
-               </c:if>
-               <%-- 댓글 끝 --%>
-               
-               <%-- 대댓글 --%>
-               <c:if test="${comment.commentRef ne 0}">
-               <div class="co-div flex-center coComment-div" id="coComment${comment.commentNo}">
-                  <div class="co-left flex-center" style="margin-left: 40px;">
-                     <div class="co-writer flex-center">
-                        <img 
-                           class="rounded-circle shadow-1-strong m-1" 
-                           src="${pageContext.request.contextPath}/resources/upload/profile/${loginMember.renamedFilename}" 
-                           alt="avatar" width="40" height="40">
-                        <span>${comment.nickname}</span>
-                     </div>
-                     <div class="co-Content" id="contentDiv${comment.commentNo}">
-                        <span id="contentSpan${comment.commentNo}">${comment.commentContent}</span>                                          
-                     </div>
-                  </div>
-                  <div class="co-right">
-                     <span class="text-secondary">
-                        <fmt:parseDate value="${comment.createdAt}" pattern="yyyy-MM-dd'T'HH:mm" var="createdAt"/>
-                        <fmt:formatDate value="${createdAt}" pattern="yyyy/MM/dd HH:mm"/>
-                     </span>
-                     <div class="small" style="padding-left: 10px;">
-                        <a href="#!" class="link-grey" onclick="commentDel(this);" data-comment-type='coComment' data-comment-no="${comment.commentNo}">삭제</a> • 
-                        <a href="#!" id="updateBtn${comment.commentNo}" class="link-grey" onclick="showCommentUpdate(this);" data-comment-no="${comment.commentNo}">수정</a>
-                     </div>      
-                  </div>                     
-               </div>
-               </c:if>
-               <%-- 대댓글 끝 --%>
-               
-             </c:forEach>
-
+					<%-- 댓글인 경우 --%>
+					<c:if test="${comment.commentRef eq 0}">
+					<div class="co-div flex-center comment-div" id="comment${comment.commentNo}">
+						<div class="co-left flex-center">
+							<div class="co-writer flex-center">
+								<img 
+									class="rounded-circle shadow-1-strong m-1" 
+									src="${pageContext.request.contextPath}/resources/upload/profile/${loginMember.renamedFilename}" 
+									alt="avatar" width="40" height="40">
+								<span>${comment.nickname}</span>
+							</div>
+							<div class="co-Content" id="contentDiv${comment.commentNo}">
+					   			<span id="contentSpan${comment.commentNo}">${comment.commentContent}</span>		
+							</div>
+						</div>
+						<div class="co-right">
+							<span class="text-secondary">
+								<fmt:parseDate value="${comment.createdAt}" pattern="yyyy-MM-dd'T'HH:mm" var="createdAt"/>
+								<fmt:formatDate value="${createdAt}" pattern="yyyy/MM/dd HH:mm"/>
+							</span>
+							<div class="text-right">
+	                           <p class="small mb-0" style="color: #aaa;">
+	                           <c:if test="${comment.nickname == loginMember.nickname}">
+	                              <a href="#!" class="link-grey" onclick="commentDel(this);" data-comment-no="${comment.commentNo}">삭제</a> • 
+	                              
+	                              <a href="#!" id="updateBtn${comment.commentNo}" class="link-grey" onclick="showCommentUpdate(this);" data-comment-no="${comment.commentNo}">수정</a> • 
+	                           </c:if>
+	                              <a href="#!" id="commentRefBtn${comment.commentNo}" class="link-grey" onclick="showCommentRefInput(this);" data-comment-no="${comment.commentNo}">답글</a>
+	                           </p>
+	                        </div>
+						</div>							
+					</div>
+					</c:if>
+					<%-- 댓글 끝 --%>
+					
+					<%-- 대댓글 --%>
+					<c:if test="${comment.commentRef ne 0}">
+					<div class="co-div flex-center coComment-div" id="coComment${comment.commentNo}">
+						<div class="co-left flex-center" style="margin-left: 40px;">
+							<div class="co-writer flex-center">
+								<img 
+									class="rounded-circle shadow-1-strong m-1" 
+									src="${pageContext.request.contextPath}/resources/upload/profile/${loginMember.renamedFilename}" 
+									alt="avatar" width="40" height="40">
+								<span>${comment.nickname}</span>
+							</div>
+							<div class="co-Content" id="contentDiv${comment.commentNo}">
+								<span id="contentSpan${comment.commentNo}">${comment.commentContent}</span>														
+							</div>
+						</div>
+						<div class="co-right">
+							<span class="text-secondary">
+								<fmt:parseDate value="${comment.createdAt}" pattern="yyyy-MM-dd'T'HH:mm" var="createdAt"/>
+								<fmt:formatDate value="${createdAt}" pattern="yyyy/MM/dd HH:mm"/>
+							</span>
+							<div class="small" style="padding-left: 10px;">
+								<a href="#!" class="link-grey" onclick="commentDel(this);" data-comment-type='coComment' data-comment-no="${comment.commentNo}">삭제</a> • 
+								<a href="#!" id="updateBtn${comment.commentNo}" class="link-grey" onclick="showCommentUpdate(this);" data-comment-no="${comment.commentNo}">수정</a>
+							</div>		
+						</div>							
+					</div>
+					</c:if>
+					<%-- 대댓글 끝 --%>
+					
+		    	</c:forEach>
+	    	</div>
+	    	
  		</div>
 
 	</section>
@@ -194,7 +194,7 @@ const enrollComment = () => {
 		success(resp){
 			console.log(resp);
 			const {chatNo, commentContent, commentNo} = resp;
-			const container = document.querySelector("#comment-input")
+			const container = document.querySelector("#comment-wrapper")
 			
 			var today = new Date();
 
@@ -207,40 +207,36 @@ const enrollComment = () => {
 			const createdAt = year + "/" + month + "/" + day + " " + hours + ":" + minutes;
 			
 			const div = `
-				<div class="card shadow comment-one mb-2" id="comment\${commentNo}">
-					<div class="card-body">
-						<div class="d-flex flex-start">
-							<img class="rounded-circle shadow-1-strong m-1" src="" alt="avatar" width="40" height="40">
-							
-							<div class="">
-								<div class="m-1 comment-div d-flex justify-content-between  align-items-start">
-									<h6 class="ml-2 mb-0 comment-nickname d-inline">
-										${loginMember.nickname}
-									</h6>
-									<span class="text-dark" id="comment-content\${commentNo}">\${commentContent}</span>
-									
-									<span class="mb-0 text-secondary">
-										\${createdAt}
-									</span>
-								</div>
-								<div class="text-right mr-2">
-									<p class="small mb-0 pr-2" style="color: #aaa;">
-										<a href="#!" class="link-grey" onclick="commentDel(this);" data-comment-no="\${commentNo}">삭제</a> • 
-										
-										<a href="#!" class="link-grey" id="updateBtn\${commentNo}" onclick="showCommentUpdate(this);" data-comment-no="\${commentNo}">수정</a> • 
-
-										<a href="#!" class="link-grey" id="commentRefBtn\${commentNo}" onclick="commentRef(this);" data-comment-no="\${commentNo}">답글</a>
-									</p>
-								</div>
-							</div>
+					<div class="co-div flex-center comment-div" id="comment\${commentNo}">
+					<div class="co-left flex-center">
+						<div class="co-writer flex-center">
+							<img 
+								class="rounded-circle shadow-1-strong m-1" 
+								src="${pageContext.request.contextPath}/resources/upload/profile/${loginMember.renamedFilename}" 
+								alt="avatar" width="40" height="40">
+							<span>${loginMember.nickname}</span>
+						</div>
+						<div class="co-Content" id="contentDiv\${commentNo}">
+				   			<span id="contentSpan\${commentNo}">\${commentContent}</span>		
 						</div>
 					</div>
+					<div class="co-right">
+						<span class="text-secondary">
+							\${createdAt}
+						</span>
+						<div class="text-right">
+	                       <p class="small mb-0" style="color: #aaa;">
+	                          <a href="#!" class="link-grey" onclick="commentDel(this);" data-comment-no="\${commentNo}">삭제</a> • 
+	                          <a href="#!" id="updateBtn\${commentNo}" class="link-grey" onclick="showCommentUpdate(this);" data-comment-no="\${commentNo}">수정</a> • 
+	                          <a href="#!" id="commentRefBtn\${commentNo}" class="link-grey" onclick="showCommentRefInput(this);" data-comment-no="\${commentNo}">답글</a>
+	                       </p>
+	                    </div>
+					</div>							
 				</div>`;
 				
-				container.insertAdjacentHTML('afterend', div);
-				container.value = '';
+				container.insertAdjacentHTML('afterbegin', div);
+				document.querySelector('#comment-content').value = '';
 					
-			/* location.reload(); */
 		},
 		error:console.log
 	});
@@ -251,6 +247,7 @@ const enrollComment = () => {
 const commentDel = (e) => {
 	console.log(e.dataset.commentNo);
 	const commentNo = e.dataset.commentNo;
+	const commentType = e.dataset.commentType;
 	
 	const csrfHeader = '${_csrf.headerName}';
 	const csrfToken = '${_csrf.token}';
@@ -266,7 +263,14 @@ const commentDel = (e) => {
 				commentNo : commentNo,
 			},
 			success(resp){
-				const deleteCommentId = "#comment" + commentNo;
+				let deleteCommentId = '';
+				
+				if(commentType == 'coComment'){
+					deleteCommentId = "#coComment" + commentNo;
+				} else {
+					deleteCommentId = "#comment" + commentNo;
+				}
+				
 				$(deleteCommentId).remove();
 				
 			},
@@ -280,45 +284,52 @@ const commentDel = (e) => {
 let originalComment;
 const showCommentUpdate = (e) => {
 	const commentNo = e.dataset.commentNo;
-	const id = '#comment-content' + commentNo
-	// console.log(id);
-	const chatNo = '${param.chatNo}';
+	const divId = '#contentDiv' + commentNo;
+	const spanId = '#contentSpan' + commentNo;
+	
+	// const chatNo = '${param.chatNo}';
 	// console.log(chatNo);
-	const content = document.querySelector(id);
-	// console.log(content);
+
+	const contentDiv = document.querySelector(divId);
+	const contentSpan = document.querySelector(spanId);
 	
  	if(e.innerText == '수정'){
-		const contentInnerText = content.innerText;
+ 		// 원래 있던 span 안보이게 처리해
+ 		contentSpan.style.display = 'none';
+		const contentInnerText = contentSpan.innerText;
 		//console.log(contentInnerText);
-		originalComment = contentInnerText;
-		//console.log("e.innerText == 수정", e.innerText == '수정');
-		const input = `<input type="text" name="content" id="commentText\${commentNo}" value="\${content.innerText}" class="updateCommentInput"/>
-					   <button class="btn" type="button" id="btn-update-comment\${commentNo}" onclick="updateComment(this)" data-comment-no="\${commentNo}">수정</button>`;
-		content.innerHTML = "";
-		content.insertAdjacentHTML('beforeend', input);
+		// originalComment = contentInnerText;
+		
+		const input = `
+				<input type="text" name="content" id="commentText\${commentNo}" value="\${contentInnerText}" class="updateCommentInput form-control"/>
+   				<button class="btn" type="button" id="btn-update-comment\${commentNo}" onclick="updateComment(this)" data-comment-no="\${commentNo}">수정</button>`;
+		contentDiv.insertAdjacentHTML('beforeend', input);
 		
 		e.innerText="취소";	
 	}
-	else{
+	else{ 
+		// 취소 누른 경우
+		// 
+		$(contentDiv).children('input').remove();
+		$(contentDiv).children('button').remove();
+		contentSpan.style.display = '';
 		//console.log(content);
-		content.innerHTML = originalComment;
 		e.innerText = "수정";	
 	}
-	const p = document.querySelector(".text-right.mr-2");
+/* 	const p = document.querySelector(".text-right.mr-2");
 	p.style.position = 'relative';
-	p.style.bottom = '7px';
+	p.style.bottom = '7px'; */
 };
 
 <%-- 댓글 수정 비동기 --%>
 const updateComment = (e) => {
 	const commentNo = e.dataset.commentNo
-	
-	const originalDivId = '#comment-content' + commentNo
-	
+
 	// 원래 댓글 담기는 곳
-	const container = document.querySelector(originalDivId);
-	// console.log(container);
+	const spanId = '#contentSpan' + commentNo;
+	const contentSpan = document.querySelector(spanId);
 	
+	// 인풋색기 버튼색기 가져와
 	const inputId = "#commentText" + commentNo; 
 	const btnId = "#btn-update-comment" + commentNo;
 
@@ -346,8 +357,11 @@ const updateComment = (e) => {
 			$(inputId).remove();
 			// 버튼 지워
 			$(btnId).remove();
+			
 			// 원래 내용 추가해
-			container.innerHTML = commentContent;
+			contentSpan.innerHTML = commentContent;
+			// span 보이게 바꿔
+			contentSpan.style.display = "";
 			
 			// 취소로 바꿔
 			document.getElementById(`updateBtn\${commentNo}`).innerHTML = '수정';
@@ -359,12 +373,32 @@ const updateComment = (e) => {
 }
 
 <%-- 답글 --%>
-const commentRef = (e) => {
+const showCommentRefInput = (e) => {
 	const commentNo = e.dataset.commentNo;
-	const div = ``;
+	
+	if(e.innerText == '답글') {
+		const div = `
+			<div class="co-ref-div" id="coRefDiv\${commentNo}">
+				<input type="text" class="co-ref-input" name="content" id="coRef\${commentNo}" placeholder="댓글을 작성해주세요." aria-label="댓글을 작성해주세요." aria-describedby="button-comment">
+				<button class="ref-btn" type="button" id="btn-enroll-comment" onclick="enrollCommentRef(this);" data-comment-no="\${commentNo}">등록</button>
+			</div>
+		`;
+		
+		const commentDivId = "#comment" + commentNo;
+		const commentDiv = document.querySelector(commentDivId);
+		
+		commentDiv.insertAdjacentHTML('afterend', div);
+		
+		e.innerText = "취소"
+	}
+	else {
+		const coRefDivId = "#coRefDiv" + commentNo;
+		$(coRefDivId).remove();
+		e.innerText = "답글";
+	}
+	
 };
 
-<<<<<<< HEAD
 const enrollCommentRef = (e) => {
 	const commentRef = e.dataset.commentNo;
 	
@@ -441,17 +475,18 @@ const enrollCommentRef = (e) => {
 			$(coRefDivId).remove();
 			
 			// 답글 버튼 취소에서 다시 답글로 바꾸기 
-			const commentRefBtnId = "#commentRefBtn" + commentRef;
-			const commentRefBtn = document.querySelector(commentRefBtnId);
-			commentRefBtn.innerText = '답글';
+	         const commentRefBtnId = "#commentRefBtn" + commentRef;
+			console.log(commentRefBtnId);
+	         const commentRefBtn = document.querySelector(commentRefBtnId);
+	         console.log(commentRefBtn);
+	         commentRefBtn.innerHTML = '답글';
+
 		},
 		error : console.log
 	});
 	
 }
 
-=======
->>>>>>> branch 'master' of https://github.com/devcami/bookie_on_and_on.git
 </script>
 
 

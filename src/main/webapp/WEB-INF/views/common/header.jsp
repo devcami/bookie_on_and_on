@@ -25,7 +25,9 @@
  <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
 <script src="https://kit.fontawesome.com/1c396dc14f.js" crossorigin="anonymous"></script>
 
-
+<!-- 아임포트(결제) -->
+<!-- iamport.payment.js -->
+<script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.8.js"></script>
 
 <!-- 글꼴 -->
 <link rel="preconnect" href="https://fonts.googleapis.com">

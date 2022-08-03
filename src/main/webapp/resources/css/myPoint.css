@@ -1,0 +1,152 @@
+@charset "UTF-8";
+section#content	{
+	margin: 0 auto;
+	padding: 20px 30px;
+	min-height:600px;
+	border-radius: 5px;
+}
+
+/* 버튼 */
+.or-btn {
+	font-size: 30px;
+    background: none;
+    border-radius: 10px;
+    color: #FE9801;
+    border: 1px solid #FE9801;
+    transition: .1s ease-in-out;
+	margin-bottom: 0.5rem;
+}
+.or-btn:hover{
+	background-color: #FE9801;
+	color: #fff;
+	box-shadow: 0px 0px 4px #5454544a;
+	cursor: pointer;
+}
+.or-btn:focus, .or-btn:focus-visible {
+	outline: unset !important;
+}
+
+.ow-btn {
+	background-color: #FE9801 !important;
+	color: #fff !important;
+}
+
+
+/******* 내 포인트 부분 ********/
+#myPointDiv {
+	display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+}
+#pointDiv {
+	width: 30%;
+	display: flex;
+	align-items: flex-end;
+	justify-content: center;
+}
+#myPointH4{
+	text-align: right;    
+}
+h1 {
+	font-size: xxx-large !important;
+}
+#myPointDiv-left {
+	display: flex;
+	
+}
+#btn-div {
+	display: flex;
+	transform: translateY(-8px);
+}
+
+
+/***** 포인트 내역 조회 부분 ******/
+#point-container {
+	display: flex;
+	flex-direction: column;
+	margin: 1rem;
+	padding: 1rem;
+	
+	background: bisque;
+    border-radius: 20px;
+}
+#point-top {
+	text-align: center;
+}
+
+#point-top h3 {
+	font-size: 2.3rem !important;
+}
+
+#point-bottom {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	
+}
+#header {
+	font-size: 25px;
+}
+
+.flex-center-space {
+	display: flex;
+    align-items: center;
+    justify-content: space-around;
+    text-align: center;
+}
+
+.plusMinus {
+	width: 5%;
+	font-size: 30px !important; 
+}
+.money {
+	width: 20%
+}
+.content {
+	width: 25%
+}
+.occur-date {
+	width: 20%
+}
+.total-point {
+	width: 20%
+}
+
+.pointInOut {
+	background: #fff;
+	border-radius: 20px;
+	font-size: 21px;
+}
+.plus {
+	border: 3.2px solid green;
+}
+.minus {
+	border: 3.2px solid red;
+	
+}
+
+/******** 충전 모달 ***********/
+.modal-body {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+#mBody-span1 {
+	font-size: x-large;
+}
+#mBody-span2 {
+	color: darkgrey;
+}
+#charge-btn {
+	font-size: large;
+	width: 100%;
+}
+.input-div {
+	display: flex;
+}
+.modal-body input {
+	border-radius: 20px;
+    border: 3px solid black;
+    font-size: larger;
+}
+
