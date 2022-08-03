@@ -23,4 +23,6 @@ public interface MemberDao {
 
 	int miniUpdateMember(Member logingMember);
 
+	int insertAuthority(Member member);
+
 }

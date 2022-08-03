@@ -48,13 +48,16 @@
 			<img src="${pageContext.request.contextPath}/resources/images/logo.png" alt="북이온앤온로고" width="100px" onclick="location.href='${pageContext.request.contextPath}'"/>
 
 			
-			<!-- 로그인 한 경우 -->
+			<!-- 로그인 한 경우   onclick="logout();"-->
 			<sec:authorize access="isAuthenticated()">
-				<form:form id="logout-btn" name="logoutFrm" action="${pageContext.request.contextPath}/member/logout.do" method="post">
-					<i class="fa-solid fa-arrow-right-from-bracket" id="logout-i" onclick="logout();"></i>
+				<form id="logout-btn" name="logoutFrm" action="${pageContext.request.contextPath}/member/logout.do" method="post">
+					<button type="submit">
+					<i class="fa-solid fa-arrow-right-from-bracket" id="logout-i">로그아웃</i>
+					</button>
 					<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-				</form:form>
+				</form>
 			</sec:authorize>
+			<!-- 로그인하지 않은경우 -->
 			<sec:authorize access="isAnonymous()">
 				<i class="fa-solid fa-user-plus i-login" onclick="location.href='${pageContext.request.contextPath}/member/login.do'"></i>
 			</sec:authorize>

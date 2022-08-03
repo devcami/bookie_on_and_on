@@ -34,14 +34,14 @@
 			<tr>
 				<th>패스워드</th>
 				<td>
-					<input type="password" class="form-control" name="password1" id="password1" value="" placeholder="비밀번호 최소 8자, 하나이상의 문자, 하나이상의 특수문자를 입력해주세요!" required>
+					<input type="password" class="form-control" name="password" id="password1" value="" placeholder="비밀번호 최소 8자, 하나이상의 문자, 하나이상의 특수문자를 입력해주세요!" required>
 					 <span class="validation" id="pswd1Valid"></span>
 				</td>
 			</tr>
 			<tr>
 				<th>패스워드확인</th>
 				<td>	
-					<input type="password" class="form-control" id="password2" value="" placeholder="동일한 패스워드 입력해주세요" required>
+					<input type="password" class="form-control" name="password" id="password2" value="" placeholder="동일한 패스워드 입력해주세요" required>
 					 <span class="validation" id="pswd2Valid"></span>
 				</td>
 			</tr>  
@@ -66,6 +66,7 @@
 				<th>이름</th>
 				<td>	
 					<input type="text" class="form-control" name="name" id="name" value="" placeholder="이름을 입력해주세요" required>
+					<span class="name error" id="nameValid"></span>
 				</td>
 			</tr>
 			<tr>
@@ -81,14 +82,10 @@
 							   id="telNum"
 							   value=""
 							   required>
-						<span class="guide ok3" id="telok">사용 가능한 핸드폰 번호입니다.</span>
-						<span class="guide error3" id="telerror">이미 등록된 핸드폰 번호입니다.</span>
+						<span class="guide ok3" id="telok"></span>
+						<span class="guide error3" id="telerror"></span>
 						<input type="hidden" id="telValid" value="" /> <%-- 사용불가 0 사용가능 중복검사 통과 시 1 --%>
 					</div>
-				
-				
-				
-				
 				</td>
 			</tr>
 			<tr>
@@ -153,12 +150,14 @@
 	</form:form>
 </div>
 <script>
+let storeCheck = false;
+
 document.querySelector("#memberId").addEventListener('keyup', (e) => {
 	const memberIdVal = e.target.value;
 	const ok = document.querySelector(".guide.ok");
 	const error = document.querySelector(".guide.error");
 	const idValid = document.querySelector("#idValid");
-	
+ 
 	if(memberIdVal.length < 4){
 		error.style.display = "none";	
 		ok.style.display = "none";	
@@ -166,8 +165,6 @@ document.querySelector("#memberId").addEventListener('keyup', (e) => {
 		return;
 	}
 	//console.log(memberIdVal);
-	
-	
 	$.ajax({
 		url : '${pageContext.request.contextPath}/member/checkIdDuplicate.do',
 		data : {
@@ -244,7 +241,7 @@ document.querySelector("#telNum").addEventListener('keyup', (e) => {
 	const error = document.querySelector(".telerror");
 	const telValid = document.querySelector("#telValid");
 	
-	if(memberTelVal.length >=11){
+	if(memberTelVal.length <= 11){
 		telerror.style.display = "none";	
 		ok.style.display = "none";	
 		idValid.value = "0";
@@ -254,7 +251,7 @@ document.querySelector("#telNum").addEventListener('keyup', (e) => {
 	
 	 
 	$.ajax({
-		url : '${pageContext.request.contextPath}/member/checkTelDuplicate.do',
+		url : '${pageContext.request.contextPath}/member//checkTelDuplicate.do',
 		data : {
 			telNum: telNumVal
 		},
@@ -262,24 +259,27 @@ document.querySelector("#telNum").addEventListener('keyup', (e) => {
 			//console.log(resp);
 			const {telNum, available} = resp;
 			
-			if(available){
-				error.style.display = "none";	
-				ok.style.display = "inline";	
-				idValid.value = "1";
-			}
-			else{
-				error.style.display = "inline";	
-				ok.style.display = "none";	
-				idValid.value = "0";
-			}
+			if(response === "true"){
+	             document.querySelector("#telNum").style.border = "1px solid black";
+	             document.querySelector("#telok").innerHTML = "사용가능한 핸드폰 번호입니다.";
+	            phoneCheck = true;
+	          }else{
+	            document.querySelector("#telNum").style.border = "2px solid red";
+	            document.querySelector("#telerror").innerHTML = "이미 등록된 핸드폰 번호입니다.";
+	            phoneCheck = false;
+	          }
 		},
-		error(jqxhr, statusText, err){
+		/* error(jqxhr, statusText, err){
 			console.log(jqxhr, statusText, err);
 			const {responseJSON : {error}} = jqxhr;
 			alert(error);
-		}
+		} */
+		error:console.log
 	});
 });
+
+
+
 
 
 
@@ -294,13 +294,13 @@ document.memberEnrollFrm.addEventListener('submit', (e) => {
 		return;
 	}
 	
-	// 이름 검사
+ 	// 이름 검사
 	const nameCk = document.querySelector("#name");
 	if(!nameCk){
 		alert("이름을 입력해주세요 ");
 		e.preventDefault();
 		return;
-	}
+	} 
 	
 	/* 
 	if(idValid.value !== "1"){
@@ -309,6 +309,12 @@ document.memberEnrollFrm.addEventListener('submit', (e) => {
 		return;
 	}
 	 */
+	 const phoneCk = document.querySelector("#telNum");
+	 if(!phoneck){
+		 alert("핸드폰번호를 입력해주세요");
+		 e.preventDefault();
+			return;
+	 }
 	 
 	
 	 
@@ -365,6 +371,22 @@ document.memberEnrollFrm.addEventListener('submit', (e) => {
 }
 document.querySelector("#password2").addEventListener("blur",passwordvalidator); */
 
+
+    document.querySelector('#name').addEventListener('blur',(e)=>{
+	const name = e.target.value;
+	if(name==""){
+		document.querySelector("#name").style.border = "2px solid black";
+		document.querySelector("#nameValid").innerHtml = "이름을 입력해주세요";
+		nameCheck = false;
+		return;
+	}
+	 document.querySelector("#name").style.border = "1px solid black";
+     document.querySelector("#nameValid").innerHTML = "";
+     nameCheck = true;
+    });
+	
+}); 
+
 document.querySelector("#password1").addEventListener('blur',(e)=>{
     //password 1
     const password = e.target.value;
@@ -372,40 +394,40 @@ document.querySelector("#password1").addEventListener('blur',(e)=>{
     //비밀번호 정규식 검사
     // 길이검사
     if(!/^.{8,20}$/.test(password)){
-      e.target.style.border = "2px solid red";
+      e.target.style.border = "2px solid black";
       document.querySelector("#pswd1Valid").innerHTML = "비밀번호는 특수문자, 영문자, 숫자 8~20자리 이여야 합니다.";
       pw1Check = false;
       return;
     }
     // 특수문자 포함여부 !&/\*@
     if(!/[!&/\\*@]/.test(password)){
-      e.target.style.border = "2px solid red";
+      e.target.style.border = "2px solid black";
       document.querySelector("#pswd1Valid").innerHTML = "비밀번호는 특수문자, 영문자, 숫자 8~20자리 이여야 합니다.";
       pw1Check = false;
       return;
     }
     // 숫자 포함여부
     if(!/\d/.test(password)){
-      e.target.style.border = "2px solid red";
+      e.target.style.border = "2px solid black";
       document.querySelector("#pswd1Valid").innerHTML = "비밀번호는 특수문자, 영문자, 숫자 8~20자리 이여야 합니다.";
       pw1Check = false;
       return;
     }
     // 영문자 포함여부
     if(!/[a-z]/i.test(password)){
-      e.target.style.border = "2px solid red";
+      e.target.style.border = "2px solid black";
       document.querySelector("#pswd1Valid").innerHTML = "비밀번호는 특수문자, 영문자, 숫자 8~20자리 이여야 합니다.";
       pw1Check = false;
       return;
     }
 
-    e.target.style.borderBottom = "2px solid #fe9801";
+     e.target.style.border = "2px solid #fe9801"; 
     document.querySelector("#pswd1Valid").innerHTML = "";
     pw1Check = true;
    });
-   document.querySelector("#pswd2").addEventListener('blur',(e)=>{
+   document.querySelector("#password2").addEventListener('blur',(e)=>{
     //password 2
-    const password2 = e.target.value;
+    const password3 = e.target.value;
     if(pw1Check != true){
       pw2Check = false;
       return;
@@ -415,16 +437,16 @@ document.querySelector("#password1").addEventListener('blur',(e)=>{
     console.log(password2);
 
     // 두 비밀번호가 같지 않으면
-    if(password1 != password2){
-      e.target.style.borderBottom = "2px solid red";
-      document.querySelector("#password1").style.borderBottom = "2px solid red";
+    if(password1 != password3){
+      e.target.style.border = "2px solid black";
+      document.querySelector("#password1").style.border= "2px solid black";
       document.querySelector("#pswd2Valid").innerHTML = "입력하신 두 비밀번호가 일치하지 않습니다.";
       pw2Check = false;
       return;
     }
     // 정상 로직
-    document.querySelector("#password1").style.borderBottom = "1px solid #fe9801";
-    document.querySelector("#password2").style.borderBottom = "1px solid #fe9801";
+    document.querySelector("#password1").style.border = "2px solid #fe9801";
+    document.querySelector("#password2").style.border = "2px solid #fe9801";
     document.querySelector("#pswd2Valid").innerHTML = "";
     pw2Check = true;
 
@@ -457,6 +479,8 @@ const fnValidateInterestChk = () => {
 document.addEventListener('DOMContentLoaded', ()=>{
 	fnValidateInterestChk();
 })
+
+
 
 </script>
 

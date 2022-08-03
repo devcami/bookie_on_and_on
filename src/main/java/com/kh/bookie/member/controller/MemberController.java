@@ -45,10 +45,11 @@ public class MemberController {
 	@Autowired
 	BCryptPasswordEncoder bcryptPasswordEncoder;
 	
-
+  // 로그인 처리
 	@GetMapping("/memberEnroll.do")
 	public void memberEnroll() {}
 
+	//회원가입처ㅣ 
 	@PostMapping("/memberEnroll.do")
 	public String memberEnroll(Member member, RedirectAttributes redirectAttr, @RequestParam (required = false) String[] interest) {
 		log.info("Member = {}", member);
@@ -84,7 +85,6 @@ public class MemberController {
 		
 	};	
 	@GetMapping("/checkIdDuplicate.do")
-
 	public ResponseEntity<?> checkIdDuplicate(@RequestParam String memberId) {
 		Map<String, Object> map = new HashMap<>();
 		try {

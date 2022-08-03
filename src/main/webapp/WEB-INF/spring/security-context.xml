@@ -53,10 +53,14 @@
 			authentication-success-forward-url 로그인 성공시 후처리 - 핸들러를 연결
 			authentication-success-handler-ref=""
 			authentication-failure-forward-url="" 로그인 실패시 후처리 ..
+			
+			username-parameter="memberId" 원래는 유서 네임 으로 받는데내가 사용하는 유저네임으로 받음 
 		 -->
 
 		<form-login login-page="/member/login.do" 
-					login-processing-url="/member/login.do"></form-login>
+					login-processing-url="/member/login.do"
+					username-parameter="memberId"
+					password-parameter="password"/>
 
 		<!-- 
 			logout-url POST logout요청 (핸들러 작성 생략 가능)
