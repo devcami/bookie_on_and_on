@@ -30,7 +30,7 @@ public interface ClubDao {
 
 	List<Club> selectClubList(Map<String, Object> map);
 
-	@Select("select count(*) from club")
+	@Select("select count(*) from club where recruit_end > sysdate")
 	int selectTotalClub();
 
 	Club selectOneClub(Object clubNo);
@@ -108,6 +108,8 @@ public interface ClubDao {
 
 	@Update("update chat_comment set comment_content = #{commentContent} where comment_no = #{commentNo}")
 	int commentUpdate(ChatComment cc);
+
+	int commentRefEnroll(ChatComment cc);
 
 
 }
