@@ -71,4 +71,29 @@
 			#{content})
 	</insert>
 	
+	<select id="selectOnePheed" resultMap="pheedMap">
+		select 
+			p.*, 
+			a.attach_no, 
+			a.renamed_filename, 
+			a.original_filename 
+		from 
+			pheed p join pheed_attachment a 
+				on p.pheed_no = a.pheed_no  
+		where 
+			p.pheed_no = #{pheedNo}
+	</select>
+	<resultMap id="pheedMap" type="pheed">
+		<id column="pheed_no" property="pheedNo" />
+		<result column="item_id" property="itemId"/>
+		<result column="page" property="page"/>
+		<result column="content" property="content"/>
+		<result column="is_opened" property="isOpened"/>
+		<result column="enroll_date" property="enrollDate"/>
+		<association property="pheedAttachment" javaType="pheedAttachment">
+			<id column="attach_no" property="attachNo" />
+			<result column="renamed_filename" property="renamedFilename"/>
+			<result column="original_filename" property="originalFilename"/>
+		</association>
+	</resultMap>
 </mapper>

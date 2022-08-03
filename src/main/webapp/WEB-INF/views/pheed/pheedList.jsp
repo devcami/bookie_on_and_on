@@ -73,10 +73,10 @@
 						  	<button type="button" 
 						  			class="btn btn-report float-right m-2" data-no="${pheed.pheedNo}" onclick="openReportModal(this);"><i class="fa-solid fa-ellipsis"></i></button>
 							<c:if test="${pheed.member.nickname eq loginMember.nickname}">
-							<button type="button" class="float-right btn-sm btn-update mt-3 mb-3 mr-2" onclick="updatePheed();">수정</button>	
+							<button type="button" class="float-right btn-sm btn-update mt-3 mb-3 mr-2"  data-pheed-no="${pheed.pheedNo}" onclick="updatePheed(this);">수정</button>	
 							</c:if>
 							<c:if test="${pheed.member.nickname eq loginMember.nickname || loginMember.memberId eq 'admin'}">
-							<button type="button" class="float-right btn-sm btn-delete mt-3 mb-3 mr-2" onclick="deletePheed();">삭제</button>	
+							<button type="button" class="float-right btn-sm btn-delete mt-3 mb-3 mr-2"  data-pheed-no="${pheed.pheedNo}" onclick="deletePheed(this);">삭제</button>	
 							</c:if>
 						</div>
 					</div>
@@ -191,10 +191,10 @@ function getReadList(cPage) {
     									  	<button type="button" 
     									  			class="btn btn-report float-right" data-no="\${pheedNo}"  onclick="openReportModal(this);"><i class="fa-solid fa-ellipsis"></i></button>`;
     									  	if(nickname == '${loginMember.nickname}'){
-    									  		div += `<button type="button" class="float-right btn-sm btn-update mt-3 mb-3 mr-2" onclick="updatePheed();">수정</button>`;	
+    									  		div += `<button type="button" class="float-right btn-sm btn-update mt-3 mb-3 mr-2" data-pheed-no=\${pheedNo} onclick="updatePheed(this);">수정</button>`;	
     									  	}
     									  	if(nickname == '${loginMember.nickname}' || ${loginMember.memberId == 'admin'}){
-												div += `<button type="button" class="float-right btn-sm btn-delete mt-3 mb-3 mr-2" onclick="deletePheed();">삭제</button>`;	
+												div += `<button type="button" class="float-right btn-sm btn-delete mt-3 mb-3 mr-2" data-pheed-no=\${pheedNo} onclick="deletePheed(this);">삭제</button>`;	
     									  	}
     									 div+=`
     									</div>
@@ -356,13 +356,35 @@ window.onscroll = function () {
 
 
 <%-- 피드 삭제 --%>
-const deletePheed = () => {
+const deletePheed = (e) => {
+	//console.log(e.dataset.pheedNo);
+	const csrfHeader = '${_csrf.headerName}';
+	const csrfToken = '${_csrf.token}';
+	const headers = {};
+	headers[csrfHeader] = csrfToken; // 전송하는 헤더에 추가하여 전송
 	
+	if(confirm('삭제 시 정보를 되돌이 킬 수 없습니다. 정말 삭제하시겠습니까?')){
+		
+		$.ajax({
+			url : "${pageContext.request.contextPath}/pheed/deletePheed.do",
+			data : {pheedNo : e.dataset.pheedNo},
+			method : 'post',
+			headers,
+			success(resp){
+				const {msg} = resp;
+				alert(msg);
+				location.reload();
+			},
+			error : console.log
+		});
+	}
 };
 
 <%-- 피드 수정 --%>
-const updatePheed = () => {
-	
+const updatePheed = (e) => {
+	const pheedNo = e.dataset.pheedNo;
+	// 수정 폼 요청	
+	location.href = "${pageContext.request.contextPath}/pheed/pheedUpdate.do?pheedNo=" + pheedNo;
 };
 
 

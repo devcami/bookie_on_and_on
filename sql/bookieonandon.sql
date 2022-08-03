@@ -259,12 +259,7 @@ create table chat_comment(
     created_at date default sysdate not null,
     comment_content varchar2(1000) not null,
     comment_level number default 1,
-<<<<<<< HEAD
-    constraint pk_chat_comment_no primary key(comment_no)
-=======
-    constraint pk_chat_comment_no primary key(comment_no) 
->>>>>>> branch 'master' of https://github.com/devcami/bookie_on_and_on.git
-);
+    constraint pk_chat_comment_no primary key(comment_no));
 select * from chat_comment;
 create sequence seq_comment_no;
 
@@ -599,11 +594,6 @@ select
     i.started_at started_at,
     i.ended_at ended_at
 from 
-<<<<<<< HEAD
-    book b right join (select * from book_ing order by add_date desc) i
-        on b.member_id = i.member_id
-where b.member_id = 'tmddbs' and b.item_id = '9788932474755' ;
-
 
 -- 1~3
 select * 
@@ -622,13 +612,10 @@ from(
         board b)
 where
     rnum between 11 and 15;
-=======
     chat_comment cc 
 where 
     chat_no = 14 
         start with comment_level = 1 connect by prior comment_no = comment_ref 
 order siblings by created_at desc;
 
-commit;
 
->>>>>>> branch 'master' of https://github.com/devcami/bookie_on_and_on.git
