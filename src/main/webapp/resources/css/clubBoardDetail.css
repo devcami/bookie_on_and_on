@@ -27,15 +27,6 @@ section label {
 	margin-bottom: 0 !important;
 	font-size: x-large;
 }
-input:focus-visible {
-	outline: none !important;
-}
-input:not(input[type=file]) {
-	border: none;
-    height: 40px;
-    font-size: large !important;
-    padding-left: 10px;
-}
 
 /***** title, 작성일, 작성자 *****/
 
@@ -50,14 +41,22 @@ input:not(input[type=file]) {
 	display: flex;
     flex-direction: column;
     justify-content: space-between;
-    margin-top: 20px;
     align-items: flex-end;
     font-size: large;
-    margin-right: 20px;
+    margin: 40px 20px 20px 0;
 }
-#date-writer-div span:last-child {
-	transform: translateY(-8px);
+#writerDiv {
+	
 }
+#writerDiv img {
+	
+}
+#enrollDate {
+	font-size: 20px;
+    color: #6c757d!important;
+}
+
+
 /********* 파일 ************/
 #file-div {
 	display: flex;
@@ -103,5 +102,67 @@ input:not(input[type=file]) {
 	box-shadow: 4px 4px 6px 1px rgb(0 0 0 / 20%);
 }
 
+/********* 댓글 부분 ***********/
+#comment-container {
+	
+}
+.card-body {
+	padding: 1.25rem 1rem 1.25rem 1.25rem !important; 
+}
+
+#comment-container .comment-one {
+    border-radius: 20px;
+    border: none;
+}
+
+input:focus-visible {
+	outline: none !important;
+}
+
+#btn-enroll-comment {
+	border-radius: 0.4rem;
+    background-color: #FFBC80;
+    color: #FFF;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+#btn-enroll-comment:hover {
+	background-color: #FFF;
+    color: #FFBC80;
+    text-shadow: 1px 1px 2px #ffda5f;
+}
+
+div.comment-div {
+    width: 610px;
+}
+
+.comment-nickname {
+	font-size: 24px;
+    color: #FE9801;
+    min-width: 60px;
+}
+#comment-container span.text-dark {
+	margin-left: 20px;
+    margin-right: 10px;
+    font-size: 22px;
+    width: 60%;
+}
+div.comment-div span.text-secondary {
+    width: 130px;
+    float: right;
+}
+.link-grey {
+    color: #aaa;
+}
+.link-grey:hover {
+    color: #FE9801;
+}
+
+/****** 댓글수정 인풋 *******/
+.updateCommentInput {
+	display: inline-block;
+    width: 297px;
+}
 
 

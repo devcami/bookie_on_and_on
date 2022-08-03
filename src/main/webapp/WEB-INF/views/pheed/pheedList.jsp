@@ -17,7 +17,7 @@
 		<div class="btns">
 			<button type="button" class="btn btn-lg btn-link btn-pheed" onclick="location.href='${pageContext.request.contextPath}/pheed/pheedFList.do'">팔로워</button>
 			<button type="button" class="btn btn-lg btn-link btn-pheed" onclick="location.href='${pageContext.request.contextPath}/pheed/pheedCList.do'" id="btn-pheed-c">발견</button>
-			<button type="button" class="btn btn-lg btn-link" id="btn-pheed-enroll"><i class="fa-solid fa-plus"></i></button>
+			<button type="button" class="btn btn-lg btn-link " id="btn-pheed-enroll" onclick="location.href='${pageContext.request.contextPath}/pheed/pheedEnroll.do'"><i class="fa-solid fa-plus"></i></button>
 		</div>
 	</div>
 </div>
@@ -95,8 +95,110 @@
 </div>
 
 
-
+<input type="hidden" name="cPage" value="1" id="cPage"/>
 <script>
+function getReadList(cPage) { 
+	console.log(cPage)
+
+	const container = document.querySelector("#content");
+    // 비동기로 다음장 가져오기
+    $.ajax({
+    	url : "${pageContext.request.contextPath}/pheed/getReadList.do",
+    	data : {cPage},
+    	success(resp){
+    		console.log(resp);
+    		if(resp.length == 0){
+    			console.log('데이터가 없음');
+    			$('#loading').text('마지막 페이지 입니다.');
+    			window.removeEventListener('scroll', infiniteScroll);
+    		}
+    		else{
+    			let vsCount = (10 * (cPage - 1)) + 1; // cPage : 2 -> 11 ~ 20 / 21 ~ 30... 
+    			resp.forEach((pheed) => {
+	    			const {attach, content, enrollDate, isOpened, itemId, member, memberId, page, pheedNo} = pheed;
+	    			const {attachNo, originalFilename, renamedFilename} = attach;
+	    			const {nickname} = member;
+	    			const profileFilename = member.renamedFilename;
+    				let div = `
+    					<div class="pheed-container shadow bg-white">
+    						<div class="pheed-writer">
+    							<div class="profile">`;
+    								if(profileFilename != null){
+			    						div += `<img src="${pageContext.request.contextPath}/resources/upload/profile/${loginMember.renamedFilename}" alt="프로필사진" />`;
+    								}
+   									else{
+   										div += `<i class="fa-solid fa-user-large user-icon"></i>`;
+   									}
+    							div += `
+    							</div>
+    							<h2>\${nickname}</h2>
+    						</div>
+   							<div class="pheed-img">`;
+   							if(renamedFilename != null){
+   								div += `<img src="${pageContext.request.contextPath}/resources/upload/pheed/\${renamedFilename}" alt="" />`;
+   							}
+   							div += `</div>
+    						<div class="pheed">
+    							<div class="pheed-content">
+    								<div class="book-info">
+    									<span class="pheed-book-title" id="book-title\${vsCount}"></span>
+    									<span class="pheed-book-page">[\${page}p]</span>`;
+										const enrollDateFmt = `\${enrollDate.year}.\${enrollDate.monthValue}.\${enrollDate.dayOfMonth} \${enrollDate.hour}:\${enrollDate.minute}`;
+								div += `
+    									<p>\${enrollDateFmt}</p>
+    								</div>
+    								<p>\${content}</p>
+    							</div>
+    							<div class="pheed-sns">
+    								<div class="pheed-sns-icons">
+    									<div class="btn-group" role="group" aria-label="Basic example">
+    										<span class="fa-stack fa-lg h-span">
+    									  		<i class="fa fa-heart fa-regular fa-stack-1x front" ></i>
+    										</span>
+    										<span class="fa-stack fa-lg h-span">
+    									  		<i class="fa fa-regular fa-comment-dots fa-stack-1x front" onclick="pheedComment(this);"></i>
+    											<input type="hidden" name="pheedNo" value="\${pheedNo}" />
+    										</span>
+    										<span class="fa-stack fa-lg b-span">
+    									  		<i class="fa fa-bookmark fa-regular fa-stack-1x front"></i>
+    										</span>
+    									  <button type="button" data-toggle="modal" data-target="#reportModal" 
+    									  			class="btn" id="btn-report"><i class="fa-solid fa-ellipsis"></i></button>
+    									</div>
+    								</div>
+    								<div class="pheed-sns-cal" id="sns-cal">
+    								</div>
+    							</div>
+    						</div>
+    					</div>`;
+    				vsCount = vsCount + 1;
+    				container.insertAdjacentHTML('beforeend', div);
+    				selectBook(cPage);
+    			});
+    		}
+    	},
+    	error: console.log
+    });
+    
+}; 
+
+//무한 스크롤
+function infiniteScroll(){
+	// scrollTop : 현재 위치 | document.height() : 문서 총 길이 | window.innerHeight : 윈도우 내부 창 사이즈 
+	//console.log("window scrollTop : ",  $(window).scrollTop()); 
+	//console.log("window height : ", $(window).height());
+	//console.log("window innerHeight : " ,window.innerHeight);
+	//console.log($(window).scrollTop() + window.innerHeight);
+	
+    if($(window).scrollTop() + window.innerHeight + 0.5 == $(document).height()){
+    	let cPage = document.querySelector("#cPage"); 
+    	cPage.value = Number(cPage.value) + 1; 
+    	console.log(cPage);
+        getReadList(cPage.value);
+    } 
+}
+window.addEventListener('scroll', infiniteScroll);
+
 <%-- 피드 댓글 상세보기 연결 --%>
 const pheedComment = (e) => {
 	const pheedNo = e.nextElementSibling.value;	
@@ -170,30 +272,34 @@ const closeComment = () => {
 	sidebar.style.zIndex="100";
 }
 
-
-window.addEventListener('load', () => {
-	let bookTitle;
-	<c:forEach items="${list}" var="pheed" varStatus="vs">
-	$.ajax({
-		url : '${pageContext.request.contextPath}/search/selectBook.do',
-		data : {
-			ttbkey : 'ttbiaj96820130001',
-			itemIdType : 'ISBN13', 
-			ItemId : ${pheed.itemId},
-			output : 'js',
-			Cover : 'Big',
-			Version : '20131101'
-		},
-		success(resp){
-			const {item} = resp;
-			const {title, isbn13} = item[0];
-			document.querySelector("#book-title${vs.count}").innerText = `\${title}`;
-		},
-		error : console.log
-	});
+function selectBook(cPage){
+	// 		1~10 11~20 21~30..
+	//cPage  1 	   2     3 ..
+	<c:forEach items="${list}" var="pheed">
+	for(let i = (((cPage - 1) * 10) + 1); i <= (cPage * 10); i++){
+		$.ajax({
+			url : '${pageContext.request.contextPath}/search/selectBook.do',
+			data : {
+				ttbkey : 'ttbiaj96820130001',
+				itemIdType : 'ISBN13', 
+				ItemId : ${pheed.itemId},
+				output : 'js',
+				Cover : 'Big',
+				Version : '20131101'
+			},
+			success(resp){
+				const {item} = resp;
+				const {title, isbn13} = item[0];
+				document.querySelector(`#book-title\${i}`).innerText = title;
+			},
+			error : console.log
+		});
+	}
 	</c:forEach>
 	
-});
+}
+
+window.addEventListener('load', selectBook(1));
 
 <%-- 상단 피드 헤더 바 --%>
 let header = document.querySelector("#header-container")
@@ -325,6 +431,6 @@ const changeIcon = (icon, shape) => {
 	
 
 }
-
 </script>
+<div id="loading" class="text-center m-3 p-3"></div>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

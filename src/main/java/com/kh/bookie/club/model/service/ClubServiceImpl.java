@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.kh.bookie.club.model.dao.ClubDao;
 import com.kh.bookie.club.model.dto.Chat;
 import com.kh.bookie.club.model.dto.ChatAttachment;
+import com.kh.bookie.club.model.dto.ChatComment;
 import com.kh.bookie.club.model.dto.Club;
 import com.kh.bookie.club.model.dto.ClubBook;
 import com.kh.bookie.club.model.dto.Mission;
@@ -193,7 +194,9 @@ public class ClubServiceImpl implements ClubService {
 
 	@Override
 	public Chat selectOneBoardCollection(int chatNo) {
-		return clubDao.selectOneBoardCollection(chatNo);
+		Chat chat = clubDao.selectOneBoardCollection(chatNo);
+		chat.setChatComments(clubDao.selectChatComments(chatNo));
+		return chat;
 	}
 
 	@Override
@@ -230,6 +233,21 @@ public class ClubServiceImpl implements ClubService {
 	@Override
 	public int insertClubChatAttach(ChatAttachment attach) {
 		return clubDao.insertClubChatAttach(attach);
+	}
+
+	@Override
+	public int commentEnroll(ChatComment cc) {
+		return clubDao.commentEnroll(cc);
+	}
+
+	@Override
+	public int commentDelete(int commentNo) {
+		return clubDao.commentDelete(commentNo);
+	}
+
+	@Override
+	public int commentUpdate(ChatComment cc) {
+		return clubDao.commentUpdate(cc);
 	}
 
 

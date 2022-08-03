@@ -31,6 +31,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.bookie.club.model.dto.Chat;
 import com.kh.bookie.club.model.dto.ChatAttachment;
+import com.kh.bookie.club.model.dto.ChatComment;
 import com.kh.bookie.club.model.dto.Club;
 import com.kh.bookie.club.model.dto.ClubBook;
 import com.kh.bookie.club.model.dto.Mission;
@@ -704,8 +705,46 @@ public class ClubController {
 			throw e;
 		}
 			
-//		return "redirect:/club/clubBoard.do/45";
 		return "redirect:/club/clubBoardDetail.do?chatNo=" + clubBoard.getChatNo();
 	}
+	
+	@PostMapping("/commentEnroll.do")
+	public ResponseEntity<?> clubBoardCommentEnroll(ChatComment cc){
+		try {
+			log.debug("ChatComment = {}", cc);
+			int result = clubService.commentEnroll(cc);
+			return ResponseEntity.ok(cc);
+		} catch(Exception e) {
+			log.error("댓글 등록 오류", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+		
+	}
+	
+	@PostMapping("/commentDel.do")
+	public ResponseEntity<?> clubBoardCommentDelete(@RequestParam int commentNo){
+		
+		try {
+			log.debug("commentNo = {}", commentNo);
+			int result = clubService.commentDelete(commentNo);
+			return ResponseEntity.ok().build();
+		} catch(Exception e) {
+			log.error("북클럽 게시글 댓글 삭제 오류", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+	}
+	
+	@PostMapping("/commentUpdate.do")
+	public ResponseEntity<?> clubBoardCommentUpdate(ChatComment cc){
+		try {
+			log.debug("ChatComment = {}", cc);
+			int result = clubService.commentUpdate(cc);
+			return ResponseEntity.ok(cc);
+		} catch(Exception e) {
+			log.error("북클럽 게시글 댓글 수정 오류");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+	}
+	
 	
 }

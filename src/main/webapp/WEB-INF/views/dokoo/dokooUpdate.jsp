@@ -17,9 +17,9 @@
 		<h1>📝독후감 쓰기📝</h1>
 	</div>
 	<form:form
-			name="dokooEnrollFrm"
+			name="dokooUpdateFrm"
 			method="POST"
-			action = "${pageContext.request.contextPath}/dokoo/dokooEnroll.do">
+			action = "${pageContext.request.contextPath}/dokoo/updateDokoo.do">
 		<div id="nickname-div" class="mb-2">
 			<label for="nickname">작성자</label>
 			<input type="text" name="nickname" id="nickname" value="${loginMember.nickname}" readonly />
@@ -28,20 +28,22 @@
 			<button class="custom-btn btn-5" data-toggle="modal" 
 				data-target="#bookListModal" type="button">책 선택</button>
 			<div id="book-info">
-				
+				<img src="" alt="책표지" id="book-img"/>
+				<span id="book-title"></span>
 			</div>
 		</div>
 		<div id="title-div">
 			<label for="title">글 제목</label>
-			<input type="text" id="title" name="title"/>
+			<input type="text" id="title" name="title" value="${dokoo.title}"/>
 		</div>
 		<div id="content-div">
 			<label for="editorData">내용</label>
-			<textarea class="summernote" name="content" id="content"></textarea>
+			<textarea class="summernote" name="content" id="content">${dokoo.content}</textarea>
 		</div>
 
 		<input type="hidden" name="memberId" value="${loginMember.memberId}" />
 		<input type="hidden" name="itemId" id="itemId" value="" />
+		<input type="hidden" name="dokooNo" value="${param.dokooNo}" />
 		
 		<div id="open-div">
 			<label class="open">공개여부</label>				
@@ -120,7 +122,8 @@ window.addEventListener('load', () => {
 									<img src=\${cover} alt="책표지" />
 									\${title}</li>`;
 						container.insertAdjacentHTML('beforeend', li);
-						
+						$("#book-img").attr("src", cover);
+						$("#book-title").text(title);
 					}
 				});
 			});
@@ -182,7 +185,7 @@ $('.summernote').summernote({
 	});
 
 
-document.dokooEnrollFrm.addEventListener('submit', (e) => {
+document.dokooUpdateFrm.addEventListener('submit', (e) => {
 	const title = document.querySelector("#title");
 	const content = document.querySelector("#content");
 	const bookInfo = document.querySelector("#book-info");
@@ -195,11 +198,6 @@ document.dokooEnrollFrm.addEventListener('submit', (e) => {
 	if(!/^.+$/.test(title.value)){
 		e.preventDefault();
 		alert("제목을 작성해주세요.")
-		return;
-	}
-	if(!/^.+$/.test(content.value)){
-		e.preventDefault();
-		alert("내용을 작성해주세요.")
 		return;
 	}
 	if(document.querySelector("#content").value.length > 1000){
