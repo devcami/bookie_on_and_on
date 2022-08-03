@@ -8,17 +8,18 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.kh.bookie.email.MailSendService;
 import com.kh.bookie.member.model.dto.Member;
 import com.kh.bookie.member.model.service.MemberService;
 
@@ -37,6 +38,10 @@ public class MemberController {
 	
 	@GetMapping("/memberEnroll.do")
 	public void memberEnroll() {}
+
+	/* 이메일인증 필요 service */
+	@Autowired
+	private MailSendService mailService;
 	
 	@PostMapping("/memberEnroll.do")
 	public String memberEnroll(Member member, RedirectAttributes redirectAttr, @RequestParam (required = false) String[] interest) {
@@ -121,5 +126,15 @@ public class MemberController {
 				.body(map);
 	}
 
+	@GetMapping("/mailCheck")
+	@ResponseBody
+	public String mailCheck(String email) {
+		log.debug("이메일 인증 요청이 들어옴!");
+		log.debug("이메일 인증 이메일 : " + email);
+		return mailService.joinEmail(email);
+	}
+	
+	@GetMapping("/emailCertified")
+	public void emailCertified() {}
 
 }
