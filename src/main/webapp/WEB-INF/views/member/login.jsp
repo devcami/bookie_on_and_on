@@ -33,6 +33,10 @@
 							id="password" name="password" placeholder="User Password..."
 							required>
 					</div>
+					<div class="text-center">
+						<input type="checkbox" class="form-check-input" name="remember-me" id="remember-me" />
+						<label for="remember-me" class="form-check-label">Remember me</label>
+					</div>
 					<div class="text-center m-3">
 						<a href="#" class="text-secondary">아이디찾기</a> | 
 						<a href="#" class="text-secondary">비밀번호 찾기</a>

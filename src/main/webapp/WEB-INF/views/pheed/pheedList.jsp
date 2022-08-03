@@ -12,6 +12,7 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param value="피드" name="title"/>
 </jsp:include>
+<sec:authentication property="principal" var="loginMember"/>
 <div id="pheed-container" >
 	<div id="pheed-header">
 		<div class="btns">
@@ -54,20 +55,35 @@
 					<div class="pheed-sns-icons">
 						<div class="btn-group" role="group" aria-label="Basic example">
 							<span class="fa-stack fa-lg h-span">
-						  		<i class="fa fa-heart fa-regular fa-stack-1x front" ></i>
+						  		<i class="fa fa-heart fa-regular fa-stack-1x front" data-pheed-no="${pheed.pheedNo}"></i>
+						  		<c:if test="${fn:contains(likesStr, pheed.pheedNo)}">
+							  		<i class="fa fa-heart fa-solid fa-stack-1x h-behind" data-pheed-no="${pheed.pheedNo}"></i>
+								</c:if>
 							</span>
 							<span class="fa-stack fa-lg h-span">
 						  		<i class="fa fa-regular fa-comment-dots fa-stack-1x front" onclick="pheedComment(this);"></i>
 								<input type="hidden" name="pheedNo" value="${pheed.pheedNo}" />
 							</span>
 							<span class="fa-stack fa-lg b-span">
-						  		<i class="fa fa-bookmark fa-regular fa-stack-1x front"></i>
+						  		<i class="fa fa-bookmark fa-regular fa-stack-1x front" data-pheed-no="${pheed.pheedNo}"></i>
+							  	<c:if test="${fn:contains(wishStr, pheed.pheedNo)}">
+								  	<i class="fa fa-bookmark fa-solid fa-stack-1x b-behind" data-pheed-no="${pheed.pheedNo}"></i>
+								</c:if>
 							</span>
-						  <button type="button" data-toggle="modal" data-target="#reportModal" 
-						  			class="btn" id="btn-report"><i class="fa-solid fa-ellipsis"></i></button>
+						  	<button type="button" 
+						  			class="btn btn-report float-right m-2" data-no="${pheed.pheedNo}" onclick="openReportModal(this);"><i class="fa-solid fa-ellipsis"></i></button>
+							<c:if test="${pheed.member.nickname eq loginMember.nickname}">
+							<button type="button" class="float-right btn-sm btn-update mt-3 mb-3 mr-2" onclick="updatePheed();">수정</button>	
+							</c:if>
+							<c:if test="${pheed.member.nickname eq loginMember.nickname || loginMember.memberId eq 'admin'}">
+							<button type="button" class="float-right btn-sm btn-delete mt-3 mb-3 mr-2" onclick="deletePheed();">삭제</button>	
+							</c:if>
 						</div>
 					</div>
-					<div class="pheed-sns-cal" id="sns-cal">
+					<div class='likes-div'>						
+						<span>좋아요</span>&nbsp;
+						<span class='likes' id="likesCnt${pheed.pheedNo}">${pheed.likesCnt}</span>
+						<span>개</span>					
 					</div>
 				</div>
 			</div>
@@ -98,7 +114,7 @@
 <input type="hidden" name="cPage" value="1" id="cPage"/>
 <script>
 function getReadList(cPage) { 
-	console.log(cPage)
+	//console.log(cPage)
 
 	const container = document.querySelector("#content");
     // 비동기로 다음장 가져오기
@@ -106,16 +122,18 @@ function getReadList(cPage) {
     	url : "${pageContext.request.contextPath}/pheed/getReadList.do",
     	data : {cPage},
     	success(resp){
-    		console.log(resp);
-    		if(resp.length == 0){
+    		//console.log(resp);
+    		let {list, likesStr, wishStr} = resp;
+    		if(list.length == 0){
     			console.log('데이터가 없음');
     			$('#loading').text('마지막 페이지 입니다.');
     			window.removeEventListener('scroll', infiniteScroll);
     		}
     		else{
-    			let vsCount = (10 * (cPage - 1)) + 1; // cPage : 2 -> 11 ~ 20 / 21 ~ 30... 
-    			resp.forEach((pheed) => {
-	    			const {attach, content, enrollDate, isOpened, itemId, member, memberId, page, pheedNo} = pheed;
+    			let vsCount = (3 * (cPage - 1)) + 1; // cPage : 2 -> 11 ~ 20 / 21 ~ 30... 
+    			list.forEach((pheed) => {
+    				//console.log(pheed);
+	    			const {attach, content, enrollDate, isOpened, itemId, member, memberId, page, pheedNo, likesCnt} = pheed;
 	    			const {attachNo, originalFilename, renamedFilename} = attach;
 	    			const {nickname} = member;
 	    			const profileFilename = member.renamedFilename;
@@ -153,28 +171,47 @@ function getReadList(cPage) {
     								<div class="pheed-sns-icons">
     									<div class="btn-group" role="group" aria-label="Basic example">
     										<span class="fa-stack fa-lg h-span">
-    									  		<i class="fa fa-heart fa-regular fa-stack-1x front" ></i>
+												  <i class="fa fa-heart fa-regular fa-stack-1x front" data-pheed-no=\${pheedNo}></i>`;
+												  if(likesStr.includes(pheedNo)){
+													  div += `<i class="fa fa-heart fa-solid fa-stack-1x h-behind" data-pheed-no=\${pheedNo}></i>`;
+												  }
+										div+=`  
     										</span>
     										<span class="fa-stack fa-lg h-span">
     									  		<i class="fa fa-regular fa-comment-dots fa-stack-1x front" onclick="pheedComment(this);"></i>
     											<input type="hidden" name="pheedNo" value="\${pheedNo}" />
     										</span>
     										<span class="fa-stack fa-lg b-span">
-    									  		<i class="fa fa-bookmark fa-regular fa-stack-1x front"></i>
+    									  		<i class="fa fa-bookmark fa-regular fa-stack-1x front" data-pheed-no=\${pheedNo}></i>`;
+												  if(wishStr.includes(pheedNo)){
+													  div += `<i class="fa fa-bookmark fa-solid fa-stack-1x b-behind" data-pheed-no=\${pheedNo}></i>`;
+												  }					  		
+										div+=`  
     										</span>
-    									  <button type="button" data-toggle="modal" data-target="#reportModal" 
-    									  			class="btn" id="btn-report"><i class="fa-solid fa-ellipsis"></i></button>
+    									  	<button type="button" 
+    									  			class="btn btn-report float-right" data-no="\${pheedNo}"  onclick="openReportModal(this);"><i class="fa-solid fa-ellipsis"></i></button>`;
+    									  	if(nickname == '${loginMember.nickname}'){
+    									  		div += `<button type="button" class="float-right btn-sm btn-update mt-3 mb-3 mr-2" onclick="updatePheed();">수정</button>`;	
+    									  	}
+    									  	if(nickname == '${loginMember.nickname}' || ${loginMember.memberId == 'admin'}){
+												div += `<button type="button" class="float-right btn-sm btn-delete mt-3 mb-3 mr-2" onclick="deletePheed();">삭제</button>`;	
+    									  	}
+    									 div+=`
     									</div>
     								</div>
-    								<div class="pheed-sns-cal" id="sns-cal">
-    								</div>
+    								<div class='likes-div'>						
+	    								<span>좋아요</span>&nbsp;
+	    								<span class='likes' id='likesCnt\${pheedNo}'>\${likesCnt}</span>
+	    								<span>개</span>					
+	    							</div>
     							</div>
     						</div>
     					</div>`;
     				vsCount = vsCount + 1;
     				container.insertAdjacentHTML('beforeend', div);
-    				selectBook(cPage);
     			});
+   				selectBook(cPage);
+   				clickEvent();
     		}
     	},
     	error: console.log
@@ -190,7 +227,7 @@ function infiniteScroll(){
 	//console.log("window innerHeight : " ,window.innerHeight);
 	//console.log($(window).scrollTop() + window.innerHeight);
 	
-    if($(window).scrollTop() + window.innerHeight + 0.5 == $(document).height()){
+    if($(window).scrollTop() + window.innerHeight == $(document).height()){
     	let cPage = document.querySelector("#cPage"); 
     	cPage.value = Number(cPage.value) + 1; 
     	console.log(cPage);
@@ -276,7 +313,7 @@ function selectBook(cPage){
 	// 		1~10 11~20 21~30..
 	//cPage  1 	   2     3 ..
 	<c:forEach items="${list}" var="pheed">
-	for(let i = (((cPage - 1) * 10) + 1); i <= (cPage * 10); i++){
+	for(let i = (((cPage - 1) * 3) + 1); i <= (cPage * 3); i++){
 		$.ajax({
 			url : '${pageContext.request.contextPath}/search/selectBook.do',
 			data : {
@@ -290,6 +327,7 @@ function selectBook(cPage){
 			success(resp){
 				const {item} = resp;
 				const {title, isbn13} = item[0];
+				//console.log(title, isbn13);
 				document.querySelector(`#book-title\${i}`).innerText = title;
 			},
 			error : console.log
@@ -316,6 +354,18 @@ window.onscroll = function () {
 	}
 };
 
+
+<%-- 피드 삭제 --%>
+const deletePheed = () => {
+	
+};
+
+<%-- 피드 수정 --%>
+const updatePheed = () => {
+	
+};
+
+
 </script>
 
 <%-- 신고창 모달 --%>
@@ -329,23 +379,22 @@ window.onscroll = function () {
         </button>
       </div>
       <div class="modal-body">
-      	<form name="pheedReportFrm" method="post" action="${pageContext.request.contextPath}/pheed/pheedReport.do">
           <div class="form-group">
             <label for="recipient-name" class="col-form-label">작성자</label>
-            <input type="text" class="form-control" id="memberId" value="로긴멤버아이디" readonly>
+            <input type="text" class="form-control" id="memberId" value="${loginMember.memberId}" readonly>
             <input type="hidden" class="form-control" id="category" value="pheed"/>
+            <input type="hidden" class="form-control" id="pheedNo" value=""/>
           </div>
           <div class="form-group">
             <p class="col-form-label">신고 내용</p>
-          	<div class="alert alert-danger alert-dismissible fade show" role="alert" id="alert" style="display:none">
+          	<div class="alert alert-danger alert-dismissible fade show" role="alert" id="alert-note" style="display:none">
 			  내용을 10자 이상 작성해주세요 !
 				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
-            <textarea class="form-control" id="report-content" placeholder="신고 내용을 작성해주세요."></textarea>
+            <textarea class="form-control" id="report-content" name="content" placeholder="신고 내용을 작성해주세요."></textarea>
           </div>
-        </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
@@ -354,19 +403,51 @@ window.onscroll = function () {
     </div>
   </div>
 </div>
-<%-- 신고창 폼 제출 --%>
 <script>
+<%-- 신고창 열기 --%>
+function openReportModal(e){
+	console.log(e.dataset.no);
+	$('#pheedNo').val(e.dataset.no);
+	$('#reportModal').modal('show');
+}
+<%-- 신고창 폼 제출 --%>
 const report = () => {
+	const category = document.querySelector("#category").value;
+	const memberId = document.querySelector('#memberId').value;
 	const content = document.querySelector("#report-content").value;
-	//console.log(content);
-	const alert = document.querySelector("#alert");
+	const pheedNo = document.querySelector('#pheedNo').value;
+	
+	const csrfHeader = '${_csrf.headerName}';
+	const csrfToken = '${_csrf.token}';
+	const headers = {};
+	headers[csrfHeader] = csrfToken; // 전송하는 헤더에 추가하여 전송 
+	
+	
+	console.log(content);
 	if(!/.{10,}$/.test(content)){
-		alert.style.display = "block";
+		document.querySelector("#alert-note").style.display = "block";
 		return;
 	}
 	if(confirm('신고를 제출하시겠습니까?')){
-		document.pheedReportFrm.submit();	
-		document.pheedReportFrm.reset();
+		$.ajax({
+			url : "${pageContext.request.contextPath}/pheed/pheedReport.do",
+			method : 'post',
+			headers,
+			data : {
+				category,
+				memberId,
+				content,
+				beenziNo : pheedNo
+			},
+			success(resp){
+				const {msg} = resp;
+				alert(msg);
+				$('#content').val(''); //폼 초기화
+				$('#reportModal').modal('hide');
+			},
+			error : console.log
+			
+		});
 	}else{
 		return;
 	}
@@ -375,13 +456,14 @@ const report = () => {
 document.querySelector("#report-content").addEventListener('keyup', (e) => {
 	const val = e.target.value;
 	if(val.length > 10){
-		document.querySelector("#alert").style.display = "none";
+		document.querySelector("#alert-note").style.display = "none";
 	}
 });
 
 
 <%-- 좋아요 북마크 클릭이벤트 --%>
-window.addEventListener('load', (e) => {
+const clickEvent = () => {
+	// 하트 클릭 이벤트 줘
 	document.querySelectorAll(".fa-heart").forEach((heart) => {
 		heart.addEventListener('click', (e) => {
 			
@@ -392,9 +474,8 @@ window.addEventListener('load', (e) => {
 			changeIcon(e.target, 'heart');
 		});	
 	});	
-});
-
-window.addEventListener('load', (e) => {
+	
+	// 북마크 클릭 이벤트 줘
 	document.querySelectorAll(".fa-bookmark").forEach((heart) => {
 		heart.addEventListener('click', (e) => {
 			
@@ -405,30 +486,94 @@ window.addEventListener('load', (e) => {
 			changeIcon(e.target, 'bookmark');
 		});	
 	});	
+	
+}
+window.addEventListener('load', (e) => {
+	// 로드할 때 하트 클릭 , 북마크 클릭 이벤트
+	clickEvent();
 });
 
 
 const changeIcon = (icon, shape) => {
 
 	let cnt = icon.parentElement.childElementCount;
+	let pheedNo = icon.dataset.pheedNo;
 	
 	const iHeart = `<i class="fa fa-heart fa-solid fa-stack-1x h-behind"></i>`;
 	const iBookMark = `<i class="fa fa-bookmark fa-solid fa-stack-1x b-behind"></i>`;
+	let memberId = "";
 	
+	if("${loginMember}"){
+         memberId = "${loginMember.username}";			
+	}
+	 
+	console.log(memberId);
 	
-	if(cnt==1) {
-		if(shape == 'heart'){
-			icon.parentElement.insertAdjacentHTML('beforeend', iHeart);
-		}
-		else {
-			icon.parentElement.insertAdjacentHTML('beforeend', iBookMark);
-		}
+	// 비동기 처리할 때 security 땜시 token 보내야 함. 
+	const csrfHeader = '${_csrf.headerName}';
+	const csrfToken = '${_csrf.token}';
+	const headers = {};
+	headers[csrfHeader] = csrfToken;
+	
+	if(cnt==1){
+		// 비었는데 눌렀는 경우 -> insert
+		$.ajax({
+			url : "${pageContext.request.contextPath}/pheed/insertLikesWish.do",
+			data : {
+				shape : shape,
+				memberId : memberId,
+				pheedNo : pheedNo
+			},
+			headers,
+			method : "POST",
+			success(data) {
+				console.log('하트/찜 insert 성공');
+				
+				if(shape=='heart'){
+					icon.parentElement.insertAdjacentHTML('beforeend', iHeart);
+					
+					// 좋아요 수 1 올려
+					const likesCntId = "#likesCnt" + pheedNo;
+					const likesCnt = document.querySelector(likesCntId);
+					likesCnt.innerHTML = Number(likesCnt.innerHTML) + 1;
+				}
+				else{
+					icon.parentElement.insertAdjacentHTML('beforeend', iBookMark);						
+				}
+				
+			},
+			error: console.log
+		});
+		
 	}
 	else {
-		icon.parentElement.removeChild(icon.parentElement.lastElementChild);
+		// 채워졌었는데 해제한 경우 -> delete
+		$.ajax({
+			url : "${pageContext.request.contextPath}/pheed/deleteLikesWish.do",
+			data : {
+				shape : shape,
+				memberId : memberId,
+				pheedNo : pheedNo
+			},
+			headers,
+			method : "POST",
+			success(data) {
+				
+				icon.parentElement.removeChild(icon.parentElement.lastElementChild);
+				
+				if(shape=="heart"){
+					// 좋아요 수 1 내려
+					const likesCntId = "#likesCnt" + pheedNo;
+					const likesCnt = document.querySelector(likesCntId);
+					likesCnt.innerHTML = Number(likesCnt.innerHTML) - 1;
+				}
+				console.log('하트/찜 delete 완료');
+				
+			},
+			error: console.log
+		});
+	
 	}
-	
-	
 
 }
 </script>
