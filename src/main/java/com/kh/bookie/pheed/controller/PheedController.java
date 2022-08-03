@@ -343,11 +343,37 @@ public class PheedController {
 		return mav;
 	}
 	
+	
 	@PostMapping("/pheedUpdate.do")
-	public String pheedUpdate(Pheed pheed, RedirectAttributes ra, @RequestParam (required = false) MultipartFile upFile) {
+	public String pheedUpdate(Pheed pheed,
+			@RequestParam(name = "upFile", required = false) MultipartFile upFile,
+			@RequestParam(name = "delFile", required = false) String delFile,
+			RedirectAttributes ra) {
 		try {
+			int result = 0;
 			log.debug("pheed = {}", pheed);
+			log.debug("upFile = {}", upFile);
+			log.debug("delFile = {}", delFile);
+			
 			String saveDirectory = application.getRealPath("/resources/upload/pheed");
+			
+			//파일 삭제
+			if(delFile != null) {
+				int attachNo = Integer.parseInt(delFile);
+				PheedAttachment attach = pheedService.selectOnePheedAttachment(attachNo);
+				
+				log.debug("attach = {}", attach);
+				
+				// 저장 경로에서 삭제
+				File deleteFile = new File(saveDirectory, attach.getRenamedFilename());
+				if(deleteFile.exists()) {
+					deleteFile.delete();
+				}
+				// DB에서 삭제
+				result = pheedService.deleteAttachment(attach.getAttachNo());
+				log.debug("{}번 pheedAttachment 삭제", attach.getAttachNo());
+				
+			}
 			
 			//업로드한 파일 저장
 			if(upFile.getSize() > 0) {
@@ -368,9 +394,11 @@ public class PheedController {
 				
 			}
 			
-			//int result = pheedService.pheedUpdate(pheed);
+			result = pheedService.pheedUpdate(pheed);
 			
 			ra.addFlashAttribute("msg", "피드 수정 완료 !");	
+			
+			
 		} catch (Exception e) {
 			log.error("피드 수정 오류", e);
 			e.printStackTrace();

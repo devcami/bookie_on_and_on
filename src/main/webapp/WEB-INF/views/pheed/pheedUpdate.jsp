@@ -14,7 +14,7 @@
 <div id="pheed-enroll-container">
 <section id="section">
 	<div id="top-title" class="text-center">
-		<h1>피드 등록🤳</h1>
+		<h1>피드 수정🤳</h1>
 	</div>
 		<form:form
 			name="pheedUpdateFrm"
@@ -38,16 +38,15 @@
 			<div id="file-div-title">
 				<label for="upFile">첨부파일</label>
 			</div>
-			<div>
-				<c:if test="${not empty pheed.attach.renamedFilename}">
-				<img src="${pageContext.request.contextPath}/resources/upload/pheed/${pheed.attach.renamedFilename}" alt="미리보기" id="profileImg" style="display: none; width: 300px;"/>
-				<button type="button" class="img-del-btn" data-attach-no="${pheed.attach.attachNo}" onclick="deleteFile(this);">삭제</button>
-				</c:if>
-				<c:if test="${empty pheed.attach.renamedFilename}">
-				<img src="" alt="미리보기" id="profileImg" style="display: none; width: 300px;"/>
-				<input type="file" name="upFile" id="upFile" onchange="loadImage(this);" />
-				</c:if>
-			</div>
+			<c:if test="${not empty pheed.attach.renamedFilename}">
+				<div class="img-div" id="imgDiv">
+					<img src="${pageContext.request.contextPath}/resources/upload/pheed/${pheed.attach.renamedFilename}" alt="미리보기" id="originalImg" style="display: inline; width: 300px;"/>
+					<button type="button" class="btn btn-lg img-del-btn w-50" data-attach-no="${pheed.attach.attachNo}" onclick="deleteFile(this);">삭제</button>
+				</div>
+			</c:if>
+		</div>
+		<div id="input-file-div">
+			<%-- 여기에 새로 추가되는 파일이 들어감 --%>					
 		</div>
 		<div id="content-div">
 			<label for="editorData">내용</label>
@@ -56,6 +55,7 @@
 
 		<input type="hidden" name="memberId" value="${loginMember.memberId}" />
 		<input type="hidden" name="itemId" id="itemId" value="${pheed.itemId}" />
+		<input type="hidden" name="pheedNo" value="${param.pheedNo}" />
 		
 		<div id="open-div">
 			<label class="open">공개여부</label>				
@@ -144,7 +144,7 @@ window.addEventListener('load', () => {
 	});
 	
 	<%-- 현재 책 뿌리기 --%>
-	<c:if test="${empty pheed.itemId}">
+	<c:if test="${not empty pheed.itemId}">
 	const bookInfo = document.querySelector("#book-info"); 
 	$.ajax({
 		url : '${pageContext.request.contextPath}/search/selectBook.do',
@@ -158,7 +158,7 @@ window.addEventListener('load', () => {
 		},
 		success(response){
 			const {item} = response;
-			//console.log(item);
+			console.log(item);
 			let {title, author, pubDate, description, isbn13, cover, categoryId, categoryName, publisher} = item[0];
 			bookInfo.insertAdjacentHTML('beforeend','<img src="" alt="책표지" id="book-img"/><span id="book-title"></span>');
 			document.querySelector('#book-img').src = cover;
@@ -181,6 +181,7 @@ const bookSelect = (e) => {
 	// 모달 닫기
 	$('#bookListModal').modal('hide');
 };
+
 <%-- img 미리보기 --%>
 const loadImage = (input) => {
     console.log(input.files);
@@ -189,20 +190,45 @@ const loadImage = (input) => {
        fr.readAsDataURL(input.files[0]);
        fr.onload = (e) => {
           console.log(e.target.result);
-          const profileImg = document.querySelector("#profileImg"); 
-          profileImg.src = e.target.result
-          profileImg.style.display = "inline";
+          const newImg = document.querySelector("#newImg"); 
+          newImg.src = e.target.result;
+          newImg.style.display = "inline";
 		}
-	}
+	} 
+    if(input.files.length == 0){
+    	newImg.src = '';
+        newImg.style.display = "none";
+    }
 }   
 
 
 $(document).ready(function() {
 	$('.summernote').summernote();
+	
+	const div = document.querySelector("#input-file-div");
+	const inputTag = `<img src='' alt="미리보기" id="newImg" style="display: none; width: 300px;"/>
+						<input type="file" name="upFile" id="upFile" onchange="loadImage(this);" />`;
+	<c:if test="${empty pheed.attach.renamedFilename}">
+		div.insertAdjacentHTML('beforeend', inputTag);	
+	</c:if>
 });
 
 const deleteFile = (e) => {
-	console.log(e);
+	const attachNo = e.dataset.attachNo;
+	console.log(attachNo);
+	const divId = "#imgDiv";
+	$("#file-div").find(divId).remove();
+	
+	// 폼 가장 아래에 delFile로 추가
+	const frm = document.pheedUpdateFrm;
+	const delInputTag = `<input type="hidden" name="delFile" value="\${attachNo}"/>`;
+	frm.insertAdjacentHTML('beforeend', delInputTag);
+	
+	// 새 파일 추가할 수 있는 input태그 추가
+	const div = document.querySelector("#input-file-div");
+	const inputTag = `<img src="" alt="미리보기" id="newImg" style="display: none; width: 300px;"/>
+						<input type="file" name="upFile" id="upFile" onchange="loadImage(this);" />`;
+	div.insertAdjacentHTML('beforeend', inputTag);
 }
 
 $('.summernote').summernote({
@@ -240,7 +266,7 @@ $('.summernote').summernote({
 	});
 
 
-document.pheedEnrollFrm.addEventListener('submit', (e) => {
+document.pheedUpdateFrm.addEventListener('submit', (e) => {
 	const content = document.querySelector("#content");
 	const bookInfo = document.querySelector("#book-info");
 	const page = document.querySelector("#page");

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.kh.bookie.pheed.model.dto.Pheed;
+import com.kh.bookie.pheed.model.dto.PheedAttachment;
 import com.kh.bookie.pheed.model.dto.PheedComment;
 
 public interface PheedService {
@@ -33,5 +34,11 @@ public interface PheedService {
 	int deletePheed(int pheedNo);
 
 	Pheed selectOnePheed(int pheedNo);
+
+	PheedAttachment selectOnePheedAttachment(int attachNo);
+
+	int deleteAttachment(int attachNo);
+
+	int pheedUpdate(Pheed pheed);
 
 }

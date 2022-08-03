@@ -108,4 +108,29 @@ public class PheedServiceImpl implements PheedService{
 	public Pheed selectOnePheed(int pheedNo) {
 		return pheedDao.selectOnePheed(pheedNo);
 	}
+	
+	@Override
+	public PheedAttachment selectOnePheedAttachment(int attachNo) {
+		return pheedDao.selectOnePheedAttachment(attachNo);
+	}
+	
+	@Override
+	public int deleteAttachment(int attachNo) {
+		return pheedDao.deleteAttachment(attachNo);
+	}
+	
+	@Override
+	public int pheedUpdate(Pheed pheed) {
+		// pheed update
+		int result = pheedDao.pheedUpdate(pheed);
+		
+		// 첨부파일 insert
+		PheedAttachment attach = pheed.getAttach();
+		if(attach != null) {
+			attach.setPheedNo(pheed.getPheedNo());
+			result = pheedDao.pheedAttachmentEnroll(attach);
+		}
+		
+		return result;
+	}
 }

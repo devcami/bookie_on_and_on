@@ -134,9 +134,14 @@ function getReadList(cPage) {
     			list.forEach((pheed) => {
     				//console.log(pheed);
 	    			const {attach, content, enrollDate, isOpened, itemId, member, memberId, page, pheedNo, likesCnt} = pheed;
-	    			const {attachNo, originalFilename, renamedFilename} = attach;
-	    			const {nickname} = member;
+	    			let attachNo, originalFilename, renamedFilename;
+	    			if(attach != null){
+	    				attachNo = attach.attachNo;
+	    				originalFilename = attach.originalFilename;
+	    				renamedFilename = attach.renamedFilename;
+	    			}
 	    			const profileFilename = member.renamedFilename;
+	    			const {nickname} = member;
     				let div = `
     					<div class="pheed-container shadow bg-white">
     						<div class="pheed-writer">
