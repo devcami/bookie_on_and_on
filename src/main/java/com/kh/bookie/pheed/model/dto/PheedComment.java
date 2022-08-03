@@ -26,6 +26,7 @@ public class PheedComment {
 	@NonNull
 	private String content;
 	private int commentRef;
+	private int commentLevel;
 	@NonNull
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDateTime createdAt;

@@ -38,7 +38,10 @@
 			<div id="file-div-title">
 				<label for="upFile">첨부파일</label>
 			</div>
-			<input type="file" name="upFile" id="upFile" multiple />
+			<div>
+				<img src="" alt="미리보기" id="profileImg" style="display: none; width: 300px;"/>
+			</div>
+			<input type="file" name="upFile" id="upFile" onchange="loadImage(this);" />
 		</div>
 		<div id="content-div">
 			<label for="editorData">내용</label>
@@ -148,9 +151,25 @@ const bookSelect = (e) => {
 	// 모달 닫기
 	$('#bookListModal').modal('hide');
 };
+<%-- img 미리보기 --%>
+const loadImage = (input) => {
+    console.log(input.files);
+    if(input.files[0]){
+       const fr = new FileReader();
+       fr.readAsDataURL(input.files[0]);
+       fr.onload = (e) => {
+          console.log(e.target.result);
+          const profileImg = document.querySelector("#profileImg"); 
+          profileImg.src = e.target.result
+          profileImg.style.display = "inline";
+		}
+	}
+}   
+
+
 $(document).ready(function() {
-	  $('.summernote').summernote();
-	});
+	$('.summernote').summernote();
+});
 
 $('.summernote').summernote({
 	  // 에디터 높이
@@ -190,10 +209,16 @@ $('.summernote').summernote({
 document.pheedEnrollFrm.addEventListener('submit', (e) => {
 	const content = document.querySelector("#content");
 	const bookInfo = document.querySelector("#book-info");
-	
+	const page = document.querySelector("#page");
 	if(bookInfo.innerText == ''){
 		e.preventDefault();
 		alert("책을 등록해주세요.")
+		return;
+	}
+	// 페이지 숫자만 1글자 이상
+	if(!/^[0-9]{1,}$/.test(page.value)){
+		e.preventDefault();
+		alert("페이지를 작성해주세요.")
 		return;
 	}
 	if(!/^.+$/.test(content.value)){

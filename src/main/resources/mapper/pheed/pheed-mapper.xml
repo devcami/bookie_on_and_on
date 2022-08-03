@@ -6,13 +6,13 @@
 	<select id="selectPheedFList" resultType="pheed">
 	</select>
 	<select id="selectPheedCList" resultType="pheed">
-		select * 
-		from
-		    pheed
-        where
-        	is_opened = 'O'
-		order by
-			1 desc
+		select 
+			ph.*,
+			(select count(*) from likes_pheed where pheed_no = ph.pheed_no) likes_cnt 
+		from 
+    		(select row_number() over (order by enroll_date desc) rnum, p.* from pheed p where is_opened = 'O') ph
+		where
+    		rnum between #{cPage} and #{numPerPage}
 	</select>
 	
 	<select id="selectAttachment" resultType="pheedAttachment">
@@ -47,6 +47,7 @@
 			select seq_pheed_no.currval from dual
 		</selectKey>
 	</insert>
+	
 	<insert id="pheedAttachmentEnroll">
 		insert into
 			pheed_attachment
@@ -57,4 +58,17 @@
 			#{renamedFilename},
 			sysdate)
 	</insert>
+	
+	<insert id="report">
+		insert into
+			report
+		values(
+			seq_report_no.nextval,
+			#{memberId},
+			#{category},
+			#{beenziNo},
+			'U',
+			#{content})
+	</insert>
+	
 </mapper>

@@ -91,9 +91,10 @@
 			seq_dokooc_no.nextval,
 			#{dokooNo},
 			#{nickname},
-			0,
+			null,
 			default,
-			#{content})
+			#{content},
+			default)
 	</insert>
 	
 	<delete id="commentDel">
