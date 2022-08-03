@@ -25,6 +25,7 @@
 		<result column="original_filename" property="originalFilename"/>
 		<result column="sns" property="sns"/>
 		<result column="point" property="point"/>
+		<result column="email" property="email"/>
 		<collection property="authorities" ofType="simpleGrantedAuthority">
 			<constructor>
 				<arg column="auth" javaType="string"/>

@@ -91,7 +91,7 @@ header .nav-item{
 }
 
 header .nav-item a img{
-	width: 50px;
+	width: 54px!important;
 }
 header .nav-item a.nav-link{
 	margin-top: 5px;
