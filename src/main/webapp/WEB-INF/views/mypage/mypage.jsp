@@ -112,6 +112,10 @@ document.addEventListener('DOMContentLoaded', function() {
 		<img src="${pageContext.request.contextPath}/resources/images/icon/point-icon.png" alt="포인트"/ style="width: 70px; height : 80px;">
 		<span>일단 여기쓰세요 포인!!!!!!트</span>
     </a>
+    <a class="record" href="${pageContext.request.contextPath}/member/emailCertified.do" style="color:black">
+		<img src="${pageContext.request.contextPath}/resources/images/icon/point-icon.png" alt="포인트"/ style="width: 70px; height : 80px;">
+		<span>인증테스트</span>
+    </a>
 </div>
 
 
