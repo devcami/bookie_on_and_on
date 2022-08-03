@@ -125,6 +125,7 @@
                     		</a>
                     	</sec:authorize> 
                     	<sec:authorize access="hasRole('ROLE_USER')"> 
+                    		<c:if test="${loginMember.memberId != 'admin'}">
                     		<a class="nav-link" href="${pageContext.request.contextPath}/mypage/mypage.do">
 				    			<c:if test="${fn:contains(uri, '/bookie/WEB-INF/views/mypage')}">
 	                    		<img src="${pageContext.request.contextPath}/resources/images/icon/i_mypage_on.png" alt="mypageicon" />내서재
@@ -133,6 +134,17 @@
 	                    		<img src="${pageContext.request.contextPath}/resources/images/icon/i_mypage.png" alt="mypageicon" />내서재
 				    			</c:if>
                     		</a>
+                    		</c:if>
+                    		<c:if test="${loginMember.memberId == 'admin'}">
+                    		<a class="nav-link" href="${pageContext.request.contextPath}/admin/admin.do">
+				    			<c:if test="${fn:contains(uri, '/bookie/WEB-INF/views/admin')}">
+	                    		<img src="${pageContext.request.contextPath}/resources/images/icon/i_admin_on.png" alt="adminicon" />관리
+				    			</c:if>
+				    			<c:if test="${!fn:contains(uri, '/bookie/WEB-INF/views/admin')}">
+	                    		<img src="${pageContext.request.contextPath}/resources/images/icon/i_admin.png" alt="adminicon" />관리
+				    			</c:if>
+                    		</a>
+                    		</c:if>
                     	</sec:authorize> 
                     </li>
 			    </ul>

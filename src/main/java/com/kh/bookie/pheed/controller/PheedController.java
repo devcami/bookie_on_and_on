@@ -1,7 +1,6 @@
 package com.kh.bookie.pheed.controller;
 
 import java.io.File;
-import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +24,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.bookie.common.HelloSpringUtils;
-import com.kh.bookie.dokoo.model.dto.Dokoo;
 import com.kh.bookie.member.model.dto.Member;
 import com.kh.bookie.pheed.model.dto.Pheed;
 import com.kh.bookie.pheed.model.dto.PheedAttachment;
@@ -51,15 +48,8 @@ public class PheedController {
 	ResourceLoader resourceLoader;
 	
 	@GetMapping("/pheedFList.do")
-	//@AuthenticationPrincipal Member loginMember
 	public ModelAndView pheedFList(ModelAndView mav, HttpServletRequest request) {
 		try {
-			// 목록 조회
-			// list 조회 때 loginMember를 넘긴다
-//			List<Pheed> list = pheedService.selectPheedFList();
-//			log.debug("list", list);
-//			mav.addObject("list", list);
-			
 			mav.setViewName("pheed/pheedList");
 		} catch (Exception e) {
 			log.error("팔로워 피드 목록 조회 오류", e);
