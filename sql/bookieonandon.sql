@@ -259,12 +259,7 @@ create table chat_comment(
     created_at date default sysdate not null,
     comment_content varchar2(1000) not null,
     comment_level number default 1,
-<<<<<<< HEAD
-    constraint pk_chat_comment_no primary key(comment_no)
-=======
-    constraint pk_chat_comment_no primary key(comment_no) 
->>>>>>> branch 'master' of https://github.com/devcami/bookie_on_and_on.git
-);
+    constraint pk_chat_comment_no primary key(comment_no));
 select * from chat_comment;
 create sequence seq_comment_no;
 
@@ -591,7 +586,3 @@ select * from member;
 select * from club where recruit_end > sysdate order by recruit_end;       
 
 
-select * from persistent_logins;
-
-
-select * from chat_comment;

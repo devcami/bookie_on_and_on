@@ -30,4 +30,8 @@ public interface PheedService {
 
 	int deletePheedWishList(Map<String, Object> map);
 
+	int deletePheed(int pheedNo);
+
+	Pheed selectOnePheed(int pheedNo);
+
 }

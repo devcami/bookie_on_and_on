@@ -42,6 +42,7 @@
 </head>
 <body>
 <sec:authentication property="principal" var="loginMember"/>
+
 <div id="body-container">
 	<header>
 		<div id="header-container">
@@ -130,15 +131,31 @@
                     	</sec:authorize> 
                     	<sec:authorize access="hasRole('ROLE_USER')"> 
                     	--%>
-                    	<a class="nav-link" href="${pageContext.request.contextPath}/mypage/mypage.do">
-			    			<c:if test="${fn:contains(uri, '/bookie/WEB-INF/views/mypage')}">
-                    		<img src="${pageContext.request.contextPath}/resources/images/icon/i_mypage_on.png" alt="mypageicon" />내서재
-			    			</c:if>
+                    	<c:if test="${not empty loginMember}">
+                    		<a class="nav-link" href="${pageContext.request.contextPath}/mypage/mypage.do?memberId=${loginMember.username}">
+				    			<c:if test="${fn:contains(uri, '/bookie/WEB-INF/views/mypage')}">
+	                    		<img src="${pageContext.request.contextPath}/resources/images/icon/i_mypage_on.png" alt="mypageicon" />내서재
+				    			</c:if>
+				    			<c:if test="${!fn:contains(uri, '/bookie/WEB-INF/views/mypage')}">
+	                    		<img src="${pageContext.request.contextPath}/resources/images/icon/i_mypage.png" alt="mypageicon" />내서재
+				    			</c:if>
+                    		</a>
+                        </c:if>
+                    	<c:if test="${empty loginMember}">
+                    		<a class="nav-link" href="${pageContext.request.contextPath}/member/login.do">
+				    			<c:if test="${fn:contains(uri, '/bookie/WEB-INF/views/mypage')}">
+	                    		<img src="${pageContext.request.contextPath}/resources/images/icon/i_mypage_on.png" alt="mypageicon" />내서재
+				    			</c:if>
+				    			<c:if test="${!fn:contains(uri, '/bookie/WEB-INF/views/mypage')}">
+	                    		<img src="${pageContext.request.contextPath}/resources/images/icon/i_mypage.png" alt="mypageicon" />내서재
+				    			</c:if>
+                    		</a>
+                        </c:if>
+<%--                     	<a class="nav-link" href="${pageContext.request.contextPath}/mypage/mypage.do">
 			    			<c:if test="${!fn:contains(uri, '/bookie/WEB-INF/views/mypage/')}">
-                    		<img src="${pageContext.request.contextPath}/resources/images/icon/i_mypage.png" alt="mypageicon" />내서재
 			    			</c:if>
                     	</a>
-                    	<%-- </sec:authorize> --%>
+ --%>                    	<%-- </sec:authorize> --%>
                     </li>
 			    </ul>
 			 </div>
