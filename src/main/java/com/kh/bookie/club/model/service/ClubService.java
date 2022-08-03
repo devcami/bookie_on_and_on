@@ -61,6 +61,8 @@ public interface ClubService {
 
 	int commentUpdate(ChatComment cc);
 
+	int commentRefEnroll(ChatComment cc);
+
 	
 
 }
