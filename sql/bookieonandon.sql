@@ -621,13 +621,21 @@ from(
         board b)
 where
     rnum between 11 and 15;
-=======
-    chat_comment cc 
-where 
-    chat_no = 14 
-        start with comment_level = 1 connect by prior comment_no = comment_ref 
-order siblings by created_at desc;
 
-commit;
-
->>>>>>> branch 'master' of https://github.com/devcami/bookie_on_and_on.git
+select 
+    m.*,
+    i.interest
+from 
+    member m join interest i
+        on m.member_id = i.member_id
+where
+    m.member_id = 'honggd';
+    
+    
+	select 
+	    m.*,
+	    (select interest from interest where member_id = 'honggd') interest
+	from 
+	    member m
+	where
+		m.member_id = 'honggd';

@@ -133,4 +133,9 @@ public class PheedServiceImpl implements PheedService{
 		
 		return result;
 	}
+	
+	@Override
+	public int commentEnroll(PheedComment pc) {
+		return pheedDao.commentEnroll(pc);
+	}
 }

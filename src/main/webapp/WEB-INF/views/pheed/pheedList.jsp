@@ -29,7 +29,7 @@
 			<div class="pheed-writer">
 				<div class="profile">
 					<c:if test="${pheed.member.renamedFilename != null}">
-						<img src="${pageContext.request.contextPath}/resources/upload/profile/${loginMember.renamedFilename}" alt="프로필사진" />
+						<img src="${pageContext.request.contextPath}/resources/upload/profile/${pheed.member.renamedFilename}" alt="프로필사진" />
 					</c:if>
 					<c:if test="${pheed.member.renamedFilename == null}">
 						<i class="fa-solid fa-user-large user-icon"></i>
@@ -95,17 +95,8 @@
 	<button class="btn bg-white close-btn" id="close" onclick="closeComment();">
        <i class="fa fa-times"></i>
     </button>
-    <div class="input-group p-3 mb-3">
-		<input type="text" class="form-control" name="content" placeholder="댓글을 작성해주세요." aria-label="댓글을 작성해주세요." aria-describedby="button-comment">
-		<div class="input-group-append">
-			<button class="btn btn-outline-secondary" type="button" id="btn-enroll-comment" onclick="enrollComment();">등록</button>
-		</div>
-    </div>
-    <div class="comment">
-		<table class="table table-borderless" id="tbl-comment">
-			<tr>
-			</tr>
-		</table>
+    <div id="comment-container">
+    	
     </div>
     <div class="dontclick"></div>
 </div>
@@ -147,7 +138,7 @@ function getReadList(cPage) {
     						<div class="pheed-writer">
     							<div class="profile">`;
     								if(profileFilename != null){
-			    						div += `<img src="${pageContext.request.contextPath}/resources/upload/profile/${loginMember.renamedFilename}" alt="프로필사진" />`;
+			    						div += `<img src="${pageContext.request.contextPath}/resources/upload/profile/\${profileFilename}" alt="프로필사진" />`;
     								}
    									else{
    										div += `<i class="fa-solid fa-user-large user-icon"></i>`;
@@ -247,57 +238,188 @@ const pheedComment = (e) => {
 	console.log(pheedNo);
 	const sidebar = document.querySelector("#sidebar");
 	sidebar.classList.add("show-nav");
-	const tbl = document.querySelector("#tbl-comment");
+	const container = document.querySelector("#comment-container");
+	const commentDiv = 
+		`<%-- 댓글 입력 창 --%>
+					<div class="input-group p-2 mb-2">
+			<input type="text" class="form-control" name="content" id="comment-content" placeholder="댓글을 작성해주세요."
+				aria-label="댓글을 작성해주세요." aria-describedby="button-comment">
+			<div class="input-group-append">
+			<button class="ml-2" type="button" id="btn-enroll-comment" data-pheed-no="\${pheedNo}" onclick="enrollComment(this);">등록</button>
+			</div>
+		</div>
+		<div id="comment-wrapper" class="p-2">
+		</div>`;
+	container.insertAdjacentHTML('afterbegin', commentDiv);
 	$.ajax({
 		url : `${pageContext.request.contextPath}/pheed/selectComments.do?pheedNo=\${pheedNo}`,
 		method : 'GET',
 		success(resp){
 			//console.log(resp);
-			tbl.innerHTML = "";
+			
+			
 			const {comments} = resp;
+				
 			comments.forEach((comment) => {
 				//console.log(comment);
 				const {pheedCNo, pheedNo, nickname, content, commentRef, createdAt} = comment;
 				//console.log(pheedCNo, pheedNo, nickname, content, commentRef, createdAt);
 				const {year, monthValue, dayOfMonth, hour, minute, second} = createdAt;
 				const date = new Date(year, monthValue, dayOfMonth, hour, minute, second);
+				const fmtCreatedAt = date.toLocaleDateString();
 				
-				const tr = document.createElement("tr");
-				const td1 = document.createElement("td");
-				const td2 = document.createElement("td");
-				const td3 = document.createElement("td");
-				const td4 = document.createElement("td");
-				/* const btnReply = document.createElement("button"); */
-				const btnCDel = document.createElement("button");
 				
-				if(commentRef == 1){
-					tr.classList.add("level2");						
-				} else{
-					tr.classList.add("level1");						
+				const wrapper = document.querySelector("#comment-wrapper");
+				const div = ''; 
+				// 일반 댓글
+				if(commentRef == 0){
+					div +=
+					`<div class="co-div flex-center comment-div" id="comment\${pheedCNo}">
+						<div class="co-left flex-center">
+							<div class="co-writer flex-center">
+								<img class="rounded-circle shadow-1-strong m-1"
+								<%-- loginMember가 아니고 댓글단 사람 프로필 가져와야돼 --%>
+		              			src="${pageContext.request.contextPath}/resources/upload/profile/${loginMember.renamedFilename}"
+								alt="avatar" width="40" height="40"> <span>\${nickname}</span>
+							</div>
+							<div class="co-Content" id="contentDiv\${pheedCNo}">
+								<span id="contentSpan\${pheedCNo}">\${content}</span>
+							</div>
+						</div>
+						<div class="co-right">
+							<span class="text-secondary">\${fmtCreatedAt}</span>
+							<div class="text-right">
+								<p class="small mb-0" style="color: #aaa;">
+					`;
+					if(nickname == ${loginMember.nickname}){
+					div +=`
+							<a href="#!" class="link-grey" onclick="commentDel(this);"
+								data-comment-no="\${pheedCNo}">삭제</a> • 
+							<a href="#!" id="updateBtn\${pheedCNo}" class="link-grey" onclick="showCommentUpdate(this);"
+								data-comment-no="\${pheedCNo}">수정</a> • 
+							<a href="#!" id="commentRefBtn\${pheedCNo}" class="link-grey" onclick="showCommentRefInput(this);"
+								data-comment-no="\${pheedCNo}">답글</a>`;
+					}
+					div += 
+								`</p>
+							</div>
+						</div>
+					</div>`;
 				}
-				td1.classList.add("comment-writer");
-				td1.innerHTML = nickname;
-				td2.classList.add("comment-content");
-				td2.innerHTML = content;
-				td3.classList.add("comment-date");
-				td3.innerText = date.toLocaleDateString();
 				
-				td4.classList.add("comment-btn-del");
-				td4.innerHTML = "<button type='button' class='btn btn-sm btn-danger btn-cdel' onclick='commentDel();'>삭제</button>";
+              
 				
-				tr.append(td1, td2, td3, td4);
-				tbl.append(tr);
+				// 대댓글
+				if(commentRef != 0){
+					div += 
+					`<div class="co-div flex-center coComment-div" id="coComment\${pheedCNo}">
+						<div class="co-left flex-center" style="margin-left: 40px;">
+							↳
+							<div class="co-writer flex-center">
+								<img class="rounded-circle shadow-1-strong m-1"
+									<%-- loginMember가 아니고 댓글단 사람 프로필 가져와야돼 --%>
+			                        src="${pageContext.request.contextPath}/resources/upload/profile/${loginMember.renamedFilename}"
+									alt="avatar" width="40" height="40"> <span>\${nickname}</span>
+							</div>
+							<div class="co-Content" id="contentDiv\${pheedCNo}">
+								<span id="contentSpan\${pheedCNo}">\${content}</span>
+							</div>
+						</div>
+						<div class="co-right">
+							<span class="text-secondary">\${fmtCreatedAt}</span>
+							<div class="small" style="padding-left: 10px;">
+								<a href="#!" class="link-grey" onclick="commentDel(this);"
+									data-comment-type='coComment'
+									data-comment-no="\${pheedCNo}">삭제</a> • 
+								<a href="#!"
+									id="updateBtn\${pheedCNo}" class="link-grey"
+									onclick="showCommentUpdate(this);"
+									data-comment-no="\${pheedCNo}">수정</a>
+							</div>
+						</div>
+					</div>`;
+					
+				}
 				
+				wrapper.insertAdjacentHTML('afterbegin', div);
 			});
 		},
 		error : console.log
 	});
 };
 
-<%-- 댓글 작성 버튼 enrollComment--%>
+
+<%------------ 댓글 등록 비동기 ------------%>
+const enrollComment = (e) => {
+   const pheedNo = e.dataset.pheedNo;
+   const commentVal = document.querySelector('#comment-content').value;
+   const csrfHeader = '${_csrf.headerName}';
+   const csrfToken = '${_csrf.token}';
+   const headers = {};
+   headers[csrfHeader] = csrfToken; // 전송하는 헤더에 추가하여 전송 
+   
+   $.ajax({
+      url : '${pageContext.request.contextPath}/pheed/commentEnroll.do',
+      method : 'post',
+      headers,
+      data : {
+         nickname : '${loginMember.nickname}',
+         pheedNo,
+         content : commentVal
+      },
+      success(resp){
+         console.log(resp);
+         const {pheedNo, content, pheedCNo} = resp;
+         const container = document.querySelector("#comment-wrapper")
+         
+         var today = new Date();
+
+         var year = today.getFullYear();
+         var month = ('0' + (today.getMonth() + 1)).slice(-2);
+         var day = ('0' + today.getDate()).slice(-2);
+         var hours = ('0' + today.getHours()).slice(-2); 
+         var minutes = ('0' + today.getMinutes()).slice(-2)
+         
+         const createdAt = year + "/" + month + "/" + day + " " + hours + ":" + minutes;
+         
+         const div = `
+               <div class="co-div flex-center comment-div" id="comment\${pheedCNo}">
+               <div class="co-left flex-center">
+                  <div class="co-writer flex-center">
+                     <img 
+                        class="rounded-circle shadow-1-strong m-1" 
+                        src="${pageContext.request.contextPath}/resources/upload/profile/${loginMember.renamedFilename}" 
+                        alt="avatar" width="40" height="40">
+                     <span>${loginMember.nickname}</span>
+                  </div>
+                  <div class="co-Content" id="contentDiv\${pheedCNo}">
+                        <span id="contentSpan\${pheedCNo}">\${content}</span>      
+                  </div>
+               </div>
+               <div class="co-right">
+                  <span class="text-secondary">
+                     \${createdAt}
+                  </span>
+                  <div class="text-right">
+                          <p class="small mb-0" style="color: #aaa;">
+                             <a href="#!" class="link-grey" onclick="commentDel(this);" data-comment-no="\${pheedCNo}">삭제</a> • 
+                             <a href="#!" id="updateBtn\${pheedCNo}" class="link-grey" onclick="showCommentUpdate(this);" data-comment-no="\${pheedCNo}">수정</a> • 
+                             <a href="#!" id="commentRefBtn\${pheedCNo}" class="link-grey" onclick="showCommentRefInput(this);" data-comment-no="\${pheedCNo}">답글</a>
+                          </p>
+                       </div>
+               </div>                     
+            </div>`;
+            
+            container.insertAdjacentHTML('afterbegin', div);
+            document.querySelector('#comment-content').value = '';
+               
+      },
+      error:console.log
+   });
+   
+}
 
 
-<%-- 삭제 버튼 commentDel --%>
 
 
 

@@ -62,5 +62,7 @@ public interface PheedDao {
 	int deletePheed(int pheedNo);
 
 	Pheed selectOnePheed(int pheedNo);
+
+	int commentEnroll(PheedComment pc);
 	
 }

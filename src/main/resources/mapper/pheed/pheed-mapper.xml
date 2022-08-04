@@ -108,4 +108,18 @@
 			<result column="created_at" property="createdAt"/>
 		</association>
 	</resultMap>
+	
+	<insert id="commentEnroll">
+		insert into
+			pheed_comment
+		values(
+			seq_pheed_comment_no.nextval,
+			#{pheedNo},
+			#{nickname},
+			#{content},
+			null,
+			default,
+			1)
+	</insert>
+	
 </mapper>

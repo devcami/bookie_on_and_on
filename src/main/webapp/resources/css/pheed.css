@@ -25,7 +25,7 @@ section#content	{
 	width: 800px;
 	font-size: 25px;
 	background-color: #FFF;
-	z-index:1;
+	z-index:2;
 	border-radius: 10px;
 	box-shadow: 1px 2px 3px #5454544a;
 }
@@ -72,6 +72,11 @@ section#content	{
 	border-radius: 50%;
 	background-color: #c7c7c7;
 }
+#content .pheed-container .pheed-writer .profile img{
+	width: 70px;
+	height:70px;
+	border-radius: 50%;
+}
 #content .pheed-container .pheed-writer .profile .user-icon{
 	font-size: 43px;
 	position: relative;
@@ -108,6 +113,9 @@ section#content	{
 
 
 /* 좋아요버튼 */
+#content .pheed-container .pheed .pheed-sns{
+	z-index : 1;
+}
 #content .pheed-container .pheed .pheed-sns .pheed-sns-icons .btn-group{
 	display: inline !important;
 }

@@ -24,6 +24,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.bookie.common.HelloSpringUtils;
+import com.kh.bookie.dokoo.model.dto.DokooComment;
 import com.kh.bookie.member.model.dto.Member;
 import com.kh.bookie.pheed.model.dto.Pheed;
 import com.kh.bookie.pheed.model.dto.PheedAttachment;
@@ -394,5 +395,19 @@ public class PheedController {
 		}
 		return "redirect:/pheed/pheedCList.do";
 	}
+	
+	@PostMapping("/commentEnroll.do")
+	public ResponseEntity<?> commentEnroll(PheedComment pc){
+		try {
+			log.debug("PheedComment = {}", pc);
+			int result = pheedService.commentEnroll(pc);
+			return ResponseEntity.ok(pc);
+		} catch (Exception e) {
+			log.error("댓글 등록 오류", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+	}
+	
+	
 	
 }

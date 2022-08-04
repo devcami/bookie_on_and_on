@@ -41,4 +41,6 @@ public interface PheedService {
 
 	int pheedUpdate(Pheed pheed);
 
+	int commentEnroll(PheedComment pc);
+
 }
