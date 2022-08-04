@@ -204,31 +204,116 @@ section#content	{
 	font-size: 30px;
 }
 
-#sidebar .comment table#tbl-comment tr td.comment-writer{
-	color: #727272;
-	font-size: 20px;
-	vertical-align: middle;
-	width: 150px;
-}
-#sidebar .comment table#tbl-comment tr td.comment-content{
-	vertical-align: middle;
-}
-#sidebar .comment table#tbl-comment tr td.comment-date{
-	font-size: 14px;
-	color: gainsboro;
-	width: 70px;
-	padding:0.75em 0 ;
-	vertical-align: middle;
-}
-#sidebar .comment table#tbl-comment tr td.comment-btn-del{
-	text-align: center;
-	padding:0.75em 0;
-	width: 50px;
-}
-
-
-
 #sidebar .dontclick{
 	height: 100%;
+}
+
+/************** 댓글 **************/
+hr{
+	border-top: 2px solid #697C37 !important;
+}
+#comment-container #comment-content{
+	border-radius : 14px;
+}
+#comment-container #btn-enroll-comment{
+	border-radius : 14px;
+	color: #fff;
+    background-color: #FE9801;
+    border-color: #FE9801;
+    width: 40px;
+    cursor:pointer;
+}
+
+#comment-container span.text-dark {
+   margin-left: 20px;
+    margin-right: 10px;
+    font-size: 22px;
+    width: 73%;
+}
+div.comment-div span.text-secondary {
+
+    float: right;
+}
+
+.link-grey { color: #aaa; } .link-grey:hover { color: #FE9801; }
+
+/****** 댓글수정 인풋 *******/
+.updateCommentInput {
+   display: inline-block;
+    width: 100%;
+    border-radius : 14px;
+}
+
+/****** 대댓글 *************/
+.co-div {
+    width: 460px;
+   justify-content: space-between;
+
+}
+.co-left {
+    justify-content: flex-start;
+}
+.co-right {
+   display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    margin-left: 10px;
+}
+.co-writer {
+    justify-content: flex-start;
+    width: 150px;
+    padding-right: 15px;
+    color: #FE9801;
+}
+.c-content {
+   display: flex;
+   width: 310px;
+}
+.co-Content {
+   display: flex;
+   width: 200px;
+}
+.flex-center{
+	display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+}
+.text-secondary{
+	font-size: 13px;
+}
+
+.small {
+   color: #aaa;
+}
+
+.btn {
+   margin-left: 5px;
+   	border-radius : 14px;
+	color: #fff;
+    background-color: #FE9801;
+    border-color: #FE9801;
+}
+
+
+/******** 대댓글 css **********/
+.co-ref-div {
+   position: relative;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    margin-left: 125px;
+}
+.co-ref-input {
+	padding:5px;
+   width: 94%;
+   border: 1px solid #ced4da;
+   border-radius: 14px;
+}
+.ref-btn {
+	border-color: #FE9801;
+   border: none;
+   cursor: pointer;
+   margin-left: 5px;
 }
 

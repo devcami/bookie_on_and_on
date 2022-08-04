@@ -16,7 +16,7 @@ import com.kh.bookie.pheed.model.dto.PheedComment;
 @Mapper
 public interface PheedDao {
 
-	List<Pheed> selectPheedFList();
+	List<Pheed> selectPheedFList(Map<String, Object> map);
 
 	List<Pheed> selectPheedCList(Map<String, Object> map);
 
@@ -64,5 +64,11 @@ public interface PheedDao {
 	Pheed selectOnePheed(int pheedNo);
 
 	int commentEnroll(PheedComment pc);
-	
+
+	int commentDel(int pheedCNo);
+
+	int commentUpdate(PheedComment pheedComment);
+
+	int commentRefEnroll(PheedComment pc);
+
 }

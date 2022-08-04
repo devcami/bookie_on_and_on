@@ -49,9 +49,51 @@ public class PheedController {
 	ResourceLoader resourceLoader;
 	
 	@GetMapping("/pheedFList.do")
-	public ModelAndView pheedFList(ModelAndView mav, HttpServletRequest request) {
+	public ModelAndView pheedFList(ModelAndView mav, @AuthenticationPrincipal Member loginMember) {
 		try {
+			Map<String, Object> map = new HashMap<>();
+	        log.debug("authentication member = {} ", loginMember);
+	        log.debug("authentication member = {} ", loginMember.getMemberId());
+	        String memberId = loginMember.getMemberId();
+	        if(loginMember != null) {
+				
+	        	
+				// 멤버 있으면 북클럽 찜 리스트 가져와 
+				List<String> pheedWishList = pheedService.getPheedWishListbyMemberId(loginMember.getUsername());
+				
+				String wishStr = "";
+				for(int i = 0; i < pheedWishList.size(); i++) {
+					wishStr += pheedWishList.get(i);
+					wishStr +=  ",";
+				}
+				
+				mav.addObject("wishStr", wishStr);
+				
+				// 멤버 있으면 북클럽 하트 리스트 가져와 
+				List<String> pheedLikesList = pheedService.getPheedLikesListbyMemberId(loginMember.getUsername());
+				
+				String likesStr = "";
+				for(int j = 0;  j < pheedLikesList.size(); j++) {
+					likesStr += pheedLikesList.get(j);
+					likesStr +=  ",";
+				}
+				mav.addObject("likesStr", likesStr);
+			}
+			
+			
+			// 목록 조회
+			int cPage = 1;
+			int numPerPage = 3;
+			map.put("cPage", cPage);
+			map.put("numPerPage", numPerPage);
+			map.put("memberId", memberId);
+			
+			List<Pheed> list = pheedService.selectPheedFList(map);
+			log.debug("list = {}", list);
+			mav.addObject("list", list);
+			
 			mav.setViewName("pheed/pheedList");
+			
 		} catch (Exception e) {
 			log.error("팔로워 피드 목록 조회 오류", e);
 			mav.addObject("msg", "팔로워 피드 목록 조회 오류");
@@ -408,6 +450,41 @@ public class PheedController {
 		}
 	}
 	
+	@PostMapping("/commentDel.do")
+	public ResponseEntity<?> commentDel(@RequestParam int pheedCNo){
+		try {
+			log.debug("pheedComment = {}", pheedCNo);
+			int result = pheedService.commentDel(pheedCNo);
+			return ResponseEntity.ok().build();
+		} catch (Exception e) {
+			log.error("댓글 삭제 오류", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+	}
 	
+	@PostMapping("/commentUpdate.do")
+	public ResponseEntity<?> commentUpdate(PheedComment pheedComment, RedirectAttributes ra) {
+		try {
+			log.debug("pheedComment = {}", pheedComment);
+			int result = pheedService.commentUpdate(pheedComment);
+			ra.addFlashAttribute("msg", "독후감 댓글 수정 완료 !");	
+			return ResponseEntity.ok(pheedComment);
+		} catch (Exception e) {
+			log.error("독후감 댓글 수정 오류", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+	}
+	
+	@PostMapping("/commentRefEnroll.do")
+	public ResponseEntity<?> commentRefEnroll(PheedComment pc){
+		try {
+			log.debug("pheedComment = {}", pc);
+			int result = pheedService.commentRefEnroll(pc);
+			return ResponseEntity.ok(pc);
+		} catch (Exception e) {
+			log.error("댓글 등록 오류", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+	}
 	
 }

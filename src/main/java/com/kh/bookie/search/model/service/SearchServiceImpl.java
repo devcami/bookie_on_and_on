@@ -148,4 +148,9 @@ public class SearchServiceImpl implements SearchService {
 	public Member selectOneMember(String memberId) {
 		return searchDao.selectOneMember(memberId);
 	}
+	
+	@Override
+	public int updateMypick(Book book) {
+		return searchDao.updateMypick(book);
+	}
 }
