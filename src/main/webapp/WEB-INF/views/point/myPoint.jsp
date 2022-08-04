@@ -26,7 +26,7 @@
 	</div>
 	<div id="point-container" class="shadow">
 		<div id="point-top" class="mb-3">
-			<h3>7월 내역</h3>
+			<h3>${month}월 내역</h3>
 		</div>
 		<div id="point-bottom">
 			<div id="header" class="flex-center-space mb-2">
@@ -36,27 +36,32 @@
 				<span class="occur-date">발생일</span>
 				<span class="total-point">누적 포인트</span>			
 			</div>
-			<div id="" class="pointInOut flex-center-space mb-1 plus">
-				<span class="plusMinus" style="color: green;">+</span>
-				<span class="money">10000</span>
-				<span class="content">포인트 충전</span>
-				<span class="occur-date">22/09/15 17:53</span>
-				<span class="total-point">20000</span>
-			</div>
-			<div id="" class="pointInOut flex-center-space mb-1 minus">
-				<span class="plusMinus" style="color: red;">-</span>
-				<span class="money">5000</span>
-				<span class="content">북클럽 디파짓 반환</span>
-				<span class="occur-date">22/09/10 22:28</span>
-				<span class="total-point">20000</span>
-			</div>
-			<div id="" class="pointInOut flex-center-space mb-1 plus">
-				<span class="plusMinus">+</span>
-				<span class="money">10000</span>
-				<span class="content">북클럽 미션 수행</span>
-				<span class="occur-date">22/09/15 17:53</span>
-				<span class="total-point">30000</span>
-			</div>
+			<c:forEach items="${list}" var="ps">
+				<c:if test='${ps.status eq "P"}'>
+					<div id="pointDiv${ps.pointNo}" class="pointInOut flex-center-space mb-1 plus">
+						<span class="plusMinus" style="color: green;">+</span>
+						<span class="money">${ps.point}</span>
+						<span class="content">${ps.content}</span>
+						<fmt:parseDate value="${ps.updatedAt}" pattern="yyyy-MM-dd'T'HH:mm" var="updatedAt"/>
+						<span class="occur-date">
+							<fmt:formatDate value="${updatedAt}" pattern="yy/MM/dd HH:mm"/>
+						</span>
+						<span class="total-point">${ps.totalPoint}</span>
+					</div>
+				</c:if>
+				<c:if test='${ps.status eq "M"}'>
+					<div id="pointDiv${ps.pointNo}" class="pointInOut flex-center-space mb-1 minus">
+						<span class="plusMinus" style="color: red;">-</span>
+						<span class="money">${ps.point}</span>
+						<span class="content">${ps.content}</span>
+						<fmt:parseDate value="${ps.updatedAt}" pattern="yyyy-MM-dd'T'HH:mm" var="updatedAt"/>
+						<span class="occur-date">
+							<fmt:formatDate value="${updatedAt}" pattern="yy/MM/dd HH:mm"/>
+						</span>
+						<span class="total-point">${ps.totalPoint}</span>
+					</div>
+				</c:if>
+			</c:forEach>
 		</div>
 	</div>
 
@@ -104,9 +109,11 @@ document.querySelector("#btn-charge").addEventListener('click', (e) => {
 $('#paymentModal').on('hidden.bs.modal', function (e) {
 	// 모달 닫길때 모달 안에 입력된 충전 금액 비워
 	document.querySelector("#chargePoint").value = '';
-	console.log("${loginMember.enrollDate}")
+	
+	getNowDateTime();
 });
 
+// 결제 고유 번호 만들어주는 함수
 const makeUid = () => {
 	const memberId = "${loginMember.username}";
 	
@@ -125,13 +132,19 @@ const makeUid = () => {
 }
 
 document.querySelector("#charge-btn").addEventListener('click', (e) => {
+	const point = document.querySelector("#chargePoint").value;
+	
+	// 테스트할때는 천원씩 테스트 할수없어..마이머니.. 테스트 끝나면 풀기
+/* 	if(point < 1000){
+		alert('포인트는 1000원부터 충전이 가능합니다.');
+		return;
+	} */
 
 	const headers = {
 		"${_csrf.headerName}" : "${_csrf.token}"
 	};
 	
 	const uid = makeUid();
-	const point = document.querySelector("#chargePoint").value;
 	
   	IMP.init('imp63733866');
   	
@@ -141,19 +154,22 @@ document.querySelector("#charge-btn").addEventListener('click', (e) => {
   	    merchant_uid: uid, // 상점에서 관리하는 주문 번호
   	    name : '포인트 충전',
   	    amount : point,
-  	    buyer_email : 'jyjmjs2@naver.com',
+  	    buyer_email : '${loginMember.email}',
   	    buyer_name : '${loginMember.nickname}',
-  	    buyer_tel : '010-1234-5678',
-  	    buyer_addr : '서울특별시 강남구 삼성동',
-  	    buyer_postcode : '123-456'
+  	    buyer_tel : '${loginMember.phone}'
   	}, function(rsp) {
   		console.log(rsp);
   	    if ( rsp.success ) {
   	    	
   	    	const param = {
-  	    		imp_uid : rsp.imp_uid
+  	    		impUid : rsp.imp_uid,
+  	    		memberId : '${loginMember.memberId}',
+  	    		content: '포인트 충전',
+  	    		point: point,
+  	    		status : 'P'
   	  		};
   	    	
+  	    	console.log(param);
   	    	//[1] 서버단에서 결제정보 조회를 위해 jQuery ajax로 imp_uid 전달하기
   	    	$.ajax({
   	    		url: "${pageContext.request.contextPath}/point/chargeMyPoint.do", //cross-domain error가 발생하지 않도록 주의해주세요
@@ -164,17 +180,63 @@ document.querySelector("#charge-btn").addEventListener('click', (e) => {
   	    		data: JSON.stringify(param),
   	    		success(resp){
   	    			console.log(resp);
+  	    			const {msg, pointStatus} = resp;
+  	    			
+  	    			alert(msg);
+  	    			const dateTime = getNowDateTime();
+
+  	    			// 모달 밖에 지금 충전된 내역 추가해
+  	    			const container = document.querySelector("#header");
+  	    			
+  	    			const div = `
+  	    				<div id="pointDiv\${pointStatus.pointNo}" class="pointInOut flex-center-space mb-1 plus">
+		  	  				<span class="plusMinus" style="color: green;">+</span>
+		  	  				<span class="money">\${pointStatus.point}</span>
+		  	  				<span class="content">\${pointStatus.content}</span>
+		  	  				<span class="occur-date">\${dateTime}</span>
+		  	  				<span class="total-point">\${pointStatus.totalPoint}</span>
+		  	  			</div>`; 
+  	    			
+  	    			// 모달 밖에 포인트 바꿔
+  	    			container.insertAdjacentHTML('afterend', div);
+  	    			
+  	    			// 모달 밖에 큰 내 포인트도 바꿔
+  	    			document.querySelector('#myPointH4').innerHTML = `\${pointStatus.totalPoint}`;
+  	    			
+  	    			// 모달 안에 인풋 내용 지워 
+  	    			document.querySelector("#chargePoint").value = '';
+
+  	    			// 포인트 충전 모달 닫어
+  	    			$('#paymentModal').modal('hide');
+  	    			
+
+  	    			
   	    		},
   	    		error: console.log
   	    	});
   	    } else {
-  	        var msg = '결제에 실패하였습니다.';
-  	        msg += '에러내용 : ' + rsp.error_msg;
+  	        var msg = '결제가 취소되었습니다.';
   	        
   	        alert(msg);
   	    }
   	});
 });
+
+const getNowDateTime = () => {
+		const today = new Date();
+		
+		let yy = today.getFullYear();
+		let year = String(yy).substring(2,4);
+		console.log(year);
+		const month = ('0' + (today.getMonth() + 1)).slice(-2);
+		const day = ('0' + today.getDate()).slice(-2);
+		const hours = ('0' + today.getHours()).slice(-2); 
+		const minutes = ('0' + today.getMinutes()).slice(-2);
+		
+		const nowDateTime = year + "/" + month + "/" + day + " " + hours + ":" + minutes;
+		
+		return nowDateTime;
+}
 
 
 </script>
