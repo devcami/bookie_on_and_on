@@ -40,13 +40,6 @@
 		    club c
 		where
 			recruit_end > sysdate
-		order by
-			<if test="sortType == null">
-			    recruit_start desc	
-			</if>
-			<if test="sortType != null">
-				recruit_end
-			</if>
 	</select>
 	<resultMap type="club" id="clubListCollectionMap">
 		<id column="club_no" property="clubNo"/>
@@ -271,5 +264,23 @@
 		order siblings by 
 			created_at desc
 	</select>
+	
+	
+	<select id="selectClubBoardList" resultMap="clubBoardListMap">
+		select
+		    *
+		from
+		    club_chat
+		where
+			club_no = #{clubNo}
+		order by 
+			enroll_date desc
+	</select>
+	<resultMap type="chat" id="clubBoardListMap">
+		<id column="chat_no" property="chatNo"/>
+		<result column="nickname" property="nickname"/>
+		<result column="title" property="title"/>
+		<result column="enroll_date" property="enrollDate"/>
+	</resultMap>
 	
 </mapper>

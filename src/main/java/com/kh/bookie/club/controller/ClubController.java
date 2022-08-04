@@ -99,8 +99,8 @@ public class ClubController {
 				
 			}
 			
-			int numPerPage = 8;
-			List<Club> list = clubService.selectClubList(cPage, numPerPage, sortType);
+			int numPerPage = 3;
+			List<Club> list = clubService.selectClubList(cPage, numPerPage);
 			mav.addObject("list", list);
 			
 			// 페이지 바
@@ -110,19 +110,6 @@ public class ClubController {
 			mav.addObject("pagebar", pagebar);
 			mav.addObject("sortType", sortType);
 			
-			/**
-			 원래
-			// 목록 조회
-			int numPerPage = 8;
-			List<Club> list = clubService.selectClubList(cPage, numPerPage);
-			mav.addObject("list", list);
-			
-			// 페이지 바
-			int totalClub = clubService.selectTotalClub();
-			String url = request.getRequestURI();
-			String pagebar = HelloSpringUtils.getPagebar(cPage, numPerPage, totalClub, url);
-			mav.addObject("pagebar", pagebar);
-			*/
 		} catch(Exception e) {
 			log.error("북클럽목록 조회 오류!!", e);
 			mav.addObject("msg", "북클럽목록 조회에 실패했습니다!");
@@ -452,17 +439,31 @@ public class ClubController {
 	@GetMapping("/clubBoard.do/{clubNo}")
 	public ModelAndView clubBoard(
 			ModelAndView mav,
-			@PathVariable int clubNo) {
+			@PathVariable int clubNo,
+			HttpServletRequest request,
+			@RequestParam(defaultValue = "1") int cPage) {
 		
 		try {
 			
 //			log.debug("clubNo = {}", clubNo);
 			
-			List<Chat> list = clubService.selectClubBoardList(clubNo);
+			
+			int numPerPage = 10;
+			List<Chat> list = clubService.selectClubBoardList(cPage, numPerPage, clubNo);
+			mav.addObject("list", list);
 			
 			log.debug("list = {}", list);
 			
-			mav.addObject("list", list);
+			// 페이지 바
+			int totalClubBoard = clubService.selectTotalClubBoard(clubNo);
+			String url = request.getRequestURI();
+			
+			log.debug("totalClubBoard = {}", totalClubBoard);
+			log.debug("url = {}", url);
+			
+			String pagebar = HelloSpringUtils.getPagebar(cPage, numPerPage, totalClubBoard, url);
+			mav.addObject("pagebar", pagebar);
+			
 			mav.setViewName("club/clubBoard");
 			
 		} catch(Exception e) {

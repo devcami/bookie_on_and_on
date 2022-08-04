@@ -60,6 +60,8 @@
 			  </tbody>
 			</table>
 		</div>
+		
+		<nav>${pagebar}</nav>
 	</section>
 
 </div>
