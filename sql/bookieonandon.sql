@@ -20,9 +20,8 @@ create table member (
     constraint uq_member_nickname unique (nickname),
     constraint ck_member_gender check (gender in ('M', 'F'))
 );
-
-update member set nickname = '승윤이' where member_id = 'tmddbs';
-
+alter table member add email varchar2(50);
+select * from member;
 -- 2. authority
 create table authority(
     member_id varchar2(200),
@@ -589,6 +588,38 @@ select * from member;
 
 select * from club where recruit_end > sysdate order by recruit_end;       
 
+create table point_status (
+    point_no number,
+    member_id varchar2(200) not null,
+    status char(1),
+    content varchar2(1000),
+    point number not null,
+    total_point number,
+    updated_at date default sysdate not null,
+    imp_uid varchar2(50),
+    constraint pk_point_status_no primary key(point_no),
+    constraint fk_point_status_member_id foreign key(member_id) references member(member_id) on delete cascade,
+    constraint ck_point_status check (status in ('M', 'P'))
+);
+create sequence seq_point_no;
+commit;
+select * from point_status;
+select * from member;
+
+select
+			cc.*,
+			ca.*,
+			m.*,
+            m.renamed_filename profilePic,
+			ca.chat_no ca_chat_no
+		from
+			club_chat cc 
+				left join chat_attachment ca on cc.chat_no = ca.chat_no 
+				left join member m on cc.nickname = m.nickname 
+		where
+			cc.chat_no = 23;
+            
+            select * from club_chat;
 ---------------------------------
 -- book <<은민>>
 ---------------------------------
@@ -598,7 +629,6 @@ select
     i.started_at started_at,
     i.ended_at ended_at
 from 
-<<<<<<< HEAD
     book b right join (select * from book_ing order by add_date desc) i
         on b.member_id = i.member_id
 where b.member_id = 'tmddbs' and b.item_id = '9788932474755' ;
@@ -659,5 +689,4 @@ where
     member_id in (select following_member_id from follower where member_id = 'honggd');
     
 select following_member_id from follower where member_id = 'tmddbs';
-        
-        
+  

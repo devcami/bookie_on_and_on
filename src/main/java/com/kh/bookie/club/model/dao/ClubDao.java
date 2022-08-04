@@ -109,5 +109,6 @@ public interface ClubDao {
 	@Update("update chat_comment set comment_content = #{commentContent} where comment_no = #{commentNo}")
 	int commentUpdate(ChatComment cc);
 
-
+	int commentRefEnroll(ChatComment cc);
+	
 }

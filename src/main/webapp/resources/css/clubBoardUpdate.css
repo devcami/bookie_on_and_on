@@ -175,4 +175,7 @@ input::file-selector-button:hover {
 #btn-div button:hover {
 	box-shadow: 4px 4px 6px 1px rgb(0 0 0 / 20%);
 }
+#btn-div button:focus, #btn-div button:focus-visible {
+	outline: unset;
+}
 

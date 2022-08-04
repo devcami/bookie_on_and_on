@@ -194,8 +194,8 @@
 			ca.chat_no ca_chat_no
 		from
 			club_chat cc 
-				join chat_attachment ca on cc.chat_no = ca.chat_no 
-				join member m on cc.nickname = m.nickname 
+				left join chat_attachment ca on cc.chat_no = ca.chat_no 
+				left join member m on cc.nickname = m.nickname 
 		where
 			cc.chat_no = #{chatNo}
 	</select>
@@ -238,13 +238,32 @@
 		</selectKey>
 	</insert>
 	
+	<insert id="commentRefEnroll">
+		insert into 
+			chat_comment 
+		values 
+			(seq_comment_no.nextval, 
+			#{chatNo}, 
+			#{nickname}, 
+			#{commentRef}, 
+			default, 
+			#{commentContent},
+			2)
+		<selectKey keyProperty="commentNo" resultType="_int" order="AFTER">
+			select
+				seq_comment_no.currval
+			from
+				dual
+		</selectKey>
+	</insert>
+	
 	<select id="selectChatComments" resultType="chatComment">
 		select 
 		    * 
 		from 
 		    chat_comment cc 
 		where 
-		    chat_no = 14 
+		    chat_no = #{chatNo} 
 		        start with 
 		        	comment_level = 1
 		        connect by 

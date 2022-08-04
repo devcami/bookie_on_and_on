@@ -2,7 +2,6 @@ package com.kh.bookie.club.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.security.Principal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -18,6 +17,7 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -62,25 +62,21 @@ public class ClubController {
 			@RequestParam(required = false) String sortType,
 			ModelAndView mav,
 			HttpServletRequest request,
-			Principal principal) {
+			@AuthenticationPrincipal Member loginMember) {
 		
 		
 		try {
 			
 			log.debug("sortType = {}", sortType);
 			
+	        log.debug("authentication member = {} ", loginMember);
+	        log.debug("authentication member = {} ", loginMember.getMemberId());
+
 			
-			UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken)principal;
-			log.debug("authentication = {} ", authentication);
-			
-			if(authentication != null) {
-				Object _principal = authentication.getPrincipal();
-				Member loginMember = (Member)_principal;					
-				log.debug("있나여? loginMember = {}", loginMember.getUsername());
-				
-				
+			if(loginMember  != null) {					
+
 				// 멤버 있으면 북클럽 찜 리스트 가져와 
-				List<String> clubWishList = clubService.getClubWishListbyMemberId(loginMember.getUsername());
+				List<String> clubWishList = clubService.getClubWishListbyMemberId(loginMember.getMemberId());
 //				log.debug("clubWishList = {}", clubWishList);
 				
 				String wishStr = "";
@@ -537,6 +533,8 @@ public class ClubController {
 			int result = clubService.insertClubBoard(clubBoard);
 			redirectAttr.addFlashAttribute("msg", "게시글을 성공적으로 등록했습니다!");
 			
+			log.debug("chatNo = {}", clubBoard.getChatNo());
+			
 		} catch(Exception e) {
 			log.error("북클럽 게시글 등록 오류", e);
 			throw e;
@@ -551,7 +549,7 @@ public class ClubController {
 			ModelAndView mav) {
 		
 		try {
-			
+			log.debug("chatNo = {}", chatNo);
 			
 			Chat clubBoard = clubService.selectOneBoardCollection(chatNo);
 			
@@ -653,7 +651,7 @@ public class ClubController {
 			
 			
 			// 파일 삭제
-			if(!delFiles.isEmpty()) {
+			if(delFiles != null) {
 				for(int i = 0; i < delFiles.size(); i++) {
 					ChatAttachment attach = clubService.findOneClubBoardAttachByAttachNo(Integer.parseInt(delFiles.get(i)));
 					
@@ -741,7 +739,19 @@ public class ClubController {
 			int result = clubService.commentUpdate(cc);
 			return ResponseEntity.ok(cc);
 		} catch(Exception e) {
-			log.error("북클럽 게시글 댓글 수정 오류");
+			log.error("북클럽 게시글 댓글 수정 오류", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+	}
+	
+	@PostMapping("/commentRefEnroll.do")
+	public ResponseEntity<?> clubBoardCommentRefEnroll(ChatComment cc){
+		try {
+			log.debug("cc = {}", cc);
+			int result = clubService.commentRefEnroll(cc);
+			return ResponseEntity.ok(cc);
+		} catch(Exception e) {
+			log.error("게시판 대댓글 입력 오류", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
