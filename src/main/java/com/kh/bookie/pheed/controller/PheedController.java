@@ -156,11 +156,12 @@ public class PheedController {
 	}
 	
 	@GetMapping("/getReadList.do")
-	public ResponseEntity<?> getReadList(@RequestParam int cPage, @AuthenticationPrincipal Member loginMember){
+	public ResponseEntity<?> getReadList(@RequestParam int cPage, @RequestParam String now, @AuthenticationPrincipal Member loginMember){
 	      try {
 	          Map<String, Object> map = new HashMap<>();
 	          log.debug("authentication member = {} ", loginMember);
 	          log.debug("authentication member = {} ", loginMember.getNickname());
+	          log.debug("now = {}", now);
 	          
 	          if(loginMember != null) {
 				// 멤버 있으면 북클럽 찜 리스트 가져와 
@@ -193,7 +194,13 @@ public class PheedController {
 			int numPerPage = cPage * 3;
 			map.put("cPage", cPage);
 			map.put("numPerPage", numPerPage);
-			List<Pheed> list = pheedService.selectPheedCList(map);
+			List<Pheed> list = null;
+			if(now.equals("C")) {
+				list = pheedService.selectPheedCList(map);
+			}
+			if(now.equals("F")) {
+				list = pheedService.selectPheedFList(map);
+			}
 			log.debug("list = {}", list);
 			if(list != null) {
 				map.put("list", list);
