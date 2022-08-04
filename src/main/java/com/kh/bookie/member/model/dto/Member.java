@@ -23,7 +23,6 @@ public class Member extends MemberEntity implements UserDetails{
 	String interest;
 	
 	private static final long serialVersionUID = 1L;
-
 	
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
