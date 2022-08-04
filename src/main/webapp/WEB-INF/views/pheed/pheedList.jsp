@@ -109,9 +109,17 @@ function getReadList(cPage) {
 
 	const container = document.querySelector("#content");
     // 비동기로 다음장 가져오기
+    const url = document.location.href;
+    let now;
+    if(url == 'http://localhost:9090/bookie/pheed/pheedCList.do'){
+     	now = 'C';
+    }
+    if(url == 'http://localhost:9090/bookie/pheed/pheedFList.do'){
+    	now = 'F';
+    }
     $.ajax({
     	url : "${pageContext.request.contextPath}/pheed/getReadList.do",
-    	data : {cPage},
+    	data : {cPage, now},
     	success(resp){
     		//console.log(resp);
     		let {list, likesStr, wishStr} = resp;
@@ -688,6 +696,8 @@ const closeComment = () => {
 function selectBook(cPage){
 	// 		1~10 11~20 21~30..
 	//cPage  1 	   2     3 ..
+	console.log(${fn:length(list)});
+	// 얘가 1개가 마지막인데 2번 더돌아서 나는거거든.. innerText.title 오류가..
 	<c:forEach items="${list}" var="pheed">
 	for(let i = (((cPage - 1) * 3) + 1); i <= (cPage * 3); i++){
 		$.ajax({

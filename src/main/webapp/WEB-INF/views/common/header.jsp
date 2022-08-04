@@ -98,7 +98,6 @@
                     <li class="nav-item">
 			    		<!-- 피드 링크 /pheed/로 시작 pheedFlList : follower list / pheedCrList : 발견 list -->
                     	<a class="nav-link" href="${pageContext.request.contextPath}/pheed/pheedFList.do">
-                    		<script>console.log('${uri}')</script>
 			    			<c:if test="${fn:contains(uri, '/bookie/WEB-INF/views/pheed/')}">
                     		<img src="${pageContext.request.contextPath}/resources/images/icon/i_pheed_on.png" alt="pheedicon" />피드
 			    			</c:if>

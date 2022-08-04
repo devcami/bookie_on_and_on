@@ -22,20 +22,24 @@ form{
 }
 
 input[type="text"],
-input[type="password"]{
+input[type="password"],
+input[type="tel"],
+input[type="radio"],
+input[type="email"]
+{
     background: #e5f0b8 ;
     border: 2px solid #fe9801;
     border-radius: 10px;
     margin-bottom: 25px;
 }
 
-button.btn{
+button.btn-primary{
 	background-color: #fe9801;
 	border: none;
 	box-shadow: 0 0 5px #00000040;
 	transition: 0.2s;
 }
-button.btn:hover{
+button.btn-primary:hover{
 	background-color: #CCDA46;
 }
 
@@ -56,4 +60,35 @@ span.ok, span.ok1 { color:green; }
 span.error, span.error1 { color:red; }
 
 
+table tr th{
+	width: 130px;
+	font-size: 20px;
+	padding-bottom: 10px;
+}
+table tr.p3 {
+	height: 60px;
+}
 
+td.sub-text{
+	font-size: 21px;
+	color: grey;
+	text-align:left !important;
+}
+div.interest-div{
+	width: 500px;
+}
+input.interest-input{
+	margin-right: 5px;
+}
+label.interest-label{
+	margin-right: 10px;
+}
+input.none{
+	background-color: #FFF;
+	border : 1px solid gainsboro;
+}
+input.input-file-button{
+	background-color: #fe9801;
+	border: none;
+	box-shadow: 0 0 5px #00000040;
+}

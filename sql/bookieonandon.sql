@@ -15,6 +15,7 @@ create table member (
     original_filename varchar2(256),
     sns varchar2(1000),
     point number default 0,
+    email varchar2(256),
     constraint pk_member_id primary key(member_id),
     constraint uq_member_nickname unique (nickname),
     constraint ck_member_gender check (gender in ('M', 'F'))
@@ -335,7 +336,6 @@ create table persistent_logins (
 -- 조회
 --==============================================
 select * from user_sequences; -- 시퀀스 조회
-
 select * from member;
 select * from authority;
 select * from interest;
@@ -639,3 +639,25 @@ where
 	    member m
 	where
 		m.member_id = 'honggd';
+        
+        
+        insert into follower values ('tmddbs', 'admin');
+        commit;
+        
+        
+        
+        
+        
+select 
+    ph.*,
+    (select count(*) from likes_pheed where pheed_no = ph.pheed_no) likes_cnt 
+from 
+    (select row_number() over (order by enroll_date desc) rnum, p.* from pheed p where is_opened = 'O' or is_opened = 'F') ph
+where
+    (rnum between 1 and 3)
+    and
+    member_id in (select following_member_id from follower where member_id = 'honggd');
+    
+select following_member_id from follower where member_id = 'tmddbs';
+        
+        

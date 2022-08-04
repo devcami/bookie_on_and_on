@@ -45,9 +45,9 @@
 		
 		<div id="open-div">
 			<label class="open">공개여부</label>				
-			<input type="checkbox" name="isOpened" value="O" class="ml-5" checked/>
+			<input type="radio" name="isOpened" value="O" class="ml-5" checked/>
 			<label for="O" class="ml-1">전체공개</label>
-			<input type="checkbox" name="isOpened" value="C" class="ml-5"/>
+			<input type="radio" name="isOpened" value="C" class="ml-5"/>
 			<label for="C" class="ml-1">비공개</label>
 		</div>
 		
