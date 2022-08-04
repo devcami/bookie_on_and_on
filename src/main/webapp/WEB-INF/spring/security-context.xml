@@ -23,6 +23,7 @@
 
 		<!--  책검색, 등록 -->
 		<intercept-url pattern="/search/bookEnroll.do" access="isAuthenticated()"/>
+		<intercept-url pattern="/search/recommendUser.do" access="isAuthenticated()"/>
 		<intercept-url pattern="/search/**" access="permitAll"/>
 		
 		

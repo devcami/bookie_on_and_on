@@ -317,4 +317,14 @@ public class SearchController {
 					.body(map);
 		}
 	}
+	
+	@GetMapping("/recommendUser.do")
+	public void recommendUser(Model model, @AuthenticationPrincipal Member loginMember) {
+		String memberId = loginMember.getMemberId();
+		Member member = searchService.selectOneMember(memberId);
+		log.debug("member = {}", member);
+		model.addAttribute("member", member);
+	}
+	
+	
 }

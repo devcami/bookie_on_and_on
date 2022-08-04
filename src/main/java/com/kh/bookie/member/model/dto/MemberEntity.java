@@ -36,4 +36,5 @@ public class MemberEntity {
 	protected String originalFilename;
 	protected String sns;
 	protected int point;
+	protected String email;
 }

@@ -52,18 +52,23 @@ public class MypageController {
 	@Autowired
 	BCryptPasswordEncoder bcryptPasswordEncoder;
 	
+	/* 팔로우페이지 */
+	@GetMapping("/follower.do")
+	public String follower(Model model, @RequestParam String memberId) {
+		Member member = memberService.selectOneMember(memberId);
+		model.addAttribute("member", member);
+		return "mypage/mypage";
+	}
+	
 	@GetMapping("/mypage.do")
 	public void mypage(Model model, @AuthenticationPrincipal Member loginMember) {
 		String memberId = loginMember.getMemberId();
 		try {
-			log.debug("loginMember =  {}", loginMember);
-			log.debug("아이디 가져와져? =  {}", loginMember.getMemberId());
-			log.debug("닉네임 가져와져? =  {}", loginMember.getNickname());
-			log.debug("폰번 가져와져? =  {}", loginMember.getPhone());
-			log.debug("성 가져와져? =  {}", loginMember.getGender());
-			log.debug("한줄소개 가져와져? =  {}", loginMember.getIntroduce());
+			Member member = memberService.selectOneMember(memberId);
+			model.addAttribute("member", member);
+			
 			// 1. 미니프로필
-
+			
 			// 2. 기록
 			
 			// 3. 읽고있는 책
@@ -87,6 +92,9 @@ public class MypageController {
 	@GetMapping("/myMiniProfile.do")
 	public void myMiniProfile() {}
 	
+	@GetMapping("/myBook.do")
+	public void myBook() {}
+
 	@GetMapping("/myScrap.do")
 	public void myScrap() {}
 	
@@ -98,6 +106,41 @@ public class MypageController {
 	
 	@GetMapping("/myBookClub.do")
 	public void myBookClub() {}
+	
+	@GetMapping("/myProfileDelete.do")
+	public String myProfileDelete(@AuthenticationPrincipal Member loginMember, RedirectAttributes redirectAttr) {
+		String nickname = loginMember.getNickname(); 
+		log.debug("nickname = {}", nickname);
+		// 파일저장위치
+        String saveDirectory = application.getRealPath("/resources/upload/profile");
+		log.debug(loginMember.getRenamedFilename());
+        
+		try {
+			if(loginMember.getRenamedFilename() != null) {
+				Member profileMember =  memberService.selectOneMemberByNickname(nickname);
+				log.debug("profileMember = {}", profileMember);
+				
+				// a. 첨부파일삭제
+				String renamedFilename = profileMember.getRenamedFilename();
+				File deleteFile = new File(saveDirectory, renamedFilename);
+				if(deleteFile.exists()) {
+					deleteFile.delete();
+					log.debug("{}의 {}파일 삭제", nickname, renamedFilename);
+				}
+				
+				// b. 레코드삭제
+				int result = memberService.deleteMemberProfile(nickname);
+				log.debug("{}의 MemberProfile 레코드 삭제", nickname);	
+			}
+			
+			redirectAttr.addFlashAttribute("msg", "Mini프로필을 성공적으로 수정했습니다.");
+			
+		} catch (Exception e) {
+			log.error("프로필 삭제 오류", e);
+			throw e;
+		}
+		return "redirect:/mypage/myMiniProfile.do";
+	}
 	
 	/* nicknameCheck */
 	@GetMapping("/nicknameCheck.do")
@@ -135,24 +178,20 @@ public class MypageController {
 					@RequestParam String introduce,
 					RedirectAttributes redirectAttr,
 					@RequestParam("upFile") MultipartFile upFile,
-					@RequestParam(value="delFile", required=false) String delFile,
+					@RequestParam String delFile,
 					@AuthenticationPrincipal Member loginMember) throws Exception {
 		String nickname = loginMember.getNickname();
-		log.debug("newNickname = {}", newNickname);
-		log.debug("introduce = {}", introduce);
-		log.debug("sns = {}", sns);
-		log.debug("logingMember = {}", loginMember);
 		log.debug("upFile = {}", upFile);
 		log.debug("delFile = {}", delFile);
-		log.debug("nickname = {}", nickname);
-		
+		log.debug("sns = {}", sns);
+		log.debug("introduce = {}", introduce);
+		log.debug("newNickname = {}", newNickname);
 		
 		// 파일저장위치
-        String saveDirectory = application.getRealPath("/resources/upload/profile"); // 정적파일보관자리 생각 src/main/resources와 구분잘하기
+        String saveDirectory = application.getRealPath("/resources/upload/profile");
 		try {
-			
 			// 1. 첨부파일 삭제 (파일 삭제)
-			if(delFile != null) {
+			if(delFile == "0" && (loginMember.getRenamedFilename() != null)) {
 				Member profileMember =  memberService.selectOneMemberByNickname(nickname);
 				log.debug("profileMember = {}", profileMember);
 				
@@ -165,37 +204,42 @@ public class MypageController {
 				}
 				
 				// b. 레코드삭제
-				int result = memberService.deleteMemberProfile(nickname);
+				int delResult = memberService.deleteMemberProfile(nickname);
 				log.debug("{}의 MemberProfile 레코드 삭제", nickname);
 			}
 			
-			// 2. 첨부파일 등록 (파일 저장)
-			MultipartFile updateFile = upFile;
-			log.debug("updateFile = {}",updateFile);
+			int updateResult;
 			Member updateMember = loginMember;
-			
+			// 2. 첨부파일 등록 (파일 저장)
 			if(upFile.getSize() > 0) {
+				log.debug("요기?");
+				MultipartFile updateFile = upFile;
 				updateMember.setOriginalFilename(updateFile.getOriginalFilename());
 				updateMember.setRenamedFilename(HelloSpringUtils.getRenamedFilename(updateFile.getOriginalFilename()));
 				updateMember.setNickname(newNickname);
 				updateMember.setIntroduce(introduce);
 				updateMember.setSns(sns);
 				
-				log.debug(saveDirectory);
-				log.debug(updateMember.getRenamedFilename());
 				File destFile = new File(saveDirectory, updateMember.getRenamedFilename());
 				upFile.transferTo(destFile);
+				updateResult = memberService.miniUpdateMember(updateMember);	
 			}
-			
-			// 3. 맴버 간단수정
-			log.debug("updateMember = {}", updateMember.getIntroduce());
-			int result2 = memberService.miniUpdateMember(updateMember);
-			
+			else {
+				// 3. 맴버 간단수정
+				updateMember.setOriginalFilename(loginMember.getOriginalFilename());
+				updateMember.setRenamedFilename(loginMember.getRenamedFilename());
+				updateMember.setNickname(newNickname);
+				updateMember.setIntroduce(introduce);
+				updateMember.setSns(sns);
+				updateResult = memberService.miniUpdateMember(updateMember);	
+				log.debug("updateResult = {}", updateResult);
+			}
+
 			redirectAttr.addFlashAttribute("msg", "Mini프로필을 성공적으로 수정했습니다.");
 		} 
 		catch(Exception e) {
 			log.error("미니프로필 수정 오류", e);
-			throw e;
+			e.printStackTrace();
 		}
 		return "redirect:/mypage/myMiniProfile.do"; 
 	}

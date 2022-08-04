@@ -20,6 +20,7 @@ import lombok.NonNull;
 public class Member extends MemberEntity implements UserDetails{
 	List<SimpleGrantedAuthority> authorities;
 	String[] interests;
+	String interest;
 
 	
 	@Override
@@ -52,17 +53,18 @@ public class Member extends MemberEntity implements UserDetails{
 		return true;
 	}
 
-	public Member(@NonNull String memberId, @NonNull String password, @NonNull LocalDateTime enrollDate,
-			@NonNull String nickname, @NonNull String phone, @NonNull Gender gender, LocalDate birthday,
-			String introduce, String renamedFilename, String originalFilename, String sns, int point) {
-		super(memberId, password, enrollDate, nickname, phone, gender, birthday, introduce, renamedFilename, originalFilename,
-				sns, point);
-		// TODO Auto-generated constructor stub
-	}
 
 	public Member(@NonNull String memberId, @NonNull String password, @NonNull LocalDateTime enrollDate,
 			@NonNull String nickname, @NonNull String phone, @NonNull Gender gender) {
 		super(memberId, password, enrollDate, nickname, phone, gender);
+		// TODO Auto-generated constructor stub
+	}
+
+	public Member(@NonNull String memberId, @NonNull String password, @NonNull LocalDateTime enrollDate,
+			@NonNull String nickname, @NonNull String phone, @NonNull Gender gender, LocalDate birthday,
+			String introduce, String renamedFilename, String originalFilename, String sns, int point, String email) {
+		super(memberId, password, enrollDate, nickname, phone, gender, birthday, introduce, renamedFilename, originalFilename,
+				sns, point, email);
 		// TODO Auto-generated constructor stub
 	}
 
