@@ -17,10 +17,21 @@
 			#{gender},
 			#{birthday},
 			#{introduce},
-			null,
-			null,
+			<if test="renamedFilename != null">
+				#{renamedFilename},
+			</if>
+			<if test="renamedFilename == null">
+				null,
+			</if>
+			<if test="originalFilename != null">
+				#{originalFilename},
+			</if>
+			<if test="originalFilename == null">
+				null,
+			</if>
 			#{sns},			
-			default)
+			default,
+			#{email})
 	</insert>
 	
 	<insert id="insertAuthority">

@@ -6,6 +6,9 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/home.css" />
 <fmt:requestEncoding value="utf-8"></fmt:requestEncoding>
+<sec:authorize access="isAuthenticated()">
+	<sec:authentication property="principal" var="loginMember"/>
+</sec:authorize>
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param value="북이온앤온" name="title"/>
 </jsp:include>
@@ -20,10 +23,10 @@
 			</div>
 		</div>
 		<div class="article goto">
-			<div class="button d-grid col-md-12" onclick="">
+			<div class="button d-grid col-md-12" onclick="location.href='${pageContext.request.contextPath}/search/recommendUser.do'">
 				<p class="col-md-12 m-0 small">${loginMember.nickname}님을 위한</p>
 				<p><i class="fa-solid fa-hand-point-right"></i></p>
-				<p class="col-12 m-0">추천 도서</p>
+				<p class="col-12 m-0">추천 유저</p>
 			</div>
 		</div>
 		<div class="article goto">

@@ -15,6 +15,7 @@ create table member (
     original_filename varchar2(256),
     sns varchar2(1000),
     point number default 0,
+    email varchar2(256),
     constraint pk_member_id primary key(member_id),
     constraint uq_member_nickname unique (nickname),
     constraint ck_member_gender check (gender in ('M', 'F'))
@@ -334,7 +335,6 @@ create table persistent_logins (
 -- 조회
 --==============================================
 select * from user_sequences; -- 시퀀스 조회
-
 select * from member;
 select * from authority;
 select * from interest;
@@ -376,7 +376,6 @@ SELECT
     ,DATA_DEFAULT   -- 기본 값   
 FROM user_tab_columns; -- 해당 계정에 속한 테이블 
    --  dba_tab_columns 전체 테이블의 경우 
-
 
 select *
 from book b right join
@@ -621,3 +620,73 @@ select
 			cc.chat_no = 23;
             
             select * from club_chat;
+---------------------------------
+-- book <<은민>>
+---------------------------------
+
+select 
+    b.*,
+    i.started_at started_at,
+    i.ended_at ended_at
+from 
+    book b right join (select * from book_ing order by add_date desc) i
+        on b.member_id = i.member_id
+where b.member_id = 'tmddbs' and b.item_id = '9788932474755' ;
+
+
+-- 1~3
+select * 
+from 
+    (select row_number() over (order by enroll_date desc) rnum, p.* 
+    from pheed p where is_opened = 'O')
+where
+    rnum between 1 and 3;
+select
+    *
+from(
+    select 
+        row_number () over(order by no desc) rnum,
+        b.*
+    from
+        board b)
+where
+    rnum between 11 and 15;
+
+select 
+    m.*,
+    i.interest
+from 
+    member m join interest i
+        on m.member_id = i.member_id
+where
+    m.member_id = 'honggd';
+    
+    
+	select 
+	    m.*,
+	    (select interest from interest where member_id = 'honggd') interest
+	from 
+	    member m
+	where
+		m.member_id = 'honggd';
+        
+        
+        insert into follower values ('tmddbs', 'admin');
+        commit;
+        
+        
+        
+        
+        
+select 
+    ph.*,
+    (select count(*) from likes_pheed where pheed_no = ph.pheed_no) likes_cnt 
+from 
+    (select row_number() over (order by enroll_date desc) rnum, p.* from pheed p where is_opened = 'O' or is_opened = 'F') ph
+where
+    (rnum between 1 and 3)
+    and
+    member_id in (select following_member_id from follower where member_id = 'honggd');
+    
+select following_member_id from follower where member_id = 'tmddbs';
+  

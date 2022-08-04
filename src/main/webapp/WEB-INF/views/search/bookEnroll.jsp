@@ -26,7 +26,6 @@
 		<div class="line"></div>
 		<div class="book-eval">
 			<h1>기록</h1>
-			
 			<div class="starRev" id="starRev">
 				<span class="star starR1">별1_왼쪽</span>
 				<span class="star starR2">별1_오른쪽</span>
@@ -71,6 +70,14 @@
 				<button class="custom-btn btn-5 " data-toggle="modal" data-target="#recentReadModal" onclick="setStatus();"><span>최근 완독일</span></button>
 			</c:if>
 			<!-- <button type="submit" class="btn btn-md btn-outline-primary" id="btn-enroll" onclick="bookEnroll();">저장</button> -->
+		</div>
+	</div>
+	<div>
+		<div id="my-pick" class="text-center mt-3">
+			<label>
+			    <input type="checkbox" name="myPick" id="myPick" ${book.myPick != null && book.myPick == 1 ? 'checked' : ''}/>
+			    <span id="mypickSpan">인생책으로 등록하기 !</span>
+			</label>
 		</div>
 	</div>
 	<div class="line"></div>
@@ -211,6 +218,67 @@
 </div>
 
 <script>
+document.querySelector('#myPick').addEventListener('change', (e) => {
+	console.log(e.target.checked);
+	const csrfHeader = '${_csrf.headerName}';
+	const csrfToken = '${_csrf.token}';
+	const headers = {};
+	headers[csrfHeader] = csrfToken; // 전송하는 헤더에 추가하여 전송
+	
+	
+	const btnradio3 = document.querySelector("#btnradio3");
+	// 읽음 아닐 때
+	if(!btnradio3.checked){
+		// 체크할라고하면 금지해
+		if(e.target.checked){
+			alert('다 읽은 책만 인생책으로 등록 가능합니다');
+			e.target.checked = false;
+			return;
+		}
+	}
+	// 읽음일 때 눌렀다 ? 비동기로 마이픽 변경
+	else {
+		// 체크하면 -> myPick을 1로 변경			
+		if(e.target.checked){
+			$.ajax({
+				url : '${pageContext.request.contextPath}/search/updateMypick.do',
+				method : 'post',
+				headers,
+				data : {
+					memberId : '${loginMember.memberId}',
+					itemId : '${param.isbn13}',
+					myPick : 1
+				},
+				success(resp){
+					console.log(resp);
+					e.target.checked = true;
+				},
+				error: console.log
+			});
+		}
+		// 취소했다 -> myPick을 0으로 변경
+		else{
+			$.ajax({
+				url : '${pageContext.request.contextPath}/search/updateMypick.do',
+				method : 'post',
+				headers,
+				data : {
+					memberId : '${loginMember.memberId}',
+					itemId : '${param.isbn13}',
+					myPick : 0
+				},
+				success(resp){
+					console.log(resp);
+					e.target.checked = false;
+				},
+				error: console.log
+			});
+		}
+	}
+			
+		
+});
+
 let wpqkf = formatDate('1996-10-15');
 let tlwkr = formatDate('1996-10-15');
 function formatDate(date) {

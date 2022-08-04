@@ -3,8 +3,19 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kh.bookie.pheed.model.dao.PheedDao">
+
 	<select id="selectPheedFList" resultType="pheed">
+		select 
+    		ph.*,
+    		(select count(*) from likes_pheed where pheed_no = ph.pheed_no) likes_cnt 
+		from 
+    		(select row_number() over (order by enroll_date desc) rnum, p.* from pheed p where is_opened = 'O' or is_opened = 'F') ph
+		where
+    		(rnum between #{cPage} and #{numPerPage})
+    		and
+    		member_id in (select following_member_id from follower where member_id = #{memberId})
 	</select>
+	
 	<select id="selectPheedCList" resultType="pheed">
 		select 
 			ph.*,
@@ -48,6 +59,18 @@
 		</selectKey>
 	</insert>
 	
+	<update id="pheedUpdate">
+		update
+			pheed
+		set
+			item_id = #{itemId},
+			page = #{page},
+			content = #{content},
+			is_opened = #{isOpened}
+		where
+			pheed_no = #{pheedNo}
+	</update>
+	
 	<insert id="pheedAttachmentEnroll">
 		insert into
 			pheed_attachment
@@ -71,4 +94,70 @@
 			#{content})
 	</insert>
 	
+	<select id="selectOnePheed" resultMap="pheedMap">
+		select 
+			*
+		from 
+			pheed p left join pheed_attachment a 
+				on p.pheed_no = a.pheed_no  
+		where 
+			p.pheed_no = #{pheedNo}
+	</select>
+	
+	<resultMap id="pheedMap" type="pheed">
+		<id column="pheed_no" property="pheedNo" />
+		<result column="item_id" property="itemId"/>
+		<result column="page" property="page"/>
+		<result column="content" property="content"/>
+		<result column="is_opened" property="isOpened"/>
+		<result column="enroll_date" property="enrollDate"/>
+		<association property="attach" javaType="pheedAttachment">
+			<id column="attach_no" property="attachNo" />
+			<result column="pheed_no" property="pheedNo"/>
+			<result column="renamed_filename" property="renamedFilename"/>
+			<result column="original_filename" property="originalFilename"/>
+			<result column="created_at" property="createdAt"/>
+		</association>
+	</resultMap>
+	
+	<insert id="commentEnroll">
+		insert into
+			pheed_comment
+		values(
+			seq_pheed_comment_no.nextval,
+			#{pheedNo},
+			#{nickname},
+			#{content},
+			null,
+			default,
+			1)
+	</insert>
+	
+	<delete id="commentDel">
+		delete from 
+			pheed_comment
+		where pheedc_no = #{pheedCNo}
+	</delete>
+	
+	<update id="commentUpdate">
+		update
+			pheed_comment
+		set
+			content = #{content}
+		where
+			pheedc_no = #{pheedCNo}
+	</update>
+	
+	<insert id="commentRefEnroll">
+		insert into
+			pheed_comment
+		values(
+			seq_pheed_comment_no.nextval,
+			#{pheedNo},
+			#{nickname},
+			#{content},
+			#{commentRef},
+			default,
+			2)
+	</insert>
 </mapper>

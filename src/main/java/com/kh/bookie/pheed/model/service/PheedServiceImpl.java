@@ -21,8 +21,8 @@ public class PheedServiceImpl implements PheedService{
 	private PheedDao pheedDao;
 	
 	@Override
-	public List<Pheed> selectPheedFList() {
-		List<Pheed> list = pheedDao.selectPheedFList();
+	public List<Pheed> selectPheedFList(Map<String, Object> map) {
+		List<Pheed> list = pheedDao.selectPheedFList(map);
 		for(Pheed p : list) {
 			PheedAttachment attach = pheedDao.selectAttachment(p.getPheedNo());
 			p.setAttach(attach);
@@ -97,5 +97,60 @@ public class PheedServiceImpl implements PheedService{
 	@Override
 	public int deletePheedWishList(Map<String, Object> map) {
 		return pheedDao.deletePheedWishList(map);
+	}
+	
+	@Override
+	public int deletePheed(int pheedNo) {
+		return pheedDao.deletePheed(pheedNo);
+	}
+	
+	@Override
+	public Pheed selectOnePheed(int pheedNo) {
+		return pheedDao.selectOnePheed(pheedNo);
+	}
+	
+	@Override
+	public PheedAttachment selectOnePheedAttachment(int attachNo) {
+		return pheedDao.selectOnePheedAttachment(attachNo);
+	}
+	
+	@Override
+	public int deleteAttachment(int attachNo) {
+		return pheedDao.deleteAttachment(attachNo);
+	}
+	
+	@Override
+	public int pheedUpdate(Pheed pheed) {
+		// pheed update
+		int result = pheedDao.pheedUpdate(pheed);
+		
+		// 첨부파일 insert
+		PheedAttachment attach = pheed.getAttach();
+		if(attach != null) {
+			attach.setPheedNo(pheed.getPheedNo());
+			result = pheedDao.pheedAttachmentEnroll(attach);
+		}
+		
+		return result;
+	}
+	
+	@Override
+	public int commentEnroll(PheedComment pc) {
+		return pheedDao.commentEnroll(pc);
+	}
+	
+	@Override
+	public int commentDel(int pheedCNo) {
+		return pheedDao.commentDel(pheedCNo);
+	}
+	
+	@Override
+	public int commentUpdate(PheedComment pheedComment) {
+		return pheedDao.commentUpdate(pheedComment);
+	}
+	
+	@Override
+	public int commentRefEnroll(PheedComment pc) {
+		return pheedDao.commentRefEnroll(pc);
 	}
 }

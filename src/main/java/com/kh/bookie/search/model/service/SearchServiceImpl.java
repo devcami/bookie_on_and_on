@@ -8,9 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.kh.bookie.member.model.dto.Member;
 import com.kh.bookie.mypage.model.dto.Book;
 import com.kh.bookie.search.model.dao.SearchDao;
 
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -140,5 +142,15 @@ public class SearchServiceImpl implements SearchService {
 	public int moreReadUpdate(Book book) {
 		// 완독일 수정 - book-ing 날짜만 수정
 		return searchDao.moreReadUpdate(book);
+	}
+	
+	@Override
+	public Member selectOneMember(String memberId) {
+		return searchDao.selectOneMember(memberId);
+	}
+	
+	@Override
+	public int updateMypick(Book book) {
+		return searchDao.updateMypick(book);
 	}
 }

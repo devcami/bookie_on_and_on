@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.kh.bookie.member.model.dto.Member;
 import com.kh.bookie.mypage.model.dto.Book;
 
 @Mapper
@@ -39,5 +40,9 @@ public interface SearchDao {
 	int moreReadDelete(int ingNo);
 
 	int moreReadUpdate(Book book);
+
+	Member selectOneMember(String memberId);
+
+	int updateMypick(Book book);
 
 }

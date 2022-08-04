@@ -1,26 +1,33 @@
 package com.kh.bookie.member.controller;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.servlet.ServletContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.kh.bookie.common.HelloSpringUtils;
+import com.kh.bookie.email.MailSendService;
 import com.kh.bookie.member.model.dto.Member;
 import com.kh.bookie.member.model.service.MemberService;
+import com.kh.bookie.pheed.model.dto.PheedAttachment;
 
 import lombok.extern.slf4j.Slf4j;
 @Controller
@@ -33,15 +40,44 @@ public class MemberController {
 	private MemberService memberService;
 	
 	@Autowired
+	ServletContext application;
+	
+	@Autowired
 	BCryptPasswordEncoder bcryptPasswordEncoder;
 	
 	@GetMapping("/memberEnroll.do")
 	public void memberEnroll() {}
+
+	/* 이메일인증 필요 service */
+	@Autowired
+	private MailSendService mailService;
 	
 	@PostMapping("/memberEnroll.do")
-	public String memberEnroll(Member member, RedirectAttributes redirectAttr, @RequestParam (required = false) String[] interest) {
+	public String memberEnroll(Member member, RedirectAttributes redirectAttr,
+								@RequestParam (required = false) MultipartFile upFile,
+								@RequestParam (required = false) String[] interest) {
 		log.info("Member = {}", member);
 		try {
+			// 올린 파일 있으면 저장
+			String saveDirectory = application.getRealPath("/resources/upload/profile");
+			
+			//업로드한 파일 저장
+			if(upFile.getSize() > 0) {
+				// 파일명 재지정
+				String originalFilename = upFile.getOriginalFilename();
+				String renamedFilename = HelloSpringUtils.getRenamedFilename(originalFilename);
+				log.debug("renamedFilename = {}", renamedFilename);
+			
+				// 파일 저장
+				File destFile = new File(saveDirectory, renamedFilename);
+				upFile.transferTo(destFile);
+				
+				// member에 set
+				member.setOriginalFilename(originalFilename);
+				member.setRenamedFilename(renamedFilename);
+				
+			}
+			
 			// 암호화 처리
 			String rawPassword = member.getPassword();
 			String encryptedPassword = bcryptPasswordEncoder.encode(rawPassword);
@@ -50,12 +86,13 @@ public class MemberController {
 			
 			// service단 처리
 			if(interest != null) member.setInterests(interest);
+			
 			int result = memberService.memberEnroll(member);
 			// 사용자 처리 피드백
 			redirectAttr.addFlashAttribute("msg","회원가입이 성공적으로 처리되었습니다.");
 		} catch (Exception e) {
+			log.error("회원가입 오류", e);
 			e.printStackTrace();
-			throw e;
 		}
 		return "redirect:/"; // msg 담아도 안나옴 -> index.jsp를 거치도록
 	}
@@ -121,5 +158,15 @@ public class MemberController {
 				.body(map);
 	}
 
+	@GetMapping("/mailCheck")
+	@ResponseBody
+	public String mailCheck(String email) {
+		log.debug("이메일 인증 요청이 들어옴!");
+		log.debug("이메일 인증 이메일 : " + email);
+		return mailService.joinEmail(email);
+	}
+	
+	@GetMapping("/emailCertified")
+	public void emailCertified() {}
 
 }

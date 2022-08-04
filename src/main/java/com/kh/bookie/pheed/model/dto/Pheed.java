@@ -1,7 +1,5 @@
 package com.kh.bookie.pheed.model.dto;
 
-import java.util.ArrayList;
-
 import com.kh.bookie.member.model.dto.Member;
 
 import lombok.Data;

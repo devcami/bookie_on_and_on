@@ -48,6 +48,8 @@ public interface DokooDao {
 
 	int updateDokoo(Dokoo dokoo);
 
+	int commentRefEnroll(DokooComment dc);
+
 	
 	
 }

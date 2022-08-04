@@ -317,4 +317,31 @@ public class SearchController {
 					.body(map);
 		}
 	}
+	
+	@GetMapping("/recommendUser.do")
+	public void recommendUser(Model model, @AuthenticationPrincipal Member loginMember) {
+		String memberId = loginMember.getMemberId();
+		Member member = searchService.selectOneMember(memberId);
+		log.debug("member = {}", member);
+		model.addAttribute("member", member);
+	}
+	
+	@PostMapping("/updateMypick.do")
+	public ResponseEntity<?> updateMypick(Book book){
+		Map<String, Object> map = new HashMap<>();
+		log.debug("book = {}",book);
+		try {
+			int result = searchService.updateMypick(book);
+			map.put("book", book);
+			return ResponseEntity.ok(map);
+		} catch (Exception e) {
+			log.error("마이픽 등록 오류", e);
+			map.put("msg", "마이픽 등록 오류");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE)
+					.body(map);
+		}
+	}
+	
+	
 }

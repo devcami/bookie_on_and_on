@@ -114,4 +114,9 @@ public class DokooServiceImpl implements DokooService {
 	public int updateDokoo(Dokoo dokoo) {
 		return dokooDao.updateDokoo(dokoo);
 	}
+	
+	@Override
+	public int commentRefEnroll(DokooComment dc) {
+		return dokooDao.commentRefEnroll(dc);
+	}
 }

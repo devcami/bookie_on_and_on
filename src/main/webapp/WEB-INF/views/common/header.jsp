@@ -100,7 +100,6 @@
                     <li class="nav-item">
 			    		<!-- 피드 링크 /pheed/로 시작 pheedFlList : follower list / pheedCrList : 발견 list -->
                     	<a class="nav-link" href="${pageContext.request.contextPath}/pheed/pheedFList.do">
-                    		<script>console.log('${uri}')</script>
 			    			<c:if test="${fn:contains(uri, '/bookie/WEB-INF/views/pheed/')}">
                     		<img src="${pageContext.request.contextPath}/resources/images/icon/i_pheed_on.png" alt="pheedicon" />피드
 			    			</c:if>
@@ -121,7 +120,16 @@
                     	</a>
                     </li>
                     <li class="nav-item">
-                    	<c:if test="${not empty loginMember}">
+						<sec:authorize access="isAnonymous()">
+                    		<a class="nav-link" href="${pageContext.request.contextPath}/member/login.do">
+				    			<c:if test="${!fn:contains(uri, '/bookie/WEB-INF/views/mypage')}">
+	                    		<img src="${pageContext.request.contextPath}/resources/images/icon/i_mypage.png" alt="mypageicon" />내서재
+				    			</c:if>
+                    		</a>
+                    	</sec:authorize> 
+                    	<sec:authorize access="hasRole('ROLE_USER')"> 
+                    		
+                    		<c:if test="${loginMember.memberId != 'admin'}">
                     		<a class="nav-link" href="${pageContext.request.contextPath}/mypage/mypage.do">
 				    			<c:if test="${fn:contains(uri, '/bookie/WEB-INF/views/mypage')}">
 	                    		<img src="${pageContext.request.contextPath}/resources/images/icon/i_mypage_on.png" alt="mypageicon" />내서재
@@ -130,18 +138,19 @@
 	                    		<img src="${pageContext.request.contextPath}/resources/images/icon/i_mypage.png" alt="mypageicon" />내서재
 				    			</c:if>
                     		</a>
-                        </c:if>
-                    	<c:if test="${empty loginMember}">
-                    		<a class="nav-link" href="${pageContext.request.contextPath}/member/login.do">
-				    			<c:if test="${fn:contains(uri, '/bookie/WEB-INF/views/mypage')}">
-	                    		<img src="${pageContext.request.contextPath}/resources/images/icon/i_mypage_on.png" alt="mypageicon" />내서재
+                    		</c:if>
+                    		
+                    		<c:if test="${loginMember.memberId == 'admin'}">
+                    		<a class="nav-link" href="${pageContext.request.contextPath}/admin/admin.do">
+				    			<c:if test="${fn:contains(uri, '/bookie/WEB-INF/views/admin')}">
+	                    		<img src="${pageContext.request.contextPath}/resources/images/icon/i_admin_on.png" alt="adminicon" />관리
 				    			</c:if>
-				    			<c:if test="${!fn:contains(uri, '/bookie/WEB-INF/views/mypage')}">
-	                    		<img src="${pageContext.request.contextPath}/resources/images/icon/i_mypage.png" alt="mypageicon" />내서재
+				    			<c:if test="${!fn:contains(uri, '/bookie/WEB-INF/views/admin')}">
+	                    		<img src="${pageContext.request.contextPath}/resources/images/icon/i_admin.png" alt="adminicon" />관리
 				    			</c:if>
                     		</a>
-                    		
-                        </c:if>
+                    		</c:if>
+                    	</sec:authorize> 
                     </li>
 			    </ul>
 			 </div>

@@ -14,13 +14,13 @@
 <div id="pheed-enroll-container">
 <section id="section">
 	<div id="top-title" class="text-center">
-		<h1>피드 등록🤳</h1>
+		<h1>피드 수정🤳</h1>
 	</div>
 		<form:form
-			name="pheedEnrollFrm"
+			name="pheedUpdateFrm"
 			method="POST"
 			enctype="multipart/form-data"
-			action = "${pageContext.request.contextPath}/pheed/pheedEnroll.do">
+			action = "${pageContext.request.contextPath}/pheed/pheedUpdate.do">
 		<div id="nickname-div" class="mb-2">
 			<label for="nickname">작성자</label>
 			<input type="text" name="nickname" id="nickname" value="${loginMember.nickname}" readonly />
@@ -32,38 +32,44 @@
 				
 			</div>
 			<label for="page" class="m-2">페이지</label>
-			<input type="number" name="page" id="page" class="form-control w-25 mr-1 d-inline"/>P
+			<input type="number" name="page" id="page" value="${pheed.page}" class="form-control w-25 mr-1 d-inline"/>P
 		</div>
 		<div id="file-div">
 			<div id="file-div-title">
 				<label for="upFile">첨부파일</label>
 			</div>
-			<div>
-				<img src="" alt="미리보기" id="profileImg" style="display: none; width: 300px;"/>
-			</div>
-			<input type="file" name="upFile" id="upFile" onchange="loadImage(this);" />
+			<c:if test="${not empty pheed.attach.renamedFilename}">
+				<div class="img-div" id="imgDiv">
+					<img src="${pageContext.request.contextPath}/resources/upload/pheed/${pheed.attach.renamedFilename}" alt="미리보기" id="originalImg" style="display: inline; width: 300px;"/>
+					<button type="button" class="btn btn-lg img-del-btn w-50" data-attach-no="${pheed.attach.attachNo}" onclick="deleteFile(this);">삭제</button>
+				</div>
+			</c:if>
+		</div>
+		<div id="input-file-div">
+			<%-- 여기에 새로 추가되는 파일이 들어감 --%>					
 		</div>
 		<div id="content-div">
 			<label for="editorData">내용</label>
-			<textarea class="summernote" name="content" id="content"></textarea>
+			<textarea class="summernote" name="content" id="content">${pheed.content}</textarea>
 		</div>
 
 		<input type="hidden" name="memberId" value="${loginMember.memberId}" />
-		<input type="hidden" name="itemId" id="itemId" value="" />
+		<input type="hidden" name="itemId" id="itemId" value="${pheed.itemId}" />
+		<input type="hidden" name="pheedNo" value="${param.pheedNo}" />
 		
 		<div id="open-div">
 			<label class="open">공개여부</label>				
-			<input type="radio" name="isOpened" value="O" class="ml-5" checked/>
+			<input type="radio" name="isOpened" value="O" class="ml-5" ${pheed.isOpened eq 'O' ? 'checked' : ''}/>
 			<label for="O" class="ml-1">전체공개</label>
-			<input type="radio" name="isOpened" value="F" class="ml-5" />
+			<input type="radio" name="isOpened" value="F" class="ml-5" ${pheed.isOpened eq 'F' ? 'checked' : ''}/>
 			<label for="O" class="ml-1">팔로워공개</label>
-			<input type="radio" name="isOpened" value="C" class="ml-5"/>
+			<input type="radio" name="isOpened" value="C" class="ml-5" ${pheed.isOpened eq 'C' ? 'checked' : ''}/>
 			<label for="C" class="ml-1">비공개</label>
 		</div>
 		
 		<input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }" />
 		<div id="btn-div">
-			<button type="submit">작성</button>
+			<button type="submit">수정</button>
 		</div>
 		
 		</form:form>
@@ -136,6 +142,30 @@ window.addEventListener('load', () => {
 		},
 		error : console.log
 	});
+	
+	<%-- 현재 책 뿌리기 --%>
+	<c:if test="${not empty pheed.itemId}">
+	const bookInfo = document.querySelector("#book-info"); 
+	$.ajax({
+		url : '${pageContext.request.contextPath}/search/selectBook.do',
+		data : {
+			ttbkey : 'ttbiaj96820130001',
+			itemIdType : 'ISBN13', 
+			ItemId : '${pheed.itemId}',
+			output : 'js',
+			Cover : 'mini',
+			Version : '20131101'
+		},
+		success(response){
+			const {item} = response;
+			console.log(item);
+			let {title, author, pubDate, description, isbn13, cover, categoryId, categoryName, publisher} = item[0];
+			bookInfo.insertAdjacentHTML('beforeend','<img src="" alt="책표지" id="book-img"/><span id="book-title"></span>');
+			document.querySelector('#book-img').src = cover;
+			document.querySelector('#book-title').innerText = title;
+		}
+	});
+	</c:if>
 });
 
 <%-- 책 클릭 시   --%>
@@ -151,6 +181,7 @@ const bookSelect = (e) => {
 	// 모달 닫기
 	$('#bookListModal').modal('hide');
 };
+
 <%-- img 미리보기 --%>
 const loadImage = (input) => {
     console.log(input.files);
@@ -159,17 +190,46 @@ const loadImage = (input) => {
        fr.readAsDataURL(input.files[0]);
        fr.onload = (e) => {
           console.log(e.target.result);
-          const profileImg = document.querySelector("#profileImg"); 
-          profileImg.src = e.target.result
-          profileImg.style.display = "inline";
+          const newImg = document.querySelector("#newImg"); 
+          newImg.src = e.target.result;
+          newImg.style.display = "inline";
 		}
-	}
+	} 
+    if(input.files.length == 0){
+    	newImg.src = '';
+        newImg.style.display = "none";
+    }
 }   
 
 
 $(document).ready(function() {
 	$('.summernote').summernote();
+	
+	const div = document.querySelector("#input-file-div");
+	const inputTag = `<img src='' alt="미리보기" id="newImg" style="display: none; width: 300px;"/>
+						<input type="file" name="upFile" id="upFile" onchange="loadImage(this);" />`;
+	<c:if test="${empty pheed.attach.renamedFilename}">
+		div.insertAdjacentHTML('beforeend', inputTag);	
+	</c:if>
 });
+
+const deleteFile = (e) => {
+	const attachNo = e.dataset.attachNo;
+	console.log(attachNo);
+	const divId = "#imgDiv";
+	$("#file-div").find(divId).remove();
+	
+	// 폼 가장 아래에 delFile로 추가
+	const frm = document.pheedUpdateFrm;
+	const delInputTag = `<input type="hidden" name="delFile" value="\${attachNo}"/>`;
+	frm.insertAdjacentHTML('beforeend', delInputTag);
+	
+	// 새 파일 추가할 수 있는 input태그 추가
+	const div = document.querySelector("#input-file-div");
+	const inputTag = `<img src="" alt="미리보기" id="newImg" style="display: none; width: 300px;"/>
+						<input type="file" name="upFile" id="upFile" onchange="loadImage(this);" />`;
+	div.insertAdjacentHTML('beforeend', inputTag);
+}
 
 $('.summernote').summernote({
 	  // 에디터 높이
@@ -206,7 +266,7 @@ $('.summernote').summernote({
 	});
 
 
-document.pheedEnrollFrm.addEventListener('submit', (e) => {
+document.pheedUpdateFrm.addEventListener('submit', (e) => {
 	const content = document.querySelector("#content");
 	const bookInfo = document.querySelector("#book-info");
 	const page = document.querySelector("#page");
