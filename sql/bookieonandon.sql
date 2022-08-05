@@ -740,3 +740,18 @@ order by
 		where 
            updated_at >= to_date('22/08/01', 'yy/mm/dd')
            and updated_at <= to_date('22/08/06', 'yy/mm/dd');
+        
+select * from club_chat;
+
+
+select 
+    * 
+from 
+    (select 
+        row_number() over(order by enroll_date desc) rnum , 
+        cc.* 
+    from 
+        club_chat cc 
+    where club_no = 45) 
+where rnum between 1 and 10;
+           
