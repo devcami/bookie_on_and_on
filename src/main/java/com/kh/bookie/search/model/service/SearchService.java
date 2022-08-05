@@ -28,5 +28,7 @@ public interface SearchService {
 
 	Member selectOneMember(String memberId);
 
+	int updateMypick(Book book);
+
 
 }

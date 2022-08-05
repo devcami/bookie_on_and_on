@@ -25,7 +25,9 @@
  <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
 <script src="https://kit.fontawesome.com/1c396dc14f.js" crossorigin="anonymous"></script>
 
-
+<!-- 아임포트(결제) -->
+<!-- iamport.payment.js -->
+<script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.8.js"></script>
 
 <!-- 글꼴 -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -103,7 +105,6 @@
                     <li class="nav-item">
 			    		<!-- 피드 링크 /pheed/로 시작 pheedFlList : follower list / pheedCrList : 발견 list -->
                     	<a class="nav-link" href="${pageContext.request.contextPath}/pheed/pheedFList.do">
-                    		<script>console.log('${uri}')</script>
 			    			<c:if test="${fn:contains(uri, '/bookie/WEB-INF/views/pheed/')}">
                     		<img src="${pageContext.request.contextPath}/resources/images/icon/i_pheed_on.png" alt="pheedicon" />피드
 			    			</c:if>

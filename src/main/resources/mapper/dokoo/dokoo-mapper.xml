@@ -28,6 +28,7 @@
 		<association property="member" javaType="member">
 			<id column="member_id" property="memberId"/>
 			<result column="nickname" property="nickname"/>
+			<result column="renamed_filename" property="renamedFilename"/>
 		</association>
 		
 	</resultMap>
@@ -111,6 +112,19 @@
 		where
 			dokooc_no = #{dokooCNo}
 	</update>
+	
+	<insert id="commentRefEnroll">
+		insert into
+			dokoo_comment
+		values(
+			seq_dokooc_no.nextval,
+			#{dokooNo},
+			#{nickname},
+			#{commentRef},
+			default,
+			#{content},
+			2)
+	</insert>
 	
 	<select id="getDokooLikes" resultMap="dokooSnsMap">
 		select * from likes_dokoo where dokoo_no = #{dokooNo}

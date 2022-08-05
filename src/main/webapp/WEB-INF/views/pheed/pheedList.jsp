@@ -29,7 +29,7 @@
 			<div class="pheed-writer">
 				<div class="profile">
 					<c:if test="${pheed.member.renamedFilename != null}">
-						<img src="${pageContext.request.contextPath}/resources/upload/profile/${loginMember.renamedFilename}" alt="프로필사진" />
+						<img src="${pageContext.request.contextPath}/resources/upload/profile/${pheed.member.renamedFilename}" alt="프로필사진" />
 					</c:if>
 					<c:if test="${pheed.member.renamedFilename == null}">
 						<i class="fa-solid fa-user-large user-icon"></i>
@@ -71,7 +71,7 @@
 								</c:if>
 							</span>
 						  	<button type="button" 
-						  			class="btn btn-report float-right m-2" data-no="${pheed.pheedNo}" onclick="openReportModal(this);"><i class="fa-solid fa-ellipsis"></i></button>
+						  			class="btn btn-report float-right m-2" data-no="${pheed.pheedNo}" onclick="openReportModal(this);"><i class="fa-solid fa-ellipsis text-dark"></i></button>
 							<c:if test="${pheed.member.nickname eq loginMember.nickname}">
 							<button type="button" class="float-right btn-sm btn-update mt-3 mb-3 mr-2" onclick="updatePheed();">수정</button>	
 							</c:if>
@@ -95,17 +95,8 @@
 	<button class="btn bg-white close-btn" id="close" onclick="closeComment();">
        <i class="fa fa-times"></i>
     </button>
-    <div class="input-group p-3 mb-3">
-		<input type="text" class="form-control" name="content" placeholder="댓글을 작성해주세요." aria-label="댓글을 작성해주세요." aria-describedby="button-comment">
-		<div class="input-group-append">
-			<button class="btn btn-outline-secondary" type="button" id="btn-enroll-comment" onclick="enrollComment();">등록</button>
-		</div>
-    </div>
-    <div class="comment">
-		<table class="table table-borderless" id="tbl-comment">
-			<tr>
-			</tr>
-		</table>
+    <div id="comment-container">
+    	
     </div>
     <div class="dontclick"></div>
 </div>
@@ -118,9 +109,17 @@ function getReadList(cPage) {
 
 	const container = document.querySelector("#content");
     // 비동기로 다음장 가져오기
+    const url = document.location.href;
+    let now;
+    if(url == 'http://localhost:9090/bookie/pheed/pheedCList.do'){
+     	now = 'C';
+    }
+    if(url == 'http://localhost:9090/bookie/pheed/pheedFList.do'){
+    	now = 'F';
+    }
     $.ajax({
     	url : "${pageContext.request.contextPath}/pheed/getReadList.do",
-    	data : {cPage},
+    	data : {cPage, now},
     	success(resp){
     		//console.log(resp);
     		let {list, likesStr, wishStr} = resp;
@@ -147,7 +146,7 @@ function getReadList(cPage) {
     						<div class="pheed-writer">
     							<div class="profile">`;
     								if(profileFilename != null){
-			    						div += `<img src="${pageContext.request.contextPath}/resources/upload/profile/${loginMember.renamedFilename}" alt="프로필사진" />`;
+			    						div += `<img src="${pageContext.request.contextPath}/resources/upload/profile/\${profileFilename}" alt="프로필사진" />`;
     								}
    									else{
    										div += `<i class="fa-solid fa-user-large user-icon"></i>`;
@@ -247,46 +246,112 @@ const pheedComment = (e) => {
 	console.log(pheedNo);
 	const sidebar = document.querySelector("#sidebar");
 	sidebar.classList.add("show-nav");
-	const tbl = document.querySelector("#tbl-comment");
+	const container = document.querySelector("#comment-container");
+	const commentDiv = 
+		`<%-- 댓글 입력 창 --%>
+		<div class="input-group p-2 mb-2">
+			<input type="text" class="form-control" name="content" id="comment-content" placeholder="댓글을 작성해주세요."
+				aria-label="댓글을 작성해주세요." aria-describedby="button-comment">
+			<div class="input-group-append">
+			<button class="ml-2" type="button" id="btn-enroll-comment" data-pheed-no="\${pheedNo}" onclick="enrollComment(this);">등록</button>
+			</div>
+		</div>
+		<div id="comment-wrapper" class="p-2">
+		</div>`;
+	container.insertAdjacentHTML('afterbegin', commentDiv);
+	document.querySelector("#comment-wrapper").innerHTML='';
 	$.ajax({
 		url : `${pageContext.request.contextPath}/pheed/selectComments.do?pheedNo=\${pheedNo}`,
 		method : 'GET',
 		success(resp){
 			//console.log(resp);
-			tbl.innerHTML = "";
+			
+			
 			const {comments} = resp;
+				
 			comments.forEach((comment) => {
 				//console.log(comment);
 				const {pheedCNo, pheedNo, nickname, content, commentRef, createdAt} = comment;
 				//console.log(pheedCNo, pheedNo, nickname, content, commentRef, createdAt);
 				const {year, monthValue, dayOfMonth, hour, minute, second} = createdAt;
 				const date = new Date(year, monthValue, dayOfMonth, hour, minute, second);
+				const fmtCreatedAt = date.toLocaleDateString();
 				
-				const tr = document.createElement("tr");
-				const td1 = document.createElement("td");
-				const td2 = document.createElement("td");
-				const td3 = document.createElement("td");
-				const td4 = document.createElement("td");
-				/* const btnReply = document.createElement("button"); */
-				const btnCDel = document.createElement("button");
 				
-				if(commentRef == 1){
-					tr.classList.add("level2");						
-				} else{
-					tr.classList.add("level1");						
+				const wrapper = document.querySelector("#comment-wrapper");
+				let div = ''; 
+				// 일반 댓글
+				if(commentRef == 0){
+					div +=
+					`<div class="co-div flex-center comment-div" id="comment\${pheedCNo}">
+						<div class="co-left flex-center">
+							<div class="co-writer flex-center">
+								<img class="rounded-circle shadow-1-strong m-1"
+								<%-- loginMember가 아니고 댓글단 사람 프로필 가져와야돼 --%>
+		              			src="${pageContext.request.contextPath}/resources/upload/profile/${loginMember.renamedFilename}"
+								alt="avatar" width="40" height="40"> <span>\${nickname}</span>
+							</div>
+							<div class="c-content" id="contentDiv\${pheedCNo}">
+								<span id="contentSpan\${pheedCNo}">\${content}</span>
+							</div>
+						</div>
+						<div class="co-right">
+							<span class="text-secondary mr-3">\${fmtCreatedAt}</span>
+							<div class="text-right">
+								<p class="small mb-0" style="color: #aaa;">
+					`;
+					if(nickname == '${loginMember.nickname}'){
+					div +=`
+							<a href="#!" class="link-grey" onclick="commentDel(this);"
+								data-comment-no="\${pheedCNo}">삭제</a> • 
+							<a href="#!" id="updateBtn\${pheedCNo}" class="link-grey" onclick="showCommentUpdate(this);"
+								data-comment-no="\${pheedCNo}">수정</a> • 
+							<a href="#!" id="commentRefBtn\${pheedCNo}" class="link-grey" onclick="showCommentRefInput(this);"
+								data-pheed-no="\${pheedNo}"
+								data-comment-no="\${pheedCNo}">답글</a>`;
+					}
+					div += 
+								`</p>
+							</div>
+						</div>
+					</div>`;
+					wrapper.insertAdjacentHTML('afterbegin', div);
 				}
-				td1.classList.add("comment-writer");
-				td1.innerHTML = nickname;
-				td2.classList.add("comment-content");
-				td2.innerHTML = content;
-				td3.classList.add("comment-date");
-				td3.innerText = date.toLocaleDateString();
 				
-				td4.classList.add("comment-btn-del");
-				td4.innerHTML = "<button type='button' class='btn btn-sm btn-danger btn-cdel' onclick='commentDel();'>삭제</button>";
+              
 				
-				tr.append(td1, td2, td3, td4);
-				tbl.append(tr);
+				// 대댓글
+				if(commentRef != 0){
+					div += 
+					`<div class="co-div flex-center coComment-div" id="coComment\${pheedCNo}">
+						<div class="co-left flex-center" style="margin-left: 40px;">
+							↳
+							<div class="co-writer flex-center">
+								<img class="rounded-circle shadow-1-strong m-1"
+									<%-- loginMember가 아니고 댓글단 사람 프로필 가져와야돼 --%>
+			                        src="${pageContext.request.contextPath}/resources/upload/profile/${loginMember.renamedFilename}"
+									alt="avatar" width="40" height="40"> <span>\${nickname}</span>
+							</div>
+							<div class="co-Content" id="contentDiv\${pheedCNo}">
+								<span id="contentSpan\${pheedCNo}">\${content}</span>
+							</div>
+						</div>
+						<div class="co-right">
+							<span class="text-secondary">\${fmtCreatedAt}</span>
+							<div class="small" style="padding-left: 10px;">
+								<a href="#!" class="link-grey" onclick="commentDel(this);"
+									data-comment-type='coComment'
+									data-comment-no="\${pheedCNo}">삭제</a> • 
+								<a href="#!"
+									id="updateBtn\${pheedCNo}" class="link-grey"
+									onclick="showCommentUpdate(this);"
+									data-comment-no="\${pheedCNo}">수정</a>
+							</div>
+						</div>
+					</div>`;
+					$(`#comment\${commentRef}`).after(div);
+				}
+				
 				
 			});
 		},
@@ -294,11 +359,325 @@ const pheedComment = (e) => {
 	});
 };
 
-<%-- 댓글 작성 버튼 enrollComment--%>
 
+<%------------ 댓글 등록 비동기 ------------%>
+const enrollComment = (e) => {
+   const pheedNo = e.dataset.pheedNo;
+   const commentVal = document.querySelector('#comment-content').value;
+   const csrfHeader = '${_csrf.headerName}';
+   const csrfToken = '${_csrf.token}';
+   const headers = {};
+   headers[csrfHeader] = csrfToken; // 전송하는 헤더에 추가하여 전송 
+   
+   $.ajax({
+      url : '${pageContext.request.contextPath}/pheed/commentEnroll.do',
+      method : 'post',
+      headers,
+      data : {
+         nickname : '${loginMember.nickname}',
+         pheedNo,
+         content : commentVal
+      },
+      success(resp){
+         console.log(resp);
+         const {pheedNo, content, pheedCNo} = resp;
+         console.log("댓글 등록 후 : ", pheedNo)
+         const container = document.querySelector("#comment-wrapper")
+         
+         var today = new Date();
 
-<%-- 삭제 버튼 commentDel --%>
+         var year = today.getFullYear();
+         var month = ('0' + (today.getMonth() + 1)).slice(-2);
+         var day = ('0' + today.getDate()).slice(-2);
+         var hours = ('0' + today.getHours()).slice(-2); 
+         var minutes = ('0' + today.getMinutes()).slice(-2)
+         
+         const createdAt = year + "/" + month + "/" + day + " " + hours + ":" + minutes;
+         
+         const div = `
+               <div class="co-div flex-center comment-div" id="comment\${pheedCNo}">
+               <div class="co-left flex-center">
+                  <div class="co-writer flex-center">
+                     <img 
+                        class="rounded-circle shadow-1-strong m-1" 
+                        src="${pageContext.request.contextPath}/resources/upload/profile/${loginMember.renamedFilename}" 
+                        alt="avatar" width="40" height="40">
+                     <span>${loginMember.nickname}</span>
+                  </div>
+                  <div class="co-Content" id="contentDiv\${pheedCNo}">
+                        <span id="contentSpan\${pheedCNo}">\${content}</span>      
+                  </div>
+               </div>
+               <div class="co-right">
+                  <span class="text-secondary">
+                     \${createdAt}
+                  </span>
+                  <div class="text-right">
+                          <p class="small mb-0" style="color: #aaa;">
+                             <a href="#!" class="link-grey" onclick="commentDel(this);" data-comment-no="\${pheedCNo}">삭제</a> • 
+                             <a href="#!" id="updateBtn\${pheedCNo}" class="link-grey" onclick="showCommentUpdate(this);" data-comment-no="\${pheedCNo}">수정</a> • 
+                             <a href="#!" id="commentRefBtn\${pheedCNo}" class="link-grey" onclick="showCommentRefInput(this);" data-pheed-no="\${pheedNo}" data-comment-no="\${pheedCNo}">답글</a>
+                          </p>
+                       </div>
+               </div>                     
+            </div>`;
+            
+            container.insertAdjacentHTML('afterbegin', div);
+            document.querySelector('#comment-content').value = '';
+               
+      },
+      error:console.log
+   });
+   
+}
 
+<%-- 댓글 삭제 --%>
+const commentDel = (e) => {
+   console.log(e.dataset.commentNo);
+   const commentNo = e.dataset.commentNo;
+   const commentType = e.dataset.commentType;
+   
+   const csrfHeader = '${_csrf.headerName}';
+   const csrfToken = '${_csrf.token}';
+   const headers = {};
+   headers[csrfHeader] = csrfToken; // 전송하는 헤더에 추가하여 전송 
+   
+   if(confirm('댓글을 삭제하시겠습니까?')){
+      $.ajax({
+         url : '${pageContext.request.contextPath}/pheed/commentDel.do',
+         method : 'post',
+         headers,
+         data : {
+        	 pheedCNo : commentNo,
+         },
+         success(resp){
+            let deleteCommentId = '';
+            
+            if(commentType == 'coComment'){
+               deleteCommentId = "#coComment" + commentNo;
+            } else {
+               deleteCommentId = "#comment" + commentNo;
+            }
+            
+            $(deleteCommentId).remove();
+            
+         },
+         error:console.log
+      });
+   }
+};
+
+<%-- 댓글 수정 화면 바꿔 --%>
+let originalComment;
+const showCommentUpdate = (e) => {
+   const commentNo = e.dataset.commentNo;
+   const divId = '#contentDiv' + commentNo;
+   const spanId = '#contentSpan' + commentNo;
+   
+   // const chatNo = '${param.chatNo}';
+   // console.log(chatNo);
+
+   const contentDiv = document.querySelector(divId);
+   const contentSpan = document.querySelector(spanId);
+   
+    if(e.innerText == '수정'){
+       // 원래 있던 span 안보이게 처리해
+       contentSpan.style.display = 'none';
+      const contentInnerText = contentSpan.innerText;
+      //console.log(contentInnerText);
+      // originalComment = contentInnerText;
+      
+      const input = `
+            <input type="text" name="content" id="commentText\${commentNo}" value="\${contentInnerText}" class="updateCommentInput form-control"/>
+               <button class="btn" type="button" id="btn-update-comment\${commentNo}" onclick="updateComment(this)" data-comment-no="\${commentNo}">수정</button>`;
+      contentDiv.insertAdjacentHTML('beforeend', input);
+      
+      e.innerText="취소";   
+   }
+   else{ 
+      // 취소 누른 경우
+      // 
+      $(contentDiv).children('input').remove();
+      $(contentDiv).children('button').remove();
+      contentSpan.style.display = '';
+      //console.log(content);
+      e.innerText = "수정";   
+   }
+/*    const p = document.querySelector(".text-right.mr-2");
+   p.style.position = 'relative';
+   p.style.bottom = '7px'; */
+};
+
+<%-- 댓글 수정 비동기 --%>
+const updateComment = (e) => {
+   const commentNo = e.dataset.commentNo
+
+   // 원래 댓글 담기는 곳
+   const spanId = '#contentSpan' + commentNo;
+   const contentSpan = document.querySelector(spanId);
+   
+   // 인풋색기 버튼색기 가져와
+   const inputId = "#commentText" + commentNo; 
+   const btnId = "#btn-update-comment" + commentNo;
+
+   // 수정한 내용 들고와
+   const commentContent = document.querySelector(inputId).value;
+   // console.log("수정한 내용 = ", commentContent);
+
+   
+   const csrfHeader = '${_csrf.headerName}';
+   const csrfToken = '${_csrf.token}';
+   const headers = {};
+   headers[csrfHeader] = csrfToken; // 전송하는 헤더에 추가하여 전송 
+   
+   $.ajax({
+      url: "${pageContext.request.contextPath}/pheed/commentUpdate.do",
+      method : "POST",
+      headers,
+      data : {
+         commentNo : commentNo,
+         commentContent : commentContent
+      },
+      success(resp){
+         console.log(resp);
+         // Input 지워
+         $(inputId).remove();
+         // 버튼 지워
+         $(btnId).remove();
+         
+         // 원래 내용 추가해
+         contentSpan.innerHTML = commentContent;
+         // span 보이게 바꿔
+         contentSpan.style.display = "";
+         
+         // 취소로 바꿔
+         document.getElementById(`updateBtn\${commentNo}`).innerHTML = '수정';
+      },
+      error: console.log
+   });
+   
+   
+}
+
+<%-- 답글 --%>
+const showCommentRefInput = (e) => {
+   const commentNo = e.dataset.commentNo;
+   const pheedNo = e.dataset.pheedNo;
+   
+   if(e.innerText == '답글') {
+      const div = `
+         <div class="co-ref-div" id="coRefDiv\${commentNo}">
+            <input type="text" class="co-ref-input" name="content" id="coRef\${commentNo}" placeholder="댓글을 작성해주세요." aria-label="댓글을 작성해주세요." aria-describedby="button-comment">
+            <button class="ref-btn" type="button" id="btn-enroll-comment" onclick="enrollCommentRef(this);" data-pheed-no="\${pheedNo}" data-comment-no="\${commentNo}">등록</button>
+         </div>
+      `;
+      
+      const commentDivId = "#comment" + commentNo;
+      const commentDiv = document.querySelector(commentDivId);
+      
+      commentDiv.insertAdjacentHTML('afterend', div);
+      
+      e.innerText = "취소"
+   }
+   else {
+      const coRefDivId = "#coRefDiv" + commentNo;
+      $(coRefDivId).remove();
+      e.innerText = "답글";
+   }
+   
+};
+
+<%-- 답글 등록 --%>
+const enrollCommentRef = (e) => {
+   const commentRef = e.dataset.commentNo;
+   const pheedNo = e.dataset.pheedNo;
+   console.log(pheedNo);
+   
+   
+   // 입력한 내용 들고와
+   const coRefInputId = "#coRef" + commentRef;
+   const commentContent = document.querySelector(coRefInputId).value;
+   
+   console.log(commentContent);
+   
+   const csrfHeader = '${_csrf.headerName}';
+   const csrfToken = '${_csrf.token}';
+   const headers = {};
+   headers[csrfHeader] = csrfToken; // 전송하는 헤더에 추가하여 전송 
+   
+   $.ajax({
+      url : '${pageContext.request.contextPath}/pheed/commentRefEnroll.do',
+      method : 'post',
+      headers,
+      data : {
+         nickname : '${loginMember.nickname}',
+       	 pheedNo,
+         content : commentContent,
+         commentRef : commentRef
+      },
+      success(data){
+         console.log(data);
+         const {pheedCNo, nickname} = data;
+         
+         // 날짜는 못가져오니까 날짜 만들어 시부렁
+         var today = new Date();
+
+         var year = today.getFullYear();
+         var month = ('0' + (today.getMonth() + 1)).slice(-2);
+         var day = ('0' + today.getDate()).slice(-2);
+         var hours = ('0' + today.getHours()).slice(-2); 
+         var minutes = ('0' + today.getMinutes()).slice(-2)
+         
+         const createdAt = year + "/" + month + "/" + day + " " + hours + ":" + minutes;
+         
+         const div = `
+            <div class="co-div flex-center coComment-div" id="coComment\${pheedCNo}">
+               <div class="co-left flex-center" style="margin-left: 40px;">
+               	  ↳
+                  <div class="co-writer flex-center">
+                     <img 
+                        class="rounded-circle shadow-1-strong m-1" 
+                        src="${pageContext.request.contextPath}/resources/upload/profile/${loginMember.renamedFilename}" 
+                        alt="avatar" width="40" height="40">
+                     <span>\${nickname}</span>
+                  </div>
+                  <div class="co-Content" id="contentDiv\${pheedCNo}">
+                     <span id="contentSpan\${pheedCNo}">\${commentContent}</span>                                          
+                  </div>
+               </div>
+               <div class="co-right">
+                  <span class="text-secondary">
+                     \${createdAt}
+                  </span>
+                  <div class="small" style="padding-left: 10px;">
+                     <a href="#!" class="link-grey" onclick="commentDel(this);" data-comment-type='coComment' data-comment-no="\${pheedCNo}">삭제</a> • 
+                     <a href="#!" id="updateBtn\${pheedCNo}" class="link-grey" onclick="showCommentUpdate(this);" data-comment-no="\${pheedCNo}">수정</a>
+                  </div>      
+               </div>                     
+            </div>
+         `;
+         
+         // 댓글 추가하셈 
+         const commentDivId = "#comment" + commentRef;
+         const commentDiv = document.querySelector(commentDivId)
+         commentDiv.insertAdjacentHTML('afterend', div);
+         
+         // 답댓글 input이랑 btn 담긴 div 삭제하셈
+         const coRefDivId = "#coRefDiv" + commentRef;
+         $(coRefDivId).remove();
+         
+         // 답글 버튼 취소에서 다시 답글로 바꾸기 
+            const commentRefBtnId = "#commentRefBtn" + commentRef;
+         	console.log(commentRefBtnId);
+            const commentRefBtn = document.querySelector(commentRefBtnId);
+            console.log(commentRefBtn);
+            commentRefBtn.innerHTML = '답글';
+
+      },
+      error : console.log
+   });
+   
+}
 
 
 $(document).mouseup(function (e){
@@ -317,6 +696,8 @@ const closeComment = () => {
 function selectBook(cPage){
 	// 		1~10 11~20 21~30..
 	//cPage  1 	   2     3 ..
+	console.log(${fn:length(list)});
+	// 얘가 1개가 마지막인데 2번 더돌아서 나는거거든.. innerText.title 오류가..
 	<c:forEach items="${list}" var="pheed">
 	for(let i = (((cPage - 1) * 3) + 1); i <= (cPage * 3); i++){
 		$.ajax({

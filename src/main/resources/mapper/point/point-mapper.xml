@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kh.bookie.point.model.dao.PointDao">
+
+	<insert id="insertPoint">
+		insert into 
+			point_status 
+		values(
+			seq_point_no.nextval, 
+			#{memberId}, 
+			#{content}, 
+			#{point}, 
+			0, 
+			default, 
+			#{impUid}, 
+			#{status})
+		<selectKey keyProperty="pointNo" resultType="_int" order="AFTER">
+			select
+				seq_point_no.currval
+			from
+				dual
+		</selectKey>
+	</insert>
+	
+	<select id="getMyPointStatusList" resultMap="pointStatusMap">
+		select 
+			* 
+		from 
+			point_status 
+		where 
+			member_id = #{memberId}
+	        <![CDATA[
+           AND 
+           updated_at >= #{start}
+           AND 
+           updated_at <= #{end}
+           ]]>
+		order by 
+			updated_at desc
+	</select>
+	<resultMap type="pointStatus" id="pointStatusMap">
+		<id column="point_no" property="pointNo"/>
+		<result column="member_id" property="memberId"/>
+		<result column="content" property="content"/>
+		<result column="point" property="point"/>
+		<result column="total_point" property="totalPoint"/>
+		<result column="updated_at" property="updatedAt"/>
+		<result column="imp_uid" property="impUid"/>
+		<result column="status" property="status"/>
+	</resultMap>
+
+</mapper>

@@ -40,4 +40,6 @@ public interface DokooService {
 
 	int updateDokoo(Dokoo dokoo);
 
+	int commentRefEnroll(DokooComment dc);
+
 }

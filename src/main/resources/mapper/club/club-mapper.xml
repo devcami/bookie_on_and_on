@@ -40,13 +40,6 @@
 		    club c
 		where
 			recruit_end > sysdate
-		order by
-			<if test="sortType == null">
-			    recruit_start desc	
-			</if>
-			<if test="sortType != null">
-				recruit_end
-			</if>
 	</select>
 	<resultMap type="club" id="clubListCollectionMap">
 		<id column="club_no" property="clubNo"/>
@@ -194,8 +187,8 @@
 			ca.chat_no ca_chat_no
 		from
 			club_chat cc 
-				join chat_attachment ca on cc.chat_no = ca.chat_no 
-				join member m on cc.nickname = m.nickname 
+				left join chat_attachment ca on cc.chat_no = ca.chat_no 
+				left join member m on cc.nickname = m.nickname 
 		where
 			cc.chat_no = #{chatNo}
 	</select>
@@ -238,13 +231,32 @@
 		</selectKey>
 	</insert>
 	
+	<insert id="commentRefEnroll">
+		insert into 
+			chat_comment 
+		values 
+			(seq_comment_no.nextval, 
+			#{chatNo}, 
+			#{nickname}, 
+			#{commentRef}, 
+			default, 
+			#{commentContent},
+			2)
+		<selectKey keyProperty="commentNo" resultType="_int" order="AFTER">
+			select
+				seq_comment_no.currval
+			from
+				dual
+		</selectKey>
+	</insert>
+	
 	<select id="selectChatComments" resultType="chatComment">
 		select 
 		    * 
 		from 
 		    chat_comment cc 
 		where 
-		    chat_no = 14 
+		    chat_no = #{chatNo} 
 		        start with 
 		        	comment_level = 1
 		        connect by 
@@ -252,5 +264,23 @@
 		order siblings by 
 			created_at desc
 	</select>
+	
+	
+	<select id="selectClubBoardList" resultMap="clubBoardListMap">
+		select
+		    *
+		from
+		    club_chat
+		where
+			club_no = #{clubNo}
+		order by 
+			enroll_date desc
+	</select>
+	<resultMap type="chat" id="clubBoardListMap">
+		<id column="chat_no" property="chatNo"/>
+		<result column="nickname" property="nickname"/>
+		<result column="title" property="title"/>
+		<result column="enroll_date" property="enrollDate"/>
+	</resultMap>
 	
 </mapper>

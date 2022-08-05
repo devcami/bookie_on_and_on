@@ -135,16 +135,28 @@ public class DokooController {
 	}
 	
 	@PostMapping("/commentUpdate.do")
-	public String commentUpdate(DokooComment dokooComment, RedirectAttributes ra) {
+	public ResponseEntity<?> commentUpdate(DokooComment dokooComment, RedirectAttributes ra) {
 		try {
 			log.debug("dokooComment = {}", dokooComment);
 			int result = dokooService.commentUpdate(dokooComment);
 			ra.addFlashAttribute("msg", "독후감 댓글 수정 완료 !");	
+			return ResponseEntity.ok(dokooComment);
 		} catch (Exception e) {
 			log.error("독후감 댓글 수정 오류", e);
-			throw e;
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
-		return "redirect:/dokoo/dokooDetail.do?dokooNo=" + dokooComment.getDokooNo();
+	}
+	
+	@PostMapping("/commentRefEnroll.do")
+	public ResponseEntity<?> commentRefEnroll(DokooComment dc){
+		try {
+			log.debug("dokooComment = {}", dc);
+			int result = dokooService.commentRefEnroll(dc);
+			return ResponseEntity.ok(dc);
+		} catch (Exception e) {
+			log.error("댓글 등록 오류", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
 	}
 	
 	@GetMapping("/getDokooSns.do")

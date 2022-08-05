@@ -15,13 +15,13 @@ create table member (
     original_filename varchar2(256),
     sns varchar2(1000),
     point number default 0,
+    email varchar2(256),
     constraint pk_member_id primary key(member_id),
     constraint uq_member_nickname unique (nickname),
     constraint ck_member_gender check (gender in ('M', 'F'))
 );
-
-update member set nickname = '승윤이' where member_id = 'tmddbs';
-
+alter table member add email varchar2(50);
+select * from member;
 -- 2. authority
 create table authority(
     member_id varchar2(200),
@@ -335,7 +335,6 @@ create table persistent_logins (
 -- 조회
 --==============================================
 select * from user_sequences; -- 시퀀스 조회
-
 select * from member;
 select * from authority;
 select * from interest;
@@ -589,6 +588,39 @@ select * from member;
 
 select * from club where recruit_end > sysdate order by recruit_end;       
 
+create table point_status (
+    point_no number,
+    member_id varchar2(200) not null,
+    content varchar2(1000),
+    point number not null,
+    total_point number,
+    updated_at date default sysdate not null,
+    imp_uid varchar2(50),
+    status varchar2(1)
+    constraint pk_point_status_no primary key(point_no),
+    constraint fk_point_status_member_id foreign key(member_id) references member(member_id) on delete cascade,
+    constraint ck_point_status check (status in ('M', 'P'))
+);
+create sequence seq_point_no;
+commit;
+select * from point_status order by updated_at desc;
+select * from member;
+
+
+select
+			cc.*,
+			ca.*,
+			m.*,
+            m.renamed_filename profilePic,
+			ca.chat_no ca_chat_no
+		from
+			club_chat cc 
+				left join chat_attachment ca on cc.chat_no = ca.chat_no 
+				left join member m on cc.nickname = m.nickname 
+		where
+			cc.chat_no = 23;
+            
+            select * from club_chat;
 ---------------------------------
 -- book <<은민>>
 ---------------------------------
@@ -598,7 +630,6 @@ select
     i.started_at started_at,
     i.ended_at ended_at
 from 
-<<<<<<< HEAD
     book b right join (select * from book_ing order by add_date desc) i
         on b.member_id = i.member_id
 where b.member_id = 'tmddbs' and b.item_id = '9788932474755' ;
@@ -621,13 +652,91 @@ from(
         board b)
 where
     rnum between 11 and 15;
-=======
-    chat_comment cc 
-where 
-    chat_no = 14 
-        start with comment_level = 1 connect by prior comment_no = comment_ref 
-order siblings by created_at desc;
+
+select 
+    m.*,
+    i.interest
+from 
+    member m join interest i
+        on m.member_id = i.member_id
+where
+    m.member_id = 'honggd';
+    
+    
+	select 
+	    m.*,
+	    (select interest from interest where member_id = 'honggd') interest
+	from 
+	    member m
+	where
+		m.member_id = 'honggd';
+        
+        
+        insert into follower values ('tmddbs', 'admin');
+        commit;
+        
+        
+        
+        
+        
+select 
+    ph.*,
+    (select count(*) from likes_pheed where pheed_no = ph.pheed_no) likes_cnt 
+from 
+    (select row_number() over (order by enroll_date desc) rnum, p.* from pheed p where is_opened = 'O' or is_opened = 'F') ph
+where
+    (rnum between 1 and 3)
+    and
+    member_id in (select following_member_id from follower where member_id = 'honggd');
+    
+select following_member_id from follower where member_id = 'tmddbs';
+
+  
+update member set point = 20010 where member_id = 'tmddbs';
+select count(*) from club_chat where club_no = 45;
 
 commit;
 
->>>>>>> branch 'master' of https://github.com/devcami/bookie_on_and_on.git
+select * from club_chat;
+select * from member;
+select * from point_status order by updated_at desc;
+
+insert into point_status values(seq_point_no.nextval, 'tmddbs', '포인트 충전', 1000, 16030, sysdate-20, null, 'P');
+insert into point_status values(seq_point_no.nextval, 'tmddbs', '북클럽 디파짓 차감', 10000, 6030, sysdate-22, null, 'M');
+insert into point_status values(seq_point_no.nextval, 'tmddbs', '북클럽 디파짓 차감', 5000, 1030, sysdate-40, null, 'M');
+insert into point_status values(seq_point_no.nextval, 'tmddbs', '포인트 충전', 30000, 31030, sysdate-49, null, 'P');
+
+select last_day(sysdate) from dual;
+
+SELECT
+    *
+FROM 
+    point_status
+WHERE  
+    member_id = 'tmddbs' and
+    SUBSTR(updated_at, 0, 8) BETWEEN (TO_CHAR(TRUNC(SYSDATE,'MM'),'YY/MM/DD') ) AND (LAST_DAY(SYSDATE))
+order by 
+    updated_at desc;
+    
+    commit;
+    
+    		select 
+			* 
+		from 
+			point_status 
+		where 
+			member_id = 'tmddbs'
+	        AND 
+	        to_char(updated_at, 'yymmdd') >= '22/08/01'
+	        AND 
+	        to_char(updated_at, 'yymmdd') <= '22/08/05'
+		order by 
+			updated_at desc;
+            
+       select 
+			* 
+		from 
+			point_status 
+		where 
+           updated_at >= to_date('22/08/01', 'yy/mm/dd')
+           and updated_at <= to_date('22/08/06', 'yy/mm/dd');

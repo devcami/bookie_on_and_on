@@ -165,4 +165,12 @@
 		<result column="interest" property="interest"/>
 	</resultMap>
 	
+	<update id="updateMypick">
+	update
+		book
+	set
+		my_pick = #{myPick}
+	where
+		member_id = #{memberId} and item_id = #{itemId}
+	</update>
 </mapper>

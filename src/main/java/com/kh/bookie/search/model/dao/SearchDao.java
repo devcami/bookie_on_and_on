@@ -43,4 +43,6 @@ public interface SearchDao {
 
 	Member selectOneMember(String memberId);
 
+	int updateMypick(Book book);
+
 }

@@ -13,7 +13,7 @@ public interface ClubService {
 
 	int enrollClub(Club club);
 
-	List<Club> selectClubList(int cPage, int numPerPage, String sortType);
+	List<Club> selectClubList(int cPage, int numPerPage);
 
 	int selectTotalClub();
 
@@ -41,7 +41,7 @@ public interface ClubService {
 
 	Chat selectOneBoardCollection(int chatNo);
 
-	List<Chat> selectClubBoardList(int clubNo);
+	List<Chat> selectClubBoardList(int cPage, int numPerPage, int clubNo);
 
 	int deleteClubBoard(int chatNo);
 
@@ -61,6 +61,8 @@ public interface ClubService {
 
 	int commentUpdate(ChatComment cc);
 
-	
+	int commentRefEnroll(ChatComment cc);
+
+	int selectTotalClubBoard(int clubNo);
 
 }

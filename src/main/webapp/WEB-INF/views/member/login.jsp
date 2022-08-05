@@ -42,7 +42,7 @@
 						<a href="#" class="text-secondary">아이디찾기</a> | 
 						<a href="#" class="text-secondary">비밀번호 찾기</a>
 					</div>
-					<button type="submit" class="btn btn-danger btn-block">로그인</button>
+					<button type="submit" class="btn btn-primary btn-block">로그인</button>
 					<button type="button" class="btn btn-primary btn-block" onclick="location.href='${pageContext.request.contextPath}/member/memberEnroll.do'">회원가입</button>
 				</form:form>
 			</div>

@@ -59,11 +59,11 @@
 		
 		<div id="open-div">
 			<label class="open">공개여부</label>				
-			<input type="checkbox" name="isOpened" value="O" class="ml-5" ${pheed.isOpened eq 'O' ? 'checked' : ''}/>
+			<input type="radio" name="isOpened" value="O" class="ml-5" ${pheed.isOpened eq 'O' ? 'checked' : ''}/>
 			<label for="O" class="ml-1">전체공개</label>
-			<input type="checkbox" name="isOpened" value="F" class="ml-5" ${pheed.isOpened eq 'F' ? 'checked' : ''}/>
+			<input type="radio" name="isOpened" value="F" class="ml-5" ${pheed.isOpened eq 'F' ? 'checked' : ''}/>
 			<label for="O" class="ml-1">팔로워공개</label>
-			<input type="checkbox" name="isOpened" value="C" class="ml-5" ${pheed.isOpened eq 'C' ? 'checked' : ''}/>
+			<input type="radio" name="isOpened" value="C" class="ml-5" ${pheed.isOpened eq 'C' ? 'checked' : ''}/>
 			<label for="C" class="ml-1">비공개</label>
 		</div>
 		
