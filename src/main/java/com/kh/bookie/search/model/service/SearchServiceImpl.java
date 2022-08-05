@@ -8,11 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.kh.bookie.member.model.dto.Follower;
 import com.kh.bookie.member.model.dto.Member;
 import com.kh.bookie.mypage.model.dto.Book;
 import com.kh.bookie.search.model.dao.SearchDao;
 
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -152,5 +152,25 @@ public class SearchServiceImpl implements SearchService {
 	@Override
 	public int updateMypick(Book book) {
 		return searchDao.updateMypick(book);
+	}
+	
+	@Override
+	public List<Member> selectMemberListByInterest(Map<String, Object> map) {
+		return searchDao.selectMemberListByInterest(map);
+	}
+	
+	@Override
+	public List<Follower> selectFollowerList(String memberId) {
+		return searchDao.selectFollowerList(memberId);
+	}
+	
+	@Override
+	public int deleteFollower(Map<String, Object> map) {
+		return searchDao.deleteFollower(map);
+	}
+	
+	@Override
+	public int insertFollower(Map<String, Object> map) {
+		return searchDao.insertFollower(map);
 	}
 }

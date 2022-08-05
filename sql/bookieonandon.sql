@@ -412,6 +412,7 @@ select * from likes_club;
 
 select * from persistent_logins;
 
+
 SELECT 
     TABLE_NAME
     ,COLUMN_NAME    -- 컬럼 명
@@ -789,3 +790,21 @@ order by
 		where 
            updated_at >= to_date('22/08/01', 'yy/mm/dd')
            and updated_at <= to_date('22/08/06', 'yy/mm/dd');
+           
+        select * from interest;
+		select 
+            m.*,
+            i.interest
+		from 
+		    member m join interest i
+                on m.member_id = i.member_id
+        where
+            interest like '%언어%' and m.member_id != 'honggd';
+            
+            
+        select 
+            m.*,
+            (select interest from interest where interest like '%#{interest}%' member_id != #{memberId}) interest
+		from 
+		    member m 
+      
