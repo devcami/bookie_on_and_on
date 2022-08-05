@@ -98,7 +98,7 @@
 							<div class="co-writer flex-center">
 								<img class="rounded-circle shadow-1-strong m-1"
 									<%-- loginMember가 아니고 댓글단 사람 프로필 가져와야돼 --%>
-                          			src="${pageContext.request.contextPath}/resources/upload/profile/${loginMember.renamedFilename}"
+                          			src="${pageContext.request.contextPath}/resources/upload/profile/${comment.renamedFilename}"
 									alt="avatar" width="40" height="40"> <span>${comment.nickname}</span>
 							</div>
 							<div class="co-Content" id="contentDiv${comment.dokooCNo}">

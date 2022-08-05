@@ -40,7 +40,14 @@
 	</select>
 	
 	<select id="selectPheedCommentList" resultType="pheedComment">
-		select * from pheed_comment where pheed_no = #{pheedNo} order by created_at
+		select 
+			c.*,
+			(select renamed_filename from member m where m.nickname = c.nickname) renamed_filename
+		from 
+			pheed_comment c
+		where 
+			pheed_no = #{pheedNo} 
+		order by created_at
 	</select>
 	
 	<insert id="pheedEnroll">
@@ -131,6 +138,9 @@
 			null,
 			default,
 			1)
+		<selectKey keyProperty="pheedCNo" resultType="_int" order="AFTER">
+			select seq_pheed_comment_no.currval from dual
+		</selectKey>
 	</insert>
 	
 	<delete id="commentDel">
