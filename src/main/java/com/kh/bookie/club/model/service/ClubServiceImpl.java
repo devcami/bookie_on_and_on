@@ -203,30 +203,16 @@ public class ClubServiceImpl implements ClubService {
 	public Chat selectOneBoardCollection(int chatNo) {
 		Chat chat = clubDao.selectOneBoardCollection(chatNo);
 		chat.setChatComments(clubDao.selectChatComments(chatNo));
+		
+		log.debug("여기 chat = {}", chat);
+		
 		return chat;
 	}
 
 	@Override
-	public List<Chat> selectClubBoardList(int cPage, int numPerPage, int clubNo) {
-		
-		
-		int offset = (cPage - 1) * numPerPage;
-		RowBounds rowBounds = new RowBounds(offset, numPerPage);
-	
-		
-		// 새로하는거
-		Map<String, Object> map = new HashMap<>();
-		map.put("rowBounds", rowBounds);
-		map.put("clubNo", clubNo);
-
-		// 1. clubBoard 찾아와
-		List<Chat> list = clubDao.selectClubBoardList(map);
-
-		
-		
-		return list;
+	public List<Chat> selectClubBoardList(Map<String, Object> map) {
+		return clubDao.selectClubBoardList(map);
 	}
-
 	@Override
 	public List<ChatAttachment> findAllClubBoardAttachByChatNo(int chatNo) {
 		return clubDao.findAllClubBoardAttachByChatNo(chatNo);
@@ -282,6 +268,8 @@ public class ClubServiceImpl implements ClubService {
 	public int selectTotalClubBoard(int clubNo) {
 		return clubDao.selectTotalClubBoard(clubNo);
 	}
+
+	
 	
 
 }

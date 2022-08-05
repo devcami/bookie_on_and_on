@@ -250,9 +250,11 @@
 		</selectKey>
 	</insert>
 	
-	<select id="selectChatComments" resultType="chatComment">
+	<select id="selectChatComments" resultMap="chatCommentMap">
 		select 
-		    * 
+		    cc.*,
+		    (select renamed_filename 
+					from member m where m.nickname = cc.nickname) "renamed_filename"
 		from 
 		    chat_comment cc 
 		where 
@@ -264,9 +266,19 @@
 		order siblings by 
 			created_at desc
 	</select>
+	<resultMap type="chatComment" id="chatCommentMap">
+		<id column="comment_no" property="commentNo" />
+		<result column="chat_no" property="chatNo"/>
+		<result column="nickname" property="nickname"/>
+		<result column="comment_ref" property="commentRef"/>
+		<result column="created_at" property="createdAt"/>
+		<result column="comment_content" property="commentContent"/>
+		<result column="comment_level" property="commentLevel"/>
+		<result column="renamed_filename" property="renamedFilename"/>
+	</resultMap>
 	
 	
-	<select id="selectClubBoardList" resultMap="clubBoardListMap">
+	<!-- <select id="selectClubBoardList" resultMap="clubBoardListMap">
 		select
 		    *
 		from
@@ -275,6 +287,18 @@
 			club_no = #{clubNo}
 		order by 
 			enroll_date desc
+	</select> -->
+	<select id="selectClubBoardList" resultMap="clubBoardListMap">
+		select 
+		    * 
+		from 
+		    (select 
+		        row_number() over(order by enroll_date desc) rnum , 
+		        cc.* 
+		    from 
+		        club_chat cc 
+		    where club_no = #{clubNo}) 
+		where rnum between #{start} and #{end}
 	</select>
 	<resultMap type="chat" id="clubBoardListMap">
 		<id column="chat_no" property="chatNo"/>
