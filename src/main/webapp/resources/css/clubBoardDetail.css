@@ -102,18 +102,21 @@ section label {
 	box-shadow: 4px 4px 6px 1px rgb(0 0 0 / 20%);
 }
 
-/********* 댓글 부분 ***********/
-#comment-container {
-	
-}
-.card-body {
-	padding: 1.25rem 1rem 1.25rem 1.25rem !important; 
+#btn-div button:focus, #btn-div button:focus-visible {
+	outline: unset !important;
 }
 
-#comment-container .comment-one {
-    border-radius: 20px;
-    border: none;
+/********* 댓글 부분 ***********/
+
+
+
+.comment-div:not(:first-child) {
+	margin-top: 1.7rem!important;
 }
+.coComment-div {
+	margin: .7rem 0;
+}
+
 
 input:focus-visible {
 	outline: none !important;
@@ -134,7 +137,6 @@ input:focus-visible {
 }
 
 div.comment-div {
-    width: 610px;
 }
 
 .comment-nickname {
@@ -146,10 +148,10 @@ div.comment-div {
 	margin-left: 20px;
     margin-right: 10px;
     font-size: 22px;
-    width: 60%;
+    width: 73%;
 }
 div.comment-div span.text-secondary {
-    width: 130px;
+
     float: right;
 }
 .link-grey {
@@ -163,6 +165,72 @@ div.comment-div span.text-secondary {
 .updateCommentInput {
 	display: inline-block;
     width: 297px;
+    border-top-right-radius: 0  !important;
+    border-bottom-right-radius: 0  !important;
 }
+
+/****** 대댓글 *************/
+.co-div {
+	justify-content: space-between;
+
+}
+.co-left {
+    justify-content: flex-start;
+}
+.co-right {
+	display: flex;
+    flex-direction: column;
+    width: 125px;
+    align-items: flex-end;
+    margin-left: 10px;
+}
+.co-writer {
+    justify-content: flex-start;
+    width: 125px;
+    padding-right: 15px;
+}
+.co-Content {
+	display: flex;
+	width: 360px;
+}
+.flex-center{
+	display: flex;
+    align-items: center;
+}
+
+.small {
+	color: #aaa;
+}
+
+.btn {
+	margin-left: 5px;
+	border-radius: 0.4rem !important;
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+}
+
+
+/******** 대댓글 css **********/
+.co-ref-div {
+	position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    margin-left: 125px;
+    margin-top: 15px;
+}
+.co-ref-input {
+	width: 94%;
+	border: 1px solid #ced4da;
+	border-radius: 0.25rem;
+	border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+.ref-btn {
+	border: none;
+	cursor: pointer;
+}
+
+
 
 

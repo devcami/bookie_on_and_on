@@ -16,6 +16,7 @@ import com.kh.bookie.club.model.dto.ChatComment;
 import com.kh.bookie.club.model.dto.Club;
 import com.kh.bookie.club.model.dto.ClubBook;
 import com.kh.bookie.club.model.dto.Mission;
+import com.kh.bookie.point.model.dto.PointStatus;
 
 @Mapper
 public interface ClubDao {
@@ -28,9 +29,9 @@ public interface ClubDao {
 	@Insert("insert into mission values (#{clubNo}, seq_mission_no.nextval, #{title}, #{content}, #{point}, #{mendDate}, #{itemId})")
 	int insertMission(Mission mission);
 
-	List<Club> selectClubList(Map<String, Object> map);
+	List<Club> selectClubList(RowBounds rowBounds);
 
-	@Select("select count(*) from club")
+	@Select("select count(*) from club where recruit_end > sysdate")
 	int selectTotalClub();
 
 	Club selectOneClub(Object clubNo);
@@ -78,9 +79,8 @@ public interface ClubDao {
 
 	Chat selectOneBoardCollection(int chatNo);
 
-	@Select("select * from club_chat where club_no = #{clubNo} order by enroll_date desc")
-	List<Chat> selectClubBoardList(int clubNo);
-
+	List<Chat> selectClubBoardList(Map<String, Object> map);
+	
 	@Select("select * from chat_attachment where chat_no = #{chatNo}")
 	List<ChatAttachment> findAllClubBoardAttachByChatNo(int chatNo);
 
@@ -109,5 +109,14 @@ public interface ClubDao {
 	@Update("update chat_comment set comment_content = #{commentContent} where comment_no = #{commentNo}")
 	int commentUpdate(ChatComment cc);
 
+	int commentRefEnroll(ChatComment cc);
 
+	@Select("select count(*) from club_chat where club_no = #{clubNo}")
+	int selectTotalClubBoard(int clubNo);
+
+	@Insert("insert into point_status values (seq_point_no.nextval, #{memberId}, #{content}, #{point}, #{totalPoint}, default, null, #{status})")
+	int insertPointStatus(PointStatus ps);
+
+	
+	
 }

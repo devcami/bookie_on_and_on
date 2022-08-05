@@ -16,6 +16,7 @@ import com.kh.bookie.club.model.dto.ChatComment;
 import com.kh.bookie.club.model.dto.Club;
 import com.kh.bookie.club.model.dto.ClubBook;
 import com.kh.bookie.club.model.dto.Mission;
+import com.kh.bookie.point.model.dto.PointStatus;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -58,22 +59,18 @@ public class ClubServiceImpl implements ClubService {
 	}
 
 	@Override
-	public List<Club> selectClubList(int cPage, int numPerPage, String sortType) {
+	public List<Club> selectClubList(int cPage, int numPerPage) {
 		int offset = (cPage - 1) * numPerPage;
 		RowBounds rowBounds = new RowBounds(offset, numPerPage);
 		
 		// 새로하는거
-		Map<String, Object> map = new HashMap<>();
-		map.put("rowBounds", rowBounds);
-		map.put("sortType", sortType);
-		List<Club> list = clubDao.selectClubList(map);
-		//
-		
-		/**
+//		Map<String, Object> map = new HashMap<>();
+//		map.put("rowBounds", rowBounds);
+//		map.put("sortType", sortType);
+
 		// 1. club 찾아와
 		List<Club> list = clubDao.selectClubList(rowBounds);
-		 */
-		
+
 		
 		// 2. club에 사진 할당해
 		for(Club club : list) {
@@ -166,6 +163,16 @@ public class ClubServiceImpl implements ClubService {
 		// 2. member 테이블 point에서 북클럽 디파짓만큼 금액 까기
 		int restPoint = Integer.parseInt(map.get("myPoint").toString()) - Integer.parseInt(map.get("deposit").toString());
 		
+		// 3. pointStatus 내역에 추가하기
+		PointStatus ps = new PointStatus();
+		ps.setMemberId(String.valueOf(map.get("memberId")));
+		ps.setPoint(Integer.parseInt(map.get("deposit").toString()));
+		ps.setContent("북클럽 디파짓 차감");
+		ps.setStatus("M");
+		ps.setTotalPoint(restPoint);
+		
+		result = clubDao.insertPointStatus(ps);
+		
 		map.put("restPoint", restPoint);
 		result = clubDao.updateMyPoint(map);
 		
@@ -200,8 +207,24 @@ public class ClubServiceImpl implements ClubService {
 	}
 
 	@Override
-	public List<Chat> selectClubBoardList(int clubNo) {
-		return clubDao.selectClubBoardList(clubNo);
+	public List<Chat> selectClubBoardList(int cPage, int numPerPage, int clubNo) {
+		
+		
+		int offset = (cPage - 1) * numPerPage;
+		RowBounds rowBounds = new RowBounds(offset, numPerPage);
+	
+		
+		// 새로하는거
+		Map<String, Object> map = new HashMap<>();
+		map.put("rowBounds", rowBounds);
+		map.put("clubNo", clubNo);
+
+		// 1. clubBoard 찾아와
+		List<Chat> list = clubDao.selectClubBoardList(map);
+
+		
+		
+		return list;
 	}
 
 	@Override
@@ -250,7 +273,15 @@ public class ClubServiceImpl implements ClubService {
 		return clubDao.commentUpdate(cc);
 	}
 
+	@Override
+	public int commentRefEnroll(ChatComment cc) {
+		return clubDao.commentRefEnroll(cc);
+	}
 
+	@Override
+	public int selectTotalClubBoard(int clubNo) {
+		return clubDao.selectTotalClubBoard(clubNo);
+	}
 	
 
 }
