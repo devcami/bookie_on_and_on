@@ -1,0 +1,6 @@
+@charset "UTF-8";
+section#content	{
+	margin: 0 auto;
+	padding: 25px;
+	border-radius: 10px;
+}
