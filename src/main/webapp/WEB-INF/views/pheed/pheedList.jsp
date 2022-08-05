@@ -271,11 +271,19 @@ const pheedComment = (e) => {
 				
 			comments.forEach((comment) => {
 				//console.log(comment);
-				const {pheedCNo, pheedNo, nickname, content, commentRef, createdAt} = comment;
+				const {pheedCNo, pheedNo, nickname, content, commentRef, createdAt, renamedFilename} = comment;
 				//console.log(pheedCNo, pheedNo, nickname, content, commentRef, createdAt);
 				const {year, monthValue, dayOfMonth, hour, minute, second} = createdAt;
 				const date = new Date(year, monthValue, dayOfMonth, hour, minute, second);
-				const fmtCreatedAt = date.toLocaleDateString();
+				
+		        var yy = date.getFullYear();
+		        var MM = ('0' + (date.getMonth() + 1)).slice(-2);
+		        var dd = ('0' + date.getDate()).slice(-2);
+		        var hh = ('0' + date.getHours()).slice(-2); 
+		        var mm = ('0' + date.getMinutes()).slice(-2)
+		         
+		        const fmtCreatedAt = yy + "/" + MM + "/" + dd + " " + hh + ":" + mm		         
+				
 				
 				
 				const wrapper = document.querySelector("#comment-wrapper");
@@ -288,7 +296,7 @@ const pheedComment = (e) => {
 							<div class="co-writer flex-center">
 								<img class="rounded-circle shadow-1-strong m-1"
 								<%-- loginMember가 아니고 댓글단 사람 프로필 가져와야돼 --%>
-		              			src="${pageContext.request.contextPath}/resources/upload/profile/${loginMember.renamedFilename}"
+		              			src="${pageContext.request.contextPath}/resources/upload/profile/\${renamedFilename}"
 								alt="avatar" width="40" height="40"> <span>\${nickname}</span>
 							</div>
 							<div class="c-content" id="contentDiv\${pheedCNo}">
@@ -329,7 +337,7 @@ const pheedComment = (e) => {
 							<div class="co-writer flex-center">
 								<img class="rounded-circle shadow-1-strong m-1"
 									<%-- loginMember가 아니고 댓글단 사람 프로필 가져와야돼 --%>
-			                        src="${pageContext.request.contextPath}/resources/upload/profile/${loginMember.renamedFilename}"
+			                        src="${pageContext.request.contextPath}/resources/upload/profile/\${renamedFilename}"
 									alt="avatar" width="40" height="40"> <span>\${nickname}</span>
 							</div>
 							<div class="co-Content" id="contentDiv\${pheedCNo}">
@@ -404,7 +412,7 @@ const enrollComment = (e) => {
                         alt="avatar" width="40" height="40">
                      <span>${loginMember.nickname}</span>
                   </div>
-                  <div class="co-Content" id="contentDiv\${pheedCNo}">
+                  <div class="c-content" id="contentDiv\${pheedCNo}">
                         <span id="contentSpan\${pheedCNo}">\${content}</span>      
                   </div>
                </div>

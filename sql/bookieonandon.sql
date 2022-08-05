@@ -49,7 +49,9 @@ create table follower(
 
 select * from pheed where member_id like 'honggd' or member_id like 'sinsa';
 insert into follower values('sinsa', 'honggd');
-insert into follower values('honggd', 'admin');
+select * from follower;
+commit;
+insert into follower values('honggd', 'tester');
 
 -- 5. book
 create table book(
@@ -804,7 +806,12 @@ order by
             
         select 
             m.*,
-            (select interest from interest where interest like '%#{interest}%' member_id != #{memberId}) interest
+            (select interest from interest where interest like '%언어%' and member_id != 'honggd') interest
 		from 
-		    member m 
+		    member m ;
       
+      select 
+        c.*, 
+        (select renamed_filename from member m where m.nickname = c.nickname) renamed_filename 
+      from dokoo_comment c 
+      where dokoo_no = 42;
