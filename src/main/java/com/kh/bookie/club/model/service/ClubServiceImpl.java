@@ -14,6 +14,7 @@ import com.kh.bookie.club.model.dto.Chat;
 import com.kh.bookie.club.model.dto.ChatAttachment;
 import com.kh.bookie.club.model.dto.ChatComment;
 import com.kh.bookie.club.model.dto.Club;
+import com.kh.bookie.club.model.dto.ClubApplicant;
 import com.kh.bookie.club.model.dto.ClubBook;
 import com.kh.bookie.club.model.dto.Mission;
 import com.kh.bookie.point.model.dto.PointStatus;
@@ -123,14 +124,18 @@ public class ClubServiceImpl implements ClubService {
 			Map<String, Object> map = new HashMap<>();
 			map.put("itemId", itemId);
 			map.put("clubNo", param.get("clubNo"));
+			
+			// log.debug("여기 clubNo = {}", param.get("clubNo"));
+			
 			club.getBookList().set(i, clubDao.selectBookMission(map));
+			
 		}
 		
 		if(param.get("memberId") != null) {
 			club.setIsJoined(clubDao.checkClubJoined(param));
 		}
 		
-		log.debug("2. club = {}", club);
+		// log.debug("2. club = {}", club);
 		
 		return club; 
 	}
@@ -290,6 +295,17 @@ public class ClubServiceImpl implements ClubService {
 	@Override
 	public int selectTotalClubBoard(int clubNo) {
 		return clubDao.selectTotalClubBoard(clubNo);
+	}
+
+	@Override
+	public Club selectClubForClubStory(Map<String, Object> map) {
+		
+		Club club = clubDao.selectOneClub(map);
+		List<ClubApplicant> applicantList = clubDao.selectClubApplicants(Integer.parseInt(map.get("clubNo").toString()));
+		log.debug("여기 applicantList = {}", applicantList);
+		club.setApplicantList(applicantList);
+		
+		return club;
 	}
 
 	

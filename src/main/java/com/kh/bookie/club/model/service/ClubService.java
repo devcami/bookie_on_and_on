@@ -69,4 +69,6 @@ public interface ClubService {
 
 	int selectTotalClubMonth();
 
+	Club selectClubForClubStory(Map<String, Object> map);
+
 }

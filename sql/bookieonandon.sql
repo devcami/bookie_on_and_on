@@ -827,3 +827,62 @@ where rnum between 1 and 10;
         (select renamed_filename from member m where m.nickname = c.nickname) renamed_filename 
       from dokoo_comment c 
       where dokoo_no = 42;
+      
+select * from my_club;
+select * from member;
+
+insert into my_club values (45, 'honggd', 10000);
+update member set point = 10000 where member_id = 'honggd';
+
+select
+			c.*,
+			b.*,
+			b.club_no bclub_no,
+		    (select count(*) from my_club where club_no = 45) current_nop,
+		    (select count(*) from likes_club where club_no = 45) likes_Cnt
+		from
+		    club c
+		    	 join club_book b on c.club_no = b.club_no
+                 join my_club m on c.club_no = m.club_no
+		where 
+			c.club_no = 45;
+            
+select
+    mc.*,
+    m.*,
+    mc.member_id mcMember_id
+from 
+    my_club mc 
+        left join member m on mc.member_id = m.member_id
+where 
+    mc.club_no = 45;
+    
+    commit;
+    
+select * from club_book;
+
+		select 
+			*
+		from
+			mission
+		where 
+			club_no = 49;
+            
+            select
+         c.*,
+         b.*,
+         b.club_no bclub_no,
+          (select count(*) from my_club where club_no = 45) current_nop,
+          (select count(*) from likes_club where club_no = 45) likes_Cnt
+      from
+          club c
+              join club_book b on c.club_no = b.club_no
+      where 
+         c.club_no = 45;
+         
+         select * from club_book;
+         
+         update club_book set book_title = '경제대마왕 반드시 부자되는 투자의 소신' where club_no = 45 and item_id = '9788957822074';
+         update club_book set book_title = '부자의 독서법' where club_no = 45 and item_id = '9791187444770';
+         update club_book set book_title = '월급쟁이 부자로 은퇴하라' where club_no = 45 and item_id = '9788925578156';
+         commit;

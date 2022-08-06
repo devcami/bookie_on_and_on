@@ -340,15 +340,15 @@ public class ClubController {
 
 		try {
 			Map<String, Object> param = new HashMap<>();
-			log.debug("itemId = {}", itemId);
-			log.debug("clubNo = {}", clubNo);
+//			log.debug("itemId = {}", itemId);
+//			log.debug("clubNo = {}", clubNo);
 			
 			param.put("itemId", itemId);
 			param.put("clubNo", clubNo);
 			
 			List<Mission> missionList = clubService.getMissions(param);
+			log.debug("missionList = {}", missionList);
 			
-//			log.debug("missionList = {}", missionList);
 			map.put("missionList", missionList);
 		} catch(Exception e) {
 			log.error("선택한 책 미션리스트 불러오기 오류", e);
@@ -852,7 +852,7 @@ public class ClubController {
 			map.put("memberId", memberId);
 			map.put("clubNo", clubNo);
 			
-			Club club = clubService.selectOneClub(map);
+			Club club = clubService.selectClubForClubStory(map);
 			
 			mav.addObject(club);
 			mav.addObject("clubNo", clubNo);

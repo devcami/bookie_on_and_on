@@ -5,131 +5,24 @@ section#content {
     min-height: 600px;
     border-radius: 5px;
 }
-/*****head*******/
-#head {
-	width: 100%;
-    height: 370px;
-    background-color: #ffa50021;
-}
-#head-img {
-	display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 20px;
-    padding-top: 90px;
-}
-#head-img img{
-	margin: 4px;
-    width: 15%;
-    filter: drop-shadow(3px 3px 5px #000);
-}
 
-
-#head-text{
-	margin: 0 30px;
+/********** 대갈 ***********/
+/* 제목 및 설명 */
+#head-text h1 {
+    border-radius: 27px;
+    margin-bottom: 0 !important;
+    font-size: 2.8rem !important;
 }
-#head-text h3 {
-	margin: 0 !important;
-}
-
-/****** 책 등록폼 ******/
-/* 제목 바 */
-#title-header{
-	top: 0px;
-	width: 800px;
-	font-size: 20px;
-	background-color: #FFF;
-	text-align: center;
-	z-index:1;
-	border-radius: 10px;
-	box-shadow: 1px 2px 3px #5454544a;
-}
-#header-div {
-	display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-#title-header-left{
-	margin-top: 10px;
-	margin-bottom: 10px;
-	display: flex;
-	align-items: center;
-}
-#title-header #title-header-left i{
-	font-size: 40px;
-	margin: 0 40px;
-	cursor: pointer;
-}
-#title-header-left i:hover{
-	color:#;
-}
-#title-header-left span {
-	font-size: 32px;
-}
-#title-header.drop {
-  position: fixed;
-  animation: dropHeader 0.3s;
-}
-@keyframes dropHeader {
-  0% {
-    top: -5rem;
-  }
-  100% {
-    top: 0;
-  }
-}
-
-
-#likeWishDiv {
-	display: flex;
-    justify-content: flex-end;
-    margin-right: 15px;
-}
-.fa-lg {
-	font-size: unset !important;
-}
-.fa-stack {
-	width: 1.7em !important;
-	cursor: pointer;
-}
-.fa-heart, .fa-bookmark {
-	font-size: 34px;
-	margin: 0 3px;
-}
-#h-span {
-	margin-right: 6px;
-}
-.front {
-	color: black;
-	z-index: 1 !important;
-}
-.h-behind {
-	color: #F10086;
-    font-size: 29px;
-}
-
-.b-behind {
-	color: #FFC46B;
-    font-size: 29px;
-}
-
-
-/* 공통 */
-.divs{
-	font-size: 27px;
-	display: flex;
-    justify-content: flex-start;
-    align-items: center;
-}
-.divs-head {
- margin-bottom: 3px !important;
- font-size: 45px;
+#head-text h4 {
+	padding: 10px 10px 3px 10px;
 }
 
 /* 뱃지 */
 .badge-div {
-	margin-top: 12px;
-	    margin-bottom: 30px;
+	margin-bottom: 20px;
+    border-bottom: 1px solid #dee2e6;
+    padding-bottom: 25px;
+    padding-left: 10px;
 }
 .mybadge{
 	color: #fff;
@@ -138,241 +31,174 @@ section#content {
 	font-weight: 300 !important;
 }
 
-/**  기본 정보 **/
-#info-div {
-	margin: 20px 0;
-    border-bottom: 1px dashed grey;
-    padding-bottom: 20px;
+/* 카테고리 */
+#category {
+	    border-bottom: 1px solid #dee2e6;
 }
-#heart-span{
-	font-size: 35px;
+#category ul {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+	flex-direction: column;
+    font-size: 30px;
 }
-.label-div {
-	width: 25%;
+#category span {
+	font-size: 50px;
 }
-.fa-won-sign {
-	transform: translateY(-2px);
-	font-size: 20px;
+#category a {
+	color: black;
+}
+#category a:hover {
+	text-decoration: unset;
 }
 
-/**** 읽는 책 *****/
-#book-div{
-	border-bottom: 1px dashed grey;
-    padding-bottom: 35px;
+
+/******* 공통 *********/
+.divs {
+	margin-top: 20px;
+	border-bottom: 1px solid #dee2e6;
+	padding-bottom: 20px;
 }
-#mini-info {
-	display: block;
+.subTitle {
+	margin-bottom: 15px;
+    
+}
+
+
+/********* 선정 도서 **********/
+.bookDiv {
+	display: flex;
+	flex-direction: column;
+	margin-left: 30px;
+	transform: translateY(-10px);
+}
+#book-cnt{
+	font-size: 25px;
+}
+.bookTag {
+	color: white;
+	font-size: 30px;
+	width: 140px;
+	text-align:center;
+	border-radius: 10px;
+}
+.eachBook img {
+	width: 115px;
+}
+
+.eachBook {
+	display: flex;
+	margin: 10px 0;
+}
+.book-info {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	margin-left: 10px;
+}
+.title {
+	font-size: 35px;
+}
+.nextTitle {
 	color: darkgrey;
 	font-size: 25px;
 }
-
-#book-imgs {
-	margin-top: 15px;
-}
-#book-imgs img {
-	width: 20%;
-	margin: 0 4px;
-	cursor: pointer;
-	transition: .5s;
-}
-
-#book-imgs img:hover {
-	transform: scale(1.1);
-}
-
-/*********** 미션 **************/
-#mDiv {
-	border-bottom: 1px solid grey;
-	padding-bottom: 30px;
-}
-#mission-head {
-	margin-bottom: 3px !important;
- 	font-size: 45px;
- 	margin-top: 10px;
-}
-#mission-div{
-	display: flex;
-	flex-wrap: wrap;
-	margin-top: 15px;
-}
-.mCard{
-	display: flex;
-    width: 100%;
-    margin: 10px 11px;
-    flex-wrap: nowrap;
-    margin: 5px 11px 20px 11px;
-    border-radius: var(--border-radius-primary);
-    box-shadow: 0px 0px 9px 0px rgb(0 0 0 / 10%);
-    transition: transform 0.15s ease-out;
-    background-color: #f8f9fa;
-}
-
-.mCard:hover {
-	transition: transform 0.15s ease-out;
-    box-shadow: 0px 0px 10px 4px rgb(0 0 0 / 10%);
-    background: white;
-}
-
-.m-img-div {
-	text-align: center;
-    
-}
-
-.mCard img {
-	height: 200px;
-}
-.m-text-div {
-	display: flex;
-    flex-direction: column;
-    width: 100%;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    cursor: pointer;
-
-}
-.m-text-div table {
-	width: 90%;
-    text-align: center;
-    border-collapse: separate;
-    border-spacing: 0px 10px;
-}
-
-.m-text-div table td {
-	font-size: larger;
-	margin-bottom: 5px;
-}
-
-#detail-btn-div{
-	position: absolute;
-    top: 0;
-    right: 0;	
-    cursor: pointer;
-	background-color: #ffc36a;
-    border-radius: 0 4px 0 32px;
-}
-
-#detail-btn {    
-	background-color: #ffc36a;
-	border-radius: 0 4px 0 32px;
-    font-size: inherit;
-    padding-left: 12px;
-    border: none;
-    color: #fff;
-    cursor: pointer;
-}
-.redText {
-	color: red;
-}
-
-/************** 마지막 등록 버튼 ****************/
-#btn-div {
-	display: flex;
-    justify-content: flex-end;
-	margin-top: 15px;
-	
-}
-#btn-div button {
-	width: 100%;
-	background: none;
-    border-radius: 10px;
-    color: #FE9801;
-    border: 1px solid #FE9801;
-    transition: .1s ease-in-out;	
-    padding: 5px 20px;
-    font-size: 25px;
-    cursor: pointer;
-    letter-spacing: 15px;
-}
-#btn-div button:hover {
-	
-	background-color: #FE9801;
-    color: #fff;
-    box-shadow: 0px 0px 4px #5454544a;
-    
-}
-#btn-div button:focus, #btn-div button:focus-visible {
-	outline: unset !important;
-}
-
-#btn-disabled {
-	background-color: #e9e9e9 !important;
-	border: 1px solid #e9e9e9 !important;
-    color: black !important;
-    cursor: default !important; 
-}
-
-#btn-disabled:hover, #btn-disabled:focus-visible,  #btn-disabled:focus{
-	box-shadow: unset !important;
-	outline: unset !important;
-	
-}
-
-
-/********* 미션 모달 *************/
-
-.modal-title{
-	margin: auto !important;
-	transform: translateX(10px);
-}
-.modal-header button {
-	padding: 0 !important;
-	margin: 0 !important
-}
-.modalDiv {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-}
-.modalDiv:first-child {
-	margin-top: 20px;
-}
-.modalDiv:not(:first-of-type) {
-	margin-top: 40px;	
-}
-/* .modalDiv:after {
-	content: "";
-    display: block;
-    width: 80px;
-    border-bottom: 1px solid #bcbcbc;
-    margin: 20px auto;
-} */
-.missionNo {
-	padding: 5px 10px;
-	color: white;
-	background-color: orange;
-	border-radius: 20px;
-}
-.mTitle {
-	font-size: xx-large !important;
-	margin-top: 5px !important;
-	margin-bottom: 0 !important;
-}
-
-.mSpan {
+.bookDescription {
 	font-size: 25px;
 }
+.b-wrapper {
+	display: flex;
+}
+.book-bar {
+	border-left: 5px solid black;
+	width: 15px;
+}
+.fa-circle-border {
+	transform: translate(-14px, -5px);
+	font-size: 25px;
+}
+.fa-circle-inside {
+	transform: translate(-9px, -26px);
+    font-size: 15.3px;
+}
+.fa-circle-inside-last {
+	transform: translate(-38px, -9px);
+    font-size: 15.3px;
+}
+.fa-circle-last {
+	transform: translate(-7px, -6px);
+}
 
-.mDate {
+#bar-first {
+	height: 120px;
+}
+#book-last {
 	
 }
-.mDeposit {
-	
+#bar-last {
+	transform: translate(4px, -1px);
 }
-.mContent {
-	margin-top: 10px;
+#book-last-text {
+	background-color: #3AB4F2;
+	color: white;
+	font-size: 30px;
+	text-align:center;
+	border-radius: 10px;
+	padding: 3px 53px;
+}
+.fa-circle-last{
+	transform: translate(-38px, -9px);
+	font-size: 15.3px;
+}
+.bookDivLast {
+	display: flex;
+	flex-direction: column;
+	transform: translateY(-10px);
+}
+/******** 선정 도서 vs별 옵션 *********/
+#circle1 {
+	color: #FBA1A1;
+}
+#circle2 {
+	color: #FBB454;
+}
+#circle3 {
+	color: #76BA99;
+}
+#circle4 {
+	color: #CA82FF;
+}
+
+#bookTag1 {
+	background-color: #FBA1A1;
+}
+#bookTag2 {
+	background-color: #FBB454;;
+}
+#bookTag3 {
+	background-color: #76BA99;
+}
+#bookTag4 {
+	background-color: #CA82FF;
+}
+/********* 북클럽 멤버 **********/
+#clubMemberDiv {
+	margin-left: 20px;
+}
+.memberWrap {
+	margin-bottom: 10px;
+	display:flex;
+	align-items: center;
+}
+.memberWrap img {
+	width: 40px;
+	height: 40px;
+}
+.nicknames {
+	width: 20%;
+	font-size: 25px;
+	margin: 0 13px;
 }
 
 
-#plzEnrollMember {
-	margin-bottom: 0;
-    text-align: center;
-    font-size: large;
-    margin-top: 10px;
-}
-
-
-
-
-
-
+/********* 미션 **********/
