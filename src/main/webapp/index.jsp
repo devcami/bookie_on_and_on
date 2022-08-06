@@ -17,9 +17,9 @@
 			<img src="${pageContext.request.contextPath}/resources/images/main-banner.png" alt="메인배너" />
 		</div>
 		<div class="article book-club-ann">
-			<img src="${pageContext.request.contextPath}/resources/images/book-club-8.png" alt="북클럽공고" />
+			<img src="${pageContext.request.contextPath}/resources/images/book-club-8.png" alt="북클럽공고" onclick="location.href='${pageContext.request.contextPath}/club/clubListMonth.do'"/>
 			<div class="button d-grid col-md-10 mx-auto">
-				<button type="button" class="btn btn-lg ">북클럽 더보기 + </button>
+				<button type="button" class="btn btn-lg" onclick="location.href='${pageContext.request.contextPath}/club/clubList.do'">북클럽 더보기 + </button>
 			</div>
 		</div>
 		<div class="article goto">

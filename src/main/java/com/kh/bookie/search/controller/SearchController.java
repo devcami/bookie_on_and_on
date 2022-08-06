@@ -1,5 +1,6 @@
 package com.kh.bookie.search.controller;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.kh.bookie.member.model.dto.Follower;
 import com.kh.bookie.member.model.dto.Member;
 import com.kh.bookie.mypage.model.dto.Book;
 import com.kh.bookie.search.model.service.SearchService;
@@ -323,6 +325,22 @@ public class SearchController {
 		String memberId = loginMember.getMemberId();
 		Member member = searchService.selectOneMember(memberId);
 		log.debug("member = {}", member);
+		if(member.getInterest() != null) {
+			List<String> interests = Arrays.asList(member.getInterest().split(","));
+			log.debug("interests = {}", interests);
+			
+			
+			model.addAttribute("interests", interests);
+		}
+		// 넘길 때 로그인 유저의 팔로워 같이 넘기기
+		List<Follower> followerList = searchService.selectFollowerList(memberId);
+		if(!followerList.isEmpty()) {
+			String followers = "";
+			for(Follower follower : followerList) {
+				 followers += follower.getFollowingMemberId() + ",";
+			}
+			model.addAttribute("followers", followers);
+		}
 		model.addAttribute("member", member);
 	}
 	
@@ -343,5 +361,59 @@ public class SearchController {
 		}
 	}
 	
+	@GetMapping("/selectMemberListByInterest.do")
+	public ResponseEntity<?> selectMemberListByInterest(@RequestParam String interest, @RequestParam String memberId){
+		Map<String, Object> map = new HashMap<>();
+		log.debug("interest = {}", interest);
+		log.debug("memberId = {}", memberId);
+		try {
+			map.put("memberId", memberId);
+			map.put("interest", interest);
+			List<Member> list = searchService.selectMemberListByInterest(map);
+			
+			return ResponseEntity.ok(list);
+		} catch (Exception e) {
+			log.error("관심사 멤버 불러오기 오류", e);
+			map.put("msg", "관심사 멤버 불러오기 오류");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE)
+					.body(map);
+		}
+	}
+	
+	@PostMapping("/insertFollower.do")
+	public ResponseEntity<?> insertFollower(@RequestParam String memberId, @RequestParam String followingMemberId){
+		Map<String, Object> map = new HashMap<>();
+		try {
+			map.put("memberId", memberId);
+			map.put("followingMemberId", followingMemberId);
+			int result = searchService.insertFollower(map);
+			return ResponseEntity.ok(map);
+		} catch (Exception e) {
+			log.error("팔로워 등록 오류", e);
+			map.put("msg", "팔로워 등록 오류");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE)
+					.body(map);
+		}
+	}
+	
+	@PostMapping("/deleteFollower.do")
+	public ResponseEntity<?> deleteFollower(@RequestParam String memberId, @RequestParam String followingMemberId){
+		Map<String, Object> map = new HashMap<>();
+		try {
+			map.put("memberId", memberId);
+			map.put("followingMemberId", followingMemberId);
+			int result = searchService.deleteFollower(map);
+			return ResponseEntity.ok(map);
+		} catch (Exception e) {
+			log.error("팔로워 취소 오류", e);
+			map.put("msg", "팔로워 취소 오류");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE)
+					.body(map);
+		}
+	}
+		
 	
 }

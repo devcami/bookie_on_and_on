@@ -83,10 +83,33 @@ public class ClubServiceImpl implements ClubService {
 	}
 
 	@Override
+	public List<Club> selectClubListMonth(int cPage, int numPerPage) {
+		int offset = (cPage - 1) * numPerPage;
+		RowBounds rowBounds = new RowBounds(offset, numPerPage);
+		
+		// 1. club 찾아와
+		List<Club> list = clubDao.selectClubListMonth(rowBounds);
+		
+		// 2. club에 사진 할당해
+		for(Club club : list) {
+			List<ClubBook> bookList = clubDao.selectClubBook(club.getClubNo());
+			club.setBookList(bookList);
+		}
+		
+		return list;
+	}
+	
+	
+	@Override
 	public int selectTotalClub() {
 		return clubDao.selectTotalClub();
 	}
 
+	@Override
+	public int selectTotalClubMonth() {
+		return clubDao.selectTotalClubMonth();
+	}
+	
 	@Override
 	public Club selectOneClub(Map<String, Object> param) {
 		

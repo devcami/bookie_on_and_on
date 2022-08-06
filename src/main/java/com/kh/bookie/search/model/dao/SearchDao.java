@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.kh.bookie.member.model.dto.Follower;
 import com.kh.bookie.member.model.dto.Member;
 import com.kh.bookie.mypage.model.dto.Book;
 
@@ -44,5 +45,13 @@ public interface SearchDao {
 	Member selectOneMember(String memberId);
 
 	int updateMypick(Book book);
+
+	List<Member> selectMemberListByInterest(Map<String, Object> map);
+
+	List<Follower> selectFollowerList(String memberId);
+
+	int deleteFollower(Map<String, Object> map);
+
+	int insertFollower(Map<String, Object> map);
 
 }

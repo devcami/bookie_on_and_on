@@ -49,7 +49,9 @@ create table follower(
 
 select * from pheed where member_id like 'honggd' or member_id like 'sinsa';
 insert into follower values('sinsa', 'honggd');
-insert into follower values('honggd', 'admin');
+select * from follower;
+commit;
+insert into follower values('honggd', 'tester');
 
 -- 5. book
 create table book(
@@ -259,11 +261,7 @@ create table chat_comment(
     created_at date default sysdate not null,
     comment_content varchar2(1000) not null,
     comment_level number default 1,
-<<<<<<< HEAD
     constraint pk_chat_comment_no primary key(comment_no)
-=======
-    constraint pk_chat_comment_no primary key(comment_no) 
->>>>>>> branch 'master' of https://github.com/devcami/bookie_on_and_on.git
 );
 select * from chat_comment;
 create sequence seq_comment_no;
@@ -330,6 +328,58 @@ create table persistent_logins (
     token varchar(64) not null,  -- username, password, expire time을 단방향 암호화한 값
     last_used timestamp not null);
     
+-- 트리거
+select * from user_triggers;
+drop trigger trigger_dokoo_comment;
+drop trigger trigger_pheed_comment;
+drop trigger trigger_chat_comment;
+drop trigger trigger_club_chat;
+commit;
+
+create trigger trigger_chat_comment 
+    after 
+    update on member 
+    for each row 
+begin 
+    if updating then 
+    update chat_comment set nickname = :new.nickname where nickname = :old.nickname;
+    end if;
+end;
+/
+
+create trigger trigger_dokoo_comment 
+    after 
+    update on member 
+    for each row 
+begin 
+    if updating then 
+    update dokoo_comment set nickname = :new.nickname where nickname = :old.nickname;
+    end if;
+end;
+/
+
+create trigger trigger_pheed_comment 
+    after 
+    update on member 
+    for each row 
+begin 
+    if updating then 
+    update pheed_comment set nickname = :new.nickname where nickname = :old.nickname;
+    end if;
+end;
+/
+
+create trigger trigger_club_chat
+    after 
+    update on member 
+    for each row 
+begin 
+    if updating then 
+    update club_chat set nickname = :new.nickname where nickname = :old.nickname;
+    end if;
+end;
+/
+
 
 --==============================================
 -- 조회
@@ -363,6 +413,7 @@ select * from likes_dokoo;
 select * from likes_club;
 
 select * from persistent_logins;
+
 
 SELECT 
     TABLE_NAME
@@ -675,8 +726,7 @@ where
         insert into follower values ('tmddbs', 'admin');
         commit;
         
-        
-        
+
         
         
 select 
@@ -690,7 +740,6 @@ where
     member_id in (select following_member_id from follower where member_id = 'honggd');
     
 select following_member_id from follower where member_id = 'tmddbs';
-
   
 update member set point = 20010 where member_id = 'tmddbs';
 select count(*) from club_chat where club_no = 45;
@@ -740,6 +789,7 @@ order by
 		where 
            updated_at >= to_date('22/08/01', 'yy/mm/dd')
            and updated_at <= to_date('22/08/06', 'yy/mm/dd');
+
         
 select * from club_chat;
 
@@ -754,4 +804,26 @@ from
         club_chat cc 
     where club_no = 45) 
 where rnum between 1 and 10;
-           
+
+        select * from interest;
+		select 
+            m.*,
+            i.interest
+		from 
+		    member m join interest i
+                on m.member_id = i.member_id
+        where
+            interest like '%언어%' and m.member_id != 'honggd';
+            
+            
+        select 
+            m.*,
+            (select interest from interest where interest like '%언어%' and member_id != 'honggd') interest
+		from 
+		    member m ;
+      
+      select 
+        c.*, 
+        (select renamed_filename from member m where m.nickname = c.nickname) renamed_filename 
+      from dokoo_comment c 
+      where dokoo_no = 42;

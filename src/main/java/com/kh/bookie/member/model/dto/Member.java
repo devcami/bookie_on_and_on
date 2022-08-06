@@ -19,7 +19,7 @@ import lombok.NonNull;
 @AllArgsConstructor
 public class Member extends MemberEntity implements UserDetails{
 	List<SimpleGrantedAuthority> authorities;
-	String[] interests;
+	Interest interests;
 	String interest;
 	
 	private static final long serialVersionUID = 1L;

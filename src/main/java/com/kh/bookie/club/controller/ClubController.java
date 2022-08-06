@@ -118,7 +118,74 @@ public class ClubController {
 		
 		return mav;
 	}
+	
+	
+	@GetMapping("/clubListMonth.do")
+	public ModelAndView clubListMonth(
+			@RequestParam(defaultValue = "1") int cPage,
+			@RequestParam(required = false) String sortType,
+			ModelAndView mav,
+			HttpServletRequest request,
+			@AuthenticationPrincipal Member loginMember) {
+		
+		
+		try {
+			
+			log.debug("sortType = {}", sortType);
+			
+			
+			if(loginMember  != null) {					
+				
+				log.debug("authentication member = {} ", loginMember);
+				log.debug("authentication member = {} ", loginMember.getMemberId());
+				
+				// 멤버 있으면 북클럽 찜 리스트 가져와 
+				List<String> clubWishList = clubService.getClubWishListbyMemberId(loginMember.getMemberId());
+//				log.debug("clubWishList = {}", clubWishList);
+				
+				String wishStr = "";
+				for(int i = 0; i < clubWishList.size(); i++) {
+					wishStr += clubWishList.get(i);
+					wishStr +=  ",";
+				}
+				
+				mav.addObject("wishStr", wishStr);
+				
+				// 멤버 있으면 북클럽 하트 리스트 가져와 
+				List<String> clubLikesList = clubService.getClubLikesListbyMemberId(loginMember.getUsername());
+				
+				String likesStr = "";
+				for(int j = 0;  j < clubLikesList.size(); j++) {
+					likesStr += clubLikesList.get(j);
+					likesStr +=  ",";
+				}
+				mav.addObject("likesStr", likesStr);
+				
+			}
+			
+			int numPerPage = 4;
+			List<Club> list = clubService.selectClubListMonth(cPage, numPerPage);
+			mav.addObject("list", list);
+			
+			// 페이지 바
+			int totalClub = clubService.selectTotalClubMonth();
+			String url = request.getRequestURI();
+			String pagebar = HelloSpringUtils.getPagebar(cPage, numPerPage, totalClub, url);
+			mav.addObject("pagebar", pagebar);
+			mav.addObject("sortType", sortType);
+			
+			mav.setViewName("club/clubList");
+			
+		} catch(Exception e) {
+			log.error("월간 북클럽목록 조회 오류!!", e);
+			mav.addObject("msg", "월간 북클럽목록 조회에 실패했습니다!");
+			throw e;
+		}
+		
+		return mav;
+	}
 
+	
 	@GetMapping("/enrollClub.do")
 	public void enrollClub() {
 	}

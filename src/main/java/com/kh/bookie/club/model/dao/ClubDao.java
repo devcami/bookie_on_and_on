@@ -117,6 +117,11 @@ public interface ClubDao {
 	@Insert("insert into point_status values (seq_point_no.nextval, #{memberId}, #{content}, #{point}, #{totalPoint}, default, null, #{status})")
 	int insertPointStatus(PointStatus ps);
 
+	List<Club> selectClubListMonth(RowBounds rowBounds);
+
+	@Select("select count(*) from club where to_char(club_start, 'MM') = to_char(sysdate, 'MM')")
+	int selectTotalClubMonth();
+
 	
 	
 }

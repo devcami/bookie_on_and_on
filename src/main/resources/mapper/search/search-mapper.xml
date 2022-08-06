@@ -173,4 +173,50 @@
 	where
 		member_id = #{memberId} and item_id = #{itemId}
 	</update>
+	
+	<select id="selectMemberListByInterest" resultMap="memberListInterestMap">
+		select 
+            m.*,
+            i.interest
+		from 
+		    member m join interest i
+                on m.member_id = i.member_id
+        where
+       		interest like '%${interest}%' and m.member_id != #{memberId}
+	</select>
+	
+	<resultMap id="memberListInterestMap" type="member">
+		<id column="member_id" property="memberId"/>
+		<result column="nickname" property="nickname"/>
+		<result column="introduce" property="introduce"/>
+		<result column="renamed_filename" property="renamedFilename"/>
+		<result column="original_filename" property="originalFilename"/>
+		<association property="interests" javaType="interest">
+			<result column="interest" property="interests"/>
+		</association>
+	</resultMap>
+	
+	<select id="selectFollowerList" resultType="follower">
+		select
+			*
+		from
+			follower
+		where
+			member_id = #{memberId}
+	</select>
+	
+	<insert id="insertFollower">
+		insert into
+			follower
+		values(
+			#{memberId},
+			#{followingMemberId})
+	</insert>
+	
+	<delete id="deleteFollower">
+		delete from
+			follower
+		where
+			member_id = #{memberId} and following_member_id = #{followingMemberId}
+	</delete>
 </mapper>
