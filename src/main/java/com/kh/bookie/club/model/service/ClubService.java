@@ -65,4 +65,8 @@ public interface ClubService {
 
 	int selectTotalClubBoard(int clubNo);
 
+	List<Club> selectClubListMonth(int cPage, int numPerPage);
+
+	int selectTotalClubMonth();
+
 }
