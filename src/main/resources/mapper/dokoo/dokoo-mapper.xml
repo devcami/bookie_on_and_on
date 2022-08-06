@@ -52,8 +52,10 @@
 	  select 
         c.*, 
         (select renamed_filename from member m where m.nickname = c.nickname) renamed_filename 
-      from dokoo_comment c 
-      where dokoo_no = #{dokooNo}
+      from 
+      	dokoo_comment c 
+      where 
+      	dokoo_no = #{dokooNo}
 	</select>	
 	
 	<resultMap type="dokooComment" id="dokooCommentMap">
