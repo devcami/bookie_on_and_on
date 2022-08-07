@@ -71,4 +71,6 @@ public interface ClubService {
 
 	Club selectClubForClubStory(Map<String, Object> map);
 
+	List<Mission> getMissionsForOneMember(Map<String, Object> map);
+
 }
