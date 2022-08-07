@@ -361,7 +361,7 @@ const openDetailMission = (e) => {
 			// console.log(mList);
 			
 			const {missionList} = mList;
-			// console.log(missionList);
+			console.log(missionList);
 			
 			if(missionList.length == 0){
 				// 미션없는 경우

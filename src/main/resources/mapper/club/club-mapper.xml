@@ -89,41 +89,41 @@
 	
 	
 	<select id="selectOneClub" resultMap="selectOneClubCollectionMap">
-		select
-			c.*,
-			b.*,
-			b.club_no bclub_no,
-		    (select count(*) from my_club where club_no = #{clubNo}) current_nop,
-		    (select count(*) from likes_club where club_no = #{clubNo}) likes_Cnt
-		from
-		    club c
-		    	 join club_book b on c.club_no = b.club_no
-		where 
-			c.club_no = #{clubNo}
-	</select>
-	<resultMap type="club" id="selectOneClubCollectionMap">
-		<id column="club_no" property="clubNo"/>
-		<result column="title" property="title"/>
-		<result column="content" property="content"/>
-		<result column="recruit_start" property="recruitStart"/>
-		<result column="recruit_end" property="recruitEnd"/>
-		<result column="club_start" property="clubStart"/>
-		<result column="club_end" property="clubEnd"/>
-		<result column="maximum_nop" property="maximumNop"/>
-		<result column="minimum_nop" property="minimumNop"/>
-		<result column="deposit" property="deposit"/>
-		<result column="current_nop" property="currentNop"/>
-		<result column="interest" property="interest"/>
-		<result column="likes_cnt" property="likesCnt"/>
-		<result column="mission_cnt" property="missionCnt"/>
-		<result column="book_Count" property="bookCount"/>
-		<collection property="bookList" javaType="arrayList" ofType="clubBook">
-	         <id column="item_id" property="itemId"/>
-	         <id column="bclub_no" property="clubNo"/>
-	         <result column="img_src" property="imgSrc"/>
-	         <result column="book_title" property="bookTitle"/>
-	      </collection>
-	</resultMap>
+      select
+         c.*,
+         b.*,
+         b.club_no bclub_no,
+          (select count(*) from my_club where club_no = #{clubNo}) current_nop,
+          (select count(*) from likes_club where club_no = #{clubNo}) likes_Cnt
+      from
+          club c
+              join club_book b on c.club_no = b.club_no
+      where 
+         c.club_no = #{clubNo}
+   </select>
+   <resultMap type="club" id="selectOneClubCollectionMap">
+      <id column="club_no" property="clubNo"/>
+      <result column="title" property="title"/>
+      <result column="content" property="content"/>
+      <result column="recruit_start" property="recruitStart"/>
+      <result column="recruit_end" property="recruitEnd"/>
+      <result column="club_start" property="clubStart"/>
+      <result column="club_end" property="clubEnd"/>
+      <result column="maximum_nop" property="maximumNop"/>
+      <result column="minimum_nop" property="minimumNop"/>
+      <result column="deposit" property="deposit"/>
+      <result column="current_nop" property="currentNop"/>
+      <result column="interest" property="interest"/>
+      <result column="likes_cnt" property="likesCnt"/>
+      <result column="mission_cnt" property="missionCnt"/>
+      <result column="book_Count" property="bookCount"/>
+      <collection property="bookList" javaType="arrayList" ofType="clubBook">
+            <id column="item_id" property="itemId"/>
+            <id column="bclub_no" property="clubNo"/>
+            <result column="img_src" property="imgSrc"/>
+            <result column="book_title" property="bookTitle"/>
+         </collection>
+   </resultMap>
 	
 	
 	<select id="selectBookMission" resultMap="selectMissionCollectionMap">
@@ -133,9 +133,9 @@
 			m.club_no mclub_no
 		from 
 			club_book b 
-				left join mission m on b.item_id = m.m_item_id
+				join mission m on b.item_id = m.m_item_id
 		where 
-            b.club_no = #{clubNo} and m.m_item_id = #{itemId}
+            b.club_no = #{clubNo} and m.club_no = #{clubNo} and m.m_item_id = #{itemId}
 	</select>
 	<resultMap type="clubBook" id="selectMissionCollectionMap">
 			<id column="item_id" property="itemId"/>
@@ -262,9 +262,11 @@
 		</selectKey>
 	</insert>
 	
-	<select id="selectChatComments" resultType="chatComment">
+	<select id="selectChatComments" resultMap="chatCommentMap">
 		select 
-		    * 
+		    cc.*,
+		    (select renamed_filename 
+					from member m where m.nickname = cc.nickname) "renamed_filename"
 		from 
 		    chat_comment cc 
 		where 
@@ -276,9 +278,19 @@
 		order siblings by 
 			created_at desc
 	</select>
+	<resultMap type="chatComment" id="chatCommentMap">
+		<id column="comment_no" property="commentNo" />
+		<result column="chat_no" property="chatNo"/>
+		<result column="nickname" property="nickname"/>
+		<result column="comment_ref" property="commentRef"/>
+		<result column="created_at" property="createdAt"/>
+		<result column="comment_content" property="commentContent"/>
+		<result column="comment_level" property="commentLevel"/>
+		<result column="renamed_filename" property="renamedFilename"/>
+	</resultMap>
 	
 	
-	<select id="selectClubBoardList" resultMap="clubBoardListMap">
+	<!-- <select id="selectClubBoardList" resultMap="clubBoardListMap">
 		select
 		    *
 		from
@@ -287,12 +299,45 @@
 			club_no = #{clubNo}
 		order by 
 			enroll_date desc
+	</select> -->
+	<select id="selectClubBoardList" resultMap="clubBoardListMap">
+		select 
+		    * 
+		from 
+		    (select 
+		        row_number() over(order by enroll_date desc) rnum , 
+		        cc.* 
+		    from 
+		        club_chat cc 
+		    where club_no = #{clubNo}) 
+		where rnum between #{start} and #{end}
 	</select>
 	<resultMap type="chat" id="clubBoardListMap">
 		<id column="chat_no" property="chatNo"/>
 		<result column="nickname" property="nickname"/>
 		<result column="title" property="title"/>
 		<result column="enroll_date" property="enrollDate"/>
+	</resultMap>
+	
+	
+	<select id="selectClubApplicants" resultMap="clubApplicantsMap">
+		select
+		    mc.*,
+		    m.*,
+		    mc.member_id mcMember_id
+		from 
+		    my_club mc 
+		        left join member m on mc.member_id = m.member_id
+		where 
+		    mc.club_no = #{clubNo}
+	</select>
+	<resultMap type="clubApplicant" id="clubApplicantsMap">
+		<id column="mcMember_id" property="memberId"/>
+		<id column="club_no" property="clubNo"/>
+		<result column="deposit" property="deposit"/>
+		<result column="renamed_filename" property="renamedFilename"/>
+		<result column="nickname" property="nickname"/>
+		<result column="introduce" property="introduce"/>
 	</resultMap>
 	
 </mapper>

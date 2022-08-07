@@ -2,8 +2,9 @@ package com.kh.bookie.club.model.dto;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+
+import com.kh.bookie.member.model.dto.Member;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,7 @@ public class Club extends ClubEntity {
 	private List<ClubBook> bookList = new ArrayList<>();
 	private List<Mission> missionList = new ArrayList<>();
 	private List<String> imgSrcList = new ArrayList<>(); 
+	private List<ClubApplicant> applicantList = new ArrayList<>(); 
 	private int currentNop;
 	private int likesCnt;
 	private int isJoined;
@@ -31,6 +33,7 @@ public class Club extends ClubEntity {
 		this.currentNop = currentNop;
 		this.likesCnt = likesCnt;
 		this.isJoined = isJoined;
+		this.applicantList = applicantList;
 		
 	}
 

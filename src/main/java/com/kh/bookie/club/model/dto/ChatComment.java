@@ -12,25 +12,8 @@ import lombok.NonNull;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ChatComment {
+public class ChatComment extends ChatCommentEntity {
 
-	@NonNull
-	private int commentNo;
-	@NonNull
-	private int chatNo;
-	@NonNull
-	private String nickname;
-	
-	private int commentRef;
-	
-	@NonNull
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private LocalDateTime createdAt;
-	
-	@NonNull
-	private String commentContent;
-	
-	@NonNull
-	private int commentLevel;
+	private String renamedFilename;
 	
 }

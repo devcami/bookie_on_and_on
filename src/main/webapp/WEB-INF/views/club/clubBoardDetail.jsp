@@ -82,7 +82,7 @@
 							<div class="co-writer flex-center">
 								<img 
 									class="rounded-circle shadow-1-strong m-1" 
-									src="${pageContext.request.contextPath}/resources/upload/profile/${loginMember.renamedFilename}" 
+									src="${pageContext.request.contextPath}/resources/upload/profile/${comment.renamedFilename}" 
 									alt="avatar" width="40" height="40">
 								<span>${comment.nickname}</span>
 							</div>
@@ -117,7 +117,7 @@
 							<div class="co-writer flex-center">
 								<img 
 									class="rounded-circle shadow-1-strong m-1" 
-									src="${pageContext.request.contextPath}/resources/upload/profile/${loginMember.renamedFilename}" 
+									src="${pageContext.request.contextPath}/resources/upload/profile/${comment.renamedFilename}" 
 									alt="avatar" width="40" height="40">
 								<span>${comment.nickname}</span>
 							</div>
@@ -130,10 +130,12 @@
 								<fmt:parseDate value="${comment.createdAt}" pattern="yyyy-MM-dd'T'HH:mm" var="createdAt"/>
 								<fmt:formatDate value="${createdAt}" pattern="yyyy/MM/dd HH:mm"/>
 							</span>
+							<c:if test="${comment.nickname == loginMember.nickname}">
 							<div class="small" style="padding-left: 10px;">
 								<a href="#!" class="link-grey" onclick="commentDel(this);" data-comment-type='coComment' data-comment-no="${comment.commentNo}">삭제</a> • 
 								<a href="#!" id="updateBtn${comment.commentNo}" class="link-grey" onclick="showCommentUpdate(this);" data-comment-no="${comment.commentNo}">수정</a>
 							</div>		
+							</c:if>
 						</div>							
 					</div>
 					</c:if>

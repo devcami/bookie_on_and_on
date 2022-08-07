@@ -14,8 +14,10 @@ import com.kh.bookie.club.model.dto.Chat;
 import com.kh.bookie.club.model.dto.ChatAttachment;
 import com.kh.bookie.club.model.dto.ChatComment;
 import com.kh.bookie.club.model.dto.Club;
+import com.kh.bookie.club.model.dto.ClubApplicant;
 import com.kh.bookie.club.model.dto.ClubBook;
 import com.kh.bookie.club.model.dto.Mission;
+import com.kh.bookie.member.model.dto.Member;
 import com.kh.bookie.point.model.dto.PointStatus;
 
 @Mapper
@@ -121,6 +123,10 @@ public interface ClubDao {
 
 	@Select("select count(*) from club where to_char(club_start, 'MM') = to_char(sysdate, 'MM')")
 	int selectTotalClubMonth();
+
+	List<ClubApplicant> selectClubApplicants(int clubNo);
+	
+	
 
 	
 	
