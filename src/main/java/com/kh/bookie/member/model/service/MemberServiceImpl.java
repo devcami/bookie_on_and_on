@@ -50,4 +50,9 @@ public class MemberServiceImpl implements MemberService {
 	public int miniUpdateMember(Member logingMember) {
 		return memberDao.miniUpdateMember(logingMember);
 	}
+
+	@Override
+	public Member selectInterests(String memberId) {
+		return memberDao.selectInterests(memberId);
+	}
 }

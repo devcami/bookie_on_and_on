@@ -20,5 +20,7 @@ public interface MemberService {
 
 	int miniUpdateMember(Member logingMember);
 
+	Member selectInterests(String memberId);
+
 
 }

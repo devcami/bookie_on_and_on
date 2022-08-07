@@ -91,6 +91,21 @@ public class MypageController {
 	
 	@GetMapping("/myMiniProfile.do")
 	public void myMiniProfile() {}
+
+	@GetMapping("/myMainProfile.do")
+	public void myMainProfile(Model model, @RequestParam Member loginMember) {
+		log.debug("model = {}", model);
+		log.debug("loginMember = {}", loginMember);
+		String memberId = loginMember.getMemberId();
+		try {
+			// 
+			Member member = memberService.selectInterests(memberId);
+			
+			
+		} catch (Exception e) {
+			
+		}
+	}
 	
 	@GetMapping("/myBook.do")
 	public void myBook() {}
@@ -172,7 +187,14 @@ public class MypageController {
 					.body(map);
 	}
 	
-	@PostMapping("/myMiniProfileUpdate")
+	/* 상세프로필 수정 */
+	@PostMapping("/myMainProfileUpdate.do")
+	public ResponseEntity<?> myMainProfileUpdate(@RequestParam String nickname) {
+		return null;
+	};
+	
+	/* 미니프로필 수정 */
+	@PostMapping("/myMiniProfileUpdate.do")
 	public String myMiniProfileUpdate(@RequestParam String newNickname,
 					@RequestParam String sns,
 					@RequestParam String introduce,

@@ -72,4 +72,10 @@
 			member_id = #{memberId} 
 	</update>
 
+	<select id="selectInterests" resultType="member">
+		select
+			
+	
+	</select>
+
 </mapper>

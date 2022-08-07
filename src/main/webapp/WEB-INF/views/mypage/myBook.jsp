@@ -5,25 +5,31 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/search.css" />
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/myBook.css" />
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param value="책검색" name="title"/>
 </jsp:include>
 <section id="content">
-	<div class="searchbar center-block">
-		<form
-			name="bookSearchFrm" 
-			<%-- action="${pageContext.request.contextPath}/search/searchForm.do" --%>
-			<%-- method="GET" --%>>
-			    <select id="searchType" name="searchType" class="col-2 form-control d-inline form-select">
-			      <option ${param.searchType eq "Keyword"? 'selected' : ''} value="Keyword">키워드</option>
-			      <option ${param.searchType eq "Title"? 'selected' : ''} value="Title">책제목</option>
-			      <option ${param.searchType eq "Author"? 'selected' : ''} value="Author">저자</option>
-			      <option ${param.searchType eq "Publisher"? 'selected' : ''} value="Publisher">출판사</option>
-			    </select>
-			    <input type="text" class="form-control col-md-8 d-inline mx-3" name="searchKeyword" id="searchKeyword" value="${param.searchKeyword ne '' ? param.searchKeyword : '' }" placeholder="검색어를 입력해주세요">
-			    <input type="button" class="btn btn-md btn-primary" id="btn-search" value="검색"/>
-		</form>
+	<div id="book-container">
+		<div class="book-eval">
+			
+			<div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+			  <input type="radio" class="btn-check" name="status" id="btnradio1" value="읽고 싶은" autocomplete="off" onclick="getItemId(event)">
+			  <label class="btn btn-outline-primary btn-status" for="btnradio1">읽고 싶은</label>
+			
+			  <input type="radio" class="btn-check" name="status" id="btnradio2" value="읽는 중" autocomplete="off" onclick="getItemId(event)">
+			  <label class="btn btn-outline-primary btn-status" for="btnradio2">읽는 중</label>
+			
+			  <input type="radio" class="btn-check" name="status" id="btnradio3" value="읽음" autocomplete="off" onclick="getItemId(event)">
+			  <label class="btn btn-outline-primary btn-status" for="btnradio3">읽음</label>
+			  
+			  <input type="radio" class="btn-check" name="status" id="btnradio4" value="잠시 멈춘" autocomplete="off" onclick="getItemId(event)">
+			  <label class="btn btn-outline-primary btn-status" for="btnradio4">잠시 멈춘</label>
+			  
+			  <input type="radio" class="btn-check" name="status" id="btnradio5" value="중단" autocomplete="off" onclick="getItemId(event)">
+			  <label class="btn btn-outline-primary btn-status" for="btnradio5">중단</label>
+			</div>
+		</div>
 	</div>
 	<div class="" id="book-container">
 		<p id="resultP"></p>
@@ -34,22 +40,6 @@
 	</div>
 </section>
 <script>
-<%-- 검색 제출 시 유효성 검사 & 비동기--%>
-document.querySelector("#btn-search").addEventListener('click', (e) => {
-	const searchKeyword = document.querySelector("#searchKeyword");
-	// 숫자, 영문, 한글로 2자 이상
-	if(!/^[0-9a-zA-Z가-힣\s]{2,}$/.test(searchKeyword.value)){
-		alert("검색어를 2자 이상 입력해주세요.");
-		e.preventDefault();
-		return;
-	}
-	
-	const container = document.querySelector("#book-container");
-	const query = document.bookSearchFrm.searchKeyword.value;
-	const queryType = document.bookSearchFrm.searchType.value;
-	container.innerHTML = "";
-	getPage(1, 20);	
-});
 
 <%-- scroll 유지 테스트 --%>
 //쿠키 생성 함수
@@ -115,6 +105,14 @@ document.querySelector("#btn-more").onclick = () => {
 	document.querySelector("#cPage").innerText = c + 1;
 	maxResult = 20;
 	getPage(c + 1, maxResult);
+};
+
+function getItemId (event) {
+	console.log(event.target.value);
+	const status = event.target.value;
+	
+	$.ajax()
+	
 };
 
 const getPage = (cPage, maxResult) => {
@@ -199,7 +197,7 @@ const getPage = (cPage, maxResult) => {
 	});
 };
 
-<%-- 책 클릭 시 내 서재에 등록 폼 --%>
+<%-- 책 클릭 시 내 서재에 등록 폼  --%>
 const bookEnroll = (e) => {
 	console.log(e.firstElementChild.value);	
 	const isbn13 = e.firstElementChild.value;

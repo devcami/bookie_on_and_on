@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/mypageSetting.css" />
 <sec:authentication property="principal" var="loginMember" scope="page"/>
 <jsp:include page="/WEB-INF/views/common/header.jsp">
-	<jsp:param value="미니프로필" name="title"/>
+	<jsp:param value="미니프로필수정" name="title"/>
 </jsp:include>
 
 <style>
