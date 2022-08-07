@@ -55,5 +55,10 @@ public class MemberServiceImpl implements MemberService {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	public List<Member> selectMemberList(){
+		return memberDao.selectMemberList;
+		
+	}
 
 }

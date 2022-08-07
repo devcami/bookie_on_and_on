@@ -27,6 +27,12 @@ public interface MemberService {
 
 	Member selectOneMemberByTel(String telNum);
 
+	List<Member> selectMemberList();
+
+	
+
+	
+
 
 
 }
