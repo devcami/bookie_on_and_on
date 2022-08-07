@@ -55,11 +55,11 @@ header div#header-container img:hover{
 header div#header-container img.sh-right{
 	float: right;
 }
-#logout-btn{
+#logout-btn, .alarm-i{
 	float: right;
 	display: inline-block;
 }
-#logout-btn #logout-i{
+#logout-btn #logout-i, .alarm-i{
 	font-size: 60px;
 	color: #FE9801;
 	float: right;
@@ -68,7 +68,7 @@ header div#header-container img.sh-right{
 	text-shadow : 3px 3px 1px #CCDA46;
 }
 
-#logout-btn #logout-i:hover{
+#logout-btn #logout-i:hover, .alarm-i:hover{
 	color: #CCDA46 ;
 	cursor: pointer;
 	transform: scale(1.1);

@@ -25,6 +25,16 @@
  <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
 <script src="https://kit.fontawesome.com/1c396dc14f.js" crossorigin="anonymous"></script>
 
+<!-- 웹소켓 -->
+<sec:authorize access="isAuthenticated()">
+<script>
+const memberId = '<sec:authentication property="principal.username"/>';
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js" integrity="sha512-1QvjE7BtotQjkq8PxLeF6P46gEpBRXuskzIVgjFpekzFVF4yjRgrQvTG1MTOJ3yQgvTteKAcO7DSZI92+u/yZw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js" integrity="sha512-iKDtgDyTHjAitUDdLljGhenhPwrbBfqTKWO1mkhSFH3A7blITC9MhYon6SjnMhp4o0rADGw9yAC6EW4t5a4K3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="${pageContext.request.contextPath}/resources/js/ws.js"></script>
+</sec:authorize>
+
 <!-- 아임포트(결제) -->
 <!-- iamport.payment.js -->
 <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.8.js"></script>
@@ -64,7 +74,11 @@
 			</sec:authorize>
 			
 			<img class="sh-right" src="${pageContext.request.contextPath}/resources/images/icon/search.png" alt="검색" onclick="location.href='${pageContext.request.contextPath}/search/searchForm.do'" />
-			<%-- <img class="sh-right" src="${pageContext.request.contextPath}/resources/images/icon/alarm.png" alt="알림"  /> --%>
+			<sec:authorize access="isAuthenticated()">
+				<i class="fa-regular fa-bell alarm-i"></i>
+				<!-- <i class="fa-regular fa-bell-exclamation alarm-i"></i> -->
+				<%-- <img class="sh-right" src="${pageContext.request.contextPath}/resources/images/icon/alarm.png" alt="알림"  /> --%>
+			</sec:authorize>
 		</div>
 		<nav class="navbar fixed-bottom navbar-expand-lg navbar-light">
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
