@@ -62,26 +62,23 @@ const memberId = '<sec:authentication property="principal.username"/>';
 		<div id="header-container">
 			<img src="${pageContext.request.contextPath}/resources/images/logo.png" alt="북이온앤온로고" width="100px" onclick="location.href='${pageContext.request.contextPath}'"/>
 
-			
-			<!-- 로그인 한 경우   onclick="logout();"-->
-			<sec:authorize access="isAuthenticated()">
-				<form id="logout-btn" name="logoutFrm" action="${pageContext.request.contextPath}/member/logout.do" method="post">
-					<button type="submit">
-					<i class="fa-solid fa-arrow-right-from-bracket" id="logout-i">로그아웃</i>
-					</button>
-					<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-				</form>
-			</sec:authorize>
-			<!-- 로그인하지 않은경우 -->
-			<sec:authorize access="isAnonymous()">
-				<i class="fa-solid fa-user-plus i-login" onclick="location.href='${pageContext.request.contextPath}/member/login.do'"></i>
-			</sec:authorize>
+
+	         <!-- 로그인 한 경우 -->
+	         <sec:authorize access="isAuthenticated()">
+	            <form:form id="logout-btn" name="logoutFrm" action="${pageContext.request.contextPath}/member/logout.do" method="post">
+	               <i class="fa-solid fa-arrow-right-from-bracket" id="logout-i" onclick="logout();"></i>
+	               <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+	            </form:form>
+	         </sec:authorize>
+	         <sec:authorize access="isAnonymous()">
+	            <i class="fa-solid fa-user-plus i-login" onclick="location.href='${pageContext.request.contextPath}/member/login.do'"></i>
+	         </sec:authorize>
 			
 
 			<img class="sh-right" src="${pageContext.request.contextPath}/resources/images/icon/search.png" alt="검색" onclick="location.href='${pageContext.request.contextPath}/search/searchForm.do'" />
-			<sec:authorize access="isAuthenticated()">
-				<i class="fa-regular fa-bell alarm-i"></i>
-				<!-- <i class="fa-regular fa-bell-exclamation alarm-i"></i> -->
+			 <sec:authorize access="isAuthenticated() && !hasRole('ADMIN')">
+				<i class="fa-regular fa-bell alarm-i" onclick="location.href='${pageContext.request.contextPath}/member/checkAlarm.do'"></i>
+				<span id="unreadCount" class="badge badge-danger rounded-circle unread-count ${unreadCount == 0 ? 'd-none' : ''}">${unreadCount}</span>
 				<%-- <img class="sh-right" src="${pageContext.request.contextPath}/resources/images/icon/alarm.png" alt="알림"  /> --%>
 			</sec:authorize>
 		</div>
@@ -160,7 +157,7 @@ const memberId = '<sec:authentication property="principal.username"/>';
                     		</c:if>
                     		
                     		<c:if test="${loginMember.memberId == 'admin'}">
-                    		<a class="nav-link" href="${pageContext.request.contextPath}/admin/admin.do">
+                    		<a class="nav-link" href="${pageContext.request.contextPath}/admin/memberList.do">
 				    			<c:if test="${fn:contains(uri, '/bookie/WEB-INF/views/admin')}">
 	                    		<img src="${pageContext.request.contextPath}/resources/images/icon/i_admin_on.png" alt="adminicon" />관리
 				    			</c:if>
@@ -182,4 +179,5 @@ const logout = () => {
 		document.logoutFrm.submit();
 	} else return;
 }
+const unreadCountSpan = document.querySelector("#unreadCount");
 </script>

@@ -6,28 +6,17 @@ section#content	{
 	border-radius: 5px;
 }
 
-  .table-fixed{
-    width: 100%;
-    background-color: #f3f3f3;
-  }
+.table-fixed{
+  width: 100%;
+  background-color: #f3f3f3;
+}
 
-
-
-
-
-  /* button div */
-#buttons {
-    padding-top: 50px;
-    text-align: center;
-  }
-  
-  /* start da css for da buttons */
+/* start da css for da buttons */
   .btn {
     border-radius: 5px;
     padding: 15px 25px;
     font-size: 22px;
     text-decoration: none;
-    margin: 15px;
     color: #fff;
     position: relative;
     display: inline-block;
@@ -45,6 +34,7 @@ section#content	{
   
   .red:hover {
     background-color: #FF6656;
+    color: #fff;
   }
   
   .purple {
@@ -54,6 +44,7 @@ section#content	{
   
   .purple:hover {
     background-color: #B573D0;
+    color: #fff;
   }
   
   .green {
@@ -63,6 +54,20 @@ section#content	{
   
   .green:hover {
     background-color: #48E68B;
+    color: #fff;
+  }
+  
+  .blue {
+    background-color: #2e8dcc;
+    box-shadow: 0px 5px 0px 0px #20699a;
+  }
+  
+  .blue:hover {
+    background-color: #17b1d4;
+  }
+  
+  #inputGroupSelect{
+    box-shadow: 0px 5px 0px 0px #20699a;
   }
 
 

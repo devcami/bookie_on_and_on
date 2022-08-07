@@ -74,6 +74,14 @@ header div#header-container img.sh-right{
 	transform: scale(1.1);
 }
 
+.unread-count{
+	position: absolute;
+	width: 31px;
+	height : 31px;
+	top: 27px;
+	right: 525px;
+}
+
 /* navbar 통째 */
 header nav.fixed-bottom{
 	text-align:center;

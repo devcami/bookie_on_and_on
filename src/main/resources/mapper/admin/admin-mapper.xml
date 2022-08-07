@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kh.bookie.admin.model.dao.AdminDao">
+	
+	<insert id="insertAlarm">
+		insert into
+			alarm
+		values(
+			seq_alarm_no.nextval,
+			#{memberId},
+			#{alarmContent},
+			default,
+			sysdate
+		)
+	</insert>
+
+	<select id="getUnreadCount" resultType="_int">
+		select
+			count(*)
+		from
+			alarm
+		where
+			member_id = #{memberId} and last_check = 0
+	</select>
+</mapper>
