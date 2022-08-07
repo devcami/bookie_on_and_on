@@ -1,8 +1,10 @@
 @charset "UTF-8";
 
 .global-container{
+
 	background: #FFF;
     min-height: 100%;
+
     display: flex;
     align-items: flex-start;
     justify-content: center;
@@ -33,7 +35,9 @@ input[type="email"]
     margin-bottom: 25px;
 }
 
+
 button.btn-primary{
+>>>>>>> branch 'master' of https://github.com/devcami/bookie_on_and_on.git
 	background-color: #fe9801;
 	border: none;
 	box-shadow: 0 0 5px #00000040;
@@ -69,6 +73,9 @@ table tr.p3 {
 	height: 60px;
 }
 
+
+
+
 td.sub-text{
 	font-size: 21px;
 	color: grey;
@@ -92,3 +99,4 @@ input.input-file-button{
 	border: none;
 	box-shadow: 0 0 5px #00000040;
 }
+
