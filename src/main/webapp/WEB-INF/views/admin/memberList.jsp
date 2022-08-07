@@ -1,3 +1,6 @@
+<%@page import="org.springframework.security.core.authority.SimpleGrantedAuthority"%>
+<%@page import="java.util.List"%>
+<%@page import="com.kh.bookie.member.model.dto.Member"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -9,6 +12,7 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param value="관리자페이지" name="title"/>
 </jsp:include>
+<section id="content">
 
 <div class="container">
       <div class="row">
@@ -16,48 +20,50 @@
           <div class="btn-group">
             <a href="${pageContext.request.contextPath}/admin/report.do" class="btn red"    id="report" >신고</a>
             <a href="${pageContext.request.contextPath}/admin/Q&A.do" class="btn purple" id="question">Q & A</a>
-            <a href="${pageContext.request.contextPath}/admin/management.do" class="btn green"  id="management">회원 관리</a>
+            <a href="${pageContext.request.contextPath}/admin/sendAlarm.do" class="btn green"  id="alarm">알림전송</a>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="container">
-      <table class="table table-fixed">
+    <div class="container mt-3">
+      <table class="table table-fixed text-center">
         <thead>
           <tr>
-            <th type="head-line" class="col-xs-2">회원 아이디</th>
-            <th type="head-line" class="col-xs-2">이름</th>
-            <th type="head-line" class="col-xs-4">E-mail</th>
-            <th type="head-line" class="col-xs-4">핸드폰 번호</th>
-            <th type="head-line" class="col-xs-4">성별</th>
-            <th type="head-line" class="col-xs-3">잔여 포인트</th>
-            <th type="head-line" class="col-xs-3">권한</th>
-         
+            <th scope="col" >아이디</th>
+            <th scope="col" >닉네임</th>
+            <th scope="col" >E-mail</th>
+            <th scope="col" >핸드폰 번호</th>
+            <th scope="col" >성별</th>
+            <th scope="col" >잔여 포인트</th>
+            <th scope="col" colspan="2">권한</th>
           </tr>
         </thead>
-        <tbody>
-          <tr data-member-id="${member.memberId}">
-            <th class="col-xs-2">${member.memberId}</th>
-            <th class="col-xs-2">${member.name}</th>
-            <th class="col-xs-3">${member.email}</th>
-            <th class="col-xs-3">${member.phone}</th>
-            <th class="col-xs-3">${member.gender}</th>
-            <th class="col-xs-3">${member.point}</th>
-            <td>					
-              <input type="checkbox" name="authority" id="role-user-${vs.count}" value="ROLE_USER"  <%= hasRole(pageContext, "ROLE_USER") ? "checked" : "" %>/>
-              <label for="role-user-${vs.count}">일반</label>
-              &nbsp;
-              <input type="checkbox" name="authority" id="role-admin-${vs.count}" value="ROLE_ADMIN" <%= hasRole(pageContext, "ROLE_ADMIN") ? "checked" : "" %>//>
-              <label for="role-admin-${vs.count}">관리자</label>
-          </td>
-          </tr>
-    
+       	<tbody>
+			<c:forEach items="${list}" var="member" varStatus="vs">
+				<tr data-member-id=${member.memberId}>
+					<td>${member.memberId}</td>
+					<td>${member.nickname}</td>
+		            <td>${member.email}</td>
+		            <td>${member.phone}</td>
+		            <td>${member.gender}</td>
+		            <td>${member.point}</td>
+					<td class="p-1">
+						<input type="checkbox" id="role-user-${vs.count}" name="authority" value="ROLE_USER" <%= hasRole(pageContext, "ROLE_USER") ? "checked" : "" %> />
+						<label for="role-user-${vs.count}">일반</label>
+						<br />
+						<input type="checkbox" id="role-admin-${vs.count}" name="authority" value="ROLE_ADMIN" <%= hasRole(pageContext, "ROLE_ADMIN") ? "checked" : "" %> />
+						<label for="role-admin-${vs.count}">관리자</label>
+					</td>
+					<td class="p-1">
+						<button type="button" class="btn btn-sm btn-outline-primary btn-update-authority p-1" value="${member.memberId}">수정</button>
+					</td>
+				</tr>
+			</c:forEach>
+		</tbody>
         
-        </tbody>
       </table>
     </div>
-<section id="content">
 
 
 </section>
@@ -96,14 +102,14 @@ document.querySelectorAll(".btn-update-authority").forEach((btn) => {
 });
 </script>
 <%!
-	/**
-	 * 메소드선언 -> servlet변환시에 메소드등록
+	/*"/Users/camilee/workspace/spring_workspace/.metadata/.plugins/org.eclipse.wst.server.core/tmp0/work/Catalina/localhost/spring/org/apache/jsp/index_jsp.java"
+	 * 메소드 선언 -> sevlet변환시에 메소드 등록
 	 */
-	private boolean hasRole(PageContext pageContext, String role){
-		Member member = (Member) pageContext.getAttribute("member");
-		List<SimpleGrantedAuthority> authorities = (List<SimpleGrantedAuthority>) member.getAuthorities();
-		return authorities.contains(new SimpleGrantedAuthority(role));
-	}
-
+	 private boolean hasRole(PageContext pageContext, String role){
+		 Member member = (Member) pageContext.getAttribute("member");
+		 List<SimpleGrantedAuthority> authorities = (List<SimpleGrantedAuthority>) member.getAuthorities();
+		 return authorities.contains(new SimpleGrantedAuthority(role));
+	 }
 %>
+
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

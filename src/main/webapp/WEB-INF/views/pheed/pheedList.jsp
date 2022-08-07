@@ -247,6 +247,7 @@ const pheedComment = (e) => {
 	const sidebar = document.querySelector("#sidebar");
 	sidebar.classList.add("show-nav");
 	const container = document.querySelector("#comment-container");
+	container.innerHTML = "";
 	const commentDiv = 
 		`<%-- 댓글 입력 창 --%>
 		<div class="input-group p-2 mb-2">

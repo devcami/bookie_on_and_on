@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans 
+	xmlns="http://www.springframework.org/schema/websocket"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/websocket http://www.springframework.org/schema/websocket/spring-websocket-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+<!-- 	<handlers>
+		<mapping handler="echoHandler" path="/echo"/>
+		<sockjs/>
+	</handlers> -->
+	
+	<!-- #17.2. stomp설정 -->
+	<!-- application-destination-prefix : /app으로 오는 주소가 오면 컨트롤러 거쳐간다 -->
+	<!-- stomp-endpoint : ws.js에 url endpoint -->
+	<!-- simple-broker : broker에게 바로 전달될 주소 -->
+	<message-broker application-destination-prefix="/app">
+		<stomp-endpoint path="/stomp">
+			<sockjs/>	
+		</stomp-endpoint>
+		
+		<simple-broker prefix="/topic, /app"/>
+	</message-broker>
+</beans:beans>

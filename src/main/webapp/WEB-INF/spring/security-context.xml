@@ -61,6 +61,7 @@
 
 		<form-login login-page="/member/login.do" 
 					login-processing-url="/member/login.do"
+					authentication-success-forward-url="/member/loginSuccess.do"
 					username-parameter="memberId"
 					password-parameter="password"/>
 

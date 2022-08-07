@@ -25,6 +25,16 @@
  <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
 <script src="https://kit.fontawesome.com/1c396dc14f.js" crossorigin="anonymous"></script>
 
+<!-- 웹소켓 -->
+<sec:authorize access="isAuthenticated()">
+<script>
+const memberId = '<sec:authentication property="principal.username"/>';
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js" integrity="sha512-1QvjE7BtotQjkq8PxLeF6P46gEpBRXuskzIVgjFpekzFVF4yjRgrQvTG1MTOJ3yQgvTteKAcO7DSZI92+u/yZw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js" integrity="sha512-iKDtgDyTHjAitUDdLljGhenhPwrbBfqTKWO1mkhSFH3A7blITC9MhYon6SjnMhp4o0rADGw9yAC6EW4t5a4K3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="${pageContext.request.contextPath}/resources/js/ws.js"></script>
+</sec:authorize>
+
 <!-- 아임포트(결제) -->
 <!-- iamport.payment.js -->
 <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.8.js"></script>
@@ -52,24 +62,25 @@
 		<div id="header-container">
 			<img src="${pageContext.request.contextPath}/resources/images/logo.png" alt="북이온앤온로고" width="100px" onclick="location.href='${pageContext.request.contextPath}'"/>
 
-			
-			<!-- 로그인 한 경우   onclick="logout();"-->
-			<sec:authorize access="isAuthenticated()">
-				<form id="logout-btn" name="logoutFrm" action="${pageContext.request.contextPath}/member/logout.do" method="post">
-					<button type="submit">
-					<i class="fa-solid fa-arrow-right-from-bracket" id="logout-i">로그아웃</i>
-					</button>
-					<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-				</form>
-			</sec:authorize>
-			<!-- 로그인하지 않은경우 -->
-			<sec:authorize access="isAnonymous()">
-				<i class="fa-solid fa-user-plus i-login" onclick="location.href='${pageContext.request.contextPath}/member/login.do'"></i>
-			</sec:authorize>
+
+	         <!-- 로그인 한 경우 -->
+	         <sec:authorize access="isAuthenticated()">
+	            <form:form id="logout-btn" name="logoutFrm" action="${pageContext.request.contextPath}/member/logout.do" method="post">
+	               <i class="fa-solid fa-arrow-right-from-bracket" id="logout-i" onclick="logout();"></i>
+	               <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+	            </form:form>
+	         </sec:authorize>
+	         <sec:authorize access="isAnonymous()">
+	            <i class="fa-solid fa-user-plus i-login" onclick="location.href='${pageContext.request.contextPath}/member/login.do'"></i>
+	         </sec:authorize>
 			
 
 			<img class="sh-right" src="${pageContext.request.contextPath}/resources/images/icon/search.png" alt="검색" onclick="location.href='${pageContext.request.contextPath}/search/searchForm.do'" />
-			<%-- <img class="sh-right" src="${pageContext.request.contextPath}/resources/images/icon/alarm.png" alt="알림"  /> --%>
+			 <sec:authorize access="isAuthenticated() && !hasRole('ADMIN')">
+				<i class="fa-regular fa-bell alarm-i" onclick="location.href='${pageContext.request.contextPath}/member/checkAlarm.do'"></i>
+				<span id="unreadCount" class="badge badge-danger rounded-circle unread-count ${unreadCount == 0 ? 'd-none' : ''}">${unreadCount}</span>
+				<%-- <img class="sh-right" src="${pageContext.request.contextPath}/resources/images/icon/alarm.png" alt="알림"  /> --%>
+			</sec:authorize>
 		</div>
 		<nav class="navbar fixed-bottom navbar-expand-lg navbar-light">
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -146,7 +157,7 @@
                     		</c:if>
                     		
                     		<c:if test="${loginMember.memberId == 'admin'}">
-                    		<a class="nav-link" href="${pageContext.request.contextPath}/admin/admin.do">
+                    		<a class="nav-link" href="${pageContext.request.contextPath}/admin/memberList.do">
 				    			<c:if test="${fn:contains(uri, '/bookie/WEB-INF/views/admin')}">
 	                    		<img src="${pageContext.request.contextPath}/resources/images/icon/i_admin_on.png" alt="adminicon" />관리
 				    			</c:if>
@@ -168,4 +179,5 @@ const logout = () => {
 		document.logoutFrm.submit();
 	} else return;
 }
+const unreadCountSpan = document.querySelector("#unreadCount");
 </script>
