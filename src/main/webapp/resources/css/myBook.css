@@ -1,0 +1,359 @@
+@charset "UTF-8";
+section#content	{
+	margin: 0 auto;
+	padding: 20px 30px;
+	min-height:600px;
+	border-radius: 5px;
+}
+
+/****** 검색화면 - 책리스트 ******/
+
+/* select */
+/* 검색버튼 */
+#btn-search{
+    background: none;
+    border-radius: 10px;
+    color: #FE9801;
+    border: 1px solid #FE9801;
+    transition: .1s ease-in-out;
+}
+#btn-search:hover{
+	background-color: #FE9801;
+	color: #fff;
+	box-shadow: 0px 0px 4px #5454544a;
+}
+
+/* 베스트도서 50선 p태그 */
+#book-container p{
+	font-size:25px;
+	color:#697C37;
+}
+
+/* 더보기 버튼 */
+#btn-more{
+	font-size: 30px;
+    background: none;
+    border-radius: 10px;
+    color: #FE9801;
+    border: 1px solid #FE9801;
+    transition: .1s ease-in-out;
+}
+#btn-more:hover{
+	background-color: #FE9801;
+	color: #fff;
+	box-shadow: 0px 0px 4px #5454544a;
+}
+
+/* 검색한 책 */
+#book-container .book-table{
+	margin: 10px 0;
+	padding: 10px;
+	/* border: 1px gainsboro solid; */
+	border-radius: 10px;
+	box-shadow: 1px 2px 3px #5454544a;
+	cursor: pointer;
+	transition: .25s ;
+}
+#book-container .book-table:hover{
+	background-color: #ffd18c88;
+	transform: scale(1.02);
+}
+#book-container .book-table:active{
+	transform: scale(0.95);
+}
+#book-container .book-table .tbl tr td img{
+	margin-right : 20px;
+}
+#book-container .book-table .tbl tr td.book-title{
+	font-size: 25px;
+}
+#book-container .book-table .tbl tr td.book-author{
+	font-size: 19px;
+	color: #FE9801;
+}
+
+/****** 책 등록폼 ******/
+/* 제목 바 */
+#title-header{
+	top: 0px;
+	width: 800px;
+	font-size: 20px;
+	background-color: #FFF;
+	text-align: center;
+	z-index:1;
+	border-radius: 10px;
+	box-shadow: 1px 2px 3px #5454544a;
+}
+#title-header #title-p{
+	padding-right: 30px;
+	margin-top: 10px;
+	display: flex;
+	align-items: center;
+}
+#title-header #title-p i{
+	font-size: 40px;
+	margin: 0 40px;
+	cursor: pointer;
+}
+#title-header #title-p i:hover{
+	color:#;
+}
+#title-header.drop {
+  position: fixed;
+  animation: dropHeader 0.3s;
+}
+@keyframes dropHeader {
+  0% {
+    top: -5rem;
+  }
+  100% {
+    top: 0;
+  }
+}
+
+
+/* 책 등록 */
+#book-container {
+	border-radius: 5px;
+}
+#book-container div.book-image{
+	text-align: center;
+	background-color: #F4EEC7;
+	padding:  30px;
+}
+#book-container div.book-image img{
+	margin: 20px;
+	box-shadow: 0px 0px 5px #5454544a;
+}
+#book-container div.book-eval{
+	display: flex;
+	flex-direction: column;
+    align-items: center;
+}
+#book-container div.book-image #subTitle-div{
+	color: #b7a97f;
+}
+/* 별점 */
+#book-container div.book-eval div.starRev{
+	margin: 10px;
+}
+.starR1{
+    background: url('http://miuu227.godohosting.com/images/icon/ico_review.png') no-repeat -52px 0;
+    background-size: auto 100%;
+    width: 15px;
+    height: 30px;
+    float:left;
+    text-indent: -9999px;
+    cursor: pointer;
+}
+.starR2{
+    background: url('http://miuu227.godohosting.com/images/icon/ico_review.png') no-repeat right 0;
+    background-size: auto 100%;
+    width: 15px;
+    height: 30px;
+    float:left;
+    text-indent: -9999px;
+    cursor: pointer;
+}
+.starR1.on{background-position:0 0;}
+.starR2.on{background-position:-15px 0;}
+
+/* 상태 */
+#book-container div.book-eval .btn-group{
+	margin-top: 30px;
+}
+#book-container div.book-eval .btn-group .btn-check{
+	opacity : 0;
+}
+#book-container div.book-eval .btn-group .btn-outline-primary {
+	margin:5px;
+	border-radius: 10px;
+    color: #FE9801;
+    border-color: #FE9801;
+}
+#book-container div.book-eval .btn-group .btn-outline-primary:hover {
+    color: #fff;
+    background-color: #FE9801;
+    border-color: #FE9801;
+}
+#book-container div.book-eval .btn-group .btn-check:checked+.btn-outline-primary{
+    color: #fff;
+    background-color: #FE9801;
+    border-color: #FE9801;
+}
+#book-container div.book-eval .btn-group .btn-secondary{
+	border-radius: 10px;
+	margin: 10px 50px;
+}
+
+/* 인생책 체크박스 */
+div#my-pick{
+	font-size: 30px;
+}
+input#myPick {display:none;}
+
+span#myPickSpan {
+	background-color:#969696;
+	-webkit-border-radius:4px;
+	-moz-border-radius:4px;
+	border-radius:4px;
+	font-weight:700;
+	color:#FFF;
+	font-size:.85em;
+	letter-spacing:2px;
+	text-decoration:none;
+	text-align:center;
+	width:280px;
+	height:40px;
+	line-height:40px;
+	cursor:pointer;
+	display:block;
+	margin: 0 auto;
+	-webkit-transition:background-color 150ms ease-in;
+	-moz-transition:background-color 150ms ease-in;
+	-ms-transition:background-color 150ms ease-in;
+	-o-transition:background-color 150ms ease-in;
+	transition:background-color 150ms ease-in;
+}
+
+span#myPickSpan:hover {
+	background-color:#ff5847;
+}
+
+input#myPick:checked + span {
+	background-color:#ff5847;
+	text-decoration:none;
+	-webkit-border-radius:4px;
+	-moz-border-radius:4px;
+	border-radius:4px;
+	background:#ff5847 url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAaCAYAAACgoey0AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAX9JREFUeNpi+P//PwMNsS4QbwBiLnQ5WlqqAsRP/0PARiBmoYfFkkB8+z8qWALEjLS0mB+IL/3HDibSymJQXB7/jx/UgNSCvU4lwAbEG4DYkwi1WUxUspQZiOcRaSkIWOAKMk0Sg3jaf+IBOIVjMyQWiH8DsR+RljaTYOkBWJ5GNwRk2R+ooh9A7ETA0jwSLL0ATfEYqRpkyVc0xR+A2AyHpdFA/I9IS0F5WhRbAWIEtQQbeAXE6lhC5jeRlj4GYgVsRaYK1HBCmmWgmuyxhAwu8BpaXjNgs/gYkYbcAGIXPCGDDkCOM8eVPkCEFhE+JhX8BGJnfAkTxgC57BOVLAXlihBC2RA9Vf+k0FJQKk8nJv+jCwQi5WNyQAWxpR02wRQS8icy6CKlmMUlUUGipfOQK3lKLAbhdhIKfWZS6258kiAfzCZg6V4gZiOn0UBIAcgn63BYehK50Ke2xQxQH+3FUoqJUtJMIlYhLxAfxVJu09xiWENuMxCrUaNhCBBgAOAVfjALa5TLAAAAAElFTkSuQmCC) no-repeat 7% center;
+	background-size:15px 13px;
+}
+
+input#myPick:checked:hover + span {
+	background-color:#dd5244;
+	color:rgba(255,255,255,0.5);
+	text-decoration:none;
+	-webkit-border-radius:4px;
+	-moz-border-radius:4px;
+	border-radius:4px;
+	background:#dd5244 url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAS5JREFUeNq8110OgjAMAGBGvIY3VESjt9jPg95PT+LccBIZ7dYOWJPGB+g+Ymg3hLW2QeLkcu/y2pSFdvl0eQevehjI3uXbfkMh96TShFq/xhG6J4faAtxEtSBOQTm4QWpnOBWl4CZT69fuYpiCpnBDrB1xLhrjgoFO8F1oGcFslUv4bV32zFoxmOHJta0XMn65dC0UaiddA8UGiN4axeC1cUkdmWviEls/NwL1FqjPNtNvoimPdC3yRCUTiTXbt0R/oSnw2iiK10BBvBY6w2uiE3xJr8oFtcrvxy/fVcyeVdGx98yotcOxN/znHeMUIhdMOG8c4reagssF43VEoT5O4ZJwvNUUFJtcEE5BMXyGpnanf5yDxjiI+hSJj7YunEBvhbuTCh9tD+jiR4ABAJ0SrJgNr1UAAAAAAElFTkSuQmCC) no-repeat 7% center;
+	background-size:15px 15px;
+}
+
+/* 책정보 */
+section#content div#book-desc{
+	padding: 30px;
+}
+section#content div#book-desc .book-info .book-author{
+	font-size: 30px;
+}
+section#content div#book-desc .book-info div{
+	padding: 20px;
+	margin: 40px 0;
+	background-color: #F4EEC7;
+	border-radius: 10px;
+}
+
+/* 저장버튼 */
+/* section#content #book-container .book-eval .btn-group #btn-enroll{
+	width: 100px;
+	font-size: 23px;
+	background-color: #FE9801;
+	color:#FFF;
+} */
+
+/* 5 */
+.custom-btn {
+	margin: 20px;
+	width: 130px;
+	height: 40px;
+	color: #fff;
+	border-radius: 5px;
+	padding: 10px 25px;
+	background: transparent;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	position: relative;
+	display: inline-block;
+	box-shadow:inset 
+			2px 2px 2px 0px rgba(255,255,255,.5),
+			7px 7px 20px 0px rgba(0,0,0,.1),
+			4px 4px 5px 0px rgba(0,0,0,.1);
+	outline: none;
+}
+
+.btn-5 {
+	width: 130px;
+	height: 40px;
+	line-height: 42px;
+	padding: 0;
+	border: none;
+    background: linear-gradient(0deg, #FE9801 0%, #ff7614 100%);
+}
+.btn-5:hover {
+	color: #FE9801;
+	background: transparent;
+ 	box-shadow:none;
+}
+.btn-5:before,
+.btn-5:after{
+	content:'';
+	position:absolute;
+	top:0;
+	right:0;
+	height:2px;
+	width:0;
+	background: #FE9801;
+	box-shadow:
+	 -1px -1px 5px 0px #fff,
+	 7px 7px 20px 0px #0003,
+	 4px 4px 5px 0px #0002;
+	transition:400ms ease all;
+}
+.btn-5:after{
+	right:inherit;
+	top:inherit;
+	left:0;
+	bottom:0;
+}
+.btn-5:hover:before,
+.btn-5:hover:after{
+	width:100%;
+	transition:800ms ease all;
+}
+
+
+
+section#content div.line{
+	margin : 50px 0 ;
+	border : solid 7px #CCDA46;
+	border-radius: 10px
+} 
+
+/* 책등록 수정 삭제 모달 */
+input.form-control[readonly]{
+	background-color: #FFF;
+	display: inline;
+	font-size: 25px;
+	width: 49%;
+	text-align: center;
+}
+
+/* 완독일 추가 */
+#recentReadList li.list-group-item {
+	cursor:pointer;
+}
+#recentReadList li.list-group-item:hover{
+	background-color: #cbda465d;
+}
+#recentReadList li.list-group-item span.bdg-delete:hover{
+	background-color: #616161; 
+}
+#recentReadList li.list-group-item span.bdg-update{
+	color:#FFF;
+	background-color: #FE9801; 
+}
+#recentReadList li.list-group-item span.bdg-update:hover{
+	background-color: #b9730a; 
+}

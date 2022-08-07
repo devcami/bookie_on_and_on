@@ -59,7 +59,7 @@ public class MemberServiceImpl implements MemberService {
 	public List<Member> selectMemberList() {
 		return memberDao.selectMemberList();
 	}
-   
+
    @Override
 	public List<Member> selectMemberListByInterest(Member member) {
 		return memberDao.selectMemberListByInterest(member);
