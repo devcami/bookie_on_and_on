@@ -78,7 +78,7 @@
 				<td >	
 					<button type="button" class="btn btn-primary w-100" id="mail-Check-Btn">본인인증</button>
 					<input class="form-control mail-check-input mt-2" placeholder="이메일 인증번호 6자리를 입력해주세요!" disabled="disabled" maxlength="6">
-					<p class="text-center" id="mail-check-warn"></p>
+					<p class="text-center" id="mail-check-warn" style="display:none;"></p>
 				</td>
 			</tr>
 			<tr>
@@ -221,6 +221,7 @@ $('.mail-check-input').blur(function () {
 	
 	if(inputCode === code){
 		$resultMsg.html('인증번호가 일치합니다.');
+		$resultMsg.css('display','inline');
 		$resultMsg.css('color','green');
 		checkInput.attr('readonly', false);
 		$('#mail-Check-Btn').attr('disabled',true);
@@ -445,7 +446,7 @@ document.memberEnrollFrm.addEventListener('submit', (e) => {
 	// name
 	
 	// email인증을 아예 안했을 경우
-	if($('.mail-check-input').attr('readonly', true)){
+	if(document.querySelector('#mail-check-warn').style.display == 'none'){
 		e.preventDefault();
 		alert('이메일 인증 후 가입 가능합니다.');		
 		return false;

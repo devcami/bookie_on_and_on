@@ -59,6 +59,18 @@
 		<result column="book_Count" property="bookCount"/>
 	</resultMap>
 	
+	<select id="selectClubListMonth" resultMap="clubListCollectionMap">
+		select
+		    c.*,
+		    (select count(*) from my_club where club_no = c.club_no) current_nop,
+		    (select count(*) from likes_club where club_no = c.club_no) likes_Cnt
+		from
+		    club c
+		where
+			to_char(club_start, 'MM') = to_char(sysdate, 'MM')
+	</select>
+	
+	
 	<select id="selectClubBook" resultMap="selectClubBookResultMap">
 		select
 			*

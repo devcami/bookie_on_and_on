@@ -1,0 +1,189 @@
+@charset "UTF-8";
+section#content	{
+	margin: 0 auto;
+	padding: 25px;
+	border-radius: 10px;
+	min-height: 600px;
+}
+
+div#recommend-header{
+	background-image: url(/bookie/resources/images/recommend-header.png) !important;
+	background-repeat: no-repeat;
+    background-position: top;
+    background-attachment: scroll;
+    background-size: 85% 94%;	
+}
+div#recommend-header span{
+	text-shadow: 2px 2px 2px #515151aa;
+}
+button#btn-mypage{
+}
+
+/* 마이페이지 등록하러가기 버튼 */
+.custom-btn {
+	margin: 20px 0;
+	width: 400px;
+	height: 60px;
+	color: #fff;
+	border-radius: 5px;
+	padding: 10px 25px;
+	background: transparent;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	position: relative;
+	display: inline-block;
+	box-shadow:inset 
+			2px 2px 2px 0px rgba(255,255,255,.5),
+			7px 7px 20px 0px rgba(0,0,0,.1),
+			4px 4px 5px 0px rgba(0,0,0,.1);
+	outline: none;
+}
+
+.btn-5 {
+	width: 400px;
+	height: 60px;
+	line-height: 42px;
+	padding: 0;
+	border: none;
+    background: linear-gradient(0deg, #FE9801 0%, #ff7614 100%);
+}
+.btn-5:hover {
+	color: #FE9801;
+	background: transparent;
+ 	box-shadow:none;
+}
+.btn-5:before,
+.btn-5:after{
+	content:'';
+	position:absolute;
+	top:0;
+	right:0;
+	height:2px;
+	width:0;
+	background: #FE9801;
+	box-shadow:
+	 -1px -1px 5px 0px #fff,
+	 7px 7px 20px 0px #0003,
+	 4px 4px 5px 0px #0002;
+	transition:400ms ease all;
+}
+.btn-5:after{
+	right:inherit;
+	top:inherit;
+	left:0;
+	bottom:0;
+}
+.btn-5:hover:before,
+.btn-5:hover:after{
+	width:100%;
+	transition:800ms ease all;
+}
+
+.article-div{
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+}
+.article-div .people-div{
+	width: 350px;
+	margin: 10px;
+}
+.article-div .people-div .card{
+	border: 2px solid #CCDA46;
+	border-radius: 16px;
+}
+
+
+/****** 프로필사진 ******/
+.people-div .user-icon{
+	font-size: 32px;
+	position: relative;
+	top: 9.5px;
+	left: 0.5px;
+	color: #FFF;
+	text-shadow: 0 0 3px #5454544a;
+}
+.people-div .card-profile{
+	background-color : #FE9801;
+	width:50px;
+	height: 50px;
+	display: inline-block;
+	border-radius:50%;
+}
+.people-div .card-profile img{
+	width:50px;
+	height: 50px;
+	border-radius:50%;
+}
+.people-div .card-title{
+	display: flex;
+}
+.people-div .card-body a{
+	color : #FE9801;
+	font-size : 22px;
+}
+.people-div .card-body a:hover{
+	text-decoration:underline;
+}
+.people-div .card-title span.title-span{
+	font-size : 35px;
+	margin-left: 20px;
+}
+.people-div .card-title label{
+	position: absolute;
+	left: 220px;
+	top: 28px;
+}
+
+
+/****** 팔로우버튼 ******/
+input.follow-btn {display:none;}
+
+span.myPickSpan {
+	background-color:#969696;
+	-webkit-border-radius:4px;
+	-moz-border-radius:4px;
+	border-radius:4px;
+	font-weight:700;
+	color:#FFF;
+	font-size:.85em;
+	letter-spacing:2px;
+	text-decoration:none;
+	text-align:center;
+	width:100px;
+	height:40px;
+	line-height:40px;
+	cursor:pointer;
+	display:block;
+	margin: 0 auto;
+	-webkit-transition:background-color 150ms ease-in;
+	-moz-transition:background-color 150ms ease-in;
+	-ms-transition:background-color 150ms ease-in;
+	-o-transition:background-color 150ms ease-in;
+	transition:background-color 150ms ease-in;
+}
+
+span.myPickSpan:hover {
+	background-color:#CCDA46;
+}
+
+input.follow-btn:checked + span {
+	background-color:#CCDA46;
+	text-decoration:none;
+	-webkit-border-radius:4px;
+	-moz-border-radius:4px;
+	border-radius:4px;
+	background:#CCDA46 url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAaCAYAAACgoey0AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAX9JREFUeNpi+P//PwMNsS4QbwBiLnQ5WlqqAsRP/0PARiBmoYfFkkB8+z8qWALEjLS0mB+IL/3HDibSymJQXB7/jx/UgNSCvU4lwAbEG4DYkwi1WUxUspQZiOcRaSkIWOAKMk0Sg3jaf+IBOIVjMyQWiH8DsR+RljaTYOkBWJ5GNwRk2R+ooh9A7ETA0jwSLL0ATfEYqRpkyVc0xR+A2AyHpdFA/I9IS0F5WhRbAWIEtQQbeAXE6lhC5jeRlj4GYgVsRaYK1HBCmmWgmuyxhAwu8BpaXjNgs/gYkYbcAGIXPCGDDkCOM8eVPkCEFhE+JhX8BGJnfAkTxgC57BOVLAXlihBC2RA9Vf+k0FJQKk8nJv+jCwQi5WNyQAWxpR02wRQS8icy6CKlmMUlUUGipfOQK3lKLAbhdhIKfWZS6258kiAfzCZg6V4gZiOn0UBIAcgn63BYehK50Ke2xQxQH+3FUoqJUtJMIlYhLxAfxVJu09xiWENuMxCrUaNhCBBgAOAVfjALa5TLAAAAAElFTkSuQmCC) no-repeat 7% center;
+	background-size:10px 8px;
+}
+
+input.follow-btn:checked:hover + span {
+	background-color:#22924b;
+	color:rgba(255,255,255,0.5);
+	text-decoration:none;
+	-webkit-border-radius:4px;
+	-moz-border-radius:4px;
+	border-radius:4px;
+	background:#22924b url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAS5JREFUeNq8110OgjAMAGBGvIY3VESjt9jPg95PT+LccBIZ7dYOWJPGB+g+Ymg3hLW2QeLkcu/y2pSFdvl0eQevehjI3uXbfkMh96TShFq/xhG6J4faAtxEtSBOQTm4QWpnOBWl4CZT69fuYpiCpnBDrB1xLhrjgoFO8F1oGcFslUv4bV32zFoxmOHJta0XMn65dC0UaiddA8UGiN4axeC1cUkdmWviEls/NwL1FqjPNtNvoimPdC3yRCUTiTXbt0R/oSnw2iiK10BBvBY6w2uiE3xJr8oFtcrvxy/fVcyeVdGx98yotcOxN/znHeMUIhdMOG8c4reagssF43VEoT5O4ZJwvNUUFJtcEE5BMXyGpnanf5yDxjiI+hSJj7YunEBvhbuTCh9tD+jiR4ABAJ0SrJgNr1UAAAAAAElFTkSuQmCC) no-repeat 7% center;
+	background-size:10px 10px;
+}

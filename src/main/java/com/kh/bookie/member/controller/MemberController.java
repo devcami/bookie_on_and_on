@@ -34,6 +34,8 @@ import com.kh.bookie.common.HelloSpringUtils;
 
 import com.kh.bookie.email.MailSendService;
 
+import com.kh.bookie.member.model.dto.Interest;
+
 import com.kh.bookie.member.model.dto.Member;
 import com.kh.bookie.member.model.service.MemberService;
 import com.kh.bookie.pheed.model.dto.PheedAttachment;
@@ -70,7 +72,7 @@ public class MemberController {
 	@PostMapping("/memberEnroll.do")
 	public String memberEnroll(Member member, RedirectAttributes redirectAttr,
 								@RequestParam (required = false) MultipartFile upFile,
-								@RequestParam (required = false) String[] interest) {
+								@RequestParam (required = false) Interest interest) {
 		log.info("Member = {}", member);
 		try {
 			// 올린 파일 있으면 저장
