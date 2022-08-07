@@ -1,11 +1,15 @@
 package com.kh.bookie.member.model.service;
 
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
+
 
 import com.kh.bookie.member.model.dao.MemberDao;
 import com.kh.bookie.member.model.dto.Member;
 
 public interface MemberService {
+
 	
 	String ROLE_USER = "ROLE_USER";
 	String ROLE_ADMIN = "ROLE_ADMIN";
@@ -16,9 +20,19 @@ public interface MemberService {
 
 	int memberEnroll(Member member);
 
+
 	int deleteMemberProfile(String nickname);
 
 	int miniUpdateMember(Member logingMember);
+
+	Member selectOneMemberByTel(String telNum);
+
+	List<Member> selectMemberList();
+
+	
+
+	
+
 
 
 }

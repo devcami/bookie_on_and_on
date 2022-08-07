@@ -5,6 +5,7 @@
 
 <mapper namespace="com.kh.bookie.member.model.dao.MemberDao">
 
+
 	<insert id="memberEnroll">
 		insert into
 			member
@@ -55,6 +56,7 @@
 		select * from member where nickname = #{nickname}
 	</select>
 	
+
 	<update id="deleteMemberProfile">
 		update member set renamed_filename = null, original_filename = null where nickname = #{nickname}
 	</update>
@@ -71,5 +73,39 @@
 		where 
 			member_id = #{memberId} 
 	</update>
+	
+	
+	<select id="selectMemberList" resultMap="memberMap">
+		select
+		    *
+		from
+		    member m 
+		    	join authority a on m.member_id = a.member_id
+		    order by 
+		      created_at desc
+	
+	</select>
+	<resultMap type="member" id="memberMap">
+		<id column="member_id" property="memberId"/>
+		<result column="password" property="password"/>
+		<result column="enroll_date" property="enrollDate"/>
+		<result column="nickname" property="nickname"/>
+		<result column="phone" property="phone"/>
+		<result column="gender" property="gender"/>
+		<result column="birthday" property="birthday"/>
+		<result column="introduce" property="introduce"/>
+		<result column="renamed_filename" property="renamedFilename"/>
+		<result column="original_filename" property="originalFilename"/>
+		<result column="sns" property="sns"/>
+		<result column="point" property="point"/>
+		<result column="email" property="email"/>
+		<!-- 권한 정보 -->
+		<collection property="authorities" ofType="simpleGrantedAuthority">
+			<constructor>
+				<arg column="auth" javaType="string"/>
+			</constructor>
+		</collection>
+	</resultMap>
+
 
 </mapper>
