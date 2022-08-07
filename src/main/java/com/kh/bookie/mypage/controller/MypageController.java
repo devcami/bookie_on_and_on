@@ -99,7 +99,7 @@ public class MypageController {
 		String memberId = loginMember.getMemberId();
 		try {
 			// 
-			Member member = memberService.selectInterests(memberId);
+//			Member member = memberService.selectInterests(memberId);
 			
 			
 		} catch (Exception e) {

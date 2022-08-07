@@ -16,7 +16,7 @@ section#content	{
     top: -15px;
     font-size: 23px;
 }
-#menuDiv ul {
+ul {
 	list-style: none;
 	padding-left: 0px;
 	text-align: center;
@@ -46,3 +46,44 @@ section#content	{
 .nowPage {
 	transform: scale(1.1);
 }
+
+/************ 위쪽 메뉴 ****************/
+
+
+
+#topMenuDiv {
+	width: 800px;
+	height: 50px;
+	position: fixed;
+	right: 0;
+    top: 0;
+    left: 91px;
+    z-index: 1030;
+    margin-top: 10px;
+}
+#topMenuDiv ul {
+	margin-bottom: 0;
+}
+#topMenuDiv li {
+	display: inline-block;
+	margin: 0 10px;
+}
+#TopProgressBar {
+/* 	width: 500px;
+	height: 30px;
+	border: 1px solid black;
+	border-radius: 20px; */
+	
+}
+
+/******* 프로그레스바 ******/
+
+.bar {
+	max-width: 800px !important;
+	height: 6px !important;
+	margin: 0 auto !important;
+	left: inherit !important;
+}
+
+
+

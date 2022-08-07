@@ -20,10 +20,6 @@
 <%
 	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 	Member loginMember = (Member) authentication.getPrincipal();
-	String[] interests = loginMember.getInterests();
-	List<String> interestList = interests != null? 
-								Arrays.asList(interests) : null;
-	pageContext.setAttribute("interestList", interestList); 
 %>
 <style>
 /* 중복아이디체크관련 */

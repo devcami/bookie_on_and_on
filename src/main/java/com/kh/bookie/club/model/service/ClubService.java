@@ -41,7 +41,7 @@ public interface ClubService {
 
 	Chat selectOneBoardCollection(int chatNo);
 
-	List<Chat> selectClubBoardList(int cPage, int numPerPage, int clubNo);
+	List<Chat> selectClubBoardList(Map<String, Object> map);
 
 	int deleteClubBoard(int chatNo);
 
@@ -64,5 +64,11 @@ public interface ClubService {
 	int commentRefEnroll(ChatComment cc);
 
 	int selectTotalClubBoard(int clubNo);
+
+	List<Club> selectClubListMonth(int cPage, int numPerPage);
+
+	int selectTotalClubMonth();
+
+	Club selectClubForClubStory(Map<String, Object> map);
 
 }

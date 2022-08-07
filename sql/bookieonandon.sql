@@ -49,7 +49,9 @@ create table follower(
 
 select * from pheed where member_id like 'honggd' or member_id like 'sinsa';
 insert into follower values('sinsa', 'honggd');
-insert into follower values('honggd', 'admin');
+select * from follower;
+commit;
+insert into follower values('honggd', 'tester');
 
 -- 5. book
 create table book(
@@ -259,11 +261,7 @@ create table chat_comment(
     created_at date default sysdate not null,
     comment_content varchar2(1000) not null,
     comment_level number default 1,
-<<<<<<< HEAD
     constraint pk_chat_comment_no primary key(comment_no)
-=======
-    constraint pk_chat_comment_no primary key(comment_no) 
->>>>>>> branch 'master' of https://github.com/devcami/bookie_on_and_on.git
 );
 select * from chat_comment;
 create sequence seq_comment_no;
@@ -330,6 +328,58 @@ create table persistent_logins (
     token varchar(64) not null,  -- username, password, expire time을 단방향 암호화한 값
     last_used timestamp not null);
     
+-- 트리거
+select * from user_triggers;
+drop trigger trigger_dokoo_comment;
+drop trigger trigger_pheed_comment;
+drop trigger trigger_chat_comment;
+drop trigger trigger_club_chat;
+commit;
+
+create trigger trigger_chat_comment 
+    after 
+    update on member 
+    for each row 
+begin 
+    if updating then 
+    update chat_comment set nickname = :new.nickname where nickname = :old.nickname;
+    end if;
+end;
+/
+
+create trigger trigger_dokoo_comment 
+    after 
+    update on member 
+    for each row 
+begin 
+    if updating then 
+    update dokoo_comment set nickname = :new.nickname where nickname = :old.nickname;
+    end if;
+end;
+/
+
+create trigger trigger_pheed_comment 
+    after 
+    update on member 
+    for each row 
+begin 
+    if updating then 
+    update pheed_comment set nickname = :new.nickname where nickname = :old.nickname;
+    end if;
+end;
+/
+
+create trigger trigger_club_chat
+    after 
+    update on member 
+    for each row 
+begin 
+    if updating then 
+    update club_chat set nickname = :new.nickname where nickname = :old.nickname;
+    end if;
+end;
+/
+
 
 --==============================================
 -- 조회
@@ -363,6 +413,7 @@ select * from likes_dokoo;
 select * from likes_club;
 
 select * from persistent_logins;
+
 
 SELECT 
     TABLE_NAME
@@ -675,8 +726,7 @@ where
         insert into follower values ('tmddbs', 'admin');
         commit;
         
-        
-        
+
         
         
 select 
@@ -690,7 +740,6 @@ where
     member_id in (select following_member_id from follower where member_id = 'honggd');
     
 select following_member_id from follower where member_id = 'tmddbs';
-
   
 update member set point = 20010 where member_id = 'tmddbs';
 select count(*) from club_chat where club_no = 45;
@@ -740,3 +789,100 @@ order by
 		where 
            updated_at >= to_date('22/08/01', 'yy/mm/dd')
            and updated_at <= to_date('22/08/06', 'yy/mm/dd');
+
+        
+select * from club_chat;
+
+
+select 
+    * 
+from 
+    (select 
+        row_number() over(order by enroll_date desc) rnum , 
+        cc.* 
+    from 
+        club_chat cc 
+    where club_no = 45) 
+where rnum between 1 and 10;
+
+        select * from interest;
+		select 
+            m.*,
+            i.interest
+		from 
+		    member m join interest i
+                on m.member_id = i.member_id
+        where
+            interest like '%언어%' and m.member_id != 'honggd';
+            
+            
+        select 
+            m.*,
+            (select interest from interest where interest like '%언어%' and member_id != 'honggd') interest
+		from 
+		    member m ;
+      
+      select 
+        c.*, 
+        (select renamed_filename from member m where m.nickname = c.nickname) renamed_filename 
+      from dokoo_comment c 
+      where dokoo_no = 42;
+      
+select * from my_club;
+select * from member;
+
+insert into my_club values (45, 'honggd', 10000);
+update member set point = 10000 where member_id = 'honggd';
+
+select
+			c.*,
+			b.*,
+			b.club_no bclub_no,
+		    (select count(*) from my_club where club_no = 45) current_nop,
+		    (select count(*) from likes_club where club_no = 45) likes_Cnt
+		from
+		    club c
+		    	 join club_book b on c.club_no = b.club_no
+                 join my_club m on c.club_no = m.club_no
+		where 
+			c.club_no = 45;
+            
+select
+    mc.*,
+    m.*,
+    mc.member_id mcMember_id
+from 
+    my_club mc 
+        left join member m on mc.member_id = m.member_id
+where 
+    mc.club_no = 45;
+    
+    commit;
+    
+select * from club_book;
+
+		select 
+			*
+		from
+			mission
+		where 
+			club_no = 49;
+            
+            select
+         c.*,
+         b.*,
+         b.club_no bclub_no,
+          (select count(*) from my_club where club_no = 45) current_nop,
+          (select count(*) from likes_club where club_no = 45) likes_Cnt
+      from
+          club c
+              join club_book b on c.club_no = b.club_no
+      where 
+         c.club_no = 45;
+         
+         select * from club_book;
+         
+         update club_book set book_title = '경제대마왕 반드시 부자되는 투자의 소신' where club_no = 45 and item_id = '9788957822074';
+         update club_book set book_title = '부자의 독서법' where club_no = 45 and item_id = '9791187444770';
+         update club_book set book_title = '월급쟁이 부자로 은퇴하라' where club_no = 45 and item_id = '9788925578156';
+         commit;

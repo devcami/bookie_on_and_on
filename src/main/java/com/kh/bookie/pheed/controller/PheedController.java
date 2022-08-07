@@ -218,9 +218,11 @@ public class PheedController {
 	public void pheedEnroll() {}
 	
 	@PostMapping("/pheedEnroll.do")
-	public String pheedEnroll(Pheed pheed, RedirectAttributes ra, @RequestParam (required = false) MultipartFile upFile) {
+	public String pheedEnroll(Pheed pheed, RedirectAttributes ra, 
+			@RequestParam (name = "upFile", required = false) MultipartFile upFile) {
 		try {
 			log.debug("pheed = {}", pheed);
+			log.debug("upFile = {}", upFile);
 			String saveDirectory = application.getRealPath("/resources/upload/pheed");
 			
 			//업로드한 파일 저장

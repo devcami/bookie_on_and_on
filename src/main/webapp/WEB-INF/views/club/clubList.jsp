@@ -312,7 +312,8 @@
 		const clubNo = e.dataset.clubNo;
 		
 		
-		location.href = '${pageContext.request.contextPath}/club/myClubDetail.do' + "?clubNo=" + clubNo;
+		// location.href = '${pageContext.request.contextPath}/club/myClubDetail.do' + "?clubNo=" + clubNo;
+		location.href = `${pageContext.request.contextPath}/club/clubDetail.do/\${clubNo}`;
 	}
 
 </script>

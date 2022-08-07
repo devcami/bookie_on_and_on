@@ -118,7 +118,74 @@ public class ClubController {
 		
 		return mav;
 	}
+	
+	
+	@GetMapping("/clubListMonth.do")
+	public ModelAndView clubListMonth(
+			@RequestParam(defaultValue = "1") int cPage,
+			@RequestParam(required = false) String sortType,
+			ModelAndView mav,
+			HttpServletRequest request,
+			@AuthenticationPrincipal Member loginMember) {
+		
+		
+		try {
+			
+			log.debug("sortType = {}", sortType);
+			
+			
+			if(loginMember  != null) {					
+				
+				log.debug("authentication member = {} ", loginMember);
+				log.debug("authentication member = {} ", loginMember.getMemberId());
+				
+				// 멤버 있으면 북클럽 찜 리스트 가져와 
+				List<String> clubWishList = clubService.getClubWishListbyMemberId(loginMember.getMemberId());
+//				log.debug("clubWishList = {}", clubWishList);
+				
+				String wishStr = "";
+				for(int i = 0; i < clubWishList.size(); i++) {
+					wishStr += clubWishList.get(i);
+					wishStr +=  ",";
+				}
+				
+				mav.addObject("wishStr", wishStr);
+				
+				// 멤버 있으면 북클럽 하트 리스트 가져와 
+				List<String> clubLikesList = clubService.getClubLikesListbyMemberId(loginMember.getUsername());
+				
+				String likesStr = "";
+				for(int j = 0;  j < clubLikesList.size(); j++) {
+					likesStr += clubLikesList.get(j);
+					likesStr +=  ",";
+				}
+				mav.addObject("likesStr", likesStr);
+				
+			}
+			
+			int numPerPage = 4;
+			List<Club> list = clubService.selectClubListMonth(cPage, numPerPage);
+			mav.addObject("list", list);
+			
+			// 페이지 바
+			int totalClub = clubService.selectTotalClubMonth();
+			String url = request.getRequestURI();
+			String pagebar = HelloSpringUtils.getPagebar(cPage, numPerPage, totalClub, url);
+			mav.addObject("pagebar", pagebar);
+			mav.addObject("sortType", sortType);
+			
+			mav.setViewName("club/clubList");
+			
+		} catch(Exception e) {
+			log.error("월간 북클럽목록 조회 오류!!", e);
+			mav.addObject("msg", "월간 북클럽목록 조회에 실패했습니다!");
+			throw e;
+		}
+		
+		return mav;
+	}
 
+	
 	@GetMapping("/enrollClub.do")
 	public void enrollClub() {
 	}
@@ -273,15 +340,15 @@ public class ClubController {
 
 		try {
 			Map<String, Object> param = new HashMap<>();
-			log.debug("itemId = {}", itemId);
-			log.debug("clubNo = {}", clubNo);
+//			log.debug("itemId = {}", itemId);
+//			log.debug("clubNo = {}", clubNo);
 			
 			param.put("itemId", itemId);
 			param.put("clubNo", clubNo);
 			
 			List<Mission> missionList = clubService.getMissions(param);
+			log.debug("missionList = {}", missionList);
 			
-//			log.debug("missionList = {}", missionList);
 			map.put("missionList", missionList);
 		} catch(Exception e) {
 			log.error("선택한 책 미션리스트 불러오기 오류", e);
@@ -414,9 +481,9 @@ public class ClubController {
 
 	}
 	
-	@GetMapping("/myClubDetail.do")
+	@GetMapping("/clubDetail.do/{clubNo}")
 	public ModelAndView myClubDetail(
-			@RequestParam int clubNo,
+			@PathVariable int clubNo,
 			ModelAndView mav
 			) {		
 		try {
@@ -436,6 +503,7 @@ public class ClubController {
 		return mav;
 	}
 	
+	
 	@GetMapping("/clubBoard.do/{clubNo}")
 	public ModelAndView clubBoard(
 			ModelAndView mav,
@@ -447,9 +515,19 @@ public class ClubController {
 			
 //			log.debug("clubNo = {}", clubNo);
 			
-			
+			Map<String, Object> map = new HashMap<>();			
 			int numPerPage = 10;
-			List<Chat> list = clubService.selectClubBoardList(cPage, numPerPage, clubNo);
+			int start = ((cPage - 1) * numPerPage) + 1;
+			int end = cPage * numPerPage;
+			
+//			map.put("cPage", cPage);
+//			map.put("numPerPage", numPerPage);
+			map.put("start", start);
+			map.put("end", end);
+			map.put("clubNo", clubNo);
+			
+			
+			List<Chat> list = clubService.selectClubBoardList(map);
 			mav.addObject("list", list);
 			
 			log.debug("list = {}", list);
@@ -464,6 +542,7 @@ public class ClubController {
 			String pagebar = HelloSpringUtils.getPagebar(cPage, numPerPage, totalClubBoard, url);
 			mav.addObject("pagebar", pagebar);
 			
+			mav.addObject("clubNo", clubNo);
 			mav.setViewName("club/clubBoard");
 			
 		} catch(Exception e) {
@@ -755,6 +834,61 @@ public class ClubController {
 			log.error("게시판 대댓글 입력 오류", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
+	}
+	
+	@GetMapping("/clubStory.do/{clubNo}")
+	public ModelAndView goToClubStory(
+			@PathVariable int clubNo,
+			ModelAndView mav,
+			@AuthenticationPrincipal Member loginMember) {
+		
+		try {
+			Map<String, Object> map = new HashMap<>();
+			
+			log.debug("여기 clubNo = {}", clubNo);
+			
+			String memberId = loginMember.getMemberId();
+			
+			map.put("memberId", memberId);
+			map.put("clubNo", clubNo);
+			
+			Club club = clubService.selectClubForClubStory(map);
+			
+			mav.addObject(club);
+			mav.addObject("clubNo", clubNo);
+			mav.setViewName("club/clubStory");
+		} catch(Exception e) {
+			log.error("북클럽 스토리 조회 오류!", e);
+			throw e;
+		}
+		
+		return mav;
+		
+	}
+	
+	@GetMapping("/clubMission.do/{clubNo}/{memberId}")
+	public ModelAndView goToClubMission(
+			@PathVariable int clubNo,
+			@PathVariable String memberId,
+			ModelAndView mav) {
+		
+		try {
+			
+			log.debug("미션갈때 clubNo = {}", clubNo);
+			log.debug("미션갈때 memberId = {}", memberId);
+			
+			mav.addObject("clubNo", clubNo);
+			mav.addObject("memberId", memberId);
+			mav.setViewName("club/clubMission");
+			
+			
+		} catch(Exception e) {
+			log.error("북클럽 미션 조회 오류!", e);
+			throw e;
+		}
+		
+		return mav;
+		
 	}
 	
 	

@@ -14,6 +14,7 @@ import com.kh.bookie.club.model.dto.Chat;
 import com.kh.bookie.club.model.dto.ChatAttachment;
 import com.kh.bookie.club.model.dto.ChatComment;
 import com.kh.bookie.club.model.dto.Club;
+import com.kh.bookie.club.model.dto.ClubApplicant;
 import com.kh.bookie.club.model.dto.ClubBook;
 import com.kh.bookie.club.model.dto.Mission;
 import com.kh.bookie.point.model.dto.PointStatus;
@@ -83,10 +84,33 @@ public class ClubServiceImpl implements ClubService {
 	}
 
 	@Override
+	public List<Club> selectClubListMonth(int cPage, int numPerPage) {
+		int offset = (cPage - 1) * numPerPage;
+		RowBounds rowBounds = new RowBounds(offset, numPerPage);
+		
+		// 1. club 찾아와
+		List<Club> list = clubDao.selectClubListMonth(rowBounds);
+		
+		// 2. club에 사진 할당해
+		for(Club club : list) {
+			List<ClubBook> bookList = clubDao.selectClubBook(club.getClubNo());
+			club.setBookList(bookList);
+		}
+		
+		return list;
+	}
+	
+	
+	@Override
 	public int selectTotalClub() {
 		return clubDao.selectTotalClub();
 	}
 
+	@Override
+	public int selectTotalClubMonth() {
+		return clubDao.selectTotalClubMonth();
+	}
+	
 	@Override
 	public Club selectOneClub(Map<String, Object> param) {
 		
@@ -100,14 +124,18 @@ public class ClubServiceImpl implements ClubService {
 			Map<String, Object> map = new HashMap<>();
 			map.put("itemId", itemId);
 			map.put("clubNo", param.get("clubNo"));
+			
+			// log.debug("여기 clubNo = {}", param.get("clubNo"));
+			
 			club.getBookList().set(i, clubDao.selectBookMission(map));
+			
 		}
 		
 		if(param.get("memberId") != null) {
 			club.setIsJoined(clubDao.checkClubJoined(param));
 		}
 		
-		log.debug("2. club = {}", club);
+		// log.debug("2. club = {}", club);
 		
 		return club; 
 	}
@@ -203,30 +231,16 @@ public class ClubServiceImpl implements ClubService {
 	public Chat selectOneBoardCollection(int chatNo) {
 		Chat chat = clubDao.selectOneBoardCollection(chatNo);
 		chat.setChatComments(clubDao.selectChatComments(chatNo));
+		
+		log.debug("여기 chat = {}", chat);
+		
 		return chat;
 	}
 
 	@Override
-	public List<Chat> selectClubBoardList(int cPage, int numPerPage, int clubNo) {
-		
-		
-		int offset = (cPage - 1) * numPerPage;
-		RowBounds rowBounds = new RowBounds(offset, numPerPage);
-	
-		
-		// 새로하는거
-		Map<String, Object> map = new HashMap<>();
-		map.put("rowBounds", rowBounds);
-		map.put("clubNo", clubNo);
-
-		// 1. clubBoard 찾아와
-		List<Chat> list = clubDao.selectClubBoardList(map);
-
-		
-		
-		return list;
+	public List<Chat> selectClubBoardList(Map<String, Object> map) {
+		return clubDao.selectClubBoardList(map);
 	}
-
 	@Override
 	public List<ChatAttachment> findAllClubBoardAttachByChatNo(int chatNo) {
 		return clubDao.findAllClubBoardAttachByChatNo(chatNo);
@@ -282,6 +296,19 @@ public class ClubServiceImpl implements ClubService {
 	public int selectTotalClubBoard(int clubNo) {
 		return clubDao.selectTotalClubBoard(clubNo);
 	}
+
+	@Override
+	public Club selectClubForClubStory(Map<String, Object> map) {
+		
+		Club club = clubDao.selectOneClub(map);
+		List<ClubApplicant> applicantList = clubDao.selectClubApplicants(Integer.parseInt(map.get("clubNo").toString()));
+		log.debug("여기 applicantList = {}", applicantList);
+		club.setApplicantList(applicantList);
+		
+		return club;
+	}
+
+	
 	
 
 }
