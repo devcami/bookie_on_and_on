@@ -5,71 +5,142 @@
 
 <mapper namespace="com.kh.bookie.member.model.dao.MemberDao">
 
-	<insert id="memberEnroll">
-		insert into
-			member
-		values(
-			#{memberId},
-			#{password},
-			default,
-			#{nickname},
-			#{phone},
-			#{gender},
-			#{birthday},
-			#{introduce},
-			<if test="renamedFilename != null">
-				#{renamedFilename},
-			</if>
-			<if test="renamedFilename == null">
-				null,
-			</if>
-			<if test="originalFilename != null">
-				#{originalFilename},
-			</if>
-			<if test="originalFilename == null">
-				null,
-			</if>
-			#{sns},			
-			default,
-			#{email})
-	</insert>
-	
-	<insert id="insertAuthority">
-		insert into
-			authority
-		values(
-			#{memberId}, #{auth})
-	</insert>
-	<insert id="insertInterest">
-		insert into
-			interest
-		values(
-			#{memberId}, #{interest})
-	</insert>
+   <insert id="memberEnroll">
+      insert into
+         member
+      values(
+         #{memberId},
+         #{password},
+         default,
+         #{nickname},
+         #{phone},
+         #{gender},
+         #{birthday},
+         #{introduce},
+         <if test="renamedFilename != null">
+            #{renamedFilename},
+         </if>
+         <if test="renamedFilename == null">
+            null,
+         </if>
+         <if test="originalFilename != null">
+            #{originalFilename},
+         </if>
+         <if test="originalFilename == null">
+            null,
+         </if>
+         #{sns},         
+         default,
+         #{email})
+   </insert>
+   
+   <insert id="insertAuthority">
+      insert into
+         authority
+      values(
+         #{memberId}, #{auth})
+   </insert>
+   <insert id="insertInterest">
+      insert into
+         interest
+      values(
+         #{memberId}, #{interest})
+   </insert>
 
-	<select id="selectOneMember" resultType="member">
-		select * from member where member_id = #{memberId}
+   <select id="selectOneMember" resultType="member">
+      select * from member where member_id = #{memberId}
+   </select>
+   
+   <select id="selectOneMemberByNickname" resultType="member">
+      select * from member where nickname = #{nickname}
+   </select>
+   
+   <update id="deleteMemberProfile">
+      update member set renamed_filename = null, original_filename = null where nickname = #{nickname}
+   </update>
+   
+   <update id="miniUpdateMember">
+      update 
+         member 
+      set 
+         nickname = #{nickname}, 
+         introduce = #{introduce}, 
+         sns = #{sns}, 
+         original_filename = #{originalFilename}, 
+         renamed_filename = #{renamedFilename} 
+      where 
+         member_id = #{memberId} 
+   </update>
+   
+   	<select id="selectMemberList" resultMap="memberMap">
+		select
+		   m.*,
+		   a.*,
+		   (select interest from interest where member_id = m.member_id) interest
+		from
+		    member m join authority a
+		        on m.member_id = a.member_id
+		order by
+			enroll_date desc
 	</select>
 	
-	<select id="selectOneMemberByNickname" resultType="member">
-		select * from member where nickname = #{nickname}
+	<resultMap type="member" id="memberMap">
+		<id column="member_id" property="memberId"/>
+		<result column="password" property="password"/>
+		<result column="enroll_date" property="enrollDate"/>
+		<result column="nickname" property="nickname"/>
+		<result column="phone" property="phone"/>
+		<result column="gender" property="gender"/>
+		<result column="birthday" property="birthday"/>
+		<result column="introduce" property="introduce"/>
+		<result column="renamed_filename" property="renamedFilename"/>
+		<result column="original_filename" property="originalFilename"/>
+		<result column="sns" property="sns"/>
+		<result column="point" property="point"/>
+		<result column="email" property="email"/>
+		<result column="interest" property="interest"/>
+		<collection property="authorities" ofType="simpleGrantedAuthority">
+			<constructor>
+				<arg column="auth" javaType="string"/>
+			</constructor>
+		</collection>
+	</resultMap>
+	
+	<select id="selectMemberListByInterest" resultMap="interestMap">
+		select 
+            m.*,
+            (select interest from interest where member_id = m.member_id) interest
+		from 
+		    member m join interest i
+                on m.member_id = i.member_id
+        where
+       		i.interest like '%${interest}%'
 	</select>
 	
-	<update id="deleteMemberProfile">
-		update member set renamed_filename = null, original_filename = null where nickname = #{nickname}
-	</update>
+	<resultMap id="interestMap" type="member">
+		<id column="member_id" property="memberId"/>
+		<result column="nickname" property="nickname"/>
+		<result column="interest" property="interest"/>
+		<association property="interests" javaType="interest">
+			<result column="interest" property="interests"/>
+		</association>
+	</resultMap>
 	
-	<update id="miniUpdateMember">
-		update 
-			member 
-		set 
-			nickname = #{nickname}, 
-			introduce = #{introduce}, 
-			sns = #{sns}, 
-			original_filename = #{originalFilename}, 
-			renamed_filename = #{renamedFilename} 
-		where 
-			member_id = #{memberId} 
+	<select id="selectAlarmList" resultType="alarm">
+		select
+			*
+		from
+			alarm
+		where
+			member_id = #{memberId}
+	</select>
+	
+	<update id="readAlarm">
+		update
+			alarm
+		set
+			last_check = 1
+		where
+			alarm_no = #{alarmNo}
 	</update>
-
 </mapper>

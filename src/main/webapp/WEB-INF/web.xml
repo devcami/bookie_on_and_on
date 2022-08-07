@@ -20,6 +20,7 @@
 	</listener>
 	
 	<!-- #3. DispatcherServlet관련 context 설정 -->
+	<!-- #16.1. ws-context.xml 등록 -->
 	<!-- Processes application requests -->
 	<servlet>
 		<servlet-name>appServlet</servlet-name>

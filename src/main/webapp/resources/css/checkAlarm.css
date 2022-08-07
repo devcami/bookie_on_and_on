@@ -1,0 +1,23 @@
+@charset "UTF-8";
+
+section#content	{
+	margin: 0 auto;
+	padding: 20px 30px;
+	min-height:600px;
+	border-radius: 5px;
+}
+
+
+#unreadCheck{
+	width: 10px;
+	height: 10px;
+	background-color:red;
+}
+
+.card{
+	cursor: pointer;
+	border-radius: 18px !important;
+}
+.alarmContent{
+	font-size: 22px;
+}
