@@ -17,7 +17,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,6 +35,7 @@ import com.kh.bookie.club.model.dto.ChatComment;
 import com.kh.bookie.club.model.dto.Club;
 import com.kh.bookie.club.model.dto.ClubBook;
 import com.kh.bookie.club.model.dto.Mission;
+import com.kh.bookie.club.model.dto.MissionStatus;
 import com.kh.bookie.club.model.service.ClubService;
 import com.kh.bookie.common.HelloSpringUtils;
 import com.kh.bookie.member.model.dto.Member;
@@ -877,16 +877,11 @@ public class ClubController {
 		
 		try {
 			
-			Map<String, Object> map = new HashMap<>();
-			
-			map.put("clubNo", clubNo);
-			map.put("memberId", memberId);
-			
 //			log.debug("미션갈때 clubNo = {}", clubNo);
 //			log.debug("미션갈때 memberId = {}", memberId);
 			
 			
-			List<Mission> missions = clubService.getMissionsForOneMember(map);
+			List<Mission> missions = clubService.getMissionsForOneMember(clubNo, memberId);
 			
 			mav.addObject("missions", missions);
 			mav.addObject("clubNo", clubNo);
@@ -926,33 +921,75 @@ public class ClubController {
 	@PostMapping("/clubMissionComplete.do")
 	public ResponseEntity<?> missionComplete(
 			@RequestParam String memberId,
+			@RequestParam int missionNo,
+			@RequestParam int clubNo,			
 			@RequestParam String answer,
+			@RequestParam String type,			
 			@RequestParam (name = "upFile", required = false) MultipartFile upFile,
-			@RequestParam (name = "delFile", required = false) MultipartFile delFile			
+			@RequestParam (name = "delFile", required = false) String delFile			
 			){
 		
 		try {
 			log.debug("memberId = {}", memberId);
 			log.debug("answer = {}", answer);
+			log.debug("type = {}", type);
 			log.debug("upFile = {}", upFile);
 			log.debug("delFile = {}", delFile);
-
+			log.debug("missionNo = {}", missionNo);
+			log.debug("clubNo = {}", clubNo);
+			
 			Map<String, Object> map = new HashMap<>();
 			String saveDirectory = application.getRealPath("/resources/upload/mission");
+
+			MissionStatus ms = new MissionStatus();
+			ms.setMemberId(memberId);
+			ms.setMissionNo(missionNo);
+			ms.setAnswer(answer);			
+			ms.setStatus("I");
 			
-			// 삭제할 파일 있으면 삭제해
-			if(delFile != null) {
+			if(type.equals("update")) {
+				MissionStatus tempMs = clubService.selectOneMissionStatus(ms);
+				
+				// 삭제할 파일 있으면 삭제해
+				if(delFile != null) {
+					log.debug("삭제할거 있다.");
+					File deleteFile = new File(saveDirectory, tempMs.getRenamedFilename());
+					if(deleteFile.exists()) {
+						deleteFile.delete();
+					}
+				}
 				
 			}
 			
 			// 업로드할 파일 있으면 업로드 해
 			if(upFile != null) {
-				log.debug("파일 있수다");
+				String originalFilename = upFile.getOriginalFilename();
+				String renamedFilename = HelloSpringUtils.getRenamedFilename(originalFilename);
+				log.debug("originalFilename = {}", originalFilename);
+				log.debug("renamedFilename = {}", renamedFilename);
+				
+				ms.setOriginalFilename(originalFilename);
+				ms.setRenamedFilename(renamedFilename);
+
+				File destFile = new File(saveDirectory, renamedFilename);
+				upFile.transferTo(destFile);
+			}
+			
+			int result = 0;
+			
+			// update인 경우
+			if(type.equals("update")) {
+				result = clubService.missionStatusUpdate(ms);
+			}
+			
+			// insert인 경우
+			if(type.equals("insert")) {
+				result = clubService.missionStatusInsert(ms);
 			}
 			
 
 			map.put("msg", "미션이 성공적으로 제출되었습니다!");
-			
+			map.put("ms", ms);
 			return ResponseEntity.ok(map);
 		} catch(Exception e) {
 			log.error("북클럽 미션 수행 오류!", e);

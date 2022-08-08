@@ -66,11 +66,11 @@ ${missions}
 			<c:if test="${mission.missionStatus eq null}">
 				<div class="mission-container">
 					<div class="mission-left">
-						<span></span>
+						<span id="span${mission.missionNo}"></span>
 					</div>
 					<div class="mission-bar">
 						<i class="fa-solid fa-circle fa-circle-border"></i>
-						<i class="fa-solid fa-circle fa-circle-inside" style="color: #f8f9fa"></i>					
+						<i id="dot${mission.missionNo}" class="fa-solid fa-circle fa-circle-inside" style="color: #f8f9fa"></i>					
 					</div>
 					<div class="mission-date-card" >
 						<span class="mendDateSpan">~ ${mission.mendDate}</span>
@@ -139,11 +139,11 @@ ${missions}
 				<c:if test="${mission.missionStatus.status eq 'A'}">
 					<div class="mission-container">
 						<div class="mission-left" style="transform: translateY(-4px);">
-							<span class="status-again">미션을 다시 확인해주세요!</span>
+							<span id="span${mission.missionNo}" class="status-again">미션을 다시 확인해주세요!</span>
 						</div>
 						<div class="mission-bar">
 							<i class="fa-solid fa-circle fa-circle-border"></i>
-							<i class="fa-solid fa-circle fa-circle-inside" style="color: #9a9b9b"></i>						
+							<i id="dot${mission.missionNo}" class="fa-solid fa-circle fa-circle-inside" style="color: #9a9b9b"></i>						
 						</div>
 						<div class="mission-date-card">
 							<span class="mendDateSpan">~ ${mission.mendDate}</span>
@@ -217,17 +217,19 @@ ${missions}
 		 	  <div class="mission-user">
 		 	  	<div>
 		 	  	  <img style="display: none;" src="" id="profile-img" />
-				  <button style="display: none;" type="button" class="btn" data-mission-no='0' id="deleteBtn" onclick="deleteFile();">삭제</button>		 	  	
+				  <button style="display: none;" type="button" class="btn" data-mission-no='0' id="deleteBtn" onclick="deleteFile(this);">삭제</button>		 	  	
 		 	  	</div>
 			 	  <input type="file" name="upFile" id="upfile" class="mt-1 mb-2" onchange="loadImage(this);" />
 			 	  <textarea name="answer" id="answer" rows="4" style="width: 100%;"></textarea>		 	  		 	  
-				  <input type="hidden" name="memberId" value="${loginMember.username}" />			  
 			  	  <input type="hidden" name="delFile" id="delFile" />
 		 	  </div>
 	      </div>
 	      <div class="modal-footer">
 	        <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-	        <button type="button" class="btn btn-enroll" id="submitBtn" onclick="missionComplete(this);">제출</button>
+	        <button 
+	        	type="button" class="btn btn-enroll" id="submitBtn" 
+	        	data-type="" data-mission-no="" data-vs-no=""
+	        	onclick="missionComplete(this);">제출</button>
 	      </div>
 	    </div>
 	  </div>
@@ -243,8 +245,8 @@ ${missions}
 /*********** 미션 모달 열어 *************/
 const openMissionDodal = (e) => {
 	const vsNo = e.dataset.vsNo - 1;
-	const mission = missionArr[vsNo];
-	console.log(mission);
+ 	let mission = missionArr[vsNo];
+ 	console.log(mission);
 	
 	const title = document.querySelector('#modalTitle');
 	const endDate = document.querySelector('#modalEndDate');
@@ -254,6 +256,7 @@ const openMissionDodal = (e) => {
 	const submitBtn = document.querySelector("#submitBtn");
 	const deleteBtn = document.querySelector("#deleteBtn");
 	const upFile = document.querySelector("#upFile");
+	const imgContainer = document.querySelector("#profile-img");
 	
 	// 모달 안에 내용 비워
 	title.innerHTML = '';
@@ -266,45 +269,83 @@ const openMissionDodal = (e) => {
 	
 	switch(mission.status){
 	case "P":
+		console.log('P');
 		statusStr = '🎉미션 성공🎉';
+		imgContainer.src = '';
+		imgContainer.style.display = 'none';
 		submitBtn.style.display = 'none';
+		deleteBtn.style.display = 'none';
 		// 이미지 src renamedFilename으로 설정해
+		imgContainer.style.display = '';
+		imgContainer.src = `${pageContext.request.contextPath}/resources/upload/mission/\${mission.renamedFilename}`
 		
 		// textarea readonly로 바꿔
+		$("#answer").attr("readonly", true);
 		
 		// 파일선택 버튼 안보이게 해
 		upFile.style.display = 'none';
 		break;
 	case "F":
+		console.log('F');
 		statusStr = '💔미션 실패💔'
+		imgContainer.src = '';
+		imgContainer.style.display = 'none';
 		submitBtn.style.display = 'none';
 		answer.style.display = 'none';
 		upFile.style.display = 'none';
+		deleteBtn.style.display = 'none';
 		break;
 	case "I":
+		console.log('I');
 		statusStr = '⏳승인 대기중⏳';
 		submitBtn.style.display = 'none';
 		// 이미지 src renamedFilename으로 설정해
-		
+		imgContainer.style.display = '';
+		imgContainer.src = `${pageContext.request.contextPath}/resources/upload/mission/\${mission.renamedFilename}`
+		deleteBtn.style.display = 'none';
+		upFile.style.display = 'none';
 		// textarea readonly로 바꿔
 		$("#answer").attr("readonly", true);
 		break;
 	case "A":
+		console.log('A');
 		statusStr = '💦다시 제출해주세요💦';
 		// textarea readonly 해제해
 		$("#answer").attr("readonly", false);
+		if(mission.renamedFilename == ''){
+			console.log("비었니 시발");
+			upFile.style.display == '';
+		}
+		else {
+			console.log('안비었다 시바');
+			upFile.style.display = 'none';			
+			imgContainer.style.display = '';
+			imgContainer.src = `${pageContext.request.contextPath}/resources/upload/mission/\${mission.renamedFilename}`
+		}
+		
+		// 이미지 src renamedFilename으로 설정해
 		submitBtn.style.display = '';
-		upFile.style.display = '';
+		deleteBtn.style.display = '';
 		answer.style.display = '';
+		submitBtn.dataset.type = "update";
+		submitBtn.dataset.vsNo = vsNo;
+		submitBtn.dataset.missionNo = mission.missionNo;
 		deleteBtn.dataset.missionNo = mission.missionNo;
 		break;
 	default:
+		console.log('default');
 		statusStr = '😊미션을 수행해주세요😊'; 
 		// textarea readonly 해제해
 		$("#answer").attr("readonly", false);
+		imgContainer.src = '';
+		imgContainer.style.display = 'none';
 		submitBtn.style.display = '';
 		upFile.style.display = '';
 		answer.style.display = '';
+		deleteBtn.style.display = 'none';
+		submitBtn.dataset.type = "insert";
+		submitBtn.dataset.vsNo = vsNo;
+		submitBtn.dataset.missionNo = mission.missionNo;
 		deleteBtn.dataset.missionNo = mission.missionNo;
 		break;
 	}
@@ -323,10 +364,13 @@ const openMissionDodal = (e) => {
 	
 /************** 미션 status 등록해 ***************/
  
-const missionComplete = () => {
+const missionComplete = (e) => {
 	
 	const answer = document.querySelector('#answer').value;	
-	
+	const type = e.dataset.type;
+	const missionNo = e.dataset.missionNo;
+	const vsNo = e.dataset.vsNo;
+	console.log("vsNo", vsNo);
 	
 	if(answer == ''){
 		alert('내용을 작성해주세요');
@@ -341,6 +385,9 @@ const missionComplete = () => {
 	let formData = new FormData();
 	formData.append("memberId", "${loginMember.username}");
 	formData.append("answer", answer);
+	formData.append("type", type);
+	formData.append("missionNo", missionNo);
+	formData.append("clubNo", "${clubNo}");
 	
 	
 	// 등록할 파일 있니? 
@@ -352,8 +399,8 @@ const missionComplete = () => {
 	
 	// 삭제할 파일 있니?
 	const isDelFile = document.querySelector("#delFile").value;
+	console.log(isDelFile);
 	if(isDelFile != ''){
-		const delFile = $("input[name='delFile']")[0].files[0];
 		formData.append("delFile", delFile);
 	} 
 	
@@ -366,6 +413,35 @@ const missionComplete = () => {
 		data : formData,
 		success(resp){
 			console.log(resp);
+			const {msg, ms} = resp;
+			alert(msg);
+			
+			// 삭제버튼 숨겨
+			document.querySelector("#deleteBtn").style.display = 'none';
+			// delFile value 없애
+			document.querySelector("#delFile").value = '';
+			// 승인대기중으로 바꿔
+			document.querySelector('#modalStatus').innerHTML = '⏳승인 대기중⏳';
+			// upFile input 안보이게 해
+			document.querySelector('#upFile').style.display = 'none';
+			// textarea readonly 걸어
+			$("#answer").attr("readonly", true);
+			
+			
+			missionArr[vsNo].status = ms.status;
+			missionArr[vsNo].renamedFilename = ms.renamedFilename;
+			missionArr[vsNo].answer = ms.answer;
+			
+			const dotId = "#dot" + ms.missionNo;
+			document.querySelector(dotId).style.color = "#9a9b9b";
+			const spanId = "#span" + ms.missionNo;
+			document.querySelector(spanId).innerHTML = "";
+			document.querySelector(spanId).innerHTML = "승인 대기중";
+			document.querySelector(spanId).style.background = 'grey';
+			document.querySelector(spanId).classList = 'status-span';
+			document.querySelector("#submitBtn").style.display = 'none';
+			document.querySelector("#upFile").value = '';
+			
 		},
 		error: console.log
 	});
@@ -388,7 +464,7 @@ const loadImage = (input) => {
  }   
  
 const deleteFile = (e) => {
-	console.log(e.dataset.missionNo);
+	const delFileNo = e.dataset.missionNo;
 	
 	// console.log(document.querySelector("#profile-img").src);
 	
@@ -399,17 +475,12 @@ const deleteFile = (e) => {
 
 	// input[name=upFile]안에 value도 지워
 	document.querySelector("#upFile").value = '';
+	document.querySelector("#upFile").style.display = '';
+		
 	
 	
 	// 그리고 아래에 delFile 추가해 
-	document.querySelector("#delFile").value = '';
-	
-	
-	// 그리고 파일 하나 삭제됐으니까 새로 파일 추가할 수 있는 input 태그 넣어
-/* 	const div = document.querySelector("#input-file-div");
-	const inputTag = `<input type="file" name="upFile" id="file\${i+1}" multiple />`;
-	div.insertAdjacentHTML('beforeend', inputTag); */
-	
+	document.querySelector("#delFile").value = delFileNo;	
 	
 }
 </script>

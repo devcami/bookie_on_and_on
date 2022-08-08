@@ -341,18 +341,15 @@
 	</resultMap>
 	
 	<select id="getMissionsForOneMember" resultMap="missionByMemberMap">
-		select
+		select  
 		    m.*,
-		    ms.*,
-		    ms.mission_no mNo,
 		    (select img_src from club_book c where c.club_no = #{clubNo} and m.m_item_id = c.item_id) img_src
 		from 
 		    mission m 
-		        left join mission_status ms on m.mission_no = ms.mission_no
 		where 
-		    (member_id = #{memberId} or member_id is null) and m.club_no = #{clubNo}
+		    m.club_no = #{clubNo}
 		order by 
-			m_endDate
+        	 m_endDate
 	</select>
 	<resultMap type="mission" id="missionByMemberMap">
 		<id column="mission_no" property="missionNo"/>
@@ -363,14 +360,6 @@
 		<result column="m_Item_Id" property="itemId"/>
 		<result column="m_endDate" property="mendDate"/>
 		<result column="img_src" property="imgSrc"/>
-		<association property="missionStatus" javaType="missionStatus">
-			<id column="mNo" property="missionNo"/>
-			<id column="member_id" property="memberId"/>
-			<result column="status" property="status"/>
-			<result column="answer" property="answer"/>
-			<result column="renamed_filename" property="renamedFilename"/>
-			<result column="original_filename" property="originalFilename"/>
-		</association>
 	</resultMap>
 	
 </mapper>

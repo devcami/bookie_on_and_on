@@ -17,6 +17,7 @@ import com.kh.bookie.club.model.dto.Club;
 import com.kh.bookie.club.model.dto.ClubApplicant;
 import com.kh.bookie.club.model.dto.ClubBook;
 import com.kh.bookie.club.model.dto.Mission;
+import com.kh.bookie.club.model.dto.MissionStatus;
 import com.kh.bookie.member.model.dto.Member;
 import com.kh.bookie.point.model.dto.PointStatus;
 
@@ -126,6 +127,18 @@ public interface ClubDao {
 
 	List<ClubApplicant> selectClubApplicants(int clubNo);
 
-	List<Mission> getMissionsForOneMember(Map<String, Object> map);
+	List<Mission> getMissionsForOneMember(int clubNo);
+
+	@Update("update mission_status set status = #{status}, answer = #{answer}, renamed_filename = #{renamedFilename}, original_filename = #{originalFilename}, updated_at = sysdate where mission_no = #{missionNo} and member_id = #{memberId}")
+	int missionStatusUpdate(MissionStatus ms);
+
+	@Insert("insert into mission_status values(#{missionNo}, #{memberId}, #{status}, #{answer}, #{renamedFilename}, #{originalFilename}, sysdate)")
+	int missionStatusInsert(MissionStatus ms);
+
+	@Select("select * from mission_status where mission_no = #{missionNo} and member_id = #{memberId}")
+	MissionStatus selectOneMissionStatus(MissionStatus ms);
+
+	@Select("select * from mission_status where mission_no = #{missionNo} and member_id = #{memberId}")
+	MissionStatus getMissionStatus(Map<String, Object> map);
 
 }

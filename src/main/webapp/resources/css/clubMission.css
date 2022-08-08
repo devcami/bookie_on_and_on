@@ -153,7 +153,8 @@ input::file-selector-button:hover {
 
 
 #profile-img {
-	width: 70%;
+ 	width: 60%;
+	margin-bottom: 10px;
 }
 
 #deleteBtn:focus, #deleteBtn:focus-visible {
