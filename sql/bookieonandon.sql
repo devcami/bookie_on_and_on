@@ -280,6 +280,8 @@ create table report (
     beenzi_no number not null,
     status varchar2(200) not null, -- U(아직처리안됨) or E(처리완료)
     content varchar2(1000),
+    created_at date default sysdate,
+    updated_at date,
     constraint pk_report_no primary key(report_no),
     constraint ck_report_category check(category in ('pheed','pheed_comment','dokoo','dokoo_comment'))
 );

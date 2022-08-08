@@ -98,7 +98,9 @@
 			#{category},
 			#{beenziNo},
 			'U',
-			#{content})
+			#{content},
+			sysdate,
+			null)
 	</insert>
 	
 	<select id="selectOnePheed" resultMap="pheedMap">

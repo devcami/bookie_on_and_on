@@ -751,13 +751,35 @@ window.onscroll = function () {
 
 
 <%-- 피드 삭제 --%>
-const deletePheed = () => {
+const deletePheed = (e) => {
+	//console.log(e.dataset.pheedNo);
+	const csrfHeader = '${_csrf.headerName}';
+	const csrfToken = '${_csrf.token}';
+	const headers = {};
+	headers[csrfHeader] = csrfToken; // 전송하는 헤더에 추가하여 전송
 	
+	if(confirm('삭제 시 정보를 되돌이 킬 수 없습니다. 정말 삭제하시겠습니까?')){
+		
+		$.ajax({
+			url : "${pageContext.request.contextPath}/pheed/deletePheed.do",
+			data : {pheedNo : e.dataset.pheedNo},
+			method : 'post',
+			headers,
+			success(resp){
+				const {msg} = resp;
+				alert(msg);
+				location.reload();
+			},
+			error : console.log
+		});
+	}
 };
 
 <%-- 피드 수정 --%>
-const updatePheed = () => {
-	
+const updatePheed = (e) => {
+	const pheedNo = e.dataset.pheedNo;
+	// 수정 폼 요청	
+	location.href = "${pageContext.request.contextPath}/pheed/pheedUpdate.do?pheedNo=" + pheedNo;
 };
 
 
