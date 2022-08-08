@@ -64,10 +64,21 @@ section#content	{
   
   .blue:hover {
     background-color: #17b1d4;
+    color: #fff;
+  }
+  
+  .yellow {
+    background-color: #e1bc03;
+    box-shadow: 0px 5px 0px 0px #ba9c04;
+  }
+  
+  .yellow:hover {
+    background-color: #edc604;
+    color: #fff;
   }
   
   #inputGroupSelect{
-    box-shadow: 0px 5px 0px 0px #20699a;
+    box-shadow: 0px 5px 0px 0px #ba9c04;
   }
 
 
