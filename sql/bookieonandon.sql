@@ -963,3 +963,12 @@ select * from club_book where club_no = 45;
 			member_id = 'tester';
             
             select * from alarm;
+select 
+			*
+		from 
+			pheed p left join pheed_attachment a 
+				on p.pheed_no = a.pheed_no  
+				left join member m
+				on p.member_id = m.member_id
+		where 
+			p.pheed_no = 37;

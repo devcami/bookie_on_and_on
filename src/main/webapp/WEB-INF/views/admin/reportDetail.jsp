@@ -14,7 +14,7 @@
 </jsp:include>
 <section id="content">
 
-<div class="container">
+	<div class="container">
       <div class="row">
         <div class="col-12">
           <div class="row col-12 btn-group">
@@ -51,110 +51,122 @@
 		</div>
 		
 	</div>
+	
 	<h1 class="text-center mt-5">신고글 내용 확인</h1>	
-
+	
 	<%-- 상세내역 --%>
 	<%-- 독후감 일 때 --%>
-	<c:if test="${report.category eq 'dokoo' || report.category eq 'dokooComment'}">
-	<section id="dokoo-content" class="rounded mt-5">
-		<div id="dokoo-title">
-			<p>"${dokoo.title}"</p>
-		</div>
-		<div id="dokoo-container">
-			<div class="" id="dokoo-info">
-				<div id="book-info" class=" p-4">
-					<span id="book-title"></span> <span id="book-author"></span>
-					<p id="book-category" class="text-secondary"></p>
+	<div id="check-div" class="text-center">
+	<c:if test="${report.category eq 'dokoo' || report.category eq 'dokoo_comment'}">
+		<c:if test="${empty dokoo}">
+			<h1>삭제 처리가 완료된 신고입니다.</h1>
+		</c:if>
+		<c:if test="${not empty dokoo}">
+		<input type="button" class="m-4 btn btn-lg btn-outline-danger" onclick="deleteReport(this);" data-beenzi-no="${report.beenziNo}" data-category="${report.category}" value="신고 발생한 글 | 댓글 삭제"/>
+		<section id="dokoo-content" class="rounded mt-5">
+			<div id="dokoo-title">
+				<p>"${dokoo.title}"</p>
+			</div>
+			<div id="dokoo-container">
+				<div class="" id="dokoo-info">
+					<div id="book-info" class=" p-4">
+						<span id="book-title"></span> <span id="book-author"></span>
+						<p id="book-category" class="text-secondary"></p>
+					</div>
+					<div class="p-3" id="writer">
+						<!-- 프로필사진 -->
+						<img class="rounded-circle shadow-1-strong m-1"
+							src="${pageContext.request.contextPath}/resources/upload/profile/${dokoo.member.renamedFilename}"
+							alt="avatar" width="40" height="40" /> <span class="p-2">${dokoo.member.nickname}</span>
+						<p class="text-secondary">
+							<fmt:parseDate value="${dokoo.enrollDate}"
+								pattern="yyyy-MM-dd'T'HH:mm" var="enrollDate" />
+							<fmt:formatDate value="${enrollDate}" pattern="yyyy/MM/dd HH:mm" />
+						</p>
+					</div>
 				</div>
-				<div class="p-3" id="writer">
-					<!-- 프로필사진 -->
-					<img class="rounded-circle shadow-1-strong m-1"
-						src="${pageContext.request.contextPath}/resources/upload/profile/${dokoo.member.renamedFilename}"
-						alt="avatar" width="40" height="40" /> <span class="p-2">${dokoo.member.nickname}</span>
-					<p class="text-secondary">
-						<fmt:parseDate value="${dokoo.enrollDate}"
-							pattern="yyyy-MM-dd'T'HH:mm" var="enrollDate" />
-						<fmt:formatDate value="${enrollDate}" pattern="yyyy/MM/dd HH:mm" />
-					</p>
+				<div class="" id="dokoo-desc">
+					<p class="text-dark">${dokoo.content}</p>
 				</div>
 			</div>
-			<div class="" id="dokoo-desc">
-				<p class="text-dark">${dokoo.content}</p>
+			<div id="comment-container" class="mt-4">
+				<div id="comment-wrapper" class="p-2">
+					<%-- 일반 댓글 --%>
+					<c:forEach items="${dokoo.dokooComments}" var="comment"
+						varStatus="vs">
+	
+						<%-- 댓글인 경우 --%>
+						<c:if test="${comment.commentRef eq 0}">
+							<div class="co-div flex-center comment-div" 
+								id="comment${comment.dokooCNo}"
+								${comment.dokooCNo == report.beenziNo ? 'style="background-color:#d156564a;"' : ''}					
+								>
+								<div class="co-left flex-center">
+									<div class="co-writer flex-center">
+										<img class="rounded-circle shadow-1-strong m-1"
+											<%-- loginMember가 아니고 댓글단 사람 프로필 가져와야돼 --%>
+	                         			src="${pageContext.request.contextPath}/resources/upload/profile/${comment.renamedFilename}"
+											alt="avatar" width="40" height="40"> <span>${comment.nickname}</span>
+									</div>
+									<div class="co-Content" id="contentDiv${comment.dokooCNo}">
+										<span id="contentSpan${comment.dokooCNo}">${comment.content}</span>
+									</div>
+								</div>
+								<div class="co-right">
+									<span class="text-secondary"> <fmt:parseDate
+											value="${comment.createdAt}" pattern="yyyy-MM-dd'T'HH:mm"
+											var="createdAt" /> <fmt:formatDate value="${createdAt}"
+											pattern="yyyy/MM/dd HH:mm" />
+									</span>
+								</div>
+							</div>
+						</c:if>
+						<%-- 댓글 끝 --%>
+	
+						<%-- 대댓글 --%>
+						<c:if test="${comment.commentRef ne 0}">
+							<div class="co-div flex-center coComment-div"
+								id="coComment${comment.dokooCNo}"
+								${comment.dokooCNo == report.beenziNo ? 'style="background-color:#d156564a;"' : ''}
+								>
+								<div class="co-left flex-center" style="margin-left: 40px;">
+									↳
+									<div class="co-writer flex-center">
+										<img class="rounded-circle shadow-1-strong m-1"
+											<%-- loginMember가 아니고 댓글단 사람 프로필 가져와야돼 --%>
+	                         src="${pageContext.request.contextPath}/resources/upload/profile/${comment.renamedFilename}"
+											alt="avatar" width="40" height="40"> <span>${comment.nickname}</span>
+									</div>
+									<div class="co-Content" id="contentDiv${comment.dokooCNo}">
+										<span id="contentSpan${comment.dokooCNo}">${comment.content}</span>
+									</div>
+								</div>
+								<div class="co-right">
+									<span class="text-secondary"> <fmt:parseDate
+											value="${comment.createdAt}" pattern="yyyy-MM-dd'T'HH:mm"
+											var="createdAt" /> <fmt:formatDate value="${createdAt}"
+											pattern="yyyy/MM/dd HH:mm" />
+									</span>
+								</div>
+							</div>
+						</c:if>
+						<%-- 대댓글 끝 --%>
+	
+					</c:forEach>
+				</div>
+	
 			</div>
-		</div>
-		<div id="comment-container" class="mt-4">
-			<div id="comment-wrapper" class="p-2">
-				<%-- 일반 댓글 --%>
-				<c:forEach items="${dokoo.dokooComments}" var="comment"
-					varStatus="vs">
-
-					<%-- 댓글인 경우 --%>
-					<c:if test="${comment.commentRef eq 0}">
-						<div class="co-div flex-center comment-div"
-							id="comment${comment.dokooCNo}"
-							<%-- ${comment.dokooCNo eq report.beenziNo ? 'style="background-color:#d156564a;"'} --%>						
-							>
-							<div class="co-left flex-center">
-								<div class="co-writer flex-center">
-									<img class="rounded-circle shadow-1-strong m-1"
-										<%-- loginMember가 아니고 댓글단 사람 프로필 가져와야돼 --%>
-                         			src="${pageContext.request.contextPath}/resources/upload/profile/${comment.renamedFilename}"
-										alt="avatar" width="40" height="40"> <span>${comment.nickname}</span>
-								</div>
-								<div class="co-Content" id="contentDiv${comment.dokooCNo}">
-									<span id="contentSpan${comment.dokooCNo}">${comment.content}</span>
-								</div>
-							</div>
-							<div class="co-right">
-								<span class="text-secondary"> <fmt:parseDate
-										value="${comment.createdAt}" pattern="yyyy-MM-dd'T'HH:mm"
-										var="createdAt" /> <fmt:formatDate value="${createdAt}"
-										pattern="yyyy/MM/dd HH:mm" />
-								</span>
-							</div>
-						</div>
-					</c:if>
-					<%-- 댓글 끝 --%>
-
-					<%-- 대댓글 --%>
-					<c:if test="${comment.commentRef ne 0}">
-						<div class="co-div flex-center coComment-div"
-							id="coComment${comment.dokooCNo}"
-							<%-- ${comment.dokooCNo eq report.beenziNo ? 'style="background-color:#d156564a;"'} --%>
-							>
-							<div class="co-left flex-center" style="margin-left: 40px;">
-								↳
-								<div class="co-writer flex-center">
-									<img class="rounded-circle shadow-1-strong m-1"
-										<%-- loginMember가 아니고 댓글단 사람 프로필 가져와야돼 --%>
-                         src="${pageContext.request.contextPath}/resources/upload/profile/${comment.renamedFilename}"
-										alt="avatar" width="40" height="40"> <span>${comment.nickname}</span>
-								</div>
-								<div class="co-Content" id="contentDiv${comment.dokooCNo}">
-									<span id="contentSpan${comment.dokooCNo}">${comment.content}</span>
-								</div>
-							</div>
-							<div class="co-right">
-								<span class="text-secondary"> <fmt:parseDate
-										value="${comment.createdAt}" pattern="yyyy-MM-dd'T'HH:mm"
-										var="createdAt" /> <fmt:formatDate value="${createdAt}"
-										pattern="yyyy/MM/dd HH:mm" />
-								</span>
-							</div>
-						</div>
-					</c:if>
-					<%-- 대댓글 끝 --%>
-
-				</c:forEach>
-			</div>
-
-		</div>
-	</section>
+		</section>
+		</c:if>
 	</c:if>
 		
-		
 	<%-- 피드일 때 --%>
-	<c:if test="${report.category eq 'pheed' || report.category eq 'pheedComment'}">
+	<c:if test="${report.category eq 'pheed' || report.category eq 'pheed_comment'}">
+		<c:if test="${empty pheed}">
+			<h1>삭제 처리가 완료된 신고입니다.</h1>
+		</c:if>
+		<c:if test="${not empty pheed}">
+		<input type="button" class="m-4 btn btn-lg btn-outline-danger" onclick="deleteReport(this);" data-beenzi-no="${report.beenziNo}" data-category="${report.category}" value="신고 발생한 글 | 댓글 삭제"/>
 		<fmt:parseDate value="${pheed.enrollDate}" pattern="yyyy-MM-dd'T'HH:mm" var="enrollDate"/>
 		<div class="pheed-container shadow bg-white">
 			<div class="pheed-writer">
@@ -176,7 +188,7 @@
 			<div class="pheed">
 				<div class="pheed-content">
 					<div class="book-info">
-						<span class="pheed-book-title" id="book-title${vs.count}"></span>
+						<span class="pheed-book-title" id="book-title-pheed"></span>
 						<span class="pheed-book-page">[${pheed.page}p]</span>
 						<p><fmt:formatDate value="${enrollDate}" pattern="yyyy.MM.dd HH:mm"/></p>
 					</div>
@@ -184,21 +196,90 @@
 				</div>
 			</div>
 		</div>
-	</c:if>
+		<%-- 피드 댓글 --%>
+		<div id="comment-container" class="m-4">
+			<div id="comment-wrapper" class="p-2">
+				<%-- 일반 댓글 --%>
+				<c:forEach items="${commentList}" var="comment" varStatus="vs">
 
+					<%-- 댓글인 경우 --%>
+					<c:if test="${comment.commentRef eq 0}">
+						<div class="co-div flex-center comment-div"
+							id="comment${comment.pheedCNo}"						
+							${comment.pheedCNo == report.beenziNo ? 'style="background-color:#d156564a;"' : ''}
+							>
+							<div class="co-left flex-center">
+								<div class="co-writer flex-center">
+									<img class="rounded-circle shadow-1-strong m-1"
+										<%-- loginMember가 아니고 댓글단 사람 프로필 가져와야돼 --%>
+                         			src="${pageContext.request.contextPath}/resources/upload/profile/${comment.renamedFilename}"
+										alt="avatar" width="40" height="40"> <span>${comment.nickname}</span>
+								</div>
+								<div class="co-Content" id="contentDiv${comment.pheedCNo}">
+									<span id="contentSpan${comment.pheedCNo}">${comment.content}</span>
+								</div>
+							</div>
+							<div class="co-right">
+								<span class="text-secondary"> <fmt:parseDate
+										value="${comment.createdAt}" pattern="yyyy-MM-dd'T'HH:mm"
+										var="createdAt" /> <fmt:formatDate value="${createdAt}"
+										pattern="yyyy/MM/dd HH:mm" />
+								</span>
+							</div>
+						</div>
+					</c:if>
+					<%-- 댓글 끝 --%>
+
+					<%-- 대댓글 --%>
+					<c:if test="${comment.commentRef ne 0}">
+						<div class="co-div flex-center coComment-div"
+							id="coComment${comment.pheedCNo}"
+							${comment.pheedCNo == report.beenziNo ? 'style="background-color:#d156564a;"' : ''}
+							>
+							<div class="co-left flex-center" style="margin-left: 40px;">
+								↳
+								<div class="co-writer flex-center">
+									<img class="rounded-circle shadow-1-strong m-1"
+										<%-- loginMember가 아니고 댓글단 사람 프로필 가져와야돼 --%>
+                         src="${pageContext.request.contextPath}/resources/upload/profile/${comment.renamedFilename}"
+										alt="avatar" width="40" height="40"> <span>${comment.nickname}</span>
+								</div>
+								<div class="co-Content" id="contentDiv${comment.pheedCNo}">
+									<span id="contentSpan${comment.pheedCNo}">${comment.content}</span>
+								</div>
+							</div>
+							<div class="co-right">
+								<span class="text-secondary"> <fmt:parseDate
+										value="${comment.createdAt}" pattern="yyyy-MM-dd'T'HH:mm"
+										var="createdAt" /> <fmt:formatDate value="${createdAt}"
+										pattern="yyyy/MM/dd HH:mm" />
+								</span>
+							</div>
+						</div>
+					</c:if>
+					<%-- 대댓글 끝 --%>
+				</c:forEach>
+			</div>
+		</div>
+		</c:if>
+	</c:if>
+	</div>
 </section>
 <script>
 window.addEventListener('load', () => {
+	const bookTitlePheed = document.querySelector("#book-title-pheed");
 	const bookTitle = document.querySelector("#book-title");
 	const bookAuthor = document.querySelector("#book-author");
 	const bookCategory = document.querySelector("#book-category");
+	
+	const itemId = ${not empty dokoo.itemId ? dokoo.itemId : pheed.itemId}; 
 	
 	$.ajax({
 		url : '${pageContext.request.contextPath}/search/selectBook.do',
 		data : {
 			ttbkey : 'ttbiaj96820130001',
 			itemIdType : 'ISBN13', 
-			ItemId : ${dokoo.itemId},
+			ItemId : itemId,
 			output : 'js',
 			Cover : 'Big',
 			Version : '20131101'
@@ -208,14 +289,48 @@ window.addEventListener('load', () => {
 			//console.log(item);
 			let {title, subInfo, author, pubDate, description, isbn13, cover, customerReviewRank, categoryId, categoryName, publisher} = item[0];			
 			const {subTitle, itemPage} = subInfo;
-			bookTitle.innerText = title;
-			bookAuthor.innerText = author;
-			bookCategory.innerText = categoryName;
+			if(bookAuthor != null && bookCategory != null && bookTitle != null){
+				bookTitle.innerText = title;
+				bookAuthor.innerText = author;
+				bookCategory.innerText = categoryName;
+			}
+			if(bookTitlePheed != null){
+				bookTitlePheed.innerText = title;
+			}
 		},
 		error : console.log
 	});
 });
 
+const deleteReport = (e) => {
+	console.log(e.dataset.beenziNo);	
+	console.log(e.dataset.category);	
+	
+	const csrfHeader = '${_csrf.headerName}';
+	const csrfToken = '${_csrf.token}';
+	const headers = {};
+	headers[csrfHeader] = csrfToken;
+	
+	if(confirm('신고당한 글 | 댓글을 삭제하시겠습니까?')){
+		$.ajax({
+			url : "${pageContext.request.contextPath}/admin/reportDelete.do", 
+			method : 'post',
+			headers,
+			data : {
+				beenziNo : e.dataset.beenziNo,
+				category : e.dataset.category
+			},
+			success(resp){
+				const checkDiv = document.querySelector("#check-div");
+				const div = `<h1>삭제 처리가 완료된 신고입니다.</h1>`;
+				checkDiv.innerHTML = "";
+				checkDiv.insertAdjacentHTML('beforeend', div);
+			},
+			error : console.log
+		});
+		
+	}
+};
 </script>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

@@ -33,18 +33,18 @@
             <th scope="col" >신고자</th>
             <th scope="col" >
             	<select name="category" id="category">
-            		<option selected disabled>카테고리</option>
+            		<option selected>카테고리</option>
             		<option value="pheed">피드</option>
             		<option value="dokoo">독후감</option>
-            		<option value="pheedComment">피드댓글</option>
-            		<option value="dokooComment">독후감댓글</option>
+            		<option value="pheed_comment">피드댓글</option>
+            		<option value="dokoo_comment">독후감댓글</option>
             	</select>
      		</th>
             <th scope="col" >글번호</th>
             <th scope="col" >신고날짜</th>
             <th scope="col" >
             	<select name="status" id="status">
-            		<option selected disabled>상태</option>
+            		<option selected >상태</option>
             		<option value="U">처리전</option>
             		<option value="E">처리완료</option>
             	</select>
@@ -74,6 +74,7 @@
 </section>
 
 <script>
+					
 const tbody = document.querySelector("#tbody");
 <%-- 카테고리 변경 시 eventListener --%>
 document.querySelector("#category").addEventListener('change', (e) => {
@@ -108,9 +109,9 @@ document.querySelector("#category").addEventListener('change', (e) => {
 							minute < 10? "0" + minute : minute;
 				
 				status = (status == 'U' ? '처리전' : '처리완료');  
-					
 				let div = `
-				<tr data-report-no="\${reportNo}">
+				<tr data-report-no="\${reportNo}"
+					onclick="location.href='${pageContext.request.contextPath}/admin/reportDetail.do?reportNo=\${reportNo}';">
 					<td>\${memberId}</td>
 					<td>\${category}</td>
 		            <td>\${beenziNo}</td>

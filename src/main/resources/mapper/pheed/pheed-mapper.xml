@@ -105,10 +105,15 @@
 	
 	<select id="selectOnePheed" resultMap="pheedMap">
 		select 
-			*
+			a.*,
+			p.*,
+			m.nickname,
+			m.renamed_filename profile
 		from 
 			pheed p left join pheed_attachment a 
 				on p.pheed_no = a.pheed_no  
+				left join member m
+				on p.member_id = m.member_id
 		where 
 			p.pheed_no = #{pheedNo}
 	</select>
@@ -116,10 +121,16 @@
 	<resultMap id="pheedMap" type="pheed">
 		<id column="pheed_no" property="pheedNo" />
 		<result column="item_id" property="itemId"/>
+		<result column="member_id" property="memberId"/>
 		<result column="page" property="page"/>
 		<result column="content" property="content"/>
 		<result column="is_opened" property="isOpened"/>
 		<result column="enroll_date" property="enrollDate"/>
+		<association property="member" javaType="member">
+			<id column="member_id" property="memberId"/>
+			<result column="nickname" property="nickname"/>
+			<result column="profile" property="renamedFilename"/>
+		</association>
 		<association property="attach" javaType="pheedAttachment">
 			<id column="attach_no" property="attachNo" />
 			<result column="pheed_no" property="pheedNo"/>

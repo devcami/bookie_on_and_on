@@ -81,7 +81,7 @@
 			report
 		set
 			status = #{status},
-			updatedAt = sysdate
+			updated_at = sysdate
 		where
 			report_no = #{reportNo}
 	</update>
