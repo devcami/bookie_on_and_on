@@ -923,5 +923,42 @@ public class ClubController {
 		return ResponseEntity.ok(resource);
 	}
 	
+	@PostMapping("/clubMissionComplete.do")
+	public ResponseEntity<?> missionComplete(
+			@RequestParam String memberId,
+			@RequestParam String answer,
+			@RequestParam (name = "upFile", required = false) MultipartFile upFile,
+			@RequestParam (name = "delFile", required = false) MultipartFile delFile			
+			){
+		
+		try {
+			log.debug("memberId = {}", memberId);
+			log.debug("answer = {}", answer);
+			log.debug("upFile = {}", upFile);
+			log.debug("delFile = {}", delFile);
+
+			Map<String, Object> map = new HashMap<>();
+			String saveDirectory = application.getRealPath("/resources/upload/mission");
+			
+			// 삭제할 파일 있으면 삭제해
+			if(delFile != null) {
+				
+			}
+			
+			// 업로드할 파일 있으면 업로드 해
+			if(upFile != null) {
+				log.debug("파일 있수다");
+			}
+			
+
+			map.put("msg", "미션이 성공적으로 제출되었습니다!");
+			
+			return ResponseEntity.ok(map);
+		} catch(Exception e) {
+			log.error("북클럽 미션 수행 오류!", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+		
+	}
 	
 }

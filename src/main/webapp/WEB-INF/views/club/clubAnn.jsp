@@ -14,6 +14,9 @@
 <sec:authorize access="isAuthenticated()">
 	<sec:authentication property="principal" var="loginMember"/>
 </sec:authorize>
+${club.bookList.get(0).bookTitle}
+${club.bookList.get(1).bookTitle}
+${club.bookList.get(2).bookTitle}
 <div id="title-header" class="" style="display: none;">
 	<div id="header-div">
 		<div id="title-header-left">
@@ -146,7 +149,7 @@
 		<div id="mission-div">
 			
 			<c:forEach items="${club.bookList}" var="book" varStatus="vs">
-				<div class="mCard" data-no="${book.itemId}" onclick="openDetailMission(this);">
+				<div class="mCard" data-no="${book.itemId}" data-vs-no="${vs.count}" onclick="openDetailMission(this);">
 					<div class='m-img-div' data-no="${vs.count}">
 						<img src="${fn:replace(book.imgSrc, 'covermini', 'cover')}" value="${book.itemId}">								
 					</div>
@@ -216,7 +219,7 @@
 	  <div class="modal-dialog" role="document">
 	    <div class="modal-content">
 	      <div class="modal-header">
-	        <h5 class="modal-title" id="exampleModalLabel">📕월급쟁이 부자로 은퇴하라</h5>
+	        <h5 class="modal-title" id="missionModalBook"></h5>
 	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 	          <span aria-hidden="true">&times;</span>
 	        </button>
@@ -329,10 +332,16 @@ const cnt = ${club.bookList.get(0).missionList.size()};
 const clubb = '${club.bookList.get(0).missionList.get(0).title}';
 
 
+let arr = new Array();
+<c:forEach items="${club.bookList}" var="book" varStatus="vs">
+	arr.push({ "bookTitle": "${book.bookTitle}"});
+</c:forEach>
 
 /********** 미션 디테일 모달 열어 ***************/
 const openDetailMission = (e) => {
-	const container = document.querySelector('#modalMissionWrapper');	
+	const container = document.querySelector('#modalMissionWrapper');
+	const headContainer = document.querySelector('#missionModalBook');
+	
 	
 	// 미션 모달 안에 내용 전부 비워
 	while (container.hasChildNodes()) {	// 부모노드가 자식이 있는지 여부를 알아낸다
@@ -340,11 +349,15 @@ const openDetailMission = (e) => {
 				container.firstChild
 		  );
 		}
+	headContainer.innerText = '';
 	
 	const itemId = e.dataset.no;
 	const eNo = e.firstElementChild.dataset.no - 1;
 	const tbodyId = "#tbody" + itemId;
 	const mCnt = $(e).find(tbodyId).children().length;
+	const vsNo = e.dataset.vsNo-1;
+	const bookTitle = arr[vsNo].bookTitle;
+
 	// console.log(eNo);
 	// console.log(mCnt);
 	
@@ -358,10 +371,10 @@ const openDetailMission = (e) => {
 		},
 		method : "GET",
 		success(mList){
-			// console.log(mList);
+			// console.log('여기', mList);
 			
 			const {missionList} = mList;
-			console.log(missionList);
+			// console.log(missionList);
 			
 			if(missionList.length == 0){
 				// 미션없는 경우
@@ -373,6 +386,8 @@ const openDetailMission = (e) => {
 					const day = mission.mendDate.dayOfMonth;
 					const mEndDate = year + "." + month + "." + day;
 					
+					headContainer.innerText = `📕\${bookTitle}`;
+					
 					const div = `
 				        <div id="m\${mission.missionNo}" class="modalDiv">
 					    	<span class="missionNo">미션 \${index + 1}</span>
@@ -383,6 +398,7 @@ const openDetailMission = (e) => {
 				    	</div>`;	
 				    
 				    container.insertAdjacentHTML('beforeend', div);
+				    
 				    	
 				})
 				
