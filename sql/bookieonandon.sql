@@ -327,7 +327,20 @@ create table persistent_logins (
     series varchar(64) primary key, 
     token varchar(64) not null,  -- username, password, expire time을 단방향 암호화한 값
     last_used timestamp not null);
-    
+
+----------------------------------
+-- 알림테이블
+----------------------------------
+create table alarm(
+    alarm_no number,
+    member_id varchar2(50),
+    alarm_content varchar2(1000),
+    last_check number default 0,
+    created_at date default sysdate,
+    constraint pk_alarm primary key(alarm_no)
+);
+create sequence seq_alarm_no;
+
 -- 트리거
 select * from user_triggers;
 drop trigger trigger_dokoo_comment;
@@ -411,6 +424,7 @@ select * from wishlist_club;
 select * from likes_pheed;
 select * from likes_dokoo;
 select * from likes_club;
+select * from alarm;
 
 select * from persistent_logins;
 
@@ -686,6 +700,15 @@ from
 where b.member_id = 'tmddbs' and b.item_id = '9788932474755' ;
 
 
+select 
+    m.*,
+    i.interest
+from 
+    member m join interest i
+        on m.member_id = i.member_id
+where
+    interest like '%언어%';
+
 -- 1~3
 select * 
 from 
@@ -886,3 +909,13 @@ select * from club_book;
          update club_book set book_title = '부자의 독서법' where club_no = 45 and item_id = '9791187444770';
          update club_book set book_title = '월급쟁이 부자로 은퇴하라' where club_no = 45 and item_id = '9788925578156';
          commit;
+         
+         
+         select
+			count(*)
+		from
+			alarm
+		where
+			member_id = 'tester';
+            
+            select * from alarm;
