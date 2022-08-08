@@ -1,11 +1,16 @@
 package com.kh.bookie.admin.model.service;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.bookie.admin.model.dao.AdminDao;
 import com.kh.bookie.admin.model.dto.Alarm;
+import com.kh.bookie.admin.model.dto.Report;
+import com.kh.bookie.member.model.dto.Member;
 
 import lombok.NonNull;
 
@@ -24,5 +29,35 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	public int getUnreadCount(@NonNull String memberId) {
 		return adminDao.getUnreadCount(memberId);
+	}
+	
+	@Override
+	public List<Report> selectReportList() {
+		return adminDao.selectReportList();
+	}
+	
+	@Override
+	public List<Report> selectReportListByCategory(String category) {
+		return adminDao.selectReportListByCategory(category);
+	}
+	
+	@Override
+	public List<Report> selectReportListByStatus(String status) {
+		return adminDao.selectReportListByStatus(status);
+	}
+	
+	@Override
+	public List<Report> selectReportListByBoth(Map<String, Object> map) {
+		return adminDao.selectReportListByBoth(map);
+	}
+	
+	@Override
+	public Report selectOneReport(int reportNo) {
+		return adminDao.selectOneReport(reportNo);
+	}
+	
+	@Override
+	public int reportUpdate(Map<String, Object> map) {
+		return adminDao.reportUpdate(map);
 	}
 }

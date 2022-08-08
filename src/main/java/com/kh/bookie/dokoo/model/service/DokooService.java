@@ -42,4 +42,6 @@ public interface DokooService {
 
 	int commentRefEnroll(DokooComment dc);
 
+	DokooComment selectOneDokooComment(int dokooCNo);
+
 }

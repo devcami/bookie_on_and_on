@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.session.RowBounds;
 
 import com.kh.bookie.dokoo.model.dto.Dokoo;
@@ -49,6 +50,9 @@ public interface DokooDao {
 	int updateDokoo(Dokoo dokoo);
 
 	int commentRefEnroll(DokooComment dc);
+
+	@Select("select * from dokoo_comment where dokooc_no = #{dokooCNo}")
+	DokooComment selectOneDokooComment(int dokooCNo);
 
 	
 	

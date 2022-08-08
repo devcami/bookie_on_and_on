@@ -289,8 +289,8 @@ hr{
     width: 73%;
 }
 div.comment-div span.text-secondary {
-
     float: right;
+    font-size: 14px;
 }
 
 .link-grey { color: #aaa; } .link-grey:hover { color: #FE9801; }
