@@ -8,6 +8,7 @@ import com.kh.bookie.club.model.dto.ChatAttachment;
 import com.kh.bookie.club.model.dto.ChatComment;
 import com.kh.bookie.club.model.dto.Club;
 import com.kh.bookie.club.model.dto.Mission;
+import com.kh.bookie.club.model.dto.MissionStatus;
 
 public interface ClubService {
 
@@ -71,6 +72,12 @@ public interface ClubService {
 
 	Club selectClubForClubStory(Map<String, Object> map);
 
-	List<Mission> getMissionsForOneMember(Map<String, Object> map);
+	List<Mission> getMissionsForOneMember(int clubNo, String memberId);
+
+	int missionStatusUpdate(MissionStatus ms);
+
+	int missionStatusInsert(MissionStatus ms);
+
+	MissionStatus selectOneMissionStatus(MissionStatus ms);
 
 }

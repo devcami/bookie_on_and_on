@@ -6,10 +6,17 @@ section#content	{
 	border-radius: 5px;
 }
 
+#menu {
+	text-align: center;
+}
+
 /****** 미션 bar *******/
 .mission-bar {
 	border-left: 5px solid black;
     width: 15px;
+}
+#mission-bar-last{
+	width: 15px;
 }
 .fa-circle-border {
     transform: translate(-14px, -5px);
@@ -19,22 +26,137 @@ section#content	{
     transform: translate(-9px, -26px);
     font-size: 15.3px;
 }
+.fa-circle-border-last {
+    transform: translate(-10px, -5px);
+    font-size: 25px;
+}
+.fa-circle-inside-last {
+    transform: translate(-34px, -9px);
+    font-size: 15.3px;
+}
+
 
 /****** 미션 card **********/
 #mission-wrapper {
-	/* padding-left: 30px; */
+	margin-top: 37px;
 }
 .mission-left {
 	width: 25%;
 	text-align: right;
     margin-right: 30px;
 }
+.mission-left-start {
+	font-size: 35px;
+	transform: translateY(-18px);
+}
+.statusDiv {
+	    transform: translateY(-13px);
+}
 .mission-container {
 	display: flex;
 }
+.mission-date-card {
+	margin-left: 30px;
+	transform: translateY(-15px);
+}
+.mendDateSpan {
+	font-size: 30px;
+}
 .mission-card {
 	display: flex;
-    flex-direction: column;
-    margin-left: 30px;
-    transform: translateY(-10px);
+	margin-top: 5px;
+    margin-bottom: 40px;
+    border-radius: 20px;
+    padding: 10px 19px 10px 10px;
+    box-shadow: #ced4da 6px 2px 16px 0px, rgb(255 255 255 / 80%) -6px -2px 16px 0px;
+	cursor: pointer;
+}
+.mission-card img {
+	width: 80px;
+}
+.mission-info {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	margin-left: 10px;
+}
+.mission-info {
+	font-size: 25px;
+}
+.status-span {
+	font-size: 35px;
+    color: white;
+    border-radius: 10px;
+    padding: 5px 10px;
+}
+.status-again {
+	font-size: 20px;
+    background: grey;
+    color: white;
+    border-radius: 10px;
+    padding: 5px 8px;
+}
+
+/******** 미션 모달 *********/
+.close {
+	padding: 0 !important;
+	margin: 0 !important;
+}
+.modal-body {
+	
+}
+.modal-header h5 {
+	margin-bottom: 0px !important;
+	font-size: 1.7rem !important;
+}
+.modal-body-top{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+.modal-body-top span {
+	font-size: 30px;
+}
+.modal-body-top h5{
+	display: inline-block;
+	text-align: right;
+}
+.modal-body p {
+	font-size: 25px;
+}
+.mission-user {
+	display: flex;
+	flex-direction: column;
+}
+#answer {
+	font-size: 20px;
+}
+input::file-selector-button {
+  background-color: orange;
+  border: none;
+  border-radius: 0.3rem;
+  padding: 4px;
+  color: white;
+  cursor: pointer;
+}
+input::file-selector-button:hover {
+  background-color: orange;
+  cursor: pointer;
+}
+.btn-enroll {
+	background: orange;
+    color: white;
+}
+.btn-enroll:focus, .btn-enroll:focus-visible {
+	outline: unse !important;
+}
+
+
+#profile-img {
+ 	width: 60%;
+	margin-bottom: 10px;
+}
+
+#deleteBtn:focus, #deleteBtn:focus-visible {
+	outline: unset !important;	
 }

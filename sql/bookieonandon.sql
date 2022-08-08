@@ -213,14 +213,18 @@ create table mission_status (
     answer varchar2(1000),
     renamed_filename varchar2(256),
     original_filename varchar2(256),
-    constraint ck_mission_status check (status in ('P', 'F', 'I')),
+    constraint ck_mission_status check (status in ('P', 'F', 'I', 'A')),
     constraint pk_mission_status_no primary key(mission_no, member_id),
     constraint fk_mission_status_no foreign key(mission_no) references mission(mission_no) on delete cascade,
     constraint fk_mission_status_member_id foreign key(member_id) references member(member_id)
 );
 alter table mission_status
 DROP constraint ck_mission_status; 
-alter table mission_status add constraint ck_mission_status check (status in ('P', 'F', 'I'));
+alter table mission_status add constraint ck_mission_status check (status in ('P', 'F', 'I', 'A'));
+commit;
+update mission_status set updated_at = sysdate - 1 where mission_no = 39 and member_id = 'tmddbs';
+update mission_status set updated_at = sysdate - 2 where mission_no = 38 and member_id = 'tmddbs';
+update mission_status set updated_at = sysdate - 3 where mission_no = 38 and member_id = 'honggd';
 select * from mission_status;
 -- 16. my_club
 create table my_club (
@@ -963,6 +967,35 @@ select * from club_book where club_no = 45;
 			member_id = 'tester';
             
             select * from alarm;
+            
+            
+select * from mission_status;
+
+select * from mission where club_no = 45;
+update mission_status set status = 'A' where mission_no = 37 and member_id = 'tmddbs';
+update mission_status set status = 'I' where mission_no = 38 and member_id = 'tmddbs';
+commit;
+
+delete mission_status where member_id = 'tmddbs';
+
+
+
+
+select  
+    m.*,
+    (select img_src from club_book c where c.club_no = 45 and m.m_item_id = c.item_id) img_src
+from 
+    mission m 
+where 
+    m.club_no = 45;
+
+select * from mission where club_no = 45;
+select * from mission_status;
+update mission_status set renamed_filename = '20220809_005528072_481.jpg' where mission_no = 37 and member_id = 'tmddbs';
+update mission_status set status = 'A' where mission_no = 37 and member_id = 'tmddbs';
+delete from mission_status where member_id = 'tmddbs';
+commit;
+
 select 
 			*
 		from 
