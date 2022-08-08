@@ -20,6 +20,7 @@
 		<a href="${pageContext.request.contextPath}/admin/report.do" class="btn red"    id="report" >신고</a>
 		<a href="${pageContext.request.contextPath}/admin/Q&A.do" class="btn purple" id="question">Q & A</a>
 		<a href="${pageContext.request.contextPath}/admin/sendAlarm.do" class="btn green"  id="alarm">알림전송</a>
+		<a href="${pageContext.request.contextPath}/club/missionCheck.do" class="btn blue"  id="mission">미션확인</a>
      </div>
 </div>
 <div>
@@ -42,7 +43,7 @@
 	  <div class="input-group-append">
 		<button 
 	     type="button" 
-	     class="btn blue"
+	     class="btn yellow"
 	     data-toggle="modal" data-target="#adminNoticeModal">알림전송하기</button>            
 	  </div>
 	</div>
