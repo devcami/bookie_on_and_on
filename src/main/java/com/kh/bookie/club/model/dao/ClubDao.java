@@ -125,9 +125,7 @@ public interface ClubDao {
 	int selectTotalClubMonth();
 
 	List<ClubApplicant> selectClubApplicants(int clubNo);
-	
-	
 
-	
-	
+	List<Mission> getMissionsForOneMember(Map<String, Object> map);
+
 }

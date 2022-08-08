@@ -13,6 +13,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,6 +56,8 @@ public class ClubController {
 	
 	@Autowired
 	ResourceLoader resourceLoader;
+	
+	final String ALADDIN_URL = "http://www.aladin.co.kr/ttb/api/";
 
 	@GetMapping("/clubList.do")
 	public ModelAndView clubList(
@@ -874,9 +877,18 @@ public class ClubController {
 		
 		try {
 			
-			log.debug("미션갈때 clubNo = {}", clubNo);
-			log.debug("미션갈때 memberId = {}", memberId);
+			Map<String, Object> map = new HashMap<>();
 			
+			map.put("clubNo", clubNo);
+			map.put("memberId", memberId);
+			
+//			log.debug("미션갈때 clubNo = {}", clubNo);
+//			log.debug("미션갈때 memberId = {}", memberId);
+			
+			
+			List<Mission> missions = clubService.getMissionsForOneMember(map);
+			
+			mav.addObject("missions", missions);
 			mav.addObject("clubNo", clubNo);
 			mav.addObject("memberId", memberId);
 			mav.setViewName("club/clubMission");
@@ -889,6 +901,26 @@ public class ClubController {
 		
 		return mav;
 		
+	}
+	
+	/**
+	 * 알라딘 API - 검색한 한권 정보 가져오기 
+	 */
+	@GetMapping("/selectBook.do")
+	public ResponseEntity<?> selectBook(
+									@RequestParam String ttbkey,
+									@RequestParam String itemIdType,
+									@RequestParam String ItemId,
+									@RequestParam String output,
+									@RequestParam String Version) {
+		log.debug("오긴해?");
+		String url = ALADDIN_URL + "ItemLookUp.aspx?ttbkey=" + ttbkey
+					+ "&itemIdType=" + itemIdType
+					+ "&ItemId=" + ItemId
+					+ "&output=" + output
+					+ "&Version=" + Version;
+		Resource resource = resourceLoader.getResource(url);
+		return ResponseEntity.ok(resource);
 	}
 	
 	

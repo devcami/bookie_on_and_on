@@ -34,13 +34,15 @@ section#content {
 /* 카테고리 */
 #category {
 	    border-bottom: 1px solid #dee2e6;
+	    text-align: center;
 }
 #category ul {
 	display: flex;
 	justify-content: space-between;
 	align-items: flex-start;
-	flex-direction: column;
+	/* flex-direction: column; */
     font-size: 30px;
+    margin-top: 15px;
 }
 #category span {
 	font-size: 50px;
@@ -202,3 +204,69 @@ section#content {
 
 
 /********* 미션 **********/
+.subTitle span {
+	color: grey;
+	font-size: 25px;	
+	margin-left: 17px;
+}
+
+.missionDiv {
+	margin: 0 10px;
+    background-color: #FFF;
+    border-radius: 15px;
+    background-repeat: no-repeat;
+    background-position: top;
+    background-attachment: scroll;
+    background-size: 100%;
+    margin-bottom: 15px;
+}
+
+.mission-book {
+    border-radius: 10px;
+    box-shadow: 0px 1px 5px #00000030;
+}
+.mbook-info {
+	background-color: #e5e1c2;
+	border-radius: 10px;
+    box-shadow: 0px 1px 5px #00000030;
+}
+.mission-content table{
+	width: 100%;
+}
+
+.missionWrapper {
+	
+}
+.missionLabel {
+	color: darkgrey;
+}
+.missionWrapper tr {
+	display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin: 10px 0px;
+}
+
+.book-title {
+	font-size: 30px;
+}
+
+/************** 풀 캘린더 ***************/
+.fc-h-event {
+	border: unset !important;
+	
+}
+.fc .fc-daygrid-event-harness-abs {
+	background: #fba1a1 !important;
+}
+.fc-h-event .fc-event-title-container {
+	background: #fba1a1 !important;
+}
+.fc-daygrid-block-event .fc-event-time, .fc-daygrid-block-event .fc-event-title {
+	background: #fba1a1 !important;
+}
+
+.fc-h-event .fc-event-main {
+	box-shadow: 0px 1px 8px 0px #00000030;
+}
+

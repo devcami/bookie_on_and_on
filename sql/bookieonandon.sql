@@ -210,12 +210,18 @@ create table mission_status (
     mission_no   number not null,
     member_id   varchar2(200) not null,
     status      char(1) default 'F',
-    constraint ck_mission_status check (status in ('P', 'F')),
-    constraint pk_mission_status_no primary key(mission_no),
+    answer varchar2(1000),
+    renamed_filename varchar2(256),
+    original_filename varchar2(256),
+    constraint ck_mission_status check (status in ('P', 'F', 'I')),
+    constraint pk_mission_status_no primary key(mission_no, member_id),
     constraint fk_mission_status_no foreign key(mission_no) references mission(mission_no) on delete cascade,
     constraint fk_mission_status_member_id foreign key(member_id) references member(member_id)
 );
-
+alter table mission_status
+DROP constraint ck_mission_status; 
+alter table mission_status add constraint ck_mission_status check (status in ('P', 'F', 'I'));
+select * from mission_status;
 -- 16. my_club
 create table my_club (
     club_no      number not null,
@@ -904,6 +910,42 @@ select * from club_book;
          c.club_no = 45;
          
          select * from club_book;
+
+
+select * from mission_status;
+insert into mission_status values (38, 'tmddbs', 'F', '미션페이지 테스트22', null, null);
+insert into mission_status values (38, 'honggd', 'F', '홍지디 미션페이지테스트', null, null);
+
+select * from mission where club_no = 45;
+
+select
+    m.*,
+    ms.*,
+    (select img_src from club_book c where c.club_no = 45 and m.m_item_id = c.item_id) img_src
+from 
+    mission m 
+        left join mission_status ms on m.mission_no = ms.mission_no
+where 
+    (member_id = 'tmddbs' or member_id is null) and m.club_no = 45
+order by m_endDate;
+select * from mission;
+select * from club_book where club_no = 45;
+
+
+
+		select
+		    m.*,
+		    ms.*,
+		    ms.mission_no mNo,
+		    (select img_src from club_book c where c.club_no = 45 and m.m_item_id = c.item_id) img_src
+		from 
+		    mission m 
+		        left join mission_status ms on m.mission_no = ms.mission_no
+		where 
+		    (member_id = 'tmddbs' or member_id is null) and m.club_no = 45
+		order by 
+			m_endDate
+
          
          update club_book set book_title = '경제대마왕 반드시 부자되는 투자의 소신' where club_no = 45 and item_id = '9788957822074';
          update club_book set book_title = '부자의 독서법' where club_no = 45 and item_id = '9791187444770';

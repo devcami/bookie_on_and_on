@@ -12,18 +12,6 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param value="북클럽스토리" name="title"/>
 </jsp:include>
-<script>
-/* 달력출력 스크립트 */
-document.addEventListener('DOMContentLoaded', function() {
-  var calendarEl = document.getElementById('calendar');
-  var calendar = new FullCalendar.Calendar(calendarEl, {
-    initialView: 'dayGridMonth'
-  });
-  calendar.render();
-});
-
-</script>
-${club}
 <sec:authorize access="isAuthenticated()">
 	<sec:authentication property="principal" var="loginMember"/>
 </sec:authorize>
@@ -56,8 +44,8 @@ ${club}
 			<ul>
 				<li><a href="#book-container">📙선정 도서</a></li>
 				<li><a href="#clubMember-container"> 👩‍👩‍👦활동 멤버</a></li>
-				<li><a href="#mission-container">🏆미션</a></li>
 				<li><a href="#schedule-container">📅스케줄</a></li>
+				<li><a href="#mission-container">🏆미션</a></li>
 			</ul>
 		</div>
 	</div>
@@ -92,12 +80,11 @@ ${club}
 					<img src="${fn:replace(book.imgSrc, 'covermini', 'cover')}">
 					<div class="book-info">
 						<span class="title">${book.bookTitle}</span>
-						<span class="nextTitle">데루야 하나코, 오카다 게이코 (지은이)</span>
-						<span class="nextTitle">비즈니스 북스 2019.07.29</span>
+						<span class="nextTitle" id="bookAuthor${book.itemId}"></span>
+						<span class="nextTitle" id="bookSubInfo${book.itemId}"></span>
 					</div>			
 				</div>
-				<p class="bookDescription">
-					설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명설명
+				<p class="bookDescription" id="bookDesc${book.itemId}">
 				</p>
 			</div>
 		</div>
@@ -149,8 +136,38 @@ ${club}
 	<%-- 미션 --%>
 	<div id="mission-container" class="divs">
 		<div class="subTitle" >
-			<h1 style="margin-bottom: 25px;">🧡미션🧡</h1>
+			<h1 style="margin-bottom: 5px;">🧡미션🧡</h1>
+			<span>자세한 미션 내용은 미션 메뉴에서 확인해주세요!</span>
 		</div>
+		
+		
+		<c:forEach items="${club.bookList}" var="book" varStatus="vs">
+		<div class="missionDiv">
+			<div class="mission-book">
+				<div class="mbook-info p-3">
+					<span class="book-title">book #${vs.count} - ${book.bookTitle}</span>
+				</div>
+				<div class="p-3 mission-content">
+			      	<table>
+			      		<tbody class="missionWrapper">
+			      			<c:if test="${book.missionList.isEmpty()}">
+					      		<tr class="missionLabel">
+			      					<td colspan="3" style="margin-bottom: 17px;">미션이 없습니다!</td>
+			      				</tr>					      				
+			      			</c:if>
+							<c:forEach items="${book.missionList}" var="mission" varStatus="ms">
+								<tr class="=&quot;head-tr&quot;" id="mission1">
+									<td>💡 ${mission.title}</td>
+									<td><fmt:formatNumber value="${mission.point}" pattern="#,###" />원</td>
+									<td>~${mission.mendDate}</td>
+								</tr>
+							</c:forEach>
+						</tbody>
+				   </table>
+				</div>
+			</div>
+		</div>
+		</c:forEach>
 	</div>
 	<%-- 미션 끝 --%>
 	
@@ -166,6 +183,27 @@ ${club}
 <script>
 
 
+/* 달력출력 스크립트 */
+document.addEventListener('DOMContentLoaded', function() {
+  var calendarEl = document.getElementById('calendar');
+  var calendar = new FullCalendar.Calendar(calendarEl, {
+    initialView: 'dayGridMonth',
+    events: [
+/*        	 {
+            title: 'All Day Event',
+            start: '2022-08-08'
+          }, */
+          {
+            title: '북클럽 기간',
+            start: '${club.clubStart}',
+            end: '${club.clubEnd}'
+          }
+      ]
+    
+  });
+  calendar.render();
+});
+
 /************ 상단 progress 바 **************/
  $(function() {
  $("section").prognroll(
@@ -178,42 +216,79 @@ $(".content").prognroll({
 
 /**************** 로드될 때 할 일 ***********************/
 window.addEventListener('load', (e) => {
-	const bookListSize = "${club.bookList.size()}";
 	
+	const bookListSize = "${club.bookList.size()}";
 	
 	// 마지막 bookBar는 좀 길게 해
 	const bookBarId = "#bookBar" + bookListSize;
-	$(bookBarId).css('height', '325px');
+/* 	$(bookBarId).css('height', '325px'); */
 	
 	// 첫 번째 책, 두 번째 책, 세 번재 책, 네 번재 책 뿌려
 	for(let i = 0; i < bookListSize; i++){
 		
 		let bookTagId = "#bookTag" + (i+1);
+		console.log(i);
 		
 		switch(i){
 		case(0): 
-			console.log('0일때');
 			$(bookTagId)[0].innerText = "첫 번째 책";
 			break;
 		case(1): 
-			console.log('1일때');
 			$(bookTagId)[0].innerText = "두 번째 책";
 			break;
 		case(2): 
-			console.log('2일때');
 			$(bookTagId)[0].innerText = "세 번째 책";
 			break;
 		case(3): 
-			console.log('2일때');
 			$(bookTagId)[0].innerText = "네 번째 책";
 			break;
 		}
-		
 
 	}
 	
 	
+	
+	/******* 선정 도서 정보 알라딘에서 가져와서 뿌리기 ********/
+	let arr = new Array();
+	<c:forEach items="${club.bookList}" var="book">
+		arr.push({itemId : "${book.itemId}"});
+	</c:forEach>
+
+	
+	arr.forEach((item, index) => {
+
+		let itemId = arr[index].itemId;
+		console.log(itemId);
+		
+	 	$.ajax({
+	 		url : '${pageContext.request.contextPath}/club/selectBook.do',
+			data : {
+				ttbkey : 'ttbiaj96820130001', // 우리 접속 키
+				itemIdType : 'ISBN13', 
+				ItemId : itemId,
+				output : 'js', // json형태로 받을게
+				Version : '20131101' // 2013년 버전으로 줘라
+			},
+			success(resp){
+				
+				const {item} = resp;
+				
+				let bookAuthorId = "#bookAuthor" + itemId;
+				let bookSubInfoId = "#bookSubInfo" + itemId;
+				let bookDescId = "#bookDesc" + itemId;
+				
+				document.querySelector(bookAuthorId).innerHTML = `\${item[0].author}`;
+				document.querySelector(bookSubInfoId).innerHTML = `\${item[0].publisher} \${item[0].pubDate.replace(/-/g, '.')} `;
+				document.querySelector(bookDescId).innerHTML = `\${item[0].description}`;
+				
+			},
+			error : console.log
+		}); 
+	});
+	
 });
+
+
 
 
 </script>

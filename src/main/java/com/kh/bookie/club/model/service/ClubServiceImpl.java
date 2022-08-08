@@ -305,7 +305,24 @@ public class ClubServiceImpl implements ClubService {
 		log.debug("여기 applicantList = {}", applicantList);
 		club.setApplicantList(applicantList);
 		
+		for(int i = 0; i < club.getBookList().size(); i++) {
+			String itemId = club.getBookList().get(i).getItemId();
+			Map<String, Object> param = new HashMap<>();
+			map.put("itemId", itemId);
+			map.put("clubNo", map.get("clubNo"));
+			
+			// log.debug("여기 clubNo = {}", param.get("clubNo"));
+			
+			club.getBookList().set(i, clubDao.selectBookMission(map));
+			
+		}
+		
 		return club;
+	}
+
+	@Override
+	public List<Mission> getMissionsForOneMember(Map<String, Object> map) {
+		return clubDao.getMissionsForOneMember(map);
 	}
 
 	

@@ -24,6 +24,9 @@ public class Mission {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate mendDate;
 	
+	private String imgSrc;
+	private MissionStatus missionStatus;
+	
 
 	
 }
