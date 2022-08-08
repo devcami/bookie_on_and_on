@@ -71,4 +71,7 @@ public interface PheedDao {
 
 	int commentRefEnroll(PheedComment pc);
 
+	@Select("select * from pheed_comment where pheedc_no = #{pheedCNo}")
+	PheedComment selectOnePheedComment(int pheedCNo);
+
 }

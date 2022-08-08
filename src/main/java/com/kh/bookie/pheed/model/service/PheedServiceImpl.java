@@ -153,4 +153,9 @@ public class PheedServiceImpl implements PheedService{
 	public int commentRefEnroll(PheedComment pc) {
 		return pheedDao.commentRefEnroll(pc);
 	}
+	
+	@Override
+	public PheedComment selectOnePheedComment(int pheedCNo) {
+		return pheedDao.selectOnePheedComment(pheedCNo);
+	}
 }

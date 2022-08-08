@@ -280,6 +280,8 @@ create table report (
     beenzi_no number not null,
     status varchar2(200) not null, -- U(아직처리안됨) or E(처리완료)
     content varchar2(1000),
+    created_at date default sysdate,
+    updated_at date,
     constraint pk_report_no primary key(report_no),
     constraint ck_report_category check(category in ('pheed','pheed_comment','dokoo','dokoo_comment'))
 );
@@ -961,3 +963,12 @@ select * from club_book where club_no = 45;
 			member_id = 'tester';
             
             select * from alarm;
+select 
+			*
+		from 
+			pheed p left join pheed_attachment a 
+				on p.pheed_no = a.pheed_no  
+				left join member m
+				on p.member_id = m.member_id
+		where 
+			p.pheed_no = 37;

@@ -314,13 +314,21 @@ const pheedComment = (e) => {
 							<a href="#!" class="link-grey" onclick="commentDel(this);"
 								data-comment-no="\${pheedCNo}">삭제</a> • 
 							<a href="#!" id="updateBtn\${pheedCNo}" class="link-grey" onclick="showCommentUpdate(this);"
-								data-comment-no="\${pheedCNo}">수정</a> • 
-							<a href="#!" id="commentRefBtn\${pheedCNo}" class="link-grey" onclick="showCommentRefInput(this);"
-								data-pheed-no="\${pheedNo}"
-								data-comment-no="\${pheedCNo}">답글</a>`;
+								data-comment-no="\${pheedCNo}">수정</a> •`; 
+					} else{
+						div += `
+							<a href="#!"
+							id="updateBtn${comment.dokooCNo}" class="link-grey"
+							onclick="openReportModal(this);" data-no="\${pheedCNo}"
+							data-category="pheed_comment">신고</a> • 
+						`;
 					}
 					div += 
-								`</p>
+								`
+							<a href="#!" id="commentRefBtn\${pheedCNo}" class="link-grey" onclick="showCommentRefInput(this);"
+								data-pheed-no="\${pheedNo}"
+								data-comment-no="\${pheedCNo}">답글</a>
+								</p>
 							</div>
 						</div>
 					</div>`;
@@ -347,14 +355,24 @@ const pheedComment = (e) => {
 						</div>
 						<div class="co-right">
 							<span class="text-secondary">\${fmtCreatedAt}</span>
-							<div class="small" style="padding-left: 10px;">
+							<div class="small" style="padding-left: 10px;"> `;
+						if(nickname == '${loginMember.nickname}'){
+							div += `
 								<a href="#!" class="link-grey" onclick="commentDel(this);"
 									data-comment-type='coComment'
 									data-comment-no="\${pheedCNo}">삭제</a> • 
 								<a href="#!"
 									id="updateBtn\${pheedCNo}" class="link-grey"
 									onclick="showCommentUpdate(this);"
-									data-comment-no="\${pheedCNo}">수정</a>
+									data-comment-no="\${pheedCNo}">수정</a>`;
+						} else{
+							div += ` •
+								<a href="#!"
+								id="updateBtn${comment.dokooCNo}" class="link-grey"
+								onclick="openReportModal(this);" data-no="\${pheedCNo}"
+								data-category="pheed_comment">신고</a>`;
+						}
+							div += `	
 							</div>
 						</div>
 					</div>`;
@@ -751,13 +769,35 @@ window.onscroll = function () {
 
 
 <%-- 피드 삭제 --%>
-const deletePheed = () => {
+const deletePheed = (e) => {
+	//console.log(e.dataset.pheedNo);
+	const csrfHeader = '${_csrf.headerName}';
+	const csrfToken = '${_csrf.token}';
+	const headers = {};
+	headers[csrfHeader] = csrfToken; // 전송하는 헤더에 추가하여 전송
 	
+	if(confirm('삭제 시 정보를 되돌이 킬 수 없습니다. 정말 삭제하시겠습니까?')){
+		
+		$.ajax({
+			url : "${pageContext.request.contextPath}/pheed/deletePheed.do",
+			data : {pheedNo : e.dataset.pheedNo},
+			method : 'post',
+			headers,
+			success(resp){
+				const {msg} = resp;
+				alert(msg);
+				location.reload();
+			},
+			error : console.log
+		});
+	}
 };
 
 <%-- 피드 수정 --%>
-const updatePheed = () => {
-	
+const updatePheed = (e) => {
+	const pheedNo = e.dataset.pheedNo;
+	// 수정 폼 요청	
+	location.href = "${pageContext.request.contextPath}/pheed/pheedUpdate.do?pheedNo=" + pheedNo;
 };
 
 
@@ -777,8 +817,8 @@ const updatePheed = () => {
           <div class="form-group">
             <label for="recipient-name" class="col-form-label">작성자</label>
             <input type="text" class="form-control" id="memberId" value="${loginMember.memberId}" readonly>
-            <input type="hidden" class="form-control" id="category" value="pheed"/>
-            <input type="hidden" class="form-control" id="pheedNo" value=""/>
+            <input type="hidden" class="form-control" id="category" value=""/>
+            <input type="hidden" class="form-control" id="beenziNo" value=""/>
           </div>
           <div class="form-group">
             <p class="col-form-label">신고 내용</p>
@@ -802,7 +842,8 @@ const updatePheed = () => {
 <%-- 신고창 열기 --%>
 function openReportModal(e){
 	console.log(e.dataset.no);
-	$('#pheedNo').val(e.dataset.no);
+	$('#beenziNo').val(e.dataset.no);
+	$('#category').val(e.dataset.category);
 	$('#reportModal').modal('show');
 }
 <%-- 신고창 폼 제출 --%>
@@ -810,7 +851,7 @@ const report = () => {
 	const category = document.querySelector("#category").value;
 	const memberId = document.querySelector('#memberId').value;
 	const content = document.querySelector("#report-content").value;
-	const pheedNo = document.querySelector('#pheedNo').value;
+	const beenziNo = document.querySelector('#beenZino').value;
 	
 	const csrfHeader = '${_csrf.headerName}';
 	const csrfToken = '${_csrf.token}';
@@ -822,29 +863,31 @@ const report = () => {
 	if(!/.{10,}$/.test(content)){
 		document.querySelector("#alert-note").style.display = "block";
 		return;
-	}
-	if(confirm('신고를 제출하시겠습니까?')){
-		$.ajax({
-			url : "${pageContext.request.contextPath}/pheed/pheedReport.do",
-			method : 'post',
-			headers,
-			data : {
-				category,
-				memberId,
-				content,
-				beenziNo : pheedNo
-			},
-			success(resp){
-				const {msg} = resp;
-				alert(msg);
-				$('#content').val(''); //폼 초기화
-				$('#reportModal').modal('hide');
-			},
-			error : console.log
-			
-		});
-	}else{
-		return;
+	} else {
+		
+		if(confirm('신고를 제출하시겠습니까?')){
+			$.ajax({
+				url : "${pageContext.request.contextPath}/pheed/pheedReport.do",
+				method : 'post',
+				headers,
+				data : {
+					category,
+					memberId,
+					content,
+					beenziNo
+				},
+				success(resp){
+					const {msg} = resp;
+					alert(msg);
+					$('#content').val(''); //폼 초기화
+					$('#reportModal').modal('hide');
+				},
+				error : console.log
+				
+			});
+		} else{
+			return;
+		}
 	}
 };
 
