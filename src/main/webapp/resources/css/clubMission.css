@@ -23,7 +23,7 @@ section#content	{
     font-size: 25px;
 }
 .fa-circle-inside {
-    transform: translate(-9px, -26px);
+    transform: translate(-9px, -25px);
     font-size: 15.3px;
 }
 .fa-circle-border-last {
@@ -160,3 +160,6 @@ input::file-selector-button:hover {
 #deleteBtn:focus, #deleteBtn:focus-visible {
 	outline: unset !important;	
 }
+
+
+

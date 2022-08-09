@@ -32,7 +32,7 @@ public interface ClubDao {
 	@Insert("insert into mission values (#{clubNo}, seq_mission_no.nextval, #{title}, #{content}, #{point}, #{mendDate}, #{itemId})")
 	int insertMission(Mission mission);
 
-	List<Club> selectClubList(RowBounds rowBounds);
+	List<Club> selectClubList(Map<String, Object> map);
 
 	@Select("select count(*) from club where recruit_end > sysdate")
 	int selectTotalClub();

@@ -1,5 +1,9 @@
 package com.kh.bookie.club.model.dto;
 
+import java.time.LocalDateTime;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,6 +21,11 @@ public class MissionStatus {
 	private String answer;
 	private String renamedFilename;
 	private String originalFilename;
+	
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private LocalDateTime updatedAt;
+	
+	private Mission mission;
 	
 	
 }

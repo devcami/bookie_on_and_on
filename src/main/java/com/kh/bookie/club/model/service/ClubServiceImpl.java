@@ -61,9 +61,9 @@ public class ClubServiceImpl implements ClubService {
 	}
 
 	@Override
-	public List<Club> selectClubList(int cPage, int numPerPage) {
-		int offset = (cPage - 1) * numPerPage;
-		RowBounds rowBounds = new RowBounds(offset, numPerPage);
+	public List<Club> selectClubList(Map<String, Object> map) {
+//		int offset = (cPage - 1) * numPerPage;
+//		RowBounds rowBounds = new RowBounds(offset, numPerPage);
 		
 		// 새로하는거
 //		Map<String, Object> map = new HashMap<>();
@@ -71,7 +71,7 @@ public class ClubServiceImpl implements ClubService {
 //		map.put("sortType", sortType);
 
 		// 1. club 찾아와
-		List<Club> list = clubDao.selectClubList(rowBounds);
+		List<Club> list = clubDao.selectClubList(map);
 
 		
 		// 2. club에 사진 할당해
