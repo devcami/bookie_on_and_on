@@ -14,7 +14,7 @@ public interface ClubService {
 
 	int enrollClub(Club club);
 
-	List<Club> selectClubList(int cPage, int numPerPage);
+	List<Club> selectClubList(Map<String, Object> map);
 
 	int selectTotalClub();
 

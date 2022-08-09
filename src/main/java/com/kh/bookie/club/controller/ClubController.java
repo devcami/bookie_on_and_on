@@ -58,7 +58,7 @@ public class ClubController {
 	ResourceLoader resourceLoader;
 	
 	final String ALADDIN_URL = "http://www.aladin.co.kr/ttb/api/";
-
+	
 	@GetMapping("/clubList.do")
 	public ModelAndView clubList(
 			@RequestParam(defaultValue = "1") int cPage,
@@ -102,14 +102,28 @@ public class ClubController {
 				
 			}
 			
-			int numPerPage = 3;
-			List<Club> list = clubService.selectClubList(cPage, numPerPage);
+			Map<String, Object> map = new HashMap<>();	
+			int numPerPage = 4;
+			int start = ((cPage - 1) * numPerPage) + 1;
+			int end = cPage * numPerPage;
+			
+			map.put("sortType", sortType);
+			map.put("start", start);
+			map.put("end", end);
+			
+			List<Club> list = clubService.selectClubList(map);
 			mav.addObject("list", list);
 			
 			// 페이지 바
 			int totalClub = clubService.selectTotalClub();
 			String url = request.getRequestURI();
-			String pagebar = HelloSpringUtils.getPagebar(cPage, numPerPage, totalClub, url);
+			String pagebar = "";
+			if(sortType == null) {
+				pagebar = HelloSpringUtils.getPagebar(cPage, numPerPage, totalClub, url);				
+			}
+			else {
+				pagebar = HelloSpringUtils.getPagebarWithSortType(cPage, numPerPage, totalClub, url, sortType);
+			}
 			mav.addObject("pagebar", pagebar);
 			mav.addObject("sortType", sortType);
 			
@@ -507,10 +521,11 @@ public class ClubController {
 	}
 	
 	
-	@GetMapping("/clubBoard.do/{clubNo}")
+	@GetMapping("/clubBoard.do")
 	public ModelAndView clubBoard(
 			ModelAndView mav,
-			@PathVariable int clubNo,
+			@RequestParam int clubNo,
+			@RequestParam(required = false) String sortType,
 			HttpServletRequest request,
 			@RequestParam(defaultValue = "1") int cPage) {
 		
@@ -519,7 +534,7 @@ public class ClubController {
 //			log.debug("clubNo = {}", clubNo);
 			
 			Map<String, Object> map = new HashMap<>();			
-			int numPerPage = 10;
+			int numPerPage = 14;
 			int start = ((cPage - 1) * numPerPage) + 1;
 			int end = cPage * numPerPage;
 			
@@ -528,6 +543,7 @@ public class ClubController {
 			map.put("start", start);
 			map.put("end", end);
 			map.put("clubNo", clubNo);
+			map.put("sortType", sortType);
 			
 			
 			List<Chat> list = clubService.selectClubBoardList(map);
@@ -539,13 +555,17 @@ public class ClubController {
 			int totalClubBoard = clubService.selectTotalClubBoard(clubNo);
 			String url = request.getRequestURI();
 			
-			log.debug("totalClubBoard = {}", totalClubBoard);
-			log.debug("url = {}", url);
+			Map<String, Object> param = new HashMap<>();
+			param.put("clubNo", clubNo);
+			param.put("sortType", sortType);
 			
-			String pagebar = HelloSpringUtils.getPagebar(cPage, numPerPage, totalClubBoard, url);
+			String pagebar = pagebar = HelloSpringUtils.getPagebarForClubBoard(cPage, numPerPage, totalClubBoard, url, param);
+
+			
 			mav.addObject("pagebar", pagebar);
-			
+			mav.addObject("sortType", sortType);
 			mav.addObject("clubNo", clubNo);
+			
 			mav.setViewName("club/clubBoard");
 			
 		} catch(Exception e) {

@@ -26,7 +26,7 @@ public class Mission {
 	
 	private String imgSrc;
 	private MissionStatus missionStatus;
-	
+	private String clubTitle;
 
 	
 }

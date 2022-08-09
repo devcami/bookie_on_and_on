@@ -1005,3 +1005,73 @@ select
 				on p.member_id = m.member_id
 		where 
 			p.pheed_no = 37;
+            
+
+select 
+    ms.*,
+    m.*,
+    (select img_src from club_book c where c.club_no = m.club_no and m.m_item_id = c.item_id) img_src,
+    (select title from club cc where cc.club_no = m.club_no) club_title
+from 
+    mission_status ms
+        left join mission m on ms.mission_no = m.mission_no
+where 
+    status = 'I';
+    
+    select * from mission_status;
+    
+    update mission_status set status='I' where mission_no = 38 and member_id = 'honggd';
+    commit;
+
+
+select * 
+from 
+    (select 
+        row_number() over (order by enroll_date desc) rnum, 
+        p.* 
+    from pheed p where is_opened = 'O')
+where
+    rnum between 1 and 3;
+    
+select 
+     *
+from 
+    (select
+        row_number() over (order by updated_at) rnum, 
+        ms.*,
+        m.m_title,
+        m.m_content,
+        m.point,
+        m.m_endDate,
+        (select img_src from club_book c where c.club_no = m.club_no and m.m_item_id = c.item_id) img_src,
+        (select title from club cc where cc.club_no = m.club_no) club_title
+    from 
+        mission_status ms
+            left join mission m on ms.mission_no = m.mission_no
+    where 
+        ms.status = 'I')
+where
+    rnum between 1 and 2;
+    
+select * from mission_status order by updated_at;
+commit;
+update mission_status set status = 'I' where member_id in ('tmddbs', 'honggd'); 
+
+
+select
+    *
+from (
+    select
+        row_number() over (order by recruit_end) rnum,
+        c.*,
+        (select count(*) from my_club where club_no = c.club_no) current_nop,
+        (select count(*) from likes_club where club_no = c.club_no) likes_Cnt
+    from
+        club c
+    where
+        recruit_end > sysdate)
+where rnum between 1 and 8;
+
+select * from club;
+
+commit;

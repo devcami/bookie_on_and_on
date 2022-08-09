@@ -33,13 +33,23 @@
 	
 	<select id="selectClubList" resultMap="clubListCollectionMap">
 		select
-		    c.*,
-		    (select count(*) from my_club where club_no = c.club_no) current_nop,
-		    (select count(*) from likes_club where club_no = c.club_no) likes_Cnt
-		from
-		    club c
-		where
-			recruit_end > sysdate
+		    *
+		from (
+		    select
+		    	<if test="sortType == null">
+		        row_number() over (order by recruit_start desc) rnum,
+		        </if>
+		    	<if test="sortType != null">
+		        row_number() over (order by recruit_end) rnum,
+		        </if>
+		        c.*,
+		        (select count(*) from my_club where club_no = c.club_no) current_nop,
+		        (select count(*) from likes_club where club_no = c.club_no) likes_Cnt
+		    from
+		        club c
+		    where
+		        recruit_end > sysdate)
+		where rnum between #{start} and #{end}
 	</select>
 	<resultMap type="club" id="clubListCollectionMap">
 		<id column="club_no" property="clubNo"/>
@@ -290,22 +300,17 @@
 	</resultMap>
 	
 	
-	<!-- <select id="selectClubBoardList" resultMap="clubBoardListMap">
-		select
-		    *
-		from
-		    club_chat
-		where
-			club_no = #{clubNo}
-		order by 
-			enroll_date desc
-	</select> -->
 	<select id="selectClubBoardList" resultMap="clubBoardListMap">
 		select 
 		    * 
 		from 
 		    (select 
-		        row_number() over(order by enroll_date desc) rnum , 
+		    	<if test="sortType == null">
+		        row_number() over(order by enroll_date desc) rnum, 
+		        </if>
+		        <if test="sortType != null">
+		        row_number() over(order by enroll_date) rnum, 
+		        </if>
 		        cc.* 
 		    from 
 		        club_chat cc 

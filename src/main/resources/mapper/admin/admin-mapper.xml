@@ -85,4 +85,43 @@
 		where
 			report_no = #{reportNo}
 	</update>
+	
+	<select id="selectMissionStatusListByAdmin" resultMap="missionStatusMap">
+		select 
+		     *
+		from 
+		    (select
+		        row_number() over (order by updated_at) rnum, 
+		        ms.*,
+		        m.m_title,
+		        m.m_content,
+		        m.point,
+		        m.m_endDate,
+		        (select img_src from club_book c where c.club_no = m.club_no and m.m_item_id = c.item_id) img_src,
+		        (select title from club cc where cc.club_no = m.club_no) club_title
+		    from 
+		        mission_status ms
+		            left join mission m on ms.mission_no = m.mission_no
+		    where 
+		        ms.status = 'I')
+		where
+		    rnum between #{start} and #{end}
+	</select>
+	<resultMap type="missionStatus" id="missionStatusMap">
+		<id column="mission_no" property="missionNo" />
+		<id column="member_id" property="memberId" />
+		<result column="status" property="status"/>
+		<result column="answer" property="answer"/>
+		<result column="renamed_filename" property="renamedFilename"/>
+		<result column="original_filename" property="originalFilename"/>
+		<result column="updated_at" property="updatedAt"/>
+		<association property="mission" javaType="mission">
+			<result column="m_title" property="title"/>
+			<result column="m_content" property="content"/>
+			<result column="point" property="point"/>
+			<result column="m_endDate" property="mendDate"/>
+			<result column="img_src" property="imgSrc"/>		
+			<result column="club_title" property="clubTitle"/>		
+		</association>
+	</resultMap>
 </mapper>

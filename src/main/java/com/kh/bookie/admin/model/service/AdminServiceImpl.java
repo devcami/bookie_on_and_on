@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.kh.bookie.admin.model.dao.AdminDao;
 import com.kh.bookie.admin.model.dto.Alarm;
 import com.kh.bookie.admin.model.dto.Report;
+import com.kh.bookie.club.model.dto.MissionStatus;
 import com.kh.bookie.member.model.dto.Member;
 
 import lombok.NonNull;
@@ -29,6 +30,26 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	public int getUnreadCount(@NonNull String memberId) {
 		return adminDao.getUnreadCount(memberId);
+	}
+	
+	@Override
+	public List<MissionStatus> selectMissionStatusListByAdmin(Map<String, Object> map) {
+		return adminDao.selectMissionStatusListByAdmin(map);
+	}
+	
+	@Override
+	public int selectTotalMissionByAdmin() {
+		return adminDao.selectTotalMissionByAdmin();
+	}
+	
+	@Override
+	public int missionAgain(Map<String, Object> map) {
+		return adminDao.missionAgain(map);
+	}
+
+	@Override
+	public int missionPass(Map<String, Object> map) {
+		return adminDao.missionPass(map);
 	}
 	
 	@Override
@@ -60,4 +81,6 @@ public class AdminServiceImpl implements AdminService {
 	public int reportUpdate(Map<String, Object> map) {
 		return adminDao.reportUpdate(map);
 	}
+
+
 }
