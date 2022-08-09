@@ -1,7 +1,9 @@
 package com.kh.bookie.mypage.controller;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
@@ -17,7 +19,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,7 +29,9 @@ import com.kh.bookie.common.HelloSpringUtils;
 import com.kh.bookie.member.model.dto.Member;
 import com.kh.bookie.member.model.dto.MemberEntity;
 import com.kh.bookie.member.model.service.MemberService;
+import com.kh.bookie.mypage.model.dto.Book;
 import com.kh.bookie.mypage.model.service.MypageService;
+import com.kh.bookie.search.model.service.SearchService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -44,6 +47,9 @@ public class MypageController {
 	MemberService memberService;
 	
 	@Autowired
+	SearchService searchService;
+	
+	@Autowired
 	ServletContext application;
 	
 	@Autowired
@@ -51,6 +57,9 @@ public class MypageController {
 	
 	@Autowired
 	BCryptPasswordEncoder bcryptPasswordEncoder;
+	
+	/* 알라딘API주소 */
+	final String ALADDIN_URL = "http://www.aladin.co.kr/ttb/api/";
 	
 	/* 팔로우페이지 */
 	@GetMapping("/follower.do")
@@ -110,6 +119,25 @@ public class MypageController {
 	@GetMapping("/myBook.do")
 	public void myBook() {}
 
+	@GetMapping("/getItemId.do")
+	public ResponseEntity<?> getItemId(@AuthenticationPrincipal Member loginMember, @RequestParam String status){
+		String memberId = loginMember.getMemberId();
+		log.debug("memberId = {}", memberId);
+		log.debug("status = {}", status);
+		Map<String, Object> param = new HashMap<>();
+		param.put("memberId", memberId);
+		param.put("status", status);
+		log.debug("param = {}" , param);
+		List<Book> bookList = new ArrayList<>();
+		try {
+			bookList = searchService.selectBooKItemIdByStatus(param);
+			log.debug("bookList = {}" , bookList);
+		} catch (Exception e) {
+			
+		}
+		return ResponseEntity.ok(bookList);
+	}
+	
 	@GetMapping("/myScrap.do")
 	public void myScrap() {}
 	
