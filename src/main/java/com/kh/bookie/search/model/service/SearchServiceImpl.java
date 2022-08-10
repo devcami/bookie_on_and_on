@@ -173,4 +173,9 @@ public class SearchServiceImpl implements SearchService {
 	public int insertFollower(Map<String, Object> map) {
 		return searchDao.insertFollower(map);
 	}
+
+	@Override
+	public List<Book> selectBooKItemIdByStatus(Map<String, Object> param) {
+		return searchDao.selectBooKItemIdByStatus(param);
+	}
 }
