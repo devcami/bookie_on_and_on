@@ -119,4 +119,9 @@ public class DokooServiceImpl implements DokooService {
 	public int commentRefEnroll(DokooComment dc) {
 		return dokooDao.commentRefEnroll(dc);
 	}
+	
+	@Override
+	public DokooComment selectOneDokooComment(int dokooCNo) {
+		return dokooDao.selectOneDokooComment(dokooCNo);
+	}
 }

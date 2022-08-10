@@ -3,6 +3,7 @@ package com.kh.bookie.member.model.service;
 import java.util.List;
 
 import com.kh.bookie.admin.model.dto.Alarm;
+import com.kh.bookie.club.model.dto.MissionStatus;
 import com.kh.bookie.member.model.dto.Member;
 
 import lombok.NonNull;
@@ -29,6 +30,5 @@ public interface MemberService {
 	List<Alarm> selectAlarmList(@NonNull String memberId);
 
 	int readAlarm(int alarmNo);
-
 
 }

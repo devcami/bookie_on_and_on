@@ -3,6 +3,7 @@ package com.kh.bookie.common;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 
 public class HelloSpringUtils {
 	/*
@@ -114,6 +115,158 @@ public class HelloSpringUtils {
 		pagebar.append("</ul>");
 		return pagebar.toString();
 	}
+	
+	
+	public static String getPagebarWithSortType(int cPage, int numPerPage, int totalContent, String url, String sortType) {
+		final int pagebarSize = 5;
+		StringBuilder pagebar = new StringBuilder();
+		url += "?sortType=" + sortType + "&cPage=";
+		
+		int totalPage = (int) Math.ceil((double) totalContent / numPerPage);
+		int pageStart = ((cPage - 1) / pagebarSize) * pagebarSize + 1;
+		int pageEnd = pageStart + pagebarSize - 1;
+		int pageNo = pageStart;
+		
+		pagebar.append("<ul class=\"pagination pagination-sm justify-content-center\">\n");
+		
+		// 이전 영역
+		if(pageNo == 1) {
+			pagebar.append(" <li class=\"page-item disabled\">\n"
+					+ "		      <a class=\"page-link\" href=\"#\" aria-label=\"Previous\">\n"
+					+ "		        <span aria-hidden=\"true\">&laquo;</span>\n"
+					+ "		        <span class=\"sr-only\">Previous</span>\n"
+					+ "		      </a>\n"
+					+ "		    </li>\n");
+		}
+		else {
+			pagebar.append(" <li class=\"page-item\">\n"
+					+ "		      <a class=\"page-link\" href=\"" + url + (pageNo - 1) + "\" aria-label=\"Previous\">\n"
+					+ "		        <span aria-hidden=\"true\">&laquo;</span>\n"
+					+ "		        <span class=\"sr-only\">Previous</span>\n"
+					+ "		      </a>\n"
+					+ "		    </li>\n");
+		}
+		
+		// pageNo 영역
+		while(pageNo <= pageEnd && pageNo <= totalPage) {
+			// 현재페이지
+			if(pageNo == cPage) {
+				pagebar.append("<li class=\"page-item active\">\n"
+						+ "		    	  <span class=\"page-link\">\n"
+						+ "			       " + pageNo + "\n"
+						+ "			        <span class=\"sr-only\">(current)</span>\n"
+						+ "			      </span>\n"
+						+ "		    </li>\n");
+			}
+			// 다른페이지
+			else {
+				pagebar.append("<li class=\"page-item\"><a class=\"page-link\" href=\""+ url + pageNo + "\">" + pageNo + "</a></li>\n");
+			}
+			pageNo++;
+		}
+		
+		
+		// 다음 영역
+		if(pageNo > totalPage) {
+			pagebar.append("<li class=\"page-item disabled\">\r\n"
+					+ "		      <a class=\"page-link\" href=\"#\" aria-label=\"Next\">\r\n"
+					+ "		        <span aria-hidden=\"true\">&raquo;</span>\r\n"
+					+ "		        <span class=\"sr-only\">Next</span>\r\n"
+					+ "		      </a>\r\n"
+					+ "		    </li>\r\n");
+		}
+		else {
+			pagebar.append("<li class=\"page-item\">\r\n"
+					+ "		      <a class=\"page-link\" href=\"" + url + pageNo + "\" aria-label=\"Next\">\r\n"
+					+ "		        <span aria-hidden=\"true\">&raquo;</span>\r\n"
+					+ "		        <span class=\"sr-only\">Next</span>\r\n"
+					+ "		      </a>\r\n"
+					+ "		    </li>\r\n");
+		}
+		
+		pagebar.append("</ul>");
+		return pagebar.toString();
+	}
+	
+	public static String getPagebarForClubBoard(int cPage, int numPerPage, int totalContent, String url,
+			Map<String, Object> param) {
+		
+		final int pagebarSize = 5;
+		StringBuilder pagebar = new StringBuilder();
+		
+		if(param.get("sortType") == null) {
+			url += "?clubNo=" + param.get("clubNo") + "&cPage=";			
+		}
+		else {
+			url += "?clubNo=" + param.get("clubNo") + "&sortType=" + param.get("sortType") + "&cPage=";
+		}
+		
+		
+		int totalPage = (int) Math.ceil((double) totalContent / numPerPage);
+		int pageStart = ((cPage - 1) / pagebarSize) * pagebarSize + 1;
+		int pageEnd = pageStart + pagebarSize - 1;
+		int pageNo = pageStart;
+		
+		pagebar.append("<ul class=\"pagination pagination-sm justify-content-center\">\n");
+		
+		// 이전 영역
+		if(pageNo == 1) {
+			pagebar.append(" <li class=\"page-item disabled\">\n"
+					+ "		      <a class=\"page-link\" href=\"#\" aria-label=\"Previous\">\n"
+					+ "		        <span aria-hidden=\"true\">&laquo;</span>\n"
+					+ "		        <span class=\"sr-only\">Previous</span>\n"
+					+ "		      </a>\n"
+					+ "		    </li>\n");
+		}
+		else {
+			pagebar.append(" <li class=\"page-item\">\n"
+					+ "		      <a class=\"page-link\" href=\"" + url + (pageNo - 1) + "\" aria-label=\"Previous\">\n"
+					+ "		        <span aria-hidden=\"true\">&laquo;</span>\n"
+					+ "		        <span class=\"sr-only\">Previous</span>\n"
+					+ "		      </a>\n"
+					+ "		    </li>\n");
+		}
+		
+		// pageNo 영역
+		while(pageNo <= pageEnd && pageNo <= totalPage) {
+			// 현재페이지
+			if(pageNo == cPage) {
+				pagebar.append("<li class=\"page-item active\">\n"
+						+ "		    	  <span class=\"page-link\">\n"
+						+ "			       " + pageNo + "\n"
+						+ "			        <span class=\"sr-only\">(current)</span>\n"
+						+ "			      </span>\n"
+						+ "		    </li>\n");
+			}
+			// 다른페이지
+			else {
+				pagebar.append("<li class=\"page-item\"><a class=\"page-link\" href=\""+ url + pageNo + "\">" + pageNo + "</a></li>\n");
+			}
+			pageNo++;
+		}
+		
+		
+		// 다음 영역
+		if(pageNo > totalPage) {
+			pagebar.append("<li class=\"page-item disabled\">\r\n"
+					+ "		      <a class=\"page-link\" href=\"#\" aria-label=\"Next\">\r\n"
+					+ "		        <span aria-hidden=\"true\">&raquo;</span>\r\n"
+					+ "		        <span class=\"sr-only\">Next</span>\r\n"
+					+ "		      </a>\r\n"
+					+ "		    </li>\r\n");
+		}
+		else {
+			pagebar.append("<li class=\"page-item\">\r\n"
+					+ "		      <a class=\"page-link\" href=\"" + url + pageNo + "\" aria-label=\"Next\">\r\n"
+					+ "		        <span aria-hidden=\"true\">&raquo;</span>\r\n"
+					+ "		        <span class=\"sr-only\">Next</span>\r\n"
+					+ "		      </a>\r\n"
+					+ "		    </li>\r\n");
+		}
+		
+		pagebar.append("</ul>");
+		return pagebar.toString();
+	}
 
 	/**
 	 * ex) 20220714_143822333_123.png
@@ -133,4 +286,7 @@ public class HelloSpringUtils {
 		
 		return sdf.format(new Date()) + df.format(Math.random() * 1000) + ext; 
 	}
+
+
+	
 }

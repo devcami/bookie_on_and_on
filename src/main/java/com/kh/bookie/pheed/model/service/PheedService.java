@@ -49,5 +49,7 @@ public interface PheedService {
 
 	int commentRefEnroll(PheedComment pc);
 
+	PheedComment selectOnePheedComment(int pheedCNo);
+
 
 }

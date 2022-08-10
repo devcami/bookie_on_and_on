@@ -104,3 +104,173 @@ th[type="head-line2"]{
      color: #f3f3f3;  
      
 }
+
+#reportTbl tr:hover{
+	cursor: pointer;
+	background-color : #b5b5b54a;
+}
+
+
+/**** 독후감 ****/
+section#dokoo-content{
+	margin: 0 auto;
+	padding: 20px 30px;
+	background-color: #F4EEC7;
+}
+section#dokoo-content #dokoo-title{
+	padding: 15px 0;
+	text-align: center;
+	color: #697C37;
+}
+section#dokoo-content #dokoo-title p{
+	font-size: 60px;
+}
+section#dokoo-content #dokoo-container{
+	margin: 0 30px;
+	background-color: #FFF;
+	border-radius: 15px;
+}
+#dokoo-content #dokoo-container #dokoo-info #book-info{
+	background-color: #e5e1c2;
+	border-radius: 10px;
+	box-shadow: 0px 1px 5px #00000030;
+}
+#dokoo-content #dokoo-container #dokoo-info span{
+	font-size: 22px;
+}
+#dokoo-content #dokoo-container #dokoo-info #writer span{
+	font-size: 30px;
+}
+#dokoo-content #dokoo-container #dokoo-info #writer p{
+	padding-left: 60px;
+}
+#dokoo-content #dokoo-container #dokoo-desc{
+	padding: 10px 30px;
+	font-size: 22px;
+}
+#comment-container #comment-content{
+	border-radius : 14px;
+}
+#comment-container #btn-enroll-comment{
+	border-radius : 14px;
+	color: #fff;
+    background-color: #FE9801;
+    border-color: #FE9801;
+    width: 40px;
+    cursor:pointer;
+}
+#comment-container span.text-dark {
+   margin-left: 20px;
+    margin-right: 10px;
+    font-size: 22px;
+    width: 73%;
+}
+div.comment-div span.text-secondary {
+    float: right;
+}
+/****** 대댓글 *************/
+.co-div {
+   justify-content: space-between;
+
+}
+.co-left {
+    justify-content: flex-start;
+}
+.co-right {
+   display: flex;
+    flex-direction: column;
+    width: 125px;
+    align-items: flex-end;
+    margin-left: 10px;
+}
+.co-writer {
+    justify-content: flex-start;
+    width: 150px;
+    padding-right: 15px;
+}
+.co-Content {
+   display: flex;
+   width: 360px;
+}
+.flex-center{
+   display: flex;
+    align-items: center;
+}
+
+.small {
+   color: #aaa;
+}
+
+/******** 대댓글 css **********/
+.co-ref-div {
+   position: relative;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    margin-left: 125px;
+    margin-top: 15px;
+}
+.co-ref-input {
+	padding:5px;
+   width: 94%;
+   border: 1px solid #ced4da;
+   border-radius: 14px;
+}
+
+
+/* 피드 한개 */
+.pheed-container{
+	/* border: 2px solid #F4EEC7; */
+	/* background-color: #F4EEC7; */
+	margin : 30px;
+	text-align: center;
+	border-radius: 10px;
+	/* box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4); */
+}
+/* 프로필 */
+.pheed-container .pheed-writer .profile{
+	position:relative;
+	top: 25px;
+	width:70px;
+	height:70px;
+	border-radius: 50%;
+	background-color: #c7c7c7;
+}
+.pheed-container .pheed-writer .profile img{
+	width: 70px;
+	height:70px;
+	border-radius: 50%;
+}
+.pheed-container .pheed-writer .profile .user-icon{
+	font-size: 43px;
+	position: relative;
+	top: 14px;
+	left: 13.5px;
+	color: #FFF;
+	text-shadow: 0 0 3px #5454544a;
+}
+.pheed-container .pheed-writer{
+	text-align: left;
+	padding: 0 30px;
+}
+.pheed-container .pheed-writer h2{
+	margin-left: 90px;
+	position: relative;
+	bottom: 30px;
+}
+
+.pheed-container .pheed-img img{
+	width: 100%;
+}
+.pheed-container .pheed{
+	text-align: left;
+	font-size: 27px;
+	padding: 30px;
+}
+.pheed-container .pheed .pheed-content p{
+	font-size: 24px;
+}
+.pheed-container .pheed .pheed-content .book-info p{
+	font-size: 20px;
+	color: #adadad;
+}

@@ -1,0 +1,113 @@
+@charset "UTF-8";
+section#content	{
+	margin: 0 auto;
+	padding: 20px 30px;
+	min-height:650px;
+	border-radius: 5px;
+	background-color: FFF1BD;
+}
+#mission-container {
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 50px;
+}
+/********* head 부분 **********/
+#head h3 {
+	margin-bottom: 5px !important;
+}
+#head h6 {
+	color: #495057;
+}
+/********* 미션 card **********/
+.mission-card {
+	display: flex;
+	flex-direction: column;
+	margin: 10px 0;
+	background-color: white;
+	cursor: pointer;
+	padding: 10px 20px;
+    border-radius: 10px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+}
+.mission-card:hover {
+	background-color: #eeeeee5e;
+}
+.mission-card h5 {
+	margin-bottom: 10px;
+}
+.rows {
+	display: flex;
+	font-size: 1rem;
+	justify-content: space-between;
+}
+
+/******** 모달 안 *********/
+#missionInfo {
+	padding-bottom: 10px;	
+	border-bottom: 1px dashed black;
+}
+#missionInfo h6 {
+	font-size: 30px !important;
+	margin-bottom: 5px !important;
+}
+#missionInfo span {
+	font-size: 25px;
+}
+
+
+#userAnswer {
+	padding: 15px 0;
+}
+#idDiv {
+	margin-bottom: 10px;
+}
+#contentDiv {
+	display: flex;
+	flex-direction: column;
+}
+#userAnswer h6 {
+	font-size: 25px;
+	margin-bottom: 5 !important;
+}
+#userAnswer span {
+	font-size: 20px;
+	margin-bottom: 10px;
+}
+#userAnswer img {
+	width: 80%;
+}
+
+/******* 모달 안 버튼 *****/
+#passBtn {
+	color: white;
+	background-color: orange;
+}
+#passBtn:hover {
+	background-color: rgb(255 153 7);
+}
+
+
+/************** 페이지 바 **************/
+.pagination {
+	justify-content: center;
+}
+.pagination li {
+	margin: 0 4px;
+}
+
+.page-item.disabled .page-link {
+	color: #fe9801 !important;
+	border: 1px solid #fe9801 !important;
+}
+
+.page-link {
+	color: #6c757d !important;
+	border-radius: 30px !important;
+}
+
+.page-item.active .page-link {
+    z-index: 1;
+    color: #fff !important;
+    background-color: #ffc107 !important;
+    border-color: #ffc107 !important;
+}

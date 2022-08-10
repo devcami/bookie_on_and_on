@@ -17,17 +17,17 @@
 <div class="container">
       <div class="row">
         <div class="col-12">
-          <div class="btn-group">
-            <a href="${pageContext.request.contextPath}/admin/report.do" class="btn red"    id="report" >신고</a>
-            <a href="${pageContext.request.contextPath}/admin/Q&A.do" class="btn purple" id="question">Q & A</a>
-            <a href="${pageContext.request.contextPath}/admin/sendAlarm.do" class="btn green"  id="alarm">알림전송</a>
-            <a href="${pageContext.request.contextPath}/club/missionCheck.do" class="btn blue"  id="mission">미션확인</a>
-          </div>
+          <div class="row col-12 btn-group">
+			<a href="${pageContext.request.contextPath}/admin/reportList.do" class="btn red"    id="report" >신고</a>
+			<a href="${pageContext.request.contextPath}/admin/qnaList.do" class="btn purple" id="question">Q & A</a>
+			<a href="${pageContext.request.contextPath}/admin/sendAlarm.do" class="btn green"  id="alarm">알림전송</a>
+			<a href="${pageContext.request.contextPath}/admin/missionCheck.do" class="btn blue"  id="mission">미션확인</a>
+	     </div>
         </div>
       </div>
     </div>
 
-    <div class="container mt-3">
+    <div class="container mt-4">
       <table class="table table-fixed text-center">
         <thead>
           <tr>
@@ -42,7 +42,7 @@
         </thead>
        	<tbody>
 			<c:forEach items="${list}" var="member" varStatus="vs">
-				<tr data-member-id=${member.memberId}>
+				<tr data-member-id="${member.memberId}">
 					<td>${member.memberId}</td>
 					<td>${member.nickname}</td>
 		            <td>${member.email}</td>

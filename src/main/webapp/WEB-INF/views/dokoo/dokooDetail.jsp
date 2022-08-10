@@ -57,8 +57,8 @@
 					  <i class="fa fa-bookmark fa-regular fa-stack-1x front" id="bookmark" data-dokoo-no="${dokoo.dokooNo}"></i>
 					</span>
 			
-					<button type="button" data-no="${dokoo.dokooNo}"  onclick="openReportModal(this);" 
-						class="btn" id="btn-report"><i class="fa-solid fa-ellipsis"></i></button>
+					<button type="button" data-no="${dokoo.dokooNo}" data-category="dokoo" onclick="openReportModal(this);" 
+						class="btn text-dark" id="btn-report"><i class="fa-solid fa-ellipsis"></i></button>
 					<c:if test="${dokoo.member.nickname eq loginMember.nickname}">
 					<button type="button" class="float-right btn-sm btn-update mr-2" onclick="updateDokoo();">수정</button>	
 					<c:if test="${dokoo.member.nickname eq loginMember.nickname || loginMember.memberId eq 'admin'}">
@@ -113,16 +113,23 @@
 							<div class="text-right">
 								<p class="small mb-0" style="color: #aaa;">
 									<c:if test="${comment.nickname == loginMember.nickname}">
-										<a href="#!" class="link-grey" onclick="commentDel(this);"
+									<a href="#!" class="link-grey" onclick="commentDel(this);"
 											data-comment-no="${comment.dokooCNo}">삭제</a> • 
                           
-                          <a href="#!" id="updateBtn${comment.dokooCNo}"
+                         			<a href="#!" id="updateBtn${comment.dokooCNo}"
 											class="link-grey" onclick="showCommentUpdate(this);"
 											data-comment-no="${comment.dokooCNo}">수정</a> • 
-                       </c:if>
+                       				</c:if>
+                       				
 									<a href="#!" id="commentRefBtn${comment.dokooCNo}"
 										class="link-grey" onclick="showCommentRefInput(this);"
-										data-comment-no="${comment.dokooCNo}">답글</a>
+										data-comment-no="${comment.dokooCNo}">답글</a> 
+									<c:if test="${loginMember.nickname ne comment.nickname}">
+									• <a href="#!"
+										id="updateBtn${comment.dokooCNo}" class="link-grey"
+										onclick="openReportModal(this);" data-category="dokoo_comment"
+										data-no="${comment.dokooCNo}">신고</a>
+									</c:if>
 								</p>
 							</div>
 						</div>
@@ -139,7 +146,7 @@
 							<div class="co-writer flex-center">
 								<img class="rounded-circle shadow-1-strong m-1"
 									<%-- loginMember가 아니고 댓글단 사람 프로필 가져와야돼 --%>
-                          src="${pageContext.request.contextPath}/resources/upload/profile/${loginMember.renamedFilename}"
+                          src="${pageContext.request.contextPath}/resources/upload/profile/${comment.renamedFilename}"
 									alt="avatar" width="40" height="40"> <span>${comment.nickname}</span>
 							</div>
 							<div class="co-Content" id="contentDiv${comment.dokooCNo}">
@@ -147,18 +154,24 @@
 							</div>
 						</div>
 						<div class="co-right">
-							<span class="text-secondary"> <fmt:parseDate
-									value="${comment.createdAt}" pattern="yyyy-MM-dd'T'HH:mm"
-									var="createdAt" /> <fmt:formatDate value="${createdAt}"
-									pattern="yyyy/MM/dd HH:mm" />
+							<span class="text-secondary"> 
+							<fmt:parseDate value="${comment.createdAt}" pattern="yyyy-MM-dd'T'HH:mm" var="createdAt" /> 
+							<fmt:formatDate value="${createdAt}" pattern="yyyy/MM/dd HH:mm" />
 							</span>
 							<div class="small" style="padding-left: 10px;">
 								<a href="#!" class="link-grey" onclick="commentDel(this);"
 									data-comment-type='coComment'
-									data-comment-no="${comment.dokooCNo}">삭제</a> • <a href="#!"
+									data-comment-no="${comment.dokooCNo}">삭제</a> • 
+								<a href="#!"
 									id="updateBtn${comment.dokooCNo}" class="link-grey"
 									onclick="showCommentUpdate(this);"
-									data-comment-no="${comment.dokooCNo}">수정</a>
+									data-comment-no="${comment.dokooCNo}">수정</a> 
+								<c:if test="${loginMember.nickname ne comment.nickname}">
+									• <a href="#!"
+									id="updateBtn${comment.dokooCNo}" class="link-grey"
+									onclick="openReportModal(this);" data-no="${comment.dokooCNo}"
+									data-category="dokoo_comment">신고</a>
+								</c:if>
 							</div>
 						</div>
 					</div>
@@ -561,6 +574,8 @@ const enrollCommentRef = (e) => {
 
 
 </script>
+
+
 <%--------------- 신고창 모달 ----------------%>
 <div class="modal fade" id="reportModal" tabindex="-1" role="dialog" aria-labelledby="reportModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -576,8 +591,8 @@ const enrollCommentRef = (e) => {
           <div class="form-group">
             <label for="recipient-name" class="col-form-label">작성자</label>
             <input type="text" class="form-control" id="memberId" value="${loginMember.memberId}" readonly>
-            <input type="hidden" class="form-control" id="category" value="dokoo"/>          
-             <input type="hidden" class="form-control" id="dokooNo" value=""/>
+            <input type="hidden" class="form-control" id="category" value=""/>          
+            <input type="hidden" class="form-control" id="beenziNo" value=""/>
           </div>
           <div class="form-group">
             <p class="col-form-label">신고 내용</p>
@@ -602,7 +617,10 @@ const enrollCommentRef = (e) => {
 <%-- 신고창 열기 --%>
 function openReportModal(e){
 	console.log(e.dataset.no);
-	$('#dokooNo').val(e.dataset.no);
+	console.log(e.dataset.category);
+	
+	$('#category').val(e.dataset.category);
+	$('#beenziNo').val(e.dataset.no);
 	$('#reportModal').modal('show');
 }
 
@@ -611,7 +629,7 @@ const report = () => {
 	const category = document.querySelector("#category").value;
 	const memberId = document.querySelector('#memberId').value;
 	const content = document.querySelector("#report-content").value;
-	const dokooNo = document.querySelector('#dokooNo').value;
+	const beenziNo = document.querySelector('#beenziNo').value;
 	
 	const csrfHeader = '${_csrf.headerName}';
 	const csrfToken = '${_csrf.token}';
@@ -623,29 +641,31 @@ const report = () => {
 	if(!/.{10,}$/.test(content)){
 		document.querySelector("#alert-note").style.display = "block";
 		return;
-	}
-	if(confirm('신고를 제출하시겠습니까?')){
-		$.ajax({
-			url : "${pageContext.request.contextPath}/pheed/pheedReport.do",
-			method : 'post',
-			headers,
-			data : {
-				category,
-				memberId,
-				content,
-				beenziNo : dokooNo
-			},
-			success(resp){
-				const {msg} = resp;
-				alert(msg);
-				$('#content').val(''); //폼 초기화
-				$('#reportModal').modal('hide');
-			},
-			error : console.log
-			
-		});
-	}else{
-		return;
+	} else {
+		
+		if(confirm('신고를 제출하시겠습니까?')){
+			$.ajax({
+				url : "${pageContext.request.contextPath}/pheed/pheedReport.do",
+				method : 'post',
+				headers,
+				data : {
+					category,
+					memberId,
+					content,
+					beenziNo
+				},
+				success(resp){
+					const {msg} = resp;
+					alert(msg);
+					$('#content').val(''); //폼 초기화
+					$('#reportModal').modal('hide');
+				},
+				error : console.log
+				
+			});
+		} else{
+			return;
+		}
 	}
 };
 

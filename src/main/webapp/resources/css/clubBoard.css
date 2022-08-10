@@ -17,7 +17,7 @@ section#content	{
 /***** 테이블 위 제목과 추가 버튼 *****/
 section#content #title {
     margin-top: 150px;
-    margin-bottom: 60px;
+    margin-bottom: 20px;
 }
 #title h1 {
 	font-size: xx-large !important;
@@ -35,6 +35,27 @@ section#content #title {
 
 #clubBoard-enroll .fa-plus {
     font-size: 25px;
+}
+
+#sortTypeDiv {
+	display: inline-block;
+    position: relative;
+    right: 200px;
+    top: 5px;
+    font-size: 20px;
+}
+#sortTypeDiv a {
+	color: #ffc107;
+}
+#sortTypeDiv a:hover {
+	color: #ff8700;
+    text-decoration: unset;
+}
+#sortTypeDiv a:first-child {
+	margin-right: 6px;
+}
+.textColor{
+	color: #ff8700 !important;
 }
 
 /******** 테이블 ********/
@@ -69,3 +90,30 @@ tbody tr {
 	cursor: pointer
 }
 
+/************** 페이지 바 **************/
+nav {
+	margin-top: 90px;
+}
+.pagination {
+	justify-content: center;
+}
+.pagination li {
+	margin: 0 4px;
+}
+
+.page-item.disabled .page-link {
+	color: #fe9801 !important;
+	border: 1px solid #fe9801 !important;
+}
+
+.page-link {
+	color: #6c757d !important;
+	border-radius: 30px !important;
+}
+
+.page-item.active .page-link {
+    z-index: 1;
+    color: #fff !important;
+    background-color: #ffc107 !important;
+    border-color: #ffc107 !important;
+}

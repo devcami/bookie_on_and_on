@@ -17,6 +17,7 @@ import com.kh.bookie.club.model.dto.Club;
 import com.kh.bookie.club.model.dto.ClubApplicant;
 import com.kh.bookie.club.model.dto.ClubBook;
 import com.kh.bookie.club.model.dto.Mission;
+import com.kh.bookie.club.model.dto.MissionStatus;
 import com.kh.bookie.point.model.dto.PointStatus;
 
 import lombok.extern.slf4j.Slf4j;
@@ -60,9 +61,9 @@ public class ClubServiceImpl implements ClubService {
 	}
 
 	@Override
-	public List<Club> selectClubList(int cPage, int numPerPage) {
-		int offset = (cPage - 1) * numPerPage;
-		RowBounds rowBounds = new RowBounds(offset, numPerPage);
+	public List<Club> selectClubList(Map<String, Object> map) {
+//		int offset = (cPage - 1) * numPerPage;
+//		RowBounds rowBounds = new RowBounds(offset, numPerPage);
 		
 		// 새로하는거
 //		Map<String, Object> map = new HashMap<>();
@@ -70,7 +71,7 @@ public class ClubServiceImpl implements ClubService {
 //		map.put("sortType", sortType);
 
 		// 1. club 찾아와
-		List<Club> list = clubDao.selectClubList(rowBounds);
+		List<Club> list = clubDao.selectClubList(map);
 
 		
 		// 2. club에 사진 할당해
@@ -321,11 +322,37 @@ public class ClubServiceImpl implements ClubService {
 	}
 
 	@Override
-	public List<Mission> getMissionsForOneMember(Map<String, Object> map) {
-		return clubDao.getMissionsForOneMember(map);
+	public List<Mission> getMissionsForOneMember(int clubNo, String memberId) {
+		List<Mission> missionList = clubDao.getMissionsForOneMember(clubNo);
+		
+		Map<String, Object> map = new HashMap<>();
+		int missionNo;
+		for(int i = 0; i < missionList.size(); i++) {
+			missionNo = missionList.get(i).getMissionNo();
+			map.put("missionNo", missionNo);
+			map.put("memberId", memberId);
+			MissionStatus ms = clubDao.getMissionStatus(map);
+			missionList.get(i).setMissionStatus(ms);
+		}
+		
+		
+		return missionList;
 	}
 
+	@Override
+	public int missionStatusUpdate(MissionStatus ms) {
+		return clubDao.missionStatusUpdate(ms);
+	}
 	
+	@Override
+	public int missionStatusInsert(MissionStatus ms) {
+		return clubDao.missionStatusInsert(ms);
+	}
+	
+	@Override
+	public MissionStatus selectOneMissionStatus(MissionStatus ms) {
+		return clubDao.selectOneMissionStatus(ms);
+	}
 	
 
 }
