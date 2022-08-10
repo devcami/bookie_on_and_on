@@ -2,6 +2,7 @@ package com.kh.bookie.mypage.controller;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
@@ -17,7 +18,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,6 +28,7 @@ import com.kh.bookie.common.HelloSpringUtils;
 import com.kh.bookie.member.model.dto.Member;
 import com.kh.bookie.member.model.dto.MemberEntity;
 import com.kh.bookie.member.model.service.MemberService;
+import com.kh.bookie.mypage.model.dto.Qna;
 import com.kh.bookie.mypage.model.service.MypageService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -88,6 +89,50 @@ public class MypageController {
 	
 	@GetMapping("/mypageSetting.do")
 	public void mypageSetting() {}
+	
+/**
+ * QNA
+ */
+	@GetMapping("/qnaList.do")
+	public void qnaList(@RequestParam String memberId, Model model){
+		try {
+			List<Qna> list = mypageService.selectMyQnaList(memberId);
+			log.debug("list", list);
+			model.addAttribute("list", list);
+		} catch (Exception e) {
+			log.error("QNA리스트 불러오기 오류",e);
+			throw e;
+		}
+	}
+	
+	@GetMapping("/qnaEnroll.do")
+	public void qnaEnroll() {}
+	
+	@PostMapping("/qnaEnroll.do")
+	public String qnaEnroll(Qna qna) {
+		try {
+			log.debug("qna = {}", qna);
+			int result = mypageService.qnaEnroll(qna);
+		} catch (Exception e) {
+			log.error("QNA 글 등록 오류", e);
+			e.printStackTrace();
+			throw e;
+		}
+		return "redirect:/mypage/qnaList.do?memberId=" + qna.getMemberId();
+	}
+	
+	@GetMapping("/qnaDetail.do")
+	public void qnaDetail(@RequestParam int qnaNo, Model model){
+		try {
+			Qna qna = mypageService.selectOneQna(qnaNo);
+			log.debug("qna = {}", qna);
+			model.addAttribute("qna", qna);
+		} catch (Exception e) {
+			log.error("QNA 상세보기 오류",e);
+			throw e;
+		}
+	}
+	
 	
 	@GetMapping("/myMiniProfile.do")
 	public void myMiniProfile() {}

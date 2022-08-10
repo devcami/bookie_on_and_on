@@ -34,6 +34,10 @@
 			created_at desc
 	</select>
 	
+	<select id="selectTotalReportContent" resultType="_int">
+		select count(*) from report 
+	</select>
+	
 	<select id="selectReportListByCategory" resultType="report">
 		select
 			*
@@ -85,4 +89,65 @@
 		where
 			report_no = #{reportNo}
 	</update>
+	
+	<select id="selectQnaList" resultType="qna">
+		select
+			*
+		from
+			qna
+		order by
+			enroll_date desc
+	</select>
+	
+	<select id="selectQnaListByStatus" resultType="qna">
+		select
+			*
+		from
+			qna
+		where
+			status = #{status}
+		order by
+			enroll_date desc
+	</select>
+	
+	<select id="selectTotalQnaContent" resultType="_int">
+		select count(*) from qna
+	</select>
+	
+	<select id="selectTotalQnaContentByStatus" resultType="_int">
+		select count(*) from qna where status = #{status}
+	</select>
+	
+	<insert id="qnaCommentEnroll">
+		insert into
+			qna_comment
+		values(
+			seq_qna_comment_no.nextval,
+			#{qnaNo},
+			#{memberId},
+			#{commentContent},
+			sysdate
+		)
+	</insert>
+	
+	<update id="qnaUpdateStatus">
+		update
+			qna
+		set
+			status = 'E'	
+		where
+			qna_no = #{qnaNo}
+	</update>
+	
+	<select id="selectTotalReportByStatus" resultType="_int">
+		select count(*) from report where status = #{status}
+	</select>
+	
+	<select id="selectTotalReportByCategory" resultType="_int">
+		select count(*) from report where category = #{category}
+	</select>
+	
+	<select id="selectTotalReportByBoth" resultType="_int">
+		select count(*) from report where status = #{status} and category = #{category}
+	</select>
 </mapper>

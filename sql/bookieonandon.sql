@@ -340,9 +340,7 @@ create table persistent_logins (
     token varchar(64) not null,  -- username, password, expire time을 단방향 암호화한 값
     last_used timestamp not null);
 
-----------------------------------
 -- 알림테이블
-----------------------------------
 create table alarm(
     alarm_no number,
     member_id varchar2(50),
@@ -352,6 +350,31 @@ create table alarm(
     constraint pk_alarm primary key(alarm_no)
 );
 create sequence seq_alarm_no;
+
+-- q&a table
+create table qna(
+    qna_no number,
+    member_id varchar2(50),
+    title varchar2(200),
+    content varchar2(3000),
+    enroll_date date,
+    status char(1) default 'U', -- 처리전 U 완료 E
+    constraint pk_qna_no primary key (qna_no)
+);
+alter table qna add status char(1) default 'U';
+commit;
+create sequence seq_qna_no;
+
+-- q&a comment table
+create table qna_comment(
+    comment_no number not null,
+    qna_no number not null,
+    member_id varchar2(100) not null,
+    comment_content varchar2(1000) not null,
+    created_at date default sysdate not null,
+    constraint pk_qna_comment_no primary key(comment_no)
+);
+create sequence seq_qna_comment_no;
 
 -- 트리거
 select * from user_triggers;
@@ -437,8 +460,19 @@ select * from likes_pheed;
 select * from likes_dokoo;
 select * from likes_club;
 select * from alarm;
+select * from qna;
+select * from qna_comment;
 
 select * from persistent_logins;
+
+select
+			*
+		from
+			qna
+		where
+			status ='U'
+		order by
+			enroll_date desc;
 
 
 SELECT 
@@ -1005,3 +1039,12 @@ select
 				on p.member_id = m.member_id
 		where 
 			p.pheed_no = 37;
+
+
+select
+    *
+from
+    qna q left join qna_comment c
+        on q.qna_no = c.qna_no
+where
+    q.qna_no = 1;

@@ -2,6 +2,66 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.kh.bookie">
+<mapper namespace="com.kh.bookie.mypage.model.dao.MypageDao">
 
+	<select id="selectMyQnaList" resultMap="qnaListCollectionMap">
+		select 
+			*
+		from
+			qna q
+				left join member m on q.member_id = m.member_id
+		order by
+			q.enroll_date desc
+	</select>
+	
+	<resultMap type="qna" id="qnaListCollectionMap">
+		<id column="qna_no" property="qnaNo"/>
+		<result column="member_id" property="memberId"/>
+		<result column="title" property="title"/>
+		<result column="content" property="content"/>
+		<result column="enroll_date" property="enrollDate"/>
+		<result column="status" property="status"/>
+		<association property="member" javaType="member">
+			<id column="member_id" property="memberId"/>
+			<result column="nickname" property="nickname"/>
+		</association>
+	</resultMap>
+	
+	<insert id="qnaEnroll">
+		insert into
+			qna
+		values(
+			seq_qna_no.nextval,
+			#{memberId},
+			#{title},
+			#{content},
+			sysdate
+		)
+	</insert>
+	
+	<select id="selectOneQna" resultMap="qnaOneCollectionMap">
+		select
+			*
+		from
+			qna q left join qna_comment c
+				on q.qna_no = c.qna_no
+		where
+			q.qna_no = #{qnaNo}
+	</select>
+	
+	<resultMap type="qna" id="qnaOneCollectionMap">
+		<id column="qna_no" property="qnaNo"/>
+		<result column="member_id" property="memberId"/>
+		<result column="title" property="title"/>
+		<result column="content" property="content"/>
+		<result column="enroll_date" property="enrollDate"/>
+		<result column="status" property="status"/>
+		<collection property="qnaCommentList" javaType="qnaComment">
+			<id column="comment_no" property="commentNo"/>
+			<result column="qna_no" property="qnaNo"/>
+			<result column="comment_content" property="commentContent"/>
+			<result column="created_at" property="createdAt"/>
+		</collection>
+	</resultMap>
+	
 </mapper>
