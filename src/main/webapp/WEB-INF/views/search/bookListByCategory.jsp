@@ -25,6 +25,9 @@
 		<button id="btn-more" class="btn gap-2 col-12" type="button">더보기</button>
 		<span style="display:none;" id="cPage">1</span>
 	</div>
+	<div id="btn-scroll-to-top" class="rounded-circle shadow text-center d-flex" onclick="location.href='#'">
+		<i class="fa-solid fa-arrow-up"></i>
+	</div>
 </section>
 
 <script>

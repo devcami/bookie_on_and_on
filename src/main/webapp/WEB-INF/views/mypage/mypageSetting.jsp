@@ -83,6 +83,7 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp">
    <jsp:param value="세팅" name="title"/>
 </jsp:include>
+<sec:authentication property="principal" var="loginMember"/>
 <!-- 뒤로가기 -->
 <div id="title-header" class="">
 	<div id="header-div">
@@ -137,7 +138,7 @@
               <a title="" href="http://www.fostrap.com/2016/04/free-material-design-template-blogger-md-fostrap.html" target="_blank">
                <img alt="회원탈퇴" class="circle" 
                src="${pageContext.request.contextPath}/resources/images/icon/smile.png" title="회원탈퇴" border="0" height="72" width="72"> </a> 
-               <span class="title"><a title=" " href="http://www.fostrap.com/2016/04/free-material-design-template-blogger-md-fostrap.html">회원탈퇴</a></span> </div>
+               <span class="title"><a title=" " href="${pageContext.request.contextPath}/mypage/deleteMember.do">회원탈퇴</a></span> </div>
             <div style="clear: both;"></div>
           </li>
         </ul>
@@ -151,12 +152,13 @@
       <div class="widget-content popular-posts">
         <ul>
           <li>
-         <div class="item-thumbnail" style="line-height: 42px;">
-              <a title="" href="http://www.fostrap.com/2016/04/free-material-design-template-blogger-md-fostrap.html" target="_blank">
-               <img alt="Q&A 글쓰기" class="circle" 
-               src="${pageContext.request.contextPath}/resources/images/icon/smile.png" title="Q&A 글쓰기" border="0" height="72" width="72"> </a> 
-               <span class="title"><a title=" " href="http://www.fostrap.com/2016/04/free-material-design-template-blogger-md-fostrap.html">Q&A 글쓰기</a></span> </div>
-            <div style="clear: both;"></div>
+	         <div class="item-thumbnail" style="line-height: 42px;">
+				<img alt="나의 Q&A 목록" class="circle" src="${pageContext.request.contextPath}/resources/images/icon/smile.png" title="나의 Q&A 목록" border="0" height="72" width="72"> 
+				<span class="title">
+					<a href="${pageContext.request.contextPath}/mypage/qnaList.do?memberId=${loginMember.memberId}">나의 Q&A 목록</a>
+				</span> 
+			 </div>
+			 <div style="clear: both;"></div>
           </li>
           <li>
          <div class="item-thumbnail" style="line-height: 42px;">

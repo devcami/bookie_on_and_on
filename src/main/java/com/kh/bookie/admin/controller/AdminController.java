@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,12 +23,15 @@ import com.kh.bookie.admin.model.dto.Alarm;
 import com.kh.bookie.admin.model.dto.Report;
 import com.kh.bookie.admin.model.service.AdminService;
 import com.kh.bookie.club.model.dto.MissionStatus;
+//github.com/devcami/bookie_on_and_on.git
 import com.kh.bookie.common.HelloSpringUtils;
 import com.kh.bookie.dokoo.model.dto.Dokoo;
 import com.kh.bookie.dokoo.model.dto.DokooComment;
 import com.kh.bookie.dokoo.model.service.DokooService;
 import com.kh.bookie.member.model.dto.Member;
 import com.kh.bookie.member.model.service.MemberService;
+import com.kh.bookie.mypage.model.dto.Qna;
+import com.kh.bookie.mypage.model.dto.QnaComment;
 import com.kh.bookie.pheed.model.dto.Pheed;
 import com.kh.bookie.pheed.model.dto.PheedComment;
 import com.kh.bookie.pheed.model.service.PheedService;
@@ -197,11 +199,20 @@ public class AdminController {
 	}
 	
 	@GetMapping("/reportList.do")
-	public void reportList(Model model) {
+	public void reportList(@RequestParam(defaultValue = "1") int cPage, 
+							Model model,
+							HttpServletRequest request) {
 		try {
-			List<Report> list = adminService.selectReportList();
+			int numPerPage = 10;
+			List<Report> list = adminService.selectReportList(cPage, numPerPage);
 			log.debug("list = {}",list);
 			model.addAttribute("list", list);
+			
+			// page bar
+			int totalContent = adminService.selectTotalReportContent();
+			String url = request.getRequestURI();
+			String pagebar = HelloSpringUtils.getPagebar(cPage, numPerPage, totalContent, url);
+			model.addAttribute("pagebar", pagebar);
 		}catch(Exception e){
 			log.error("신고리스트 불러오기 오류",e);
 			throw e;
@@ -209,29 +220,48 @@ public class AdminController {
 	}
 	
 	@GetMapping("/selectReportListByCategory.do")
-	public ResponseEntity<?> selectReportListByCategory(@RequestParam String category , @RequestParam String status){
+	public ResponseEntity<?> selectReportListByCategory(
+				@RequestParam String category , @RequestParam String status,
+				@RequestParam(defaultValue = "1") int cPage,
+				HttpServletRequest request){
 		Map<String, Object> map = new HashMap<>();
 		try {
 			List<Report> list = null;
+			int numPerPage = 10;
+			map.put("cPage", cPage);
+			map.put("numPerPage", numPerPage);
+			int totalContent = 0;
+			
 			if(!status.equals("상태") && category.equals("카테고리")) {
 				// 상태는 선택되고 카테고리는 전체일 시
-				list = adminService.selectReportListByStatus(status);
+				map.put("status", status);
+				list = adminService.selectReportListByStatus(map);
+				totalContent = adminService.selectTotalReportByStatus(status);
 			} 
 			else if(status.equals("상태") && category.equals("카테고리")) {
 				// 둘다 없을 시
-				list = adminService.selectReportList();
+				list = adminService.selectReportList(cPage, numPerPage);
 			}
 			else if(status.equals("상태")) {
 				// 카테고리만 선택 시
-				list = adminService.selectReportListByCategory(category);
+				map.put("category", category);
+				list = adminService.selectReportListByCategory(map);
+				totalContent = adminService.selectTotalReportByCategory(category);
 			}
 			else if(!status.equals("상태")){
 				// 둘다 선택 시
 				map.put("category", category);
 				map.put("status", status);
 				list = adminService.selectReportListByBoth(map);
+				totalContent = adminService.selectTotalReportByBoth(map);
 			} 
 			map.put("list", list);
+			
+			// page bar
+			String url = request.getRequestURI();
+			String pagebar = HelloSpringUtils.getPagebar(cPage, numPerPage, totalContent, url);
+			map.put("pagebar", pagebar);
+			
 		} catch (Exception e) {
 			log.error("신고리스트 -카테고리 불러오기 오류", e);
 			map.put("msg", "신고리스트 -카테고리 불러오기 오류");
@@ -241,29 +271,49 @@ public class AdminController {
 	}
 	
 	@GetMapping("/selectReportListByStatus.do")
-	public ResponseEntity<?> selectReportListByStatus(@RequestParam String status, @RequestParam String category){
+	public ResponseEntity<?> selectReportListByStatus(
+			@RequestParam String status, @RequestParam String category,
+			@RequestParam(defaultValue = "1") int cPage,
+			HttpServletRequest request){
 		Map<String, Object> map = new HashMap<>();
 		try {
+			int numPerPage = 10;
+			int totalContent = 0;
 			List<Report> list = null;
+			map.put("cPage", cPage);
+			map.put("numPerPage", numPerPage);
+			
 			if(!category.equals("카테고리") && status.equals("상태")){
 				// 카테고리는 선택되고 상태는 전체일 시
-				list = adminService.selectReportListByCategory(category);
+				map.put("category", category);
+				list = adminService.selectReportListByCategory(map);
+				
+				totalContent = adminService.selectTotalReportByCategory(category);
 			} 
 			else if(status.equals("상태") && category.equals("카테고리")) {
 				// 둘다 없을 시
-				list = adminService.selectReportList();
+				list = adminService.selectReportList(cPage, numPerPage);
 			}
 			else if(category.equals("카테고리")) {
 				// 상태만 선택 시
-				list = adminService.selectReportListByStatus(status);
+				map.put("status", status);
+				list = adminService.selectReportListByStatus(map);
+				
+				totalContent = adminService.selectTotalReportByStatus(status);
 			} 
 			else if(!category.equals("카테고리")){
 				// 둘다 선택 시
 				map.put("category", category);
 				map.put("status", status);
 				list = adminService.selectReportListByBoth(map);
+				totalContent = adminService.selectTotalReportByBoth(map);
 			} 
 			map.put("list", list);
+			
+			// page bar
+			String url = request.getRequestURI();
+			String pagebar = HelloSpringUtils.getPagebar(cPage, numPerPage, totalContent, url);
+			map.put("pagebar", pagebar);
 		} catch (Exception e) {
 			log.error("신고리스트 -상태 불러오기 오류", e);
 			map.put("msg", "신고리스트 -상태 불러오기 오류");
@@ -337,6 +387,7 @@ public class AdminController {
 			int result = adminService.reportUpdate(map);
 		} catch (Exception e) {
 			log.error("신고 상태 수정 오류", e);
+			throw e;
 		}
 		return "redirect:/admin/reportDetail.do?reportNo=" + reportNo;
 	}
@@ -363,4 +414,81 @@ public class AdminController {
 		return ResponseEntity.ok(map);
 		
 	}
+	
+	@GetMapping("/qnaList.do")
+	public void qnaList(@RequestParam(defaultValue = "1") int cPage, 
+						Model model,
+						HttpServletRequest request){
+		try {
+			int numPerPage = 10;
+			List<Qna> list = adminService.selectQnaList(cPage, numPerPage);
+			log.debug("list", list);
+			model.addAttribute("list", list);
+			
+			// page bar
+			int totalContent = adminService.selectTotalQnaContent();
+			String url = request.getRequestURI();
+			String pagebar = HelloSpringUtils.getPagebar(cPage, numPerPage, totalContent, url);
+			model.addAttribute("pagebar", pagebar);
+		} catch (Exception e) {
+			log.error("QNA리스트 불러오기 오류",e);
+			model.addAttribute("msg", "QNA리스트 불러오기 오류");
+			throw e;
+		}
+	}
+	
+	@GetMapping("/selectQnaListByStatus.do")
+	public ResponseEntity<?> selectQnaListByStatus(
+			@RequestParam(defaultValue = "1") int cPage,
+			@RequestParam String status, 
+			HttpServletRequest request){
+		Map<String, Object> map = new HashMap<>();
+		try {
+			List<Qna> list = null;
+			int numPerPage = 10;
+			log.debug("status = {}", status);
+			if(status.equals("상태")){
+				// 전체 검색
+				list = adminService.selectQnaList(cPage, numPerPage);
+				// page bar
+				int totalContent = adminService.selectTotalQnaContent();
+				String url = request.getRequestURI();
+				String pagebar = HelloSpringUtils.getPagebar(cPage, numPerPage, totalContent, url);
+				map.put("pagebar", pagebar);
+			} 
+			else if(!status.equals("상태")) {
+				// 상태에 따른 검색
+				map.put("status", status);
+				map.put("cPage", cPage);
+				map.put("numPerPage", numPerPage);
+				list = adminService.selectQnaListByStatus(map);
+				log.debug("list = {}", list);
+				// page bar
+				int totalContent = adminService.selectTotalQnaContentByStatus(status);
+				String url = request.getRequestURI();
+				String pagebar = HelloSpringUtils.getPagebar(cPage, numPerPage, totalContent, url);
+				map.put("pagebar", pagebar);
+			}
+			map.put("list", list);
+		} catch (Exception e) {
+			log.error("신고리스트 -상태 불러오기 오류", e);
+			map.put("msg", "신고리스트 -상태 불러오기 오류");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(map);
+		}
+		return ResponseEntity.ok(map);
+	}
+	
+	@PostMapping("/qnaCommentEnroll.do")
+	public String qnaCommentEnroll(QnaComment qnaComment) {
+		try {
+			log.debug("qnaComment = {}", qnaComment);
+			int result = adminService.qnaCommentEnroll(qnaComment);
+		} catch (Exception e) {
+			log.error("QNA 답변 등록 오류", e);
+			e.printStackTrace();
+			throw e;
+		}
+		return "redirect:/mypage/qnaDetail.do?qnaNo=" + qnaComment.getQnaNo();
+	}
+	
 }

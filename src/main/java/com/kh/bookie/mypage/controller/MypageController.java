@@ -34,6 +34,7 @@ import com.kh.bookie.member.model.dto.Member;
 import com.kh.bookie.member.model.dto.MemberEntity;
 import com.kh.bookie.member.model.service.MemberService;
 import com.kh.bookie.mypage.model.dto.Book;
+import com.kh.bookie.mypage.model.dto.Qna;
 import com.kh.bookie.mypage.model.service.MypageService;
 import com.kh.bookie.search.model.service.SearchService;
 
@@ -102,11 +103,73 @@ public class MypageController {
 	@GetMapping("/mypageSetting.do")
 	public void mypageSetting() {}
 	
+	/**
+	 * QNA
+	 */
+	@GetMapping("/qnaList.do")
+	public void qnaList(@RequestParam String memberId, Model model){
+		try {
+			List<Qna> list = mypageService.selectMyQnaList(memberId);
+			log.debug("list", list);
+			model.addAttribute("list", list);
+		} catch (Exception e) {
+			log.error("QNA리스트 불러오기 오류",e);
+			throw e;
+		}
+	}
+	
+	@GetMapping("/qnaEnroll.do")
+	public void qnaEnroll() {}
+	
+	@PostMapping("/qnaEnroll.do")
+	public String qnaEnroll(Qna qna) {
+		try {
+			log.debug("qna = {}", qna);
+			int result = mypageService.qnaEnroll(qna);
+		} catch (Exception e) {
+			log.error("QNA 글 등록 오류", e);
+			e.printStackTrace();
+			throw e;
+		}
+		return "redirect:/mypage/qnaList.do?memberId=" + qna.getMemberId();
+	}
+	
+	@GetMapping("/qnaDetail.do")
+	public void qnaDetail(@RequestParam int qnaNo, Model model){
+		try {
+			Qna qna = mypageService.selectOneQna(qnaNo);
+			log.debug("qna = {}", qna);
+			model.addAttribute("qna", qna);
+		} catch (Exception e) {
+			log.error("QNA 상세보기 오류",e);
+			throw e;
+		}
+	}
+	
 	@GetMapping("/myMiniProfile.do")
 	public void myMiniProfile() {}
+	
+	/* 회원탈퇴 */
+	@GetMapping("/deleteMember.do")
+	public ResponseEntity<?> deleteMember(@AuthenticationPrincipal Member loginMember) {
+		String memberId = loginMember.getMemberId();
+		Map<String, Object> map = new HashMap<>();
+		try {
+			int result = memberService.deleteMember(memberId);
+			
+			if(result>0) {
+				map.put("msg", "성공적으로 회원정보를 삭제했습니다.");
+				SecurityContextHolder.clearContext(); // 이 부분을 꼭 따로 추가해 줘야 스프링 시큐리티 탈퇴 시 로그아웃 처리가 됨!!!
+			}
+			else 
+				map.put("msg", "회원정보삭제에 실패했습니다.");
+		} catch (Exception e) {
+			log.error("회원탈퇴 오류", e);
+			e.printStackTrace();
+		}
+		return ResponseEntity.ok(map);
+	}
 
-	@GetMapping("/myPasswordUpdateFrm.do")
-	public void myPasswordUpdateFrm() {}
 
 	@GetMapping("/myMainProfile.do")
 	public void myMainProfile(Model model, @RequestParam Member loginMember) {
@@ -123,6 +186,12 @@ public class MypageController {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * 패스워드 변경
+	 */
+	@GetMapping("/myPasswordUpdateFrm.do")
+	public void myPasswordUpdateFrm() {}
 	
 	/* 기존패스워드 체크 */
 	@PostMapping("/passwordCheck.do")
@@ -212,6 +281,7 @@ public class MypageController {
 	@GetMapping("/myBookClub.do")
 	public void myBookClub() {}
 	
+	/* 마이프로필 삭제 */
 	@GetMapping("/myProfileDelete.do")
 	public String myProfileDelete(@AuthenticationPrincipal Member loginMember, RedirectAttributes redirectAttr) {
 		String nickname = loginMember.getNickname(); 

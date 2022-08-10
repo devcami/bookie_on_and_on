@@ -23,6 +23,13 @@
 	</div>
 </div>
 <section id="content">
+	<c:if test="${empty list}">
+		<div class="text-center mt-5 p-5" id="emptyPheed">
+			<h1>게시글이 없어요 ! 🥲</h1>
+			<h1><a href="${pageContext.request.contextPath}/search/recommendUser.do">"추천유저"</a>에서 팔로우를 신청해봐요</h1>
+		</div>
+	</c:if>
+	<c:if test="${not empty list}">
 	<c:forEach items="${list}" var="pheed" varStatus="vs">
 	<fmt:parseDate value="${pheed.enrollDate}" pattern="yyyy-MM-dd'T'HH:mm" var="enrollDate"/>
 		<div class="pheed-container shadow bg-white">
@@ -89,6 +96,7 @@
 			</div>
 		</div>
 	</c:forEach>
+	</c:if>
 </section>
 
 <div id="sidebar" class="bg-white">

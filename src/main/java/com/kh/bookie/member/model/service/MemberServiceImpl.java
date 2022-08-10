@@ -84,4 +84,9 @@ public class MemberServiceImpl implements MemberService {
 	public int updatePassword(Map<String, Object> param) {
 		return memberDao.updatePassword(param);
 	}
+
+	@Override
+	public int deleteMember(String memberId) {
+		return memberDao.deleteMember(memberId);
+	}
 }
