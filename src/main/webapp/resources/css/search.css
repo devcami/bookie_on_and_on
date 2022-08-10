@@ -43,7 +43,27 @@ section#content	{
 	color: #fff;
 	box-shadow: 0px 0px 4px #5454544a;
 }
-
+/* 맨 위로 버튼 */
+#btn-scroll-to-top i{
+	font-size: 20px;
+}
+#btn-scroll-to-top{
+	color : #CCDA46;
+	width: 40px;
+	height : 40px;
+	position : fixed;
+	right : 350px;
+	bottom: 120px;
+	align-items: center;
+    justify-content: center;
+    background: transparent;
+    border : 2px solid #CCDA46;
+    cursor: pointer;
+}
+#btn-scroll-to-top:hover{
+    background-color: #CCDA46;
+    color : #FFF;
+}
 /* 검색한 책 */
 #book-container .book-table{
 	margin: 10px 0;

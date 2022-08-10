@@ -14,7 +14,7 @@
 	<!-- static 자원은 security filter처리 하지 않음 -->
 	<http security="none" pattern="/resources/**" />
 	<http auto-config="true">
-		<intercept-url pattern="/**" access="permitAll"/>
+		<intercept-url pattern="/" access="permitAll"/>
 		
 		<intercept-url pattern="/member/login.do" access="isAnonymous()"/>
 		<intercept-url pattern="/member/memberEnroll.do" access="isAnonymous()"/>

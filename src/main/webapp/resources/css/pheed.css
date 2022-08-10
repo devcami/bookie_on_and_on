@@ -2,7 +2,7 @@
 section#content	{
 	margin: 0 auto;
 	padding: 20px 30px;
-	min-height:1000px;
+	min-height:600px;
 	border-radius: 5px;
 }
 
@@ -53,7 +53,17 @@ section#content	{
 	font-size:30px;
 }
 
-
+/* 빈목록 */
+#emptyPheed {
+	border : 2px solid #CCDA46;
+	border-radius: 15px;
+}
+#emptyPheed a{
+	color : #FE9801;
+}
+#emptyPheed a:hover{
+	color : #d88100;
+}
 /* 피드 한개 */
 #content .pheed-container{
 	/* border: 2px solid #F4EEC7; */
