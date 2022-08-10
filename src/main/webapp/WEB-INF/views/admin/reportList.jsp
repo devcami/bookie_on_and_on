@@ -12,7 +12,7 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param value="관리자페이지" name="title"/>
 </jsp:include>
-<section id="content">
+<section id="content" style="min-height: 500px;">
 
 <div class="container">
       <div class="row">
@@ -72,7 +72,9 @@
 
 </div>
 </section>
-
+<div class="pagebar" >
+	<nav class="pagination-outer" id="pagebar" >${pagebar}</nav>
+</div>
 <script>
 					
 const tbody = document.querySelector("#tbody");
@@ -94,7 +96,7 @@ document.querySelector("#category").addEventListener('change', (e) => {
 		success(resp){
 			console.log(resp);
 			// tbody에 뿌려
-			const {list} = resp;
+			const {list, pagebar} = resp;
 			list.forEach((report) => {
 				console.log(report);
 				let {reportNo, memberId, beenziNo, category, createdAt, status} = report;
@@ -120,6 +122,7 @@ document.querySelector("#category").addEventListener('change', (e) => {
 				</tr>
 				`;
 				tbody.insertAdjacentHTML('beforeend', div);
+				document.querySelector("#pagebar").innerHTML = pagebar;
 			});
 			
 			
@@ -144,7 +147,7 @@ document.querySelector("#status").addEventListener('change', (e) => {
 			status :  e.target.value },
 		success(resp){
 			//console.log(resp);
-			const {list} = resp;
+			const {list, pagebar} = resp;
 			list.forEach((report) => {
 				//console.log(report);
 				let {reportNo, memberId, beenziNo, category, createdAt, status} = report;
@@ -170,6 +173,7 @@ document.querySelector("#status").addEventListener('change', (e) => {
 				</tr>
 				`;
 				tbody.insertAdjacentHTML('beforeend', div);
+				document.querySelector("#pagebar").innerHTML = pagebar;
 			});
 			
 			
