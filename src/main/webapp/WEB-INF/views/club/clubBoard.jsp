@@ -20,13 +20,23 @@ ${clubNo}
 			<ul>
 				<li id="first-li" class="menu-li" style="background-color: #F76E11;"><a href="${pageContext.request.contextPath}/club/clubDetail.do/${clubNo}">메인페이지</a></li>
 				<li id="second-li" class="menu-li" style="background-color: #FF9F45;"><a href="${pageContext.request.contextPath}/club/clubStory.do/${clubNo}">북클럽 스토리</a></li>
-				<li id="third-li" class="menu-li nowPage" style="background-color: #FFBC80;"><a href="${pageContext.request.contextPath}/club/clubBoard.do/${clubNo}">게시판</a></li>
+				<li id="third-li" class="menu-li nowPage" style="background-color: #FFBC80;"><a href="${pageContext.request.contextPath}/club/clubBoard.do?clubNo=${clubNo}">게시판</a></li>
 				<li id="fourth-li" class="menu-li" style="background-color: #FC4F4F;"><a href="${pageContext.request.contextPath}/club/clubMission.do/${clubNo}/${loginMember.username}">미션</a></li>
 				<li id="fifth-li" class="menu-li" style="background-color: #D9534F;"><a href="${pageContext.request.contextPath}/club/clubChat.do/${clubNo}">채팅..?</a></li>		
 			</ul>
 		</div>
 		<div id="title" class="text-center">
 			<h1>📣북클럽 게시판📣</h1>
+			<div id="sortTypeDiv">
+				<a 
+					href="${pageContext.request.contextPath}/club/clubBoard.do?clubNo=${clubNo}"
+					class="${sortType eq null ? 'textColor' : ''}"
+					>최신순</a>
+				<a 
+					href="${pageContext.request.contextPath}/club/clubBoard.do?clubNo=${clubNo}&sortType=oldList"
+					class="${sortType eq 'oldList' ? 'textColor' : ''}"
+					>오래된순</a>
+			</div>
 			<button 
 				type="button" 
 				class="btn btn-lg btn-link" 
