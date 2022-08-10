@@ -14,7 +14,11 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -101,6 +105,9 @@ public class MypageController {
 	@GetMapping("/myMiniProfile.do")
 	public void myMiniProfile() {}
 
+	@GetMapping("/myPasswordUpdateFrm.do")
+	public void myPasswordUpdateFrm() {}
+
 	@GetMapping("/myMainProfile.do")
 	public void myMainProfile(Model model, @RequestParam Member loginMember) {
 		log.debug("model = {}", model);
@@ -112,9 +119,64 @@ public class MypageController {
 			
 			
 		} catch (Exception e) {
-			
+			log.error("내프로필 조회 오류", e);
+			e.printStackTrace();
 		}
 	}
+	
+	/* 기존패스워드 체크 */
+	@PostMapping("/passwordCheck.do")
+	public ResponseEntity<?> passwordCheck(@RequestParam String nowPassword, @AuthenticationPrincipal Member loginMember, Authentication auth){
+		log.debug("nowPassword = {}", nowPassword);
+		Map<String, Object> map = new HashMap<>();
+		try {
+			Member member = memberService.selectPassword(loginMember.getMemberId());
+			String presentedPassword = member.getPassword(); // 현재 DB저장 비밀번호
+			log.debug("presentedPassword = {}", presentedPassword);
+			log.debug("{}", bcryptPasswordEncoder.matches(nowPassword, presentedPassword));
+		    if (!bcryptPasswordEncoder.matches(nowPassword, presentedPassword)) {
+		        map.put("msg", "두 비밀번호가 일치하지 않습니다.");
+		        map.put("valid", "0");
+		    }
+		    else {
+		    	map.put("msg", "비밀번호가 일치합니다.");
+		    	map.put("valid", "1");
+		    }
+		} catch (Exception e) {
+			log.error("비밀번호 조회 오류", e);
+			e.printStackTrace();
+		}	
+		return ResponseEntity.ok(map);
+	}
+	
+	@PostMapping("/myPasswordUpdate.do")
+	public ResponseEntity<?> myPasswordUpdate(@RequestParam String newPasswordCheck, @AuthenticationPrincipal Member loginMember) {
+		String newPassword = newPasswordCheck;
+		log.debug("newPassword = {}", newPassword);
+		Map<String, Object> param = new HashMap<>();
+		Map<String, Object> map = new HashMap<>();
+		try {
+			// 새로운 비밀번호 암호화 처리
+			String newEncryptPassword = bcryptPasswordEncoder.encode(newPassword);
+			param.put("newPassword", newEncryptPassword);
+			param.put("memberId", loginMember.getMemberId());
+			
+			// db갱신 mvc
+			int result = memberService.updatePassword(param);
+			
+			// 비밀번호/권한정보가 바뀌었을때는 전체 Authentication을 대체 (비번바뀔때는 무조건 이렇게!)
+			Authentication newAuthentication = new UsernamePasswordAuthenticationToken(
+															loginMember, loginMember.getPassword(), loginMember.getAuthorities());
+			SecurityContextHolder.getContext().setAuthentication(newAuthentication);
+			map.put("msg", "비밀번호를 성공적으로 수정했습니다.");
+		} catch (Exception e) {
+			log.error("비밀번호 수정 오류!", e);
+			map.put("msg", "회원정보 수정오류!");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(map);
+		}
+		return ResponseEntity.ok(map);
+	}
+	
 	
 	@GetMapping("/myBook.do")
 	public void myBook() {}

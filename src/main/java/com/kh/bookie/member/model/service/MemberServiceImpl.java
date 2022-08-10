@@ -74,4 +74,14 @@ public class MemberServiceImpl implements MemberService {
 	public int readAlarm(int alarmNo) {
 		return memberDao.readAlarm(alarmNo);
 	}
+
+	@Override
+	public Member selectPassword(@NonNull String memberId) {
+		return memberDao.selectPassword(memberId);
+	}
+	
+	@Override
+	public int updatePassword(Map<String, Object> param) {
+		return memberDao.updatePassword(param);
+	}
 }
