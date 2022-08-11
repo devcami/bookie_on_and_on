@@ -34,7 +34,7 @@
 			    <button 
 			    	id="btn-enroll"
 			    	class="btn btn-sm" 
-			    	onclick="location.href='${pageContext.request.contextPath}/club/oldClubList.do;">마감된 북클럽</button>   	
+			    	onclick="location.href='${pageContext.request.contextPath}/club/oldClubList.do';">마감된 북클럽</button>   	
 			</sec:authorize>
 			<%-- <sec:authorize access="hasRole('ROLE_CLUB')"> --%>
 			<button 

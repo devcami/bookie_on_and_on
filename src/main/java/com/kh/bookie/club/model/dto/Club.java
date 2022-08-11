@@ -23,8 +23,13 @@ public class Club extends ClubEntity {
 	private int likesCnt;
 	private int isJoined;
 	
+	private int totalMission;
+	private List<Chat> clubBoard = new ArrayList<>();
+	private List<Member> clubMember = new ArrayList<>();
+	
+	
 	public Club(int clubNo, String title, String content, LocalDate recruitStart, LocalDate recruitEnd, LocalDate clubStart,
-			LocalDate clubEnd, int bookCount, int maximunNop, int minimunNop, int deposit, String interest, String missionCnt) {
+			LocalDate clubEnd, int bookCount, int maximunNop, int minimunNop, int deposit, String interest, String missionCnt, List<ClubBook> bookList, List<Member> clubMember, List<Chat> clubBoard, int totalMission, int dStart, int dEnd, int isJoined, int currentNop, List<String> imgSrcList, List<Mission> missionList, int likesCnt, List<ClubApplicant> applicantList) {
 		super(clubNo, title, content, recruitStart, recruitEnd, clubStart, clubEnd, bookCount, maximunNop, minimunNop, deposit, interest, missionCnt);
 		
 		this.bookList = bookList;
@@ -34,7 +39,9 @@ public class Club extends ClubEntity {
 		this.likesCnt = likesCnt;
 		this.isJoined = isJoined;
 		this.applicantList = applicantList;
-		
+		this.totalMission = totalMission;
+		this.clubBoard = clubBoard;
+		this.clubMember = clubMember;
 	}
 
 	@Override
