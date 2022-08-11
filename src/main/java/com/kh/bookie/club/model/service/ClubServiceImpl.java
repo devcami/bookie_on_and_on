@@ -18,6 +18,7 @@ import com.kh.bookie.club.model.dto.ClubApplicant;
 import com.kh.bookie.club.model.dto.ClubBook;
 import com.kh.bookie.club.model.dto.Mission;
 import com.kh.bookie.club.model.dto.MissionStatus;
+import com.kh.bookie.member.model.dto.Member;
 import com.kh.bookie.point.model.dto.PointStatus;
 
 import lombok.extern.slf4j.Slf4j;
@@ -62,13 +63,6 @@ public class ClubServiceImpl implements ClubService {
 
 	@Override
 	public List<Club> selectClubList(Map<String, Object> map) {
-//		int offset = (cPage - 1) * numPerPage;
-//		RowBounds rowBounds = new RowBounds(offset, numPerPage);
-		
-		// 새로하는거
-//		Map<String, Object> map = new HashMap<>();
-//		map.put("rowBounds", rowBounds);
-//		map.put("sortType", sortType);
 
 		// 1. club 찾아와
 		List<Club> list = clubDao.selectClubList(map);
@@ -82,6 +76,22 @@ public class ClubServiceImpl implements ClubService {
 		
 		return list;
 		
+	}
+	
+	@Override
+	public List<Club> selectClubOldList(Map<String, Object> map) {
+
+		// 1. club 찾아와
+		List<Club> list = clubDao.selectClubOldList(map);
+
+		
+		// 2. club에 사진 할당해
+		for(Club club : list) {
+			List<ClubBook> bookList = clubDao.selectClubBook(club.getClubNo());
+			club.setBookList(bookList);
+		}
+		
+		return list;
 	}
 
 	@Override
@@ -106,6 +116,12 @@ public class ClubServiceImpl implements ClubService {
 	public int selectTotalClub() {
 		return clubDao.selectTotalClub();
 	}
+	
+	@Override
+	public int selectTotalOldClub() {
+		return clubDao.selectTotalOldClub();
+	}
+
 
 	@Override
 	public int selectTotalClubMonth() {
@@ -354,5 +370,20 @@ public class ClubServiceImpl implements ClubService {
 		return clubDao.selectOneMissionStatus(ms);
 	}
 	
+	@Override
+	public Club getClubDetailInfo(int clubNo) {
+		Club club = clubDao.getClubDetailInfo(clubNo);
+		
+		List<ClubBook> clubBookList = clubDao.getClubBookList(clubNo);
+		club.setBookList(clubBookList);
+		
+		List<Chat> clubBoardList = clubDao.getFiveRecentClubBoard(clubNo);
+		club.setClubBoard(clubBoardList);
+		
+		List<Member> memberList = clubDao.getClubMemberList(clubNo);
+		club.setClubMember(memberList);
+		
+		return club;
+	}
 
 }

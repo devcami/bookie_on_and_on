@@ -33,10 +33,15 @@ public interface ClubDao {
 	int insertMission(Mission mission);
 
 	List<Club> selectClubList(Map<String, Object> map);
+	
+	List<Club> selectClubOldList(Map<String, Object> map);
 
 	@Select("select count(*) from club where recruit_end > sysdate")
 	int selectTotalClub();
-
+	
+	@Select("select count(*) from club where club_end < sysdate")
+	int selectTotalOldClub();
+	
 	Club selectOneClub(Object clubNo);
 
 	ClubBook selectBookMission(Map<String, Object> map);
@@ -140,5 +145,18 @@ public interface ClubDao {
 
 	@Select("select * from mission_status where mission_no = #{missionNo} and member_id = #{memberId}")
 	MissionStatus getMissionStatus(Map<String, Object> map);
+
+	Club getClubDetailInfo(int clubNo);
+	
+	@Select("select * from (select row_number() over (order by enroll_date desc) rnum, cc.chat_no, cc.nickname, cc.title, cc.enroll_date from club_chat cc where club_no = #{clubNo}) where rnum between 1 and 5")
+	List<Chat> getFiveRecentClubBoard(int clubNo);
+
+	@Select("select item_id, img_src, book_title from club_book where club_no = #{clubNo}")
+	List<ClubBook> getClubBookList(int clubNo);
+
+	@Select("select m.member_id, m.nickname, m.renamed_filename from my_club mc left join member m on mc.member_id = m.member_id where mc.club_no = #{clubNo}")
+	List<Member> getClubMemberList(int clubNo);
+
+	
 
 }

@@ -3,6 +3,7 @@ package com.kh.bookie.club.controller;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -129,6 +130,48 @@ public class ClubController {
 			
 		} catch(Exception e) {
 			log.error("북클럽목록 조회 오류!!", e);
+			mav.addObject("msg", "북클럽목록 조회에 실패했습니다!");
+			throw e;
+		}
+		
+		return mav;
+	}
+	
+	@GetMapping("/oldClubList.do")
+	public ModelAndView oldClubList(
+			@RequestParam(defaultValue = "1") int cPage,
+			ModelAndView mav,
+			HttpServletRequest request,
+			@AuthenticationPrincipal Member loginMember) {
+		
+		
+		try {
+			
+	        log.debug("authentication member = {} ", loginMember);
+	        log.debug("authentication member = {} ", loginMember.getMemberId());
+			
+			Map<String, Object> map = new HashMap<>();	
+			int numPerPage = 2;
+			int start = ((cPage - 1) * numPerPage) + 1;
+			int end = cPage * numPerPage;
+
+			map.put("start", start);
+			map.put("end", end);
+			
+			List<Club> list = clubService.selectClubOldList(map);
+			mav.addObject("list", list);
+			
+			// 페이지 바
+			int totalClub = clubService.selectTotalOldClub();
+			String url = request.getRequestURI();
+
+
+			String pagebar = HelloSpringUtils.getPagebar(cPage, numPerPage, totalClub, url);				
+
+			mav.addObject("pagebar", pagebar);
+			
+		} catch(Exception e) {
+			log.error("북클럽목록(old) 조회 오류!!", e);
 			mav.addObject("msg", "북클럽목록 조회에 실패했습니다!");
 			throw e;
 		}
@@ -506,6 +549,17 @@ public class ClubController {
 		try {
 			log.debug("clubNo = {}", clubNo);		
 			
+			Club club = clubService.getClubDetailInfo(clubNo);
+			
+			LocalDate today = LocalDate.now();
+			
+			
+			Period dStart = Period.between(club.getClubStart(), today);
+			Period dEnd = Period.between(today, club.getClubEnd());
+
+			mav.addObject("dStart", dStart.getDays());
+			mav.addObject("dEnd", dEnd.getDays());
+			mav.addObject("club", club);
 			mav.addObject("clubNo", clubNo);
 			mav.setViewName("club/clubDetail");
 			
