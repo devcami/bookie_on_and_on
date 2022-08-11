@@ -229,14 +229,14 @@ document.querySelector('#myPick').addEventListener('change', (e) => {
 	const btnradio3 = document.querySelector("#btnradio3");
 	// 읽음 아닐 때
 	if(!btnradio3.checked){
-		// 체크할라고하면 금지해
+		// 체크할라고하면 금지
 		if(e.target.checked){
 			alert('다 읽은 책만 인생책으로 등록 가능합니다');
 			e.target.checked = false;
 			return;
 		}
 	}
-	// 읽음일 때 눌렀다 ? 비동기로 마이픽 변경
+	// 읽음일 때 눌렀다면 비동기로 마이픽 변경
 	else {
 		// 체크하면 -> myPick을 1로 변경			
 		if(e.target.checked){
