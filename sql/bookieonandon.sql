@@ -1173,3 +1173,42 @@ from
     from club_chat cc where club_no = 45)
 where
     rnum between 1 and 5;
+
+select
+	    c.deposit,
+	    c.title,
+	    c.content,
+	    trunc(sysdate - c.club_start)+1 d_start,
+	    trunc(c.club_end - sysdate)+1 d_end,
+	    (select count(*) from mission where club_no = 45) total_mission,
+	    cb.img_src,
+	    cb.item_id,
+	    cb.club_no bclub_no
+	from 
+	    club c 
+	        left join club_book cb on c.club_no = cb.club_no
+	where
+		c.club_no = 45;
+        
+        
+select * from chat_attachment;
+
+select
+	    c.deposit,
+	    c.title,
+	    c.content,
+	    trunc(sysdate - c.club_start)+1 d_start,
+	    trunc(c.club_end - sysdate)+1 d_end,
+	    (select count(*) from mission where club_no = 45) total_mission
+	from 
+	    club c 
+	where
+		c.club_no =45;
+
+select * from club;
+
+update club set club_end = sysdate - 3 where club_no = 50;
+update club set club_end = sysdate - 2 where club_no = 53;
+update club set club_end = sysdate - 1 where club_no = 59;
+
+commit;
