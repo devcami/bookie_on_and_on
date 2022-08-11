@@ -54,4 +54,6 @@ public interface SearchDao {
 
 	int insertFollower(Map<String, Object> map);
 
+	List<Book> selectBooKItemIdByStatus(Map<String, Object> param);
+
 }

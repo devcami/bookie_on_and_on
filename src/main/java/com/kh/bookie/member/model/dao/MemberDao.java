@@ -35,4 +35,10 @@ public interface MemberDao {
 
    int readAlarm(int alarmNo);
 
+   Member selectPassword(@NonNull String memberId);
+
+   int updatePassword(Map<String, Object> param);
+
+   int deleteMember(String memberId);
+
 }

@@ -143,4 +143,29 @@
 		where
 			alarm_no = #{alarmNo}
 	</update>
+	
+	<select id="selectPassword" resultType="member">
+		select
+			*
+		from
+			member
+		where
+			member_id = #{memberId}	
+	</select>
+	
+	<update id="updatePassword">
+		update
+			member
+		set
+			password = #{newPassword}
+		where
+			member_id = #{memberId}
+	</update>
+	
+	<delete id="deleteMember">
+		delete from member
+		where
+			member_id = #{memberId}
+	</delete>
+	
 </mapper>

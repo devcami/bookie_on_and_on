@@ -107,19 +107,39 @@ document.querySelector("#btn-more").onclick = () => {
 	getPage(c + 1, maxResult);
 };
 
-function getItemId (event) {
-	console.log(event.target.value);
+function getItemId(event) {	
 	const status = event.target.value;
+	console.log(status);
 	
-	$.ajax()
+	/* itemId찾아오기 */
+	$.ajax({
+		url: `${pageContext.request.contextPath}/mypage/getItemId.do`,
+		method : "get",
+		data : {status :status},
+		success(data){
+			console.log(data);
+			
+		},
+		error : console.log
+	});
 	
+	
+	let book = {
+			ttbkey : 'ttbiaj96820130001',
+			ItemId : '이제 이걸 받아와야하는데',
+			ItemIdType : '',
+			OptResult : '',
+			Output : 'js',
+			Cover : 'mini',
+			Version : '20131101'
+	};
 };
 
 const getPage = (cPage, maxResult) => {
 	console.log(cPage, maxResult);
 	// const searchApi = 'https://cors-anywhere.herokuapp.com/';
 	const container = document.querySelector("#book-container");
-	console.log('${param.searchType}', '${param.searchKeyword}');
+	
 	
 	let book = {
 			ttbkey : 'ttbiaj96820130001',

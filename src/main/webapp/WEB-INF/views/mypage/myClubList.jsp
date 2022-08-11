@@ -7,18 +7,17 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/clubList.css" />
 <jsp:include page="/WEB-INF/views/common/header.jsp">
-	<jsp:param value="북클럽리스트" name="title"/>
+	<jsp:param value="마이북클럽리스트" name="title"/>
 </jsp:include>
 <sec:authorize access="isAuthenticated()">
 	<sec:authentication property="principal" var="loginMember"/>
 </sec:authorize>
 <section id="content">
 	<div id="menu">
-		<h1>북클럽리스트</h1>
+		<h1>마이북클럽리스트</h1>
 		<div id="menu-left">
 			<select id="sortType" name="sortType" class="form-control d-inline form-select">
 		      <option ${sortType eq null ? 'selected' : ''} value="newList">최신순</option>
-		      <option ${sortType eq "oldList" ? 'selected' : ''} value="oldList">마감순</option>
 		    </select>
 			<sec:authorize access="hasRole('ROLE_ADMIN')">
 			    <button 
@@ -31,10 +30,6 @@
 			    	id="btn-enroll"
 			    	class="btn btn-sm" 
 			    	onclick="location.href='${pageContext.request.contextPath}/club/enrollClub.do';">나의 북클럽</button>
-			    <button 
-			    	id="btn-enroll"
-			    	class="btn btn-sm" 
-			    	onclick="location.href='${pageContext.request.contextPath}/club/oldClubList.do';">마감된 북클럽</button>   	
 			</sec:authorize>
 			<%-- <sec:authorize access="hasRole('ROLE_CLUB')"> --%>
 			<button 

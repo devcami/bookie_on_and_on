@@ -16,8 +16,12 @@ public interface ClubService {
 
 	List<Club> selectClubList(Map<String, Object> map);
 
+	List<Club> selectClubOldList(Map<String, Object> map);
+	
 	int selectTotalClub();
 
+	int selectTotalOldClub();
+	
 	Club selectOneClub(Map<String, Object> param);
 
 	List<Mission> getMissions(Map<String, Object> param);
@@ -79,5 +83,8 @@ public interface ClubService {
 	int missionStatusInsert(MissionStatus ms);
 
 	MissionStatus selectOneMissionStatus(MissionStatus ms);
+
+	Club getClubDetailInfo(int clubNo);
+
 
 }

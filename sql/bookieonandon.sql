@@ -222,9 +222,12 @@ alter table mission_status
 DROP constraint ck_mission_status; 
 alter table mission_status add constraint ck_mission_status check (status in ('P', 'F', 'I', 'A'));
 commit;
-update mission_status set updated_at = sysdate - 1 where mission_no = 39 and member_id = 'tmddbs';
-update mission_status set updated_at = sysdate - 2 where mission_no = 38 and member_id = 'tmddbs';
-update mission_status set updated_at = sysdate - 3 where mission_no = 38 and member_id = 'honggd';
+
+select
+    *
+from
+    user_cons_columns
+where table_name = 'MISSION_STATUS';
 select * from mission_status;
 -- 16. my_club
 create table my_club (
@@ -487,16 +490,6 @@ select * from qna_comment;
 
 select * from persistent_logins;
 
-select
-			*
-		from
-			qna
-		where
-			status ='U'
-		order by
-			enroll_date desc;
-
-
 SELECT 
     TABLE_NAME
     ,COLUMN_NAME    -- 컬럼 명
@@ -509,47 +502,8 @@ SELECT
     ,DATA_DEFAULT   -- 기본 값   
 FROM user_tab_columns; -- 해당 계정에 속한 테이블 
    --  dba_tab_columns 전체 테이블의 경우 
+   
 
-select *
-from book b right join
-(select
-    ing_no, item_id, member_id, started_at, ended_at, add_date
-    , row_number() over(order by add_date desc) rnum
-from
-    book_ing
-where 
-    member_id = 'tmddbs' and item_id = '9788932474755') 
-    i on b.member_id = i.member_id
-where
-    b.member_id = 'tmddbs' and b.item_id = '9788932474755' and i.rnum = 1;
-    
-select 
-    b.*,
-    i.started_at started_at,
-    i.ended_at ended_at,
-    i.ing_no ing_no
-from 
-    book b join 
-            (select ing_no, item_id, member_id, started_at, ended_at, add_date, row_number() over(order by i2.add_date desc) rnum from book_ing i2) i
-        on b.member_id = i.member_id and b.item_id = i.item_id
-where b.member_id = 'tmddbs' and b.item_id = '9788932474755' and i.rownum = 1;
-
-select * from book_ing where member_id = 'tmddbs' and item_id = '9788932474755';
-
-select
-    *
-from
-    member m 
-        join authority a on m.member_id = a.member_id
-        left join interest i on m.member_id = i.member_id 
-where
-    m.member_id = 'tmddbs';
-
-
-select distinct item_id, member_id from book_ing where member_id = 'tmddbs' and ended_at is not null;
-select * from dokoo;
-
--- sample data
 
 -------------------------
 -- club <<은성>>
@@ -592,19 +546,19 @@ insert into likes_club values (26, 'honggd1');
 
 
 select
-		    c.*,
-		    b.*,
-		    b.club_no bclub_no,
-		    m.*,
-		    m.club_no mclub_no,
-		    (select count(*) from my_club where club_no = c.club_no and c.club_no = 26) current_nop,
-		    (select count(*) from likes_club where club_no = c.club_no and c.club_no = 26) likesCnt
-		from
-		    club c 
-		    	join club_book b on c.club_no = b.club_no
-		    	join mission m on c.club_no = m.club_no
-		where 
-			c.club_no = 26;
+    c.*,
+    b.*,
+    b.club_no bclub_no,
+    m.*,
+    m.club_no mclub_no,
+    (select count(*) from my_club where club_no = c.club_no and c.club_no = 26) current_nop,
+    (select count(*) from likes_club where club_no = c.club_no and c.club_no = 26) likesCnt
+from
+    club c 
+    	join club_book b on c.club_no = b.club_no
+    	join mission m on c.club_no = m.club_no
+where 
+	c.club_no = 26;
     
             
             
@@ -984,7 +938,6 @@ from
 where 
     p.pheed_no = 37;
 
-
 select
     *
 from
@@ -1057,3 +1010,95 @@ where rnum between 1 and 8;
 
 select * from club;
 
+commit;
+
+select
+    trunc(sysdate - club_start)+1,
+    trunc(club_end - sysdate)+1
+from 
+    club 
+where club_no = 45;
+
+select * from club where club_no = 45;
+select * from club_book where club_no = 45;
+select * from club_chat where club_no = 45;
+select * from mission where club_no = 45;
+select * from my_club where club_no = 45;
+
+select
+    c.deposit,
+    c.title,
+    c.content,
+    trunc(sysdate - c.club_start)+1 d_start,
+    trunc(c.club_end - sysdate)+1 d_end,
+    (select count(*) from mission where club_no = 45) total_mission,
+    cb.img_src,
+    cb.item_id,
+    m.member_id,
+    m.renamed_filename,
+    m.nickname
+from 
+    club c 
+        left join club_book cb on c.club_no = cb.club_no
+        left join my_club mc on c.club_no = mc.club_no
+        left join member m on mc.member_id = m.member_id
+where c.club_no = 45;
+
+select 
+    *
+from 
+    club_chat
+where 
+    club_no = 45;
+
+-- 1~3
+select 
+    * 
+from 
+    (select row_number() over (order by enroll_date desc) rnum,
+    cc.chat_no,
+    cc.nickname,
+    cc.title,
+    cc.enroll_date
+    from club_chat cc where club_no = 45)
+where
+    rnum between 1 and 5;
+
+select
+	    c.deposit,
+	    c.title,
+	    c.content,
+	    trunc(sysdate - c.club_start)+1 d_start,
+	    trunc(c.club_end - sysdate)+1 d_end,
+	    (select count(*) from mission where club_no = 45) total_mission,
+	    cb.img_src,
+	    cb.item_id,
+	    cb.club_no bclub_no
+	from 
+	    club c 
+	        left join club_book cb on c.club_no = cb.club_no
+	where
+		c.club_no = 45;
+        
+        
+select * from chat_attachment;
+
+select
+	    c.deposit,
+	    c.title,
+	    c.content,
+	    trunc(sysdate - c.club_start)+1 d_start,
+	    trunc(c.club_end - sysdate)+1 d_end,
+	    (select count(*) from mission where club_no = 45) total_mission
+	from 
+	    club c 
+	where
+		c.club_no =45;
+
+select * from club;
+
+update club set club_end = sysdate - 3 where club_no = 50;
+update club set club_end = sysdate - 2 where club_no = 53;
+update club set club_end = sysdate - 1 where club_no = 59;
+
+commit;
