@@ -14,15 +14,13 @@
 <sec:authorize access="isAuthenticated()">
 	<sec:authentication property="principal" var="loginMember"/>
 </sec:authorize>
-${club.bookList.get(0).bookTitle}
-${club.bookList.get(1).bookTitle}
-${club.bookList.get(2).bookTitle}
 <div id="title-header" class="" style="display: none;">
 	<div id="header-div">
 		<div id="title-header-left">
 			<i class="fa-solid fa-angle-left" onclick="location.href='/bookie/club/clubList.do'"></i>
 			<span>[북클럽] ${club.title}</span>					
 		</div>
+		<c:if test="${club.recruitEnd lt nowDate}">
 		<sec:authorize access="hasRole('ROLE_USER')">
 			<div id="likeWishDiv">
 				<span class="fa-stack fa-lg" id='h-span'>
@@ -33,6 +31,7 @@ ${club.bookList.get(2).bookTitle}
 				</span>
 			</div>		
 		</sec:authorize>
+		</c:if>
 	</div>
 </div>
 <section id="content">
@@ -204,7 +203,7 @@ ${club.bookList.get(2).bookTitle}
 			</c:if>
 			<!-- 날짜가 지난 북클럽일때 -->			
 			<c:if test="${club.recruitEnd lt nowDate}">
-				<button id="btn-disabled">이미 마감된 북클럽입니다😥</button>
+				<button id="btn-disabled">모집일이 지난 북클럽입니다😥</button>
 			</c:if>
 		</sec:authorize>
 		<sec:authorize access="isAnonymous()">

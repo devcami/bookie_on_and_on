@@ -222,9 +222,12 @@ alter table mission_status
 DROP constraint ck_mission_status; 
 alter table mission_status add constraint ck_mission_status check (status in ('P', 'F', 'I', 'A'));
 commit;
-update mission_status set updated_at = sysdate - 1 where mission_no = 39 and member_id = 'tmddbs';
-update mission_status set updated_at = sysdate - 2 where mission_no = 38 and member_id = 'tmddbs';
-update mission_status set updated_at = sysdate - 3 where mission_no = 38 and member_id = 'honggd';
+
+select
+    *
+from
+    user_cons_columns
+where table_name = 'MISSION_STATUS';
 select * from mission_status;
 -- 16. my_club
 create table my_club (
@@ -1039,7 +1042,6 @@ select
 				on p.member_id = m.member_id
 		where 
 			p.pheed_no = 37;
-<<<<<<< HEAD
 
 
 select
@@ -1049,7 +1051,6 @@ from
         on q.qna_no = c.qna_no
 where
     q.qna_no = 1;
-=======
             
 
 select 
@@ -1120,4 +1121,55 @@ where rnum between 1 and 8;
 select * from club;
 
 commit;
->>>>>>> branch 'master' of https://github.com/devcami/bookie_on_and_on.git
+
+select
+    trunc(sysdate - club_start)+1,
+    trunc(club_end - sysdate)+1
+from 
+    club 
+where club_no = 45;
+
+select * from club where club_no = 45;
+select * from club_book where club_no = 45;
+select * from club_chat where club_no = 45;
+select * from mission where club_no = 45;
+select * from my_club where club_no = 45;
+
+select
+    c.deposit,
+    c.title,
+    c.content,
+    trunc(sysdate - c.club_start)+1 d_start,
+    trunc(c.club_end - sysdate)+1 d_end,
+    (select count(*) from mission where club_no = 45) total_mission,
+    cb.img_src,
+    cb.item_id,
+    m.member_id,
+    m.renamed_filename,
+    m.nickname
+from 
+    club c 
+        left join club_book cb on c.club_no = cb.club_no
+        left join my_club mc on c.club_no = mc.club_no
+        left join member m on mc.member_id = m.member_id
+where c.club_no = 45;
+
+select 
+    *
+from 
+    club_chat
+where 
+    club_no = 45;
+
+-- 1~3
+select 
+    * 
+from 
+    (select row_number() over (order by enroll_date desc) rnum,
+    cc.chat_no,
+    cc.nickname,
+    cc.title,
+    cc.enroll_date
+    from club_chat cc where club_no = 45)
+where
+    rnum between 1 and 5;

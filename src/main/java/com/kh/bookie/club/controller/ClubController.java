@@ -74,11 +74,11 @@ public class ClubController {
 			log.debug("sortType = {}", sortType);
 			
 	        log.debug("authentication member = {} ", loginMember);
-	        log.debug("authentication member = {} ", loginMember.getMemberId());
 
 			
 			if(loginMember  != null) {					
 
+				log.debug("authentication member = {} ", loginMember.getMemberId());
 				// 멤버 있으면 북클럽 찜 리스트 가져와 
 				List<String> clubWishList = clubService.getClubWishListbyMemberId(loginMember.getMemberId());
 //				log.debug("clubWishList = {}", clubWishList);
