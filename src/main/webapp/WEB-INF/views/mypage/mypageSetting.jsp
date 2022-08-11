@@ -114,7 +114,7 @@
               <a title="" href="http://www.fostrap.com/2016/04/free-material-design-template-blogger-md-fostrap.html" target="_blank">
                <img alt="비밀번호변경" class="circle" 
                src="${pageContext.request.contextPath}/resources/images/icon/smile.png" title="비밀번호변경" border="0" height="72" width="72"> </a> 
-               <span class="title"><a title=" " href="http://www.fostrap.com/2016/04/free-material-design-template-blogger-md-fostrap.html">비밀번호변경</a></span> </div>
+               <span class="title"><a title=" " href="${pageContext.request.contextPath}/mypage/myPasswordUpdateFrm.do">비밀번호변경</a></span> </div>
             <div style="clear: both;"></div>
           </li>
           <li>
@@ -138,7 +138,7 @@
               <a title="" href="http://www.fostrap.com/2016/04/free-material-design-template-blogger-md-fostrap.html" target="_blank">
                <img alt="회원탈퇴" class="circle" 
                src="${pageContext.request.contextPath}/resources/images/icon/smile.png" title="회원탈퇴" border="0" height="72" width="72"> </a> 
-               <span class="title"><a title=" " href="http://www.fostrap.com/2016/04/free-material-design-template-blogger-md-fostrap.html">회원탈퇴</a></span> </div>
+               <span class="title"><a title=" " href="${pageContext.request.contextPath}/mypage/deleteMember.do">회원탈퇴</a></span> </div>
             <div style="clear: both;"></div>
           </li>
         </ul>

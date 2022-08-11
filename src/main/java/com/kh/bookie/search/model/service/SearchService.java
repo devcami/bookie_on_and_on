@@ -39,5 +39,7 @@ public interface SearchService {
 
 	int deleteFollower(Map<String, Object> map);
 
+	List<Book> selectBooKItemIdByStatus(Map<String, Object> param);
+
 
 }
