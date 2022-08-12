@@ -1100,10 +1100,3 @@ select * from club;
 update club set club_end = sysdate - 3 where club_no = 50;
 update club set club_end = sysdate - 2 where club_no = 53;
 update club set club_end = sysdate - 1 where club_no = 59;
-
-commit;
-<<<<<<< HEAD
-
-select * from club;
-=======
->>>>>>> branch 'master' of https://github.com/devcami/bookie_on_and_on.git
