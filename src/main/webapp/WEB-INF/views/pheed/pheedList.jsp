@@ -112,6 +112,37 @@
 
 <input type="hidden" name="cPage" value="1" id="cPage"/>
 <script>
+function selectBook(cPage){
+	// 		1~10 11~20 21~30..
+	//cPage  1 	   2     3 ..
+	console.log(${fn:length(list)});
+	// 얘가 1개가 마지막인데 2번 더돌아서 나는거거든.. innerText.title 오류가..
+	let j = (cPage - 1) * 3 + 1;
+	<c:forEach items="${list}" var="pheed">
+		$.ajax({
+			url : '${pageContext.request.contextPath}/search/selectBook.do',
+			data : {
+				ttbkey : 'ttbiaj96820130001',
+				itemIdType : 'ISBN13', 
+				ItemId : ${pheed.itemId},
+				output : 'js',
+				Cover : 'Big',
+				Version : '20131101'
+			},
+			async: false,
+			success(resp){
+				const {item} = resp;
+				const {title, isbn13} = item[0];
+				console.log(title, j);
+				document.querySelector(`#book-title\${j}`).innerText = title;
+				j++;
+			},
+			error : console.log
+		});
+	</c:forEach>
+	
+}
+
 function getReadList(cPage) { 
 	//console.log(cPage)
 
@@ -247,6 +278,8 @@ function infiniteScroll(){
     } 
 }
 window.addEventListener('scroll', infiniteScroll);
+window.addEventListener('load', selectBook(1));
+
 
 <%-- 피드 댓글 상세보기 연결 --%>
 const pheedComment = (e) => {
@@ -727,38 +760,6 @@ const closeComment = () => {
 	sidebar.style.boxShadow = "0 .5rem 1rem rgba(0,0,0,.15)";
 	sidebar.style.zIndex="100";
 }
-
-function selectBook(cPage){
-	// 		1~10 11~20 21~30..
-	//cPage  1 	   2     3 ..
-	console.log(${fn:length(list)});
-	// 얘가 1개가 마지막인데 2번 더돌아서 나는거거든.. innerText.title 오류가..
-	<c:forEach items="${list}" var="pheed">
-	for(let i = (((cPage - 1) * 3) + 1); i <= (cPage * 3); i++){
-		$.ajax({
-			url : '${pageContext.request.contextPath}/search/selectBook.do',
-			data : {
-				ttbkey : 'ttbiaj96820130001',
-				itemIdType : 'ISBN13', 
-				ItemId : ${pheed.itemId},
-				output : 'js',
-				Cover : 'Big',
-				Version : '20131101'
-			},
-			success(resp){
-				const {item} = resp;
-				const {title, isbn13} = item[0];
-				//console.log(title, isbn13);
-				document.querySelector(`#book-title\${i}`).innerText = title;
-			},
-			error : console.log
-		});
-	}
-	</c:forEach>
-	
-}
-
-window.addEventListener('load', selectBook(1));
 
 <%-- 상단 피드 헤더 바 --%>
 let header = document.querySelector("#header-container")
