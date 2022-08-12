@@ -379,6 +379,22 @@ create table qna_comment(
 );
 create sequence seq_qna_comment_no;
 
+
+create table point_status (
+    point_no number,
+    member_id varchar2(200) not null,
+    content varchar2(1000),
+    point number not null,
+    total_point number,
+    updated_at date default sysdate not null,
+    imp_uid varchar2(50),
+    status varchar2(1),
+    constraint pk_point_status_no primary key(point_no),
+    constraint fk_point_status_member_id foreign key(member_id) references member(member_id) on delete cascade,
+    constraint ck_point_status check (status in ('M', 'P'))
+);
+create sequence seq_point_no;
+
 -- 트리거
 select * from user_triggers;
 drop trigger trigger_dokoo_comment;
@@ -435,6 +451,12 @@ end;
 --==============================================
 -- 조회
 --==============================================
+-- 전체 테이블 목록 조회
+select * from user_tables;
+-- 전체 컬럼 조회
+select * from user_tab_columns;
+
+
 select * from user_sequences; -- 시퀀스 조회
 select * from member;
 select * from authority;
@@ -468,16 +490,6 @@ select * from qna_comment;
 
 select * from persistent_logins;
 
-select
-			*
-		from
-			qna
-		where
-			status ='U'
-		order by
-			enroll_date desc;
-
-
 SELECT 
     TABLE_NAME
     ,COLUMN_NAME    -- 컬럼 명
@@ -490,47 +502,8 @@ SELECT
     ,DATA_DEFAULT   -- 기본 값   
 FROM user_tab_columns; -- 해당 계정에 속한 테이블 
    --  dba_tab_columns 전체 테이블의 경우 
+   
 
-select *
-from book b right join
-(select
-    ing_no, item_id, member_id, started_at, ended_at, add_date
-    , row_number() over(order by add_date desc) rnum
-from
-    book_ing
-where 
-    member_id = 'tmddbs' and item_id = '9788932474755') 
-    i on b.member_id = i.member_id
-where
-    b.member_id = 'tmddbs' and b.item_id = '9788932474755' and i.rnum = 1;
-    
-select 
-    b.*,
-    i.started_at started_at,
-    i.ended_at ended_at,
-    i.ing_no ing_no
-from 
-    book b join 
-            (select ing_no, item_id, member_id, started_at, ended_at, add_date, row_number() over(order by i2.add_date desc) rnum from book_ing i2) i
-        on b.member_id = i.member_id and b.item_id = i.item_id
-where b.member_id = 'tmddbs' and b.item_id = '9788932474755' and i.rownum = 1;
-
-select * from book_ing where member_id = 'tmddbs' and item_id = '9788932474755';
-
-select
-    *
-from
-    member m 
-        join authority a on m.member_id = a.member_id
-        left join interest i on m.member_id = i.member_id 
-where
-    m.member_id = 'tmddbs';
-
-
-select distinct item_id, member_id from book_ing where member_id = 'tmddbs' and ended_at is not null;
-select * from dokoo;
-
--- sample data
 
 -------------------------
 -- club <<은성>>
@@ -573,38 +546,33 @@ insert into likes_club values (26, 'honggd1');
 
 
 select
-		    c.*,
-		    b.*,
-		    b.club_no bclub_no,
-		    m.*,
-		    m.club_no mclub_no,
-		    (select count(*) from my_club where club_no = c.club_no and c.club_no = 26) current_nop,
-		    (select count(*) from likes_club where club_no = c.club_no and c.club_no = 26) likesCnt
-		from
-		    club c 
-		    	join club_book b on c.club_no = b.club_no
-		    	join mission m on c.club_no = m.club_no
-		where 
-			c.club_no = 26;
+    c.*,
+    b.*,
+    b.club_no bclub_no,
+    m.*,
+    m.club_no mclub_no,
+    (select count(*) from my_club where club_no = c.club_no and c.club_no = 26) current_nop,
+    (select count(*) from likes_club where club_no = c.club_no and c.club_no = 26) likesCnt
+from
+    club c 
+    	join club_book b on c.club_no = b.club_no
+    	join mission m on c.club_no = m.club_no
+where 
+	c.club_no = 26;
     
             
             
 select* from mission where club_no = 43 and m_item_id = 9788963710358;
 
-		select 
-			*
-		from 
-			club_book b 
-				left join mission m on b.item_id = m.m_item_id
-		where 
-            b.club_no = 43 and m.m_item_id = 9788963710358;
-            
-            select * from club;
-            
-            select * from likes_club;
-            
-            select count(*) from likes_club where club_no = 26;
-            select * from my_club;
+select 
+    *
+from 
+    club_book b 
+        left join mission m on b.item_id = m.m_item_id
+where 
+    b.club_no = 43 and m.m_item_id = 9788963710358;
+
+select count(*) from likes_club where club_no = 26;
             
 select
     c.*,
@@ -687,7 +655,6 @@ select * from club_chat;
 select * from chat_attachment;
 select * from chat_comment;
 delete from club_chat where chat_no = 7;
-commit;
 
 update club_chat set title = '제목제목제목', content = '하이하이' where chat_no = 1;
 
@@ -701,40 +668,24 @@ select * from club_chat order by enroll_date desc;
 select * from member;
 
 select * from club where recruit_end > sysdate order by recruit_end;       
-
-create table point_status (
-    point_no number,
-    member_id varchar2(200) not null,
-    content varchar2(1000),
-    point number not null,
-    total_point number,
-    updated_at date default sysdate not null,
-    imp_uid varchar2(50),
-    status varchar2(1)
-    constraint pk_point_status_no primary key(point_no),
-    constraint fk_point_status_member_id foreign key(member_id) references member(member_id) on delete cascade,
-    constraint ck_point_status check (status in ('M', 'P'))
-);
-create sequence seq_point_no;
-commit;
 select * from point_status order by updated_at desc;
 select * from member;
 
 
 select
-			cc.*,
-			ca.*,
-			m.*,
-            m.renamed_filename profilePic,
-			ca.chat_no ca_chat_no
-		from
-			club_chat cc 
-				left join chat_attachment ca on cc.chat_no = ca.chat_no 
-				left join member m on cc.nickname = m.nickname 
-		where
-			cc.chat_no = 23;
-            
-            select * from club_chat;
+    cc.*,
+    ca.*,
+    m.*,
+    m.renamed_filename profilePic,
+    ca.chat_no ca_chat_no
+from
+    club_chat cc 
+        left join chat_attachment ca on cc.chat_no = ca.chat_no 
+        left join member m on cc.nickname = m.nickname 
+where
+    cc.chat_no = 23;
+    
+    select * from club_chat;
 ---------------------------------
 -- book <<은민>>
 ---------------------------------
@@ -786,21 +737,14 @@ where
     m.member_id = 'honggd';
     
     
-	select 
-	    m.*,
-	    (select interest from interest where member_id = 'honggd') interest
-	from 
-	    member m
-	where
-		m.member_id = 'honggd';
-        
-        
-        insert into follower values ('tmddbs', 'admin');
-        commit;
-        
-
-        
-        
+select 
+    m.*,
+    (select interest from interest where member_id = 'honggd') interest
+from 
+    member m
+where
+    m.member_id = 'honggd';
+    
 select 
     ph.*,
     (select count(*) from likes_pheed where pheed_no = ph.pheed_no) likes_cnt 
@@ -815,12 +759,6 @@ select following_member_id from follower where member_id = 'tmddbs';
   
 update member set point = 20010 where member_id = 'tmddbs';
 select count(*) from club_chat where club_no = 45;
-
-commit;
-
-select * from club_chat;
-select * from member;
-select * from point_status order by updated_at desc;
 
 insert into point_status values(seq_point_no.nextval, 'tmddbs', '포인트 충전', 1000, 16030, sysdate-20, null, 'P');
 insert into point_status values(seq_point_no.nextval, 'tmddbs', '북클럽 디파짓 차감', 10000, 6030, sysdate-22, null, 'M');
@@ -839,33 +777,28 @@ WHERE
 order by 
     updated_at desc;
     
-    commit;
+select 
+    * 
+from 
+    point_status 
+where 
+    member_id = 'tmddbs'
+    AND 
+    to_char(updated_at, 'yymmdd') >= '22/08/01'
+    AND 
+    to_char(updated_at, 'yymmdd') <= '22/08/05'
+order by 
+    updated_at desc;
     
-    		select 
-			* 
-		from 
-			point_status 
-		where 
-			member_id = 'tmddbs'
-	        AND 
-	        to_char(updated_at, 'yymmdd') >= '22/08/01'
-	        AND 
-	        to_char(updated_at, 'yymmdd') <= '22/08/05'
-		order by 
-			updated_at desc;
-            
-       select 
-			* 
-		from 
-			point_status 
-		where 
-           updated_at >= to_date('22/08/01', 'yy/mm/dd')
-           and updated_at <= to_date('22/08/06', 'yy/mm/dd');
+select 
+    * 
+from 
+    point_status 
+where 
+   updated_at >= to_date('22/08/01', 'yy/mm/dd')
+   and updated_at <= to_date('22/08/06', 'yy/mm/dd');
 
         
-select * from club_chat;
-
-
 select 
     * 
 from 
@@ -877,48 +810,39 @@ from
     where club_no = 45) 
 where rnum between 1 and 10;
 
-        select * from interest;
-		select 
-            m.*,
-            i.interest
-		from 
-		    member m join interest i
-                on m.member_id = i.member_id
-        where
-            interest like '%언어%' and m.member_id != 'honggd';
-            
-            
-        select 
-            m.*,
-            (select interest from interest where interest like '%언어%' and member_id != 'honggd') interest
-		from 
-		    member m ;
-      
-      select 
-        c.*, 
-        (select renamed_filename from member m where m.nickname = c.nickname) renamed_filename 
-      from dokoo_comment c 
-      where dokoo_no = 42;
-      
-select * from my_club;
-select * from member;
+select * from interest;
+select 
+    m.*,
+    i.interest
+from 
+    member m join interest i
+        on m.member_id = i.member_id
+where
+    interest like '%언어%' and m.member_id != 'honggd';
+    
+    
+select 
+    m.*,
+    (select interest from interest where interest like '%언어%' and member_id != 'honggd') interest
+from 
+    member m ;
 
 insert into my_club values (45, 'honggd', 10000);
 update member set point = 10000 where member_id = 'honggd';
 
 select
-			c.*,
-			b.*,
-			b.club_no bclub_no,
-		    (select count(*) from my_club where club_no = 45) current_nop,
-		    (select count(*) from likes_club where club_no = 45) likes_Cnt
-		from
-		    club c
-		    	 join club_book b on c.club_no = b.club_no
-                 join my_club m on c.club_no = m.club_no
-		where 
-			c.club_no = 45;
-            
+    c.*,
+    b.*,
+    b.club_no bclub_no,
+    (select count(*) from my_club where club_no = 45) current_nop,
+    (select count(*) from likes_club where club_no = 45) likes_Cnt
+from
+    club c
+         join club_book b on c.club_no = b.club_no
+         join my_club m on c.club_no = m.club_no
+where 
+    c.club_no = 45;
+    
 select
     mc.*,
     m.*,
@@ -929,38 +853,28 @@ from
 where 
     mc.club_no = 45;
     
-    commit;
     
 select * from club_book;
 
-		select 
-			*
-		from
-			mission
-		where 
-			club_no = 49;
-            
-            select
-         c.*,
-         b.*,
-         b.club_no bclub_no,
-          (select count(*) from my_club where club_no = 45) current_nop,
-          (select count(*) from likes_club where club_no = 45) likes_Cnt
-      from
-          club c
-              join club_book b on c.club_no = b.club_no
-      where 
-         c.club_no = 45;
-         
-         select * from club_book;
-
-
-select * from mission_status;
-insert into mission_status values (38, 'tmddbs', 'F', '미션페이지 테스트22', null, null);
-insert into mission_status values (38, 'honggd', 'F', '홍지디 미션페이지테스트', null, null);
-
-select * from mission where club_no = 45;
-
+select 
+    *
+from
+    mission
+where 
+    club_no = 49;
+    
+    select
+ c.*,
+ b.*,
+ b.club_no bclub_no,
+  (select count(*) from my_club where club_no = 45) current_nop,
+  (select count(*) from likes_club where club_no = 45) likes_Cnt
+from
+  club c
+      join club_book b on c.club_no = b.club_no
+where 
+ c.club_no = 45;
+ 
 select
     m.*,
     ms.*,
@@ -971,51 +885,33 @@ from
 where 
     (member_id = 'tmddbs' or member_id is null) and m.club_no = 45
 order by m_endDate;
-select * from mission;
 select * from club_book where club_no = 45;
 
-
-
-		select
-		    m.*,
-		    ms.*,
-		    ms.mission_no mNo,
-		    (select img_src from club_book c where c.club_no = 45 and m.m_item_id = c.item_id) img_src
-		from 
-		    mission m 
-		        left join mission_status ms on m.mission_no = ms.mission_no
-		where 
-		    (member_id = 'tmddbs' or member_id is null) and m.club_no = 45
-		order by 
-			m_endDate
+select
+    m.*,
+    ms.*,
+    ms.mission_no mNo,
+    (select img_src from club_book c where c.club_no = 45 and m.m_item_id = c.item_id) img_src
+from 
+    mission m 
+        left join mission_status ms on m.mission_no = ms.mission_no
+where 
+    (member_id = 'tmddbs' or member_id is null) and m.club_no = 45
+order by 
+    m_endDate;
 
          
-         update club_book set book_title = '경제대마왕 반드시 부자되는 투자의 소신' where club_no = 45 and item_id = '9788957822074';
-         update club_book set book_title = '부자의 독서법' where club_no = 45 and item_id = '9791187444770';
-         update club_book set book_title = '월급쟁이 부자로 은퇴하라' where club_no = 45 and item_id = '9788925578156';
-         commit;
-         
-         
-         select
-			count(*)
-		from
-			alarm
-		where
-			member_id = 'tester';
-            
-            select * from alarm;
-            
-            
+update club_book set book_title = '경제대마왕 반드시 부자되는 투자의 소신' where club_no = 45 and item_id = '9788957822074';
+update club_book set book_title = '부자의 독서법' where club_no = 45 and item_id = '9791187444770';
+update club_book set book_title = '월급쟁이 부자로 은퇴하라' where club_no = 45 and item_id = '9788925578156';
+
 select * from mission_status;
 
 select * from mission where club_no = 45;
 update mission_status set status = 'A' where mission_no = 37 and member_id = 'tmddbs';
 update mission_status set status = 'I' where mission_no = 38 and member_id = 'tmddbs';
-commit;
 
 delete mission_status where member_id = 'tmddbs';
-
-
 
 
 select  
@@ -1031,18 +927,16 @@ select * from mission_status;
 update mission_status set renamed_filename = '20220809_005528072_481.jpg' where mission_no = 37 and member_id = 'tmddbs';
 update mission_status set status = 'A' where mission_no = 37 and member_id = 'tmddbs';
 delete from mission_status where member_id = 'tmddbs';
-commit;
 
 select 
-			*
-		from 
-			pheed p left join pheed_attachment a 
-				on p.pheed_no = a.pheed_no  
-				left join member m
-				on p.member_id = m.member_id
-		where 
-			p.pheed_no = 37;
-
+    *
+from 
+    pheed p left join pheed_attachment a 
+        on p.pheed_no = a.pheed_no  
+        left join member m
+        on p.member_id = m.member_id
+where 
+    p.pheed_no = 37;
 
 select
     *
@@ -1051,7 +945,6 @@ from
         on q.qna_no = c.qna_no
 where
     q.qna_no = 1;
-            
 
 select 
     ms.*,
@@ -1064,10 +957,8 @@ from
 where 
     status = 'I';
     
-    select * from mission_status;
     
-    update mission_status set status='I' where mission_no = 38 and member_id = 'honggd';
-    commit;
+update mission_status set status='I' where mission_no = 38 and member_id = 'honggd';
 
 
 select * 
@@ -1100,7 +991,6 @@ where
     rnum between 1 and 2;
     
 select * from mission_status order by updated_at;
-commit;
 update mission_status set status = 'I' where member_id in ('tmddbs', 'honggd'); 
 
 
@@ -1212,5 +1102,8 @@ update club set club_end = sysdate - 2 where club_no = 53;
 update club set club_end = sysdate - 1 where club_no = 59;
 
 commit;
+<<<<<<< HEAD
 
 select * from club;
+=======
+>>>>>>> branch 'master' of https://github.com/devcami/bookie_on_and_on.git

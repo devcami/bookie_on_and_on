@@ -133,30 +133,30 @@
             <th>관심 장르</th>
             <td>
                <div class="interest-div text-center">
-                  <input type="checkbox" class="interest-input" name="interest" id="interest0" value="경제">
+                  <input type="checkbox" class="interest-input" name="interestEnroll" id="interest0" value="경제">
                   <label class="interest-label" for="interest0">경제</label>
-                  <input type="checkbox" class="interest-input" name="interest" id="interest1" value="공학">
+                  <input type="checkbox" class="interest-input" name="interestEnroll" id="interest1" value="공학">
                   <label class="interest-label" for="interest1">공학</label>
-                  <input type="checkbox" class="interest-input" name="interest" id="interest2" value="문학">
+                  <input type="checkbox" class="interest-input" name="interestEnroll" id="interest2" value="문학">
                   <label class="interest-label" for="interest2">문학</label>
-                  <input type="checkbox" class="interest-input" name="interest" id="interest3" value="자기계발">
+                  <input type="checkbox" class="interest-input" name="interestEnroll" id="interest3" value="자기계발">
                   <label class="interest-label" for="interest3">자기계발</label>
-                  <input type="checkbox" class="interest-input" name="interest" id="interest4" value="언어">
+                  <input type="checkbox" class="interest-input" name="interestEnroll" id="interest4" value="언어">
                   <label class="interest-label" for="interest4">언어</label>
-                  <input type="checkbox" class="interest-input" name="interest" id="interest5" value="취미">
+                  <input type="checkbox" class="interest-input" name="interestEnroll" id="interest5" value="취미">
                   <label class="interest-label" for="interest5">취미</label>
                   <br />
-                  <input type="checkbox" class="interest-input" name="interest" id="interest6" value="에세이">
+                  <input type="checkbox" class="interest-input" name="interestEnroll" id="interest6" value="에세이">
                   <label class="interest-label" for="interest6">에세이</label>
-                  <input type="checkbox" class="interest-input" name="interest" id="interest7" value="예술">
+                  <input type="checkbox" class="interest-input" name="interestEnroll" id="interest7" value="예술">
                   <label class="interest-label" for="interest7">예술</label>
-                  <input type="checkbox" class="interest-input" name="interest" id="interest8" value="교육">
+                  <input type="checkbox" class="interest-input" name="interestEnroll" id="interest8" value="교육">
                   <label class="interest-label" for="interest8">교육</label>
-                  <input type="checkbox" class="interest-input" name="interest" id="interest9" value="인문학">
+                  <input type="checkbox" class="interest-input" name="interestEnroll" id="interest9" value="인문학">
                   <label class="interest-label" for="interest9">인문학</label>
-                  <input type="checkbox" class="interest-input" name="interest" id="interest10" value="종교">
+                  <input type="checkbox" class="interest-input" name="interestEnroll" id="interest10" value="종교">
                   <label class="interest-label" for="interest10">종교</label>
-                  <input type="checkbox" class="interest-input" name="interest" id="interest11" value="기타">
+                  <input type="checkbox" class="interest-input" name="interestEnroll" id="interest11" value="기타">
                   <label class="interest-label" for="interest11">기타</label>
                 </div>
             </td>
