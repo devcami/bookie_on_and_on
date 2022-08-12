@@ -112,12 +112,40 @@
 
 <input type="hidden" name="cPage" value="1" id="cPage"/>
 <script>
-function selectBook(cPage){
+function selectBook(cPage, list){
 	// 		1~10 11~20 21~30..
 	//cPage  1 	   2     3 ..
-	console.log(${fn:length(list)});
+	// console.log(${fn:length(list)});
 	// 얘가 1개가 마지막인데 2번 더돌아서 나는거거든.. innerText.title 오류가..
 	let j = (cPage - 1) * 3 + 1;
+	if(list != null){
+		//console.log(list);
+		list.forEach((pheed) => {
+			const {itemId} = pheed;
+			$.ajax({
+				url : '${pageContext.request.contextPath}/search/selectBook.do',
+				data : {
+					ttbkey : 'ttbiaj96820130001',
+					itemIdType : 'ISBN13', 
+					ItemId : itemId,
+					output : 'js',
+					Cover : 'Big',
+					Version : '20131101'
+				},
+				async: false,
+				success(resp){
+					const {item} = resp;
+					const {title, isbn13} = item[0];
+					console.log(title, j);
+					document.querySelector(`#book-title\${j}`).innerText = title;
+					j++;
+				},
+				error : console.log
+			});
+		});
+	}
+	else{
+		
 	<c:forEach items="${list}" var="pheed">
 		$.ajax({
 			url : '${pageContext.request.contextPath}/search/selectBook.do',
@@ -141,10 +169,11 @@ function selectBook(cPage){
 		});
 	</c:forEach>
 	
+	}
 }
 
 function getReadList(cPage) { 
-	//console.log(cPage)
+	console.log(cPage)
 
 	const container = document.querySelector("#content");
     // 비동기로 다음장 가져오기
@@ -253,7 +282,7 @@ function getReadList(cPage) {
     				vsCount = vsCount + 1;
     				container.insertAdjacentHTML('beforeend', div);
     			});
-   				selectBook(cPage);
+   				selectBook(cPage, list);
    				clickEvent();
     		}
     	},
@@ -278,6 +307,7 @@ function infiniteScroll(){
     } 
 }
 window.addEventListener('scroll', infiniteScroll);
+
 window.addEventListener('load', selectBook(1));
 
 
