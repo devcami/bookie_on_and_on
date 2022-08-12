@@ -10,9 +10,10 @@
 	<jsp:param value="북클럽 등록" name="title"/>
 </jsp:include>
 <section id="content">
+${club}
+
 	<div id="top-menu">
-		<h1>북클럽 등록</h1>	
-		<!-- <button id="btn-enroll" class="mybtn">등 록</button> -->	  
+		<h1>북클럽 등록</h1>	 
 	</div>
 	<form:form name="clubEnrollFrm" >
 		<div id="intro-div" class="divs">
@@ -24,12 +25,13 @@
 		    	id="title"
 		    	name="title"
 		    	class="form-control col-form-label-sm basic-input"  
-		    	aria-describedby="emailHelp" placeholder="제목을 입력하세요.">
+		    	aria-describedby="emailHelp" placeholder="제목을 입력하세요."
+		    	value="${club.title}">
 		  </div>
 		  <div class="form-group">
 		  	<i class="fa-solid fa-pencil"></i>
 		    <label for="content">한 줄 설명</label>
-		    <textarea name="content" class="form-control" id="clubDesc" rows="2"></textarea>
+		    <textarea name="content" class="form-control" id="clubDesc" rows="2">${club.content}</textarea>
 		    <small id="emailHelp" class="form-text text-muted">북클럽에 대한 간단한 설명을 적어주세요!</small>
   		  </div>
 		</div>
@@ -42,11 +44,19 @@
 				</div>
 				<div class="row">
 					<div class="col">
-				      <input type="date" name="recruitStart" id="recruitStart" class="form-control col-form-label-sm basic-input" placeholder="First name">
+				      <input 
+				      	type="date" 
+				      	name="recruitStart" id="recruitStart" 
+				      	class="form-control col-form-label-sm basic-input"
+				      	value="${club.recruitStart}">
 				    </div>
 				    <span>~</span>
 				    <div class="col" >
-				      <input type="date" name="recruitEnd" id="recruitEnd" class="form-control col-form-label-sm basic-input" placeholder="Last name">
+				      <input 
+				      	type="date" 
+				      	name="recruitEnd" id="recruitEnd" 
+				      	class="form-control col-form-label-sm basic-input"
+				      	value="${club.recruitEnd}">
 				    </div>
 				</div>
 			 </div>
@@ -60,11 +70,19 @@
 				</div>
 				<div class="row">
 					<div class="col">
-				      <input type="date" name="clubStart" id="clubStart" class="form-control col-form-label-sm basic-input" >
+				      <input 
+				      	type="date" 
+				      	name="clubStart" id="clubStart" 
+				      	class="form-control col-form-label-sm basic-input" 
+				      	value="${club.clubStart}">
 				    </div>
 				    <span>~</span>
 				    <div class="col">
-				      <input type="date" name="clubEnd" id="clubEnd" class="form-control col-form-label-sm basic-input" >
+				      <input 
+				      	type="date" 
+				      	name="clubEnd" id="clubEnd" 
+				      	class="form-control col-form-label-sm basic-input" 
+				      	value="${club.clubEnd}">
 				    </div>
 				</div>
 			 </div>
@@ -88,7 +106,8 @@
 			      	name="minimumNop" 
 			      	id="minimumNop"
 			      	class="form-control col-form-label-sm basic-input" 
-			      	placeholder="최소 인원" dir="rtl">
+			      	placeholder="최소 인원" dir="rtl"
+			      	value="${club.minimumNop}">
 			   	  <span>명</span>
 			    </div>
 			 </div>
@@ -103,7 +122,8 @@
 			      	name="maximumNop" 
 			      	id="maximumNop" 
 			      	class="form-control col-form-label-sm basic-input" 
-			      	placeholder="최대 인원" dir="rtl">
+			      	placeholder="최대 인원" dir="rtl"
+			      	value="${club.maximumNop}">
 			      <span>명</span>
 			    </div>
 			 </div>
@@ -122,7 +142,8 @@
 			      	id="deposit" 
 			      	name="deposit"
 			      	class="form-control col-form-label-sm basic-input" 
-			      	placeholder="금액을 입력하세요" dir="rtl">
+			      	placeholder="금액을 입력하세요" dir="rtl"
+			      	value="${club.deposit}">
 			      <i class="fa-solid fa-won-sign"></i>
 			    </div>
 			 </div>
@@ -132,29 +153,29 @@
 					<label class="my-1" for="inlineFormCustomSelectPref">분야</label>				
 				</div>
 				<div class="col interest-col">
-				 	<input type="checkbox" name="interests" value="경제"/>
+				 	<input type="checkbox" name="interests" <c:if test="${fn:contains(club.interest, '경제')}">checked</c:if> value="경제"/>
 				 	<label for="경제">경제</label>	
-				 	<input type="checkbox" name="interests" value="공학"/>
+				 	<input type="checkbox" name="interests" <c:if test="${fn:contains(club.interest, '공학')}">checked</c:if> value="공학"/>
 				 	<label for="공학">공학</label>	
-				 	<input type="checkbox" name="interests" value="문학"/>
+				 	<input type="checkbox" name="interests" <c:if test="${fn:contains(club.interest, '문학')}">checked</c:if> value="문학"/>
 				 	<label for="문학">문학</label>	
-				 	<input type="checkbox" name="interests" value="자기계발"/>
+				 	<input type="checkbox" name="interests" <c:if test="${fn:contains(club.interest, '자기계발')}">checked</c:if> value="자기계발"/>
 				 	<label for="자기계발">자기계발</label>	
-				 	<input type="checkbox" name="interests" value="언어"/>
+				 	<input type="checkbox" name="interests" <c:if test="${fn:contains(club.interest, '언어')}">checked</c:if> value="언어"/>
 				 	<label for="언어">언어</label>	
-				 	<input type="checkbox" name="interests" value="취미"/>
+				 	<input type="checkbox" name="interests" <c:if test="${fn:contains(club.interest, '취미')}">checked</c:if> value="취미"/>
 				 	<label for="취미">취미</label>	
-				 	<input type="checkbox" name="interests" value="에세이"/>
+				 	<input type="checkbox" name="interests" <c:if test="${fn:contains(club.interest, '에세이')}">checked</c:if> value="에세이"/>
 				 	<label for="에세이">에세이</label>	
-				 	<input type="checkbox" name="interests" value="예술"/>
+				 	<input type="checkbox" name="interests" <c:if test="${fn:contains(club.interest, '예술')}">checked</c:if> value="예술"/>
 				 	<label for="예술">예술</label>	
-				 	<input type="checkbox" name="interests" value="교육"/>
+				 	<input type="checkbox" name="interests" <c:if test="${fn:contains(club.interest, '교육')}">checked</c:if> value="교육"/>
 				 	<label for="교육">교육</label>	
-				 	<input type="checkbox" name="interests" value="인문학"/>
+				 	<input type="checkbox" name="interests" <c:if test="${fn:contains(club.interest, '인문학')}">checked</c:if> value="인문학"/>
 				 	<label for="인문학">인문학</label>	
-				 	<input type="checkbox" name="interests" value="종교"/>
+				 	<input type="checkbox" name="interests" <c:if test="${fn:contains(club.interest, '종교')}">checked</c:if> value="종교"/>
 				 	<label for="종교">종교</label>	
-				 	<input type="checkbox" name="interests" value="기타"/>
+				 	<input type="checkbox" name="interests" <c:if test="${fn:contains(club.interest, '기타')}">checked</c:if> value="기타"/>
 				 	<label for="기타">기타</label>		
 				</div>
 			 </div>
@@ -164,12 +185,33 @@
 		<div id="book-div" class="divs">
 			<p id="books-p"><strong>읽는 책</strong></p>
 			<small id="books-small" class="form-text text-muted">등록 가능한 책은 최대 4권 입니다.</small>
-			<p id="bLabel" style="font-size: medium; margin-top: 10px !important;">📋 기본정보를 먼저 입력해주세요!</p>
-			
 			<div id="bookWrapper">
-			<!--
-			 	여기에 책이 하나씩 추가됨.
-			 -->
+			<!-- 여기에 책이 하나씩 추가됨. -->
+				<c:forEach items="${club.bookList}" var="book" varStatus="vs">
+					<div class="book-container" id="book${book.itemId}">
+	                  <div class="book-table">
+	                     <input type="hidden" name="isbn13" value="9788954699914">
+	                     <input type="hidden" name="bookImg" value="https://image.aladin.co.kr/product/29857/0/covermini/895469991x_1.jpg">
+	                     <table class="tbl">
+	                        <tbody><tr>
+	                           <td rowspan="4">
+	                              <img src="https://image.aladin.co.kr/product/29857/0/covermini/895469991x_1.jpg" style="width:65px;">
+	                           </td>
+	                           <td colspan="5" class="book-title">하얼빈</td>
+	                        </tr>
+	                        <tr>
+	                           <td class="book-author">김훈 (지은이)</td>
+	                        </tr>
+	                        <tr>
+	                           <td colspan="2" class="book-p">출판사 : 문학동네 🧡 출판일 : 2022-08-03</td>
+	                        </tr>
+	                     </tbody></table>
+	                  </div>
+					  <div>
+						<button type="button" class="btn deleteBook-btn" onclick="deleteBook(this);" value="9788954699914">삭제</button>
+					  </div>
+				  </div>
+				</c:forEach>
 			</div>
 			
 

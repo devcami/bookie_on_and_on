@@ -181,8 +181,8 @@
 	</sec:authorize>
 	<div id="btn-div">
 		<sec:authorize access="hasRole('ROLE_ADMIN')">
-			<button style="margin-right: 2px;">수정</button>
-			<button style="margin-left: 2px;">삭제</button>
+			<button style="margin-right: 2px;" data-type="update" onclick="ckNop(this);">수정</button>
+			<button type="button" style="margin-left: 2px;" data-type="delete" onclick="ckNop(this);">삭제</button>
 		</sec:authorize>
 		<sec:authorize access="isAuthenticated() && !hasRole('ADMIN')">
 			<!-- 모집중인 경우 -->
@@ -244,14 +244,45 @@
 		<input type="hidden" name="deposit" value="${club.deposit}" />
 		<input type="hidden" name="myPoint" id="myPoint" value="" />
 	</form:form>
-	
-	
+
+	<form:form
+		name="deleteClubFrm" 
+		method="POST"
+		action="${pageContext.request.contextPath}/club/deleteClub.do">
+		<input type="hidden" name="clubNo" value="${club.clubNo}" />
+	</form:form>	
 
 	
 </section>
 
 <script>
 
+// 수정/삭제 버튼 눌렀을 때
+const ckNop = (e) => {
+	
+	const type = e.dataset.type;
+	const nop = ${club.currentNop};
+	
+	console.log(type);
+	
+	if(nop != 0){
+		if(type == "update"){
+			alert('이미 신청한 회원이 있어 수정이 불가합니다.');
+			return;
+		}
+		else {
+			alert("이미 신청한 회원이 있어 삭제가 불가합니다.");
+			return;
+		}
+	}
+	
+	if(type == "update")
+		location.href = `${pageContext.request.contextPath}/club/updateClub.do/${club.clubNo}`;
+	else 
+		deleteClubFrm.submit();
+		
+	
+}
 
 const bookEnroll = (e) => {
 	const isbn13 = $(e).attr('value');

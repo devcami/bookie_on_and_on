@@ -157,6 +157,12 @@ public interface ClubDao {
 	@Select("select m.member_id, m.nickname, m.renamed_filename from my_club mc left join member m on mc.member_id = m.member_id where mc.club_no = #{clubNo}")
 	List<Member> getClubMemberList(int clubNo);
 
+	@Insert("insert into mission_status values(#{missionNo}, #{memberId}, #{status}, null, null, null, sysdate)")
+	int insertFailMissionStatus(MissionStatus ms);
+
+	@Delete("delete from club where club_no = #{clubNo}")
+	int deleteClub(int clubNo);
+
 	
 
 }
