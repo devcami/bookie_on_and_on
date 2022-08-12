@@ -40,7 +40,7 @@ public class MemberServiceImpl implements MemberService {
       result = memberDao.insertAuthority(map);
       map.clear();
       map.put("memberId", member.getMemberId());
-      map.put("interest", member.getInterests());
+      map.put("interestEnroll", member.getInterestEnroll());
       result = memberDao.insertInterest(map);
       return result;
    }
