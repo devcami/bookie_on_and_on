@@ -80,10 +80,10 @@
 						  	<button type="button" 
 						  			class="btn btn-report float-right m-2" data-no="${pheed.pheedNo}" onclick="openReportModal(this);"><i class="fa-solid fa-ellipsis text-dark"></i></button>
 							<c:if test="${pheed.member.nickname eq loginMember.nickname}">
-							<button type="button" class="float-right btn-sm btn-update mt-3 mb-3 mr-2" onclick="updatePheed();">수정</button>	
+							<button type="button" class="float-right btn-sm btn-update mt-3 mb-3 mr-2" data-no="${pheed.pheedNo}" onclick="updatePheed(this);">수정</button>	
 							</c:if>
 							<c:if test="${pheed.member.nickname eq loginMember.nickname || loginMember.memberId eq 'admin'}">
-							<button type="button" class="float-right btn-sm btn-delete mt-3 mb-3 mr-2" onclick="deletePheed();">삭제</button>	
+							<button type="button" class="float-right btn-sm btn-delete mt-3 mb-3 mr-2" data-no="${pheed.pheedNo}" onclick="deletePheed(this);">삭제</button>	
 							</c:if>
 						</div>
 					</div>
@@ -203,10 +203,10 @@ function getReadList(cPage) {
     									  	<button type="button" 
     									  			class="btn btn-report float-right" data-no="\${pheedNo}"  onclick="openReportModal(this);"><i class="fa-solid fa-ellipsis"></i></button>`;
     									  	if(nickname == '${loginMember.nickname}'){
-    									  		div += `<button type="button" class="float-right btn-sm btn-update mt-3 mb-3 mr-2" onclick="updatePheed();">수정</button>`;	
+    									  		div += `<button type="button" class="float-right btn-sm btn-update mt-3 mb-3 mr-2" data-no="\${pheedNo}" onclick="updatePheed(this);">수정</button>`;	
     									  	}
     									  	if(nickname == '${loginMember.nickname}' || ${loginMember.memberId == 'admin'}){
-												div += `<button type="button" class="float-right btn-sm btn-delete mt-3 mb-3 mr-2" onclick="deletePheed();">삭제</button>`;	
+												div += `<button type="button" class="float-right btn-sm btn-delete mt-3 mb-3 mr-2" data-no="\${pheedNo}" onclick="deletePheed(this);">삭제</button>`;	
     									  	}
     									 div+=`
     									</div>
@@ -788,7 +788,7 @@ const deletePheed = (e) => {
 		
 		$.ajax({
 			url : "${pageContext.request.contextPath}/pheed/deletePheed.do",
-			data : {pheedNo : e.dataset.pheedNo},
+			data : {pheedNo : e.dataset.no},
 			method : 'post',
 			headers,
 			success(resp){
@@ -803,7 +803,7 @@ const deletePheed = (e) => {
 
 <%-- 피드 수정 --%>
 const updatePheed = (e) => {
-	const pheedNo = e.dataset.pheedNo;
+	const pheedNo = e.dataset.no;
 	// 수정 폼 요청	
 	location.href = "${pageContext.request.contextPath}/pheed/pheedUpdate.do?pheedNo=" + pheedNo;
 };
