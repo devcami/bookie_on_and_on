@@ -1,5 +1,6 @@
 package com.kh.bookie.club.model.service;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -134,7 +135,6 @@ public class ClubServiceImpl implements ClubService {
 		// 1. 클럽 찾아와
 		Club club = clubDao.selectOneClub(param.get("clubNo"));
 		
-		// log.debug("1. club = {}", club);
 		
 		for(int i = 0; i < club.getBookList().size(); i++) {
 			String itemId = club.getBookList().get(i).getItemId();
@@ -340,6 +340,7 @@ public class ClubServiceImpl implements ClubService {
 	@Override
 	public List<Mission> getMissionsForOneMember(int clubNo, String memberId) {
 		List<Mission> missionList = clubDao.getMissionsForOneMember(clubNo);
+		LocalDate now = LocalDate.now();
 		
 		Map<String, Object> map = new HashMap<>();
 		int missionNo;
@@ -347,8 +348,27 @@ public class ClubServiceImpl implements ClubService {
 			missionNo = missionList.get(i).getMissionNo();
 			map.put("missionNo", missionNo);
 			map.put("memberId", memberId);
+	
 			MissionStatus ms = clubDao.getMissionStatus(map);
+			
+			log.debug("ms = {}", ms);
+			
+			// 미션 날짜 검사해
+			// 날짜 지났는데 미션 안되어있으면 (ms가 널인경우)
+			if(now.isAfter(missionList.get(i).getMendDate()) && ms == null) {
+				ms = new MissionStatus();
+//				log.debug("missionNo = {}", missionNo);
+//				log.debug("memberId = {}", memberId);
+				ms.setMissionNo(missionNo);
+				ms.setMemberId(memberId);
+				ms.setStatus("F");
+				log.debug("두번째 ms = {}", ms);
+				int result = clubDao.insertFailMissionStatus(ms);
+			}
+			
 			missionList.get(i).setMissionStatus(ms);
+			
+			
 		}
 		
 		
@@ -384,6 +404,11 @@ public class ClubServiceImpl implements ClubService {
 		club.setClubMember(memberList);
 		
 		return club;
+	}
+	
+	@Override
+	public int deleteClub(int clubNo) {
+		return clubDao.deleteClub(clubNo);
 	}
 
 }

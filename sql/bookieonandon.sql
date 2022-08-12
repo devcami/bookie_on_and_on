@@ -218,9 +218,9 @@ create table mission_status (
     constraint fk_mission_status_no foreign key(mission_no) references mission(mission_no) on delete cascade,
     constraint fk_mission_status_member_id foreign key(member_id) references member(member_id)
 );
-alter table mission_status
-DROP constraint ck_mission_status; 
-alter table mission_status add constraint ck_mission_status check (status in ('P', 'F', 'I', 'A'));
+select * from mission_status where member_id = 'tmddbs';
+select * from mission where club_no =45;
+update mission set m_endDate = sysdate - 1 where mission_no = 39;
 commit;
 
 select
@@ -1100,5 +1100,3 @@ select * from club;
 update club set club_end = sysdate - 3 where club_no = 50;
 update club set club_end = sysdate - 2 where club_no = 53;
 update club set club_end = sysdate - 1 where club_no = 59;
-
-commit;

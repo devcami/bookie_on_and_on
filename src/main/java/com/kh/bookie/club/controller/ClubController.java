@@ -951,12 +951,8 @@ public class ClubController {
 		
 		try {
 			
-//			log.debug("미션갈때 clubNo = {}", clubNo);
-//			log.debug("미션갈때 memberId = {}", memberId);
-			
-			
 			List<Mission> missions = clubService.getMissionsForOneMember(clubNo, memberId);
-			
+
 			mav.addObject("missions", missions);
 			mav.addObject("clubNo", clubNo);
 			mav.addObject("memberId", memberId);
@@ -1070,6 +1066,49 @@ public class ClubController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		
+	}
+	
+	@PostMapping("/deleteClub.do")
+	public String deleteClub(
+			RedirectAttributes redirectAttr,
+			@RequestParam int clubNo
+			) {
+		
+		try {
+			
+			log.debug("clubNo = {}", clubNo);
+			int result = clubService.deleteClub(clubNo);
+			redirectAttr.addFlashAttribute("msg", "북클럽이 삭제되었습니다!");
+			
+		} catch(Exception e) {
+			log.error("북클럽 삭제 오류!", e);
+			throw e;
+		}
+		return "redirect:/club/clubList.do";
+	}
+	
+	@GetMapping("/updateClub.do/{clubNo}")
+	public ModelAndView updateClub(
+			ModelAndView mav,
+			@PathVariable int clubNo
+			) {
+		
+		try {
+			
+			log.debug("club = {}", clubNo);
+			
+			Map<String, Object> param = new HashMap<>();
+			param.put("clubNo", clubNo);
+			
+			Club club = clubService.selectOneClub(param);
+			mav.addObject("club", club);
+			mav.setViewName("club/updateClub");
+			
+		} catch(Exception e) {
+			log.error("북클럽 삭제 오류!", e);
+			throw e;
+		}
+		return mav;
 	}
 	
 }
