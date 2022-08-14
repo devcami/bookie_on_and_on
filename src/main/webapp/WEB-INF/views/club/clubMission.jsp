@@ -310,11 +310,9 @@ const openMissionDodal = (e) => {
 		// textarea readonly 해제해
 		$("#answer").attr("readonly", false);
 		if(mission.renamedFilename == ''){
-			console.log("비었니 시발");
 			upFile.style.display == '';
 		}
 		else {
-			console.log('안비었다 시바');
 			upFile.style.display = 'none';			
 			imgContainer.style.display = '';
 			imgContainer.src = `${pageContext.request.contextPath}/resources/upload/mission/\${mission.renamedFilename}`

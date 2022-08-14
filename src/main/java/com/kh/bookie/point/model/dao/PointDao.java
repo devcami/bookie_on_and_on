@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
+import com.kh.bookie.club.model.dto.MyClub;
 import com.kh.bookie.point.model.dto.PointStatus;
 
 @Mapper
@@ -24,6 +25,17 @@ public interface PointDao {
 	int updateTotalPointInMember(PointStatus pointStatus);
 
 	List<PointStatus> getMyPointStatusList(Map<String, Object> map);
+
+	@Select("select * from my_club where club_end < sysdate and club_status = 'I' and member_id = #{memberId}")
+	List<MyClub> getMyClubStatus(Map<String, Object> map);
+
+	@Select("select count(*) from mission_status where club_no = #{clubNo} and member_id = #{memberId} and status = 'P'")
+	int getTotalPassMission(MyClub myClub);
+
+	int insertClubEndpoint(PointStatus ps);
+
+	@Update("update my_club set club_status = 'E' where club_no = #{clubNo} and member_id = #{memberId}")
+	int updateMyClubStatus(MyClub myClub);
 	
 
 	

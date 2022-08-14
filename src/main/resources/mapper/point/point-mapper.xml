@@ -50,5 +50,25 @@
 		<result column="imp_uid" property="impUid"/>
 		<result column="status" property="status"/>
 	</resultMap>
+	
+	<insert id="insertClubEndpoint">
+		insert into 
+			point_status 
+		values(
+			seq_point_no.nextval, 
+			#{memberId}, 
+			#{content}, 
+			#{point}, 
+			#{totalPoint}, 
+			default, 
+			null,
+			#{status})
+		<selectKey keyProperty="pointNo" resultType="_int" order="AFTER">
+			select
+				seq_point_no.currval
+			from
+				dual
+		</selectKey>
+	</insert>
 
 </mapper>

@@ -1,3 +1,7 @@
+<%@page import="java.util.Collections"%>
+<%@page import="java.util.Collection"%>
+<%@page import="java.util.HashMap"%>
+<%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -7,13 +11,17 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/enrollClub.css" />
 <jsp:include page="/WEB-INF/views/common/header.jsp">
-	<jsp:param value="북클럽 등록" name="title"/>
+	<jsp:param value="북클럽 수정" name="title"/>
 </jsp:include>
+<script>
+	let missionCnt = 0;
+	let cnt = 1;
+</script>
 <section id="content">
 ${club}
 
 	<div id="top-menu">
-		<h1>북클럽 등록</h1>	 
+		<h1>북클럽 수정</h1>	 
 	</div>
 	<form:form name="clubEnrollFrm" >
 		<div id="intro-div" class="divs">
@@ -185,33 +193,11 @@ ${club}
 		<div id="book-div" class="divs">
 			<p id="books-p"><strong>읽는 책</strong></p>
 			<small id="books-small" class="form-text text-muted">등록 가능한 책은 최대 4권 입니다.</small>
+			<p id="bLabel" style="font-size: medium; margin-top: 10px !important;">📋 기본정보를 먼저 입력해주세요!</p>
 			<div id="bookWrapper">
-			<!-- 여기에 책이 하나씩 추가됨. -->
-				<c:forEach items="${club.bookList}" var="book" varStatus="vs">
-					<div class="book-container" id="book${book.itemId}">
-	                  <div class="book-table">
-	                     <input type="hidden" name="isbn13" value="9788954699914">
-	                     <input type="hidden" name="bookImg" value="https://image.aladin.co.kr/product/29857/0/covermini/895469991x_1.jpg">
-	                     <table class="tbl">
-	                        <tbody><tr>
-	                           <td rowspan="4">
-	                              <img src="https://image.aladin.co.kr/product/29857/0/covermini/895469991x_1.jpg" style="width:65px;">
-	                           </td>
-	                           <td colspan="5" class="book-title">하얼빈</td>
-	                        </tr>
-	                        <tr>
-	                           <td class="book-author">김훈 (지은이)</td>
-	                        </tr>
-	                        <tr>
-	                           <td colspan="2" class="book-p">출판사 : 문학동네 🧡 출판일 : 2022-08-03</td>
-	                        </tr>
-	                     </tbody></table>
-	                  </div>
-					  <div>
-						<button type="button" class="btn deleteBook-btn" onclick="deleteBook(this);" value="9788954699914">삭제</button>
-					  </div>
-				  </div>
-				</c:forEach>
+			<!-- 
+				여기에 책이 하나씩 추가됨. 
+			-->
 			</div>
 			
 
@@ -226,27 +212,7 @@ ${club}
 				<span style="display:none;" id="cPage">1</span>
 			</div>
 		</div>
-		
-<!-- 		<button 
-			type="button" 
-			id="btn-add-book"
-			class="btn gap-2 col-12"
-			onclick="addBookTest();"
-			data-container="body" 
-			data-toggle="popover" 
-			data-placement="top" 
-			data-content="📋 기본정보를 먼저 입력해주세요!">
-		  책 추가
-		</button>
- -->
-		
-<!-- 		<script>
-		
-		 $(function () {
-		    $( '[data-toggle="popover"]' ).popover()
-		  } );
-		
-		</script> -->
+
 		
 
 		<div id="mission-div" class="divs">
@@ -257,16 +223,72 @@ ${club}
 			<!-- 
 				여기에 미션이 하나씩 추가됨
 			 -->	  
+			 <c:set var="cnt" value="1" />
+			 <c:set var="book" value="${club.bookList}"/>
+			 <%
+			 	List<HashMap<String, Object>> item = (List<HashMap<String, Object>>) pageContext.getAttribute("book");
+			 	System.out.println("여기 있다" + item);	
+			    Collections.reverse(item);
+			 	pageContext.setAttribute("books", item);
+			 %>
+			 
+			 
+			 <c:forEach items="${books}" var="book">
+			 		<div class="card" id="m${book.itemId}">
+					    <div class="card-header" id="head${book.itemId}">
+					      <h5 class="mb-0">
+					        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#col${book.itemId}" aria-expanded="false" aria-controls="col${book.itemId}">
+					          Book <i>&lt;${book.bookTitle}&gt;</i> 미션
+					        </button>
+					      </h5>
+					    </div>
+					    <div id="col${book.itemId}" class="collapse" aria-labelledby="head${book.itemId}" data-parent="#missionContainer" style="">
+					      <div class="card-body">
+					      	<table>
+					      		<tbody id="missionWrapper${book.itemId}">
+						      		<tr id="addMissionLabel">
+				      					<td colspan="4" style="margin-bottom: 17px;">🧡책에 대한 미션을 등록해주세요!</td>
+				      				</tr>	
+			 						<c:forEach items="${book.missionList}" var="mission" varStatus="vs">
+									<tr class="=&quot;head-tr&quot;" id="mission${cnt}">
+										<td><input class="missionInput" type="text" name="missionName" id="mName${cnt}" value="${mission.title}" readonly=""></td>
+										<td><input class="missionInput" type="text" name="missionDeposit" id="mDeposit${cnt}" value="${mission.point}원" readonly=""></td>
+										<td><input class="missionInput" type="text" name="missionDate" id="mEndDate${cnt}" value="~ ${mission.mendDate}" readonly=""></td>
+										<td value="${book.itemId}">
+											<button type="button" class="mybtn" onclick="editMission(this);" value="${cnt}">수정</button>
+											<button type="button" class="mybtn" onclick="deleteMission(this);" value="${cnt}">삭제</button>
+										</td>
+										<input type="hidden" name="missionContent" id="mContent${cnt}" value="${mission.content}">
+									</tr>
+									<c:if test="${vs.last}">
+										<script>
+											missionCnt = missionCnt + ${vs.count};
+											cnt = cnt + ${vs.count};
+										</script>
+									</c:if>
+									 <c:set var="cnt" value="${cnt + 1}" />
+									</c:forEach>
+								</tbody>
+					      	</table>
+						    <button type="button" value="${book.itemId}" id="plus${book.itemId}" class="btn gap-1 col-1 mission-btn" onclick="plusMission(this);" data-toggle="modal" data-target="#addMissionModal" data-whatever="@mdo">
+						    +
+						    </button>
+					      </div>
+					    </div>
+					  </div>
+			 </c:forEach>
+			 
 			</div>
 		</div>
 
 		<div id="bottom-menu">
 			<button type="button" onclick="frmSubmit();" id="btn-enroll" class="mybtn last-btn">등 록</button>
-			<button type="button" id="btn-cancel" class="mybtn last-btn">취 소</button>	    	
+			<button type="button" onclick="cancelAll();" id="btn-cancel" class="mybtn last-btn">취 소</button>	    	
 		</div>
 
 		<div id="additionalInfo">
-			<input type="hidden" name="finalDeposit" id="finalDeposit" />			
+			<input type="hidden" name="clubNo" id="clubNo" value="${club.clubNo}" />			
+			<input type="hidden" name="delBook" id="" />						
 		</div>
 
 		
@@ -387,13 +409,116 @@ ${club}
 		<input type="hidden" />
 		<!-- <input type="hidden" name="currentBook" value="" /> -->
 	</form> --%>
-	
 
+
+
+
+
+
+<script>
+	const selectedBooks = new Array();
+	const booksDiv = new Object();
+</script>
+	
+<c:forEach items="${club.bookList}" var="book">
+	<script>
+		selectedBooks.push("${book.itemId}");
+		const arr${book.itemId} = new Object();
+	</script>
+	
+	<c:forEach items="${book.missionList}" var="mission">
+		${mission}
+	</c:forEach>
+	
+</c:forEach>
 
 <script>
 
 window.onload = function(){
-	document.getElementById('recruitStart').value = new Date().toISOString().substring(0, 10);
+	
+	const container = document.querySelector('#bookWrapper');
+	const missionContainer = document.getElementById('missionContainer');
+	const addBookModalContainer = document.querySelector("#modal-header-bottom");
+	
+	console.log('미션cnt ', missionCnt);
+	console.log('cnt ', cnt);
+	
+	selectedBooks.forEach((item, index) => {
+		
+		const missionArr = "arr" + item;
+		
+		console.log(missionArr);
+		
+		let itemId = selectedBooks[index];
+		
+	 	$.ajax({
+	 		url : '${pageContext.request.contextPath}/club/selectBook.do',
+			data : {
+				ttbkey : 'ttbiaj96820130001', // 우리 접속 키
+				itemIdType : 'ISBN13', 
+				ItemId : itemId,
+				output : 'js', // json형태로 받을게,
+				Cover : 'mini',
+				Version : '20131101' // 2013년 버전으로 줘라
+			},
+			success(resp){
+				const {item} = resp;
+				console.log(item[0]);
+				const book = item[0];
+				
+				const div = `
+						<div class="book-container" id="book\${itemId}">
+			              <div class="book-table">
+		                    <input type="hidden" name="isbn13" value="\${itemId}">
+		                    <input type="hidden" name="bookImg" value="\${book.cover}">
+		                    <table class="tbl">
+		                       <tbody><tr>
+		                          <td rowspan="4">
+		                             <img src="\${book.cover}" style="width:65px;">
+		                          </td>
+		                          <td colspan="5" class="book-title">\${book.title}</td>
+		                       </tr>
+		                       <tr>
+		                          <td class="book-author">\${book.author}</td>
+		                       </tr>
+		                       <tr>
+		                          <td colspan="2" class="book-p">출판사 : \${book.publisher} 🧡 출판일 : \${book.pubDate}</td>
+		                       </tr>
+		                    </tbody></table>
+		                 </div>
+		                 <div>
+	                     	<button type="button" class="btn deleteBook-btn" onclick="deleteBook(this);" value="\${itemId}">삭제</button>
+	                    </div>
+					  </div>`;
+					 
+				// 읽는 책 부분에 추가
+				container.insertAdjacentHTML('beforeend', div);
+				
+				// booksDiv에도 추가
+				booksDiv[itemId] = document.getElementById(`book\${itemId}`);
+				
+				// 책 추가 모달 작은 이미지 추가
+				
+				console.log(addBookModalContainer);
+				const imgSrc = book.cover;
+				const smallImgId = "smallImg" + itemId; 
+				
+ 				const smallBookDiv = `
+					<div class="img-btn" id=\${smallImgId}>
+				      <img src=\${imgSrc} style="width:65px;">
+				      <button type="button" class="close x-btn" value=\${itemId} onclick = "modalDeleteBook(this);" >
+				      	 <span aria-hidden="true">&times;</span>
+				      </button>				      
+			    	</div>
+				`;
+				
+				addBookModalContainer.insertAdjacentHTML('beforeend', smallBookDiv); 
+				
+				
+			},
+			error : console.log
+		}); 
+	});
 }
 
 /************** 기본정보 유효성검사 ************/
@@ -572,6 +697,15 @@ const addBookTest = () => {
 			getPage(1, maxResult);
 		 	setTimeout(() => window.scrollTo(0, 0), 1000)
 		}
+		
+		
+/* 		selectedBooks.forEach((itemId) => {
+			const btnDiv = `
+				<div id="btnDiv\${itemId}">
+	                <button type="button" class="mybtn btn-plus noclick" onclick="modalAddBook(this);" value="\${itemId}">+</button>
+	                <input type="hidden" name="img" value="https://image.aladin.co.kr/product/29857/0/covermini/895469991x_1.jpg">
+	             </div>`;
+		}); */
 	} 
 	
 	$('#addBookModal').on('shown.bs.modal', function (e) {
@@ -751,8 +885,11 @@ document.querySelector("#btn-more").onclick = () => {
                </div>
                `;
                container.insertAdjacentHTML('beforeend', div);
-               
+               ckUnSelected(isbn13);
                ckSelectedBook(isbn13, btnDivId);
+               
+               
+               
             });
             
          },
@@ -764,8 +901,7 @@ document.querySelector("#btn-more").onclick = () => {
 
 /******************************************************************************/
 
-const selectedBooks = [];  
-const booksDiv = new Object();
+
 
 const modalAddBook = (e) => {
 // 	console.log("선택된 책 isbn", e.value);
@@ -818,6 +954,18 @@ const delBook = (isbn) => {
 	delete booksDiv[isbn];
 }
 
+const ckUnSelected = (isbn) => {
+	
+	const btnId = "btnDiv" + isbn;
+	const div = document.getElementById(btnId);
+	
+	if(div != null) {
+		div.firstElementChild.classList.remove('noclick');
+		div.firstElementChild.disabled = '';		
+	};
+
+}
+
 const modalDeleteBook = (e) => {
 	
 //	console.log("삭제전",booksDiv);
@@ -827,10 +975,7 @@ const modalDeleteBook = (e) => {
 	const container = document.querySelector("#modal-header-bottom");
 	container.removeChild(e.parentElement);
 
-	const btnId = "btnDiv" + isbn;
-	const div = document.getElementById(btnId);
-	div.firstElementChild.classList.remove('noclick');
-	div.firstElementChild.disabled = '';
+	ckUnSelected(isbn);
 	
 	
 	const divId = "#book" + isbn;
@@ -919,7 +1064,7 @@ const showAddBookBtn = () => {
 }
 
 
- 
+
 const enrollBook = () => {
 	
 	if(selectedBooks.length == 4){
@@ -1022,6 +1167,17 @@ const deleteBook = (e) => {
 		showAddBookBtn();
 	}
 	
+	// mCount 빼
+	console.log("원래 ", missionCnt);
+	const mId = '#missionWrapper' + isbn;
+	const missionWrapper = document.querySelector(mId);
+	console.log(missionWrapper);
+	const mNo = missionWrapper.childElementCount - 2; 
+	console.log("삭제한 책 미션 수 ", mNo);
+	missionCnt = missionCnt - mNo;
+	
+	console.log("삭제후 ", missionCnt);
+	
 	// 미션 삭제
 	$(`#m\${isbn}`).remove();
 	
@@ -1030,7 +1186,6 @@ const deleteBook = (e) => {
 	if(missionContainer.childElementCount == 0){
 		document.querySelector('#mLabel').style.display = '';
 	}
-	
 	
 }
 
@@ -1115,10 +1270,6 @@ const hideMissionModal = () => {
    	}
    	
 }
-
-
-let cnt = 1;
-let missionCnt = 0;
 
 // 미션 모달에서 등록 버튼 누르면 
 const enrollMission = () => {
@@ -1343,13 +1494,16 @@ const frmSubmit = () => {
 	const additionalInfo = document.querySelector('#additionalInfo');
 	
 	selectedBooks.forEach((isbn) => {
-		const tbodyId = "missionWrapper" + isbn;
-		const mCnt = document.getElementById(tbodyId).childElementCount - 1;
+		const tbodyId = "#missionWrapper" + isbn;
+		const mCnt = $(tbodyId).children('tr').length - 1; 
+		console.log('mCnt = ', mCnt);
 		const mInput = `
 			<input type="hidden" name="mCount" value="\${mCnt}" />
 		`;
+		
 		additionalInfo.insertAdjacentHTML('beforeend', mInput);
 	});
+
 
 	const divs = Object.values(booksDiv);
 	divs.forEach((div) => {
@@ -1363,18 +1517,32 @@ const frmSubmit = () => {
 		additionalInfo.insertAdjacentHTML('beforeend', nameInput);
 		
 	});
-	
+
 	
 	// 따옴표 검사해서 바꿔치기해
 	$('#title').val().replace(/\"/g, '&quot;');
 	$('#clubDesc').val().replace(/\"/g, '&quot;');
 	
 	
- 	frm.action = `${pageContext.request.contextPath}/club/enrollClub.do`
+ 	frm.action = `${pageContext.request.contextPath}/club/updateClub.do`;
 	frm.method = "POST";
 	frm.submit();
 	
 }
+
+
+
+const cancelAll = () => {
+	const yn = confirm("수정을 취소하시겠습니까?");
+	if(yn){
+		location.href = `${pageContext.request.contextPath}/club/clubAnn.do?clubNo=${club.clubNo}`;
+	}
+	else {
+		return;
+	}
+	
+}
+
 </script>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
