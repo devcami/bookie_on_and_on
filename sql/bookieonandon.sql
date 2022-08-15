@@ -1108,15 +1108,47 @@ update club set club_end = sysdate - 1 where club_no = 59;
 
 select * from point_status;
 select * from my_club;
+select * from mission;
 select * from mission_status;
 select * from mission where club_no = 55;
-update my_club set mission_cnt = 3 where club_no =51;
+update mission_status set club_no = 45 where mission_no in (37, 38, 39, 40);
 commit;
-select * from club where club_no = 55;
-update mission_status set status = 'P' where mission_no in (61, 62);
-update my_club set club_status = 'I' where club_no in (45, 56, 51, 55);
+select count(*) from mission_status where club_no = 55 and member_id = 'tmddbs' and status = 'P';
 
-update club set club_end = sysdate - 1 where club_no = 55;
-update my_club set club_end = sysdate -1 where club_no = 55;
+select * from point_status;
 
-select * from my_club where club_end < sysdate and club_status = 'I' and member_id = 'tmddbs';
+delete from point_status where point_no = 22;
+update my_club set club_status = 'I' where club_no = 55 and member_id = 'tmddbs';
+commit;
+
+select * from chat_member;
+
+create table chat_member (
+    chatroom_id varchar2(50),
+    member_id varchar2(50),
+    last_check number default 0,
+    created_at date default sysdate,
+    deleted_at date,
+    constraint pk_chat_member primary key(chatroom_id, member_id)
+);
+alter table chat_member add club_no number;
+
+commit;
+
+create table chat_log (
+    no number,
+    chatroom_id varchar2(50),
+    member_id varchar2(50),
+    msg varchar2(4000),
+    time number,
+    constraint pk_chat_log_no primary key(no),
+    constraint fk_chat_log foreign key(chatroom_id, member_id) references chat_member(chatroom_id, member_id)
+);
+create sequence seq_chat_log_no;
+
+select * from chat_member;
+select * from chat_log;
+delete from chat_log where member_id = 'tmddbs';
+alter table chat_log add nickname varchar2(100);
+alter table chat_log add renamed_filename varchar2(256);
+commit;
