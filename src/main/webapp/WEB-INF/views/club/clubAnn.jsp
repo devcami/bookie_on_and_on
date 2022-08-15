@@ -14,15 +14,13 @@
 <sec:authorize access="isAuthenticated()">
 	<sec:authentication property="principal" var="loginMember"/>
 </sec:authorize>
-${club.bookList.get(0).bookTitle}
-${club.bookList.get(1).bookTitle}
-${club.bookList.get(2).bookTitle}
 <div id="title-header" class="" style="display: none;">
 	<div id="header-div">
 		<div id="title-header-left">
 			<i class="fa-solid fa-angle-left" onclick="location.href='/bookie/club/clubList.do'"></i>
 			<span>[북클럽] ${club.title}</span>					
 		</div>
+		<c:if test="${club.recruitEnd lt nowDate}">
 		<sec:authorize access="hasRole('ROLE_USER')">
 			<div id="likeWishDiv">
 				<span class="fa-stack fa-lg" id='h-span'>
@@ -33,6 +31,7 @@ ${club.bookList.get(2).bookTitle}
 				</span>
 			</div>		
 		</sec:authorize>
+		</c:if>
 	</div>
 </div>
 <section id="content">
@@ -182,8 +181,8 @@ ${club.bookList.get(2).bookTitle}
 	</sec:authorize>
 	<div id="btn-div">
 		<sec:authorize access="hasRole('ROLE_ADMIN')">
-			<button style="margin-right: 2px;">수정</button>
-			<button style="margin-left: 2px;">삭제</button>
+			<button style="margin-right: 2px;" data-type="update" onclick="ckNop(this);">수정</button>
+			<button type="button" style="margin-left: 2px;" data-type="delete" onclick="ckNop(this);">삭제</button>
 		</sec:authorize>
 		<sec:authorize access="isAuthenticated() && !hasRole('ADMIN')">
 			<!-- 모집중인 경우 -->
@@ -204,7 +203,7 @@ ${club.bookList.get(2).bookTitle}
 			</c:if>
 			<!-- 날짜가 지난 북클럽일때 -->			
 			<c:if test="${club.recruitEnd lt nowDate}">
-				<button id="btn-disabled">이미 마감된 북클럽입니다😥</button>
+				<button id="btn-disabled">모집일이 지난 북클럽입니다😥</button>
 			</c:if>
 		</sec:authorize>
 		<sec:authorize access="isAnonymous()">
@@ -245,14 +244,45 @@ ${club.bookList.get(2).bookTitle}
 		<input type="hidden" name="deposit" value="${club.deposit}" />
 		<input type="hidden" name="myPoint" id="myPoint" value="" />
 	</form:form>
-	
-	
+
+	<form:form
+		name="deleteClubFrm" 
+		method="POST"
+		action="${pageContext.request.contextPath}/club/deleteClub.do">
+		<input type="hidden" name="clubNo" value="${club.clubNo}" />
+	</form:form>	
 
 	
 </section>
 
 <script>
 
+// 수정/삭제 버튼 눌렀을 때
+const ckNop = (e) => {
+	
+	const type = e.dataset.type;
+	const nop = ${club.currentNop};
+	
+	console.log(type);
+	
+	if(nop != 0){
+		if(type == "update"){
+			alert('이미 신청한 회원이 있어 수정이 불가합니다.');
+			return;
+		}
+		else {
+			alert("이미 신청한 회원이 있어 삭제가 불가합니다.");
+			return;
+		}
+	}
+	
+	if(type == "update")
+		location.href = `${pageContext.request.contextPath}/club/updateClub.do/${club.clubNo}`;
+	else 
+		deleteClubFrm.submit();
+		
+	
+}
 
 const bookEnroll = (e) => {
 	const isbn13 = $(e).attr('value');

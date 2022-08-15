@@ -77,7 +77,7 @@ public class AdminController {
 		try {
 			
 			Map<String, Object> map = new HashMap<>();	
-			int numPerPage = 3;
+			int numPerPage = 10;
 			int start = ((cPage - 1) * numPerPage) + 1;
 			int end = cPage * numPerPage;
 			

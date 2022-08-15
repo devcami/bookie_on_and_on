@@ -44,7 +44,7 @@
       insert into
          interest
       values(
-         #{memberId}, #{interest})
+         #{memberId}, #{interestEnroll})
    </insert>
 
    <select id="selectOneMember" resultType="member">

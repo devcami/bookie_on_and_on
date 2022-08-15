@@ -1,7 +1,5 @@
 package com.kh.bookie.member.model.dto;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -12,7 +10,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 
 @Data
 @NoArgsConstructor
@@ -20,6 +17,7 @@ import lombok.NonNull;
 public class Member extends MemberEntity implements UserDetails{
 	List<SimpleGrantedAuthority> authorities;
 	Interest interests;
+	String[] interestEnroll;
 	String interest;
 	
 	private static final long serialVersionUID = 1L;
@@ -54,21 +52,6 @@ public class Member extends MemberEntity implements UserDetails{
 		return true;
 	}
 
-
-	public Member(@NonNull String memberId, @NonNull String password, @NonNull LocalDateTime enrollDate,
-			@NonNull String nickname, @NonNull String phone, @NonNull Gender gender) {
-		super(memberId, password, enrollDate, nickname, phone, gender);
-		// TODO Auto-generated constructor stub
-	}
-
-	public Member(@NonNull String memberId, @NonNull String password, @NonNull LocalDateTime enrollDate,
-			@NonNull String nickname, @NonNull String phone, @NonNull Gender gender, LocalDate birthday,
-			String introduce, String renamedFilename, String originalFilename, String sns, int point, String email) {
-		super(memberId, password, enrollDate, nickname, phone, gender, birthday, introduce, renamedFilename, originalFilename,
-				sns, point, email);
-		// TODO Auto-generated constructor stub
-	}
-
-
+	
 	
 }
