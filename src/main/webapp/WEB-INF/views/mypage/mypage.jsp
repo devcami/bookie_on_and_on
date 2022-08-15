@@ -162,5 +162,28 @@ document.addEventListener('DOMContentLoaded', function() {
 document.querySelector(".profile-settings-btn").addEventListener("click", (e) => {
 	location.href = "${pageContext.request.contextPath}/mypage/myMiniProfile.do";
 });
+
+/* 마이페이지 로딩시 내 책 정보 뿌려주기 */
+window.onload = function(){
+	/* 읽고 있는 책 찾아 뿌리기 */
+	$.ajax({
+		url: `${pageContext.request.contextPath}/mypage/myReadingBook.do`,
+		method : "get",
+		success(data){
+			console.log(data);
+ 		},
+		error : console.log
+	});
+	/* 마이픽 뿌려주기 */
+	$.ajax({
+		url: `${pageContext.request.contextPath}/mypage/myPickBook.do`,
+		method : "get",
+		success(data){
+			console.log(data);
+ 		},
+		error : console.log
+	});
+};
+
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

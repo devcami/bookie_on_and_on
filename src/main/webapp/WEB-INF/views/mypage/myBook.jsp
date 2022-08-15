@@ -118,21 +118,12 @@ function getItemId(event) {
 		data : {status :status},
 		success(data){
 			console.log(data);
+			console.log(typeof data);
+			console.log(data.length);
 			
-		},
+ 		},
 		error : console.log
 	});
-	
-	
-	let book = {
-			ttbkey : 'ttbiaj96820130001',
-			ItemId : '이제 이걸 받아와야하는데',
-			ItemIdType : '',
-			OptResult : '',
-			Output : 'js',
-			Cover : 'mini',
-			Version : '20131101'
-	};
 };
 
 const getPage = (cPage, maxResult) => {
