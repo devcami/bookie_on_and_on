@@ -175,7 +175,25 @@ public class SearchServiceImpl implements SearchService {
 	}
 
 	@Override
-	public List<Book> selectBooKItemIdByStatus(Map<String, Object> param) {
+	public List<String> selectBooKItemIdByStatus(Map<String, Object> param) {
 		return searchDao.selectBooKItemIdByStatus(param);
 	}
+
+	@Override
+	public List<String> selectBooKItemId(Map<String, Object> param) {
+		return searchDao.selectBooKItemId(param);
+	}
+
+	@Override
+	public List<String> selectMyPickItemId(Map<String, Object> param) {
+		return searchDao.selectMyPickItemId(param);
+	}
+
+	@Override
+	public List<String> selectMyBookAllItemId(String memberId) {
+		return searchDao.selectMyBookAllItemId(memberId);
+	}
+
+	
+	
 }

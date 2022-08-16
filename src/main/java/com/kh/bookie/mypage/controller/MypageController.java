@@ -1,20 +1,24 @@
 package com.kh.bookie.mypage.controller;
 
 import java.io.File;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -28,6 +32,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import com.kh.bookie.common.HelloSpringUtils;
 import com.kh.bookie.member.model.dto.Member;
@@ -74,28 +82,17 @@ public class MypageController {
 		return "mypage/mypage";
 	}
 	
+	/* 마이페이지 */
 	@GetMapping("/mypage.do")
 	public void mypage(Model model, @AuthenticationPrincipal Member loginMember) {
 		String memberId = loginMember.getMemberId();
+		Map<String, Object> map = new HashMap<>();
 		try {
 			Member member = memberService.selectOneMember(memberId);
 			model.addAttribute("member", member);
-			
-			// 1. 미니프로필
-			
-			// 2. 기록
-			
-			// 3. 읽고있는 책
-			
-			// 4. 마이픽
-			
-			// 5. 달력
-			
-			// 6. 차트
-			
 		} catch (Exception e) {
 			log.error("내서재 조회오류", e);
-//			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body();
+			throw e;
 		}
 		
 	}
@@ -187,9 +184,7 @@ public class MypageController {
 		}
 	}
 	
-	/**
-	 * 패스워드 변경
-	 */
+	/* 패스워드 변경 */
 	@GetMapping("/myPasswordUpdateFrm.do")
 	public void myPasswordUpdateFrm() {}
 	
@@ -218,6 +213,7 @@ public class MypageController {
 		return ResponseEntity.ok(map);
 	}
 	
+	/* 패스워드 변경 */
 	@PostMapping("/myPasswordUpdate.do")
 	public ResponseEntity<?> myPasswordUpdate(@RequestParam String newPasswordCheck, @AuthenticationPrincipal Member loginMember) {
 		String newPassword = newPasswordCheck;
@@ -246,27 +242,136 @@ public class MypageController {
 		return ResponseEntity.ok(map);
 	}
 	
-	
+	/* 내 책정보 */
 	@GetMapping("/myBook.do")
 	public void myBook() {}
 
-	@GetMapping("/getItemId.do")
-	public ResponseEntity<?> getItemId(@AuthenticationPrincipal Member loginMember, @RequestParam String status){
+	/* */
+	@GetMapping("/myBookAllItemId")
+	public ResponseEntity<?> myBookAllItemId(@AuthenticationPrincipal Member loginMember){
 		String memberId = loginMember.getMemberId();
-		log.debug("memberId = {}", memberId);
-		log.debug("status = {}", status);
+		List<String> itemIdList = new ArrayList<>();
+		try {
+			itemIdList = searchService.selectMyBookAllItemId(memberId);
+			log.debug("itemIdList = {}", itemIdList);
+		} catch (Exception e) {
+			log.error("itemId 가져오기 오류", e);
+			throw e;
+		}
+		return ResponseEntity.ok(itemIdList);
+	}
+	
+	/* 내 서재 읽는중 책 itemId 가져오기 */
+	@GetMapping("/getItemId")
+	public ResponseEntity<?> getItemId(@AuthenticationPrincipal Member loginMember){
+		String memberId = loginMember.getMemberId();
+		String status = "읽는 중";
+		Map<String, Object> param = new HashMap<>();
+		param.put("status", status);
+		param.put("memberId", memberId);
+		List<String> itemIdList = new ArrayList<>();
+		try {
+			itemIdList = searchService.selectBooKItemId(param);
+			log.debug("itemIdList = {}", itemIdList);
+			
+		} catch (Exception e) {
+			log.error("itemId 가져오기 오류", e);
+			throw e;
+		}
+		return ResponseEntity.ok(itemIdList);
+	}
+	
+	/* 내 서재 마이픽 책 itemId 가져오기 */
+	@GetMapping("/getmyPickItemId")
+	public ResponseEntity<?> getmyPickItemId(@AuthenticationPrincipal Member loginMember){
+		String memberId = loginMember.getMemberId();
+		String myPick = "1"; // 마이픽이 1로 된 책들 itemId가져오기
+		Map<String, Object> param = new HashMap<>();
+		param.put("memberId", memberId);
+		param.put("myPick", myPick);
+		List<String> myPickItemIdList = new ArrayList<>();
+		try {
+			myPickItemIdList = searchService.selectMyPickItemId(param);
+			log.debug("myPickItemIdList = {}", myPickItemIdList);
+		} catch (Exception e) {
+			log.error("myPickItemId 가져오기 오류", e);
+			throw e;
+		}
+		return ResponseEntity.ok(myPickItemIdList);
+	}
+	
+//	/* 내 서재의 책 status별 정보 */
+//	@GetMapping("/getItemId.do")
+//	public List<Map<String, Object>> getItemId(@AuthenticationPrincipal Member loginMember, @RequestParam String status) {
+//			String memberId = loginMember.getMemberId();
+//			Map<String, Object> param = new HashMap<>();
+//			param.put("memberId", memberId);
+//			param.put("status", status);
+//			List<Book> bookList = new ArrayList<>();
+//			bookList = searchService.selectBooKItemIdByStatus(param);
+//			int i = 0;
+//			String itemId[] = {};				
+//			if(bookList != null && bookList.size() > 0) {
+//				for(Book book : bookList) {
+//					itemId[i++] = book.getItemId();
+//				}
+//			}
+//			log.debug("itemId = {}", itemId);
+//	        String serviceKey = "ttbiaj96820130001";
+//	        try {
+//	        	for(String id : itemId) {
+//	        		String urlStr = "http://www.aladin.co.kr/ttb/api/ItemLookUp.aspx";
+//	        		urlStr += "?" + URLEncoder.encode("ttbkey", "UTF-8") + "=" + serviceKey;
+//	        		urlStr += "&" + URLEncoder.encode("itemIdType", "UTF-8") + "=ISBN";
+//	        		urlStr += "&" + URLEncoder.encode("ItemId", "UTF-8") + "="+id;
+//	        		urlStr += "&" + URLEncoder.encode("output", "UTF-8") + "=xml";
+//	        		urlStr += "&" + URLEncoder.encode("Version", "UTF-8") + "=20131101";
+//	        		
+//	        		System.out.println(urlStr);
+//	        		
+//	        		// xml 파싱
+//	        		Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(urlStr);
+//	        		XPath xpath = XPathFactory.newInstance().newXPath();
+//	        		
+//	        		NodeList nList = document.getElementsByTagName("item");
+//	        		Node nNode = nList.item(0);
+//	        		if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+//	        			Element eElement = (Element) nNode;
+//	        			getTagValue("cover", eElement); // title
+//	        			getTagValue("itemId", eElement); // itemId
+//	        		}
+//	        	};	
+//			} catch (Exception e) {
+//				log.error("내 책 조회 오류", e);
+//			}
+//	        return null;
+//	    }
+//	    
+//	      // tag값의 정보를 가져오는 함수
+//	   public static String getTagValue(String tag, Element eElement) {
+//	          String result = "";
+//	       NodeList nlList = eElement.getElementsByTagName(tag).item(0).getChildNodes();
+//	       result = nlList.item(0).getTextContent();
+//	        System.out.println(result);
+//	       return result;
+//	   }
+
+	/* 내 서재의 책 status별 정보 */
+	@GetMapping("/getItemIdByStatus.do")
+	public ResponseEntity<?> getItemId(@AuthenticationPrincipal Member loginMember, @RequestParam String status) {
+		String memberId = loginMember.getMemberId();
 		Map<String, Object> param = new HashMap<>();
 		param.put("memberId", memberId);
 		param.put("status", status);
-		log.debug("param = {}" , param);
-		List<Book> bookList = new ArrayList<>();
+		List<String> ItemIdByStatus = new ArrayList<>();
 		try {
-			bookList = searchService.selectBooKItemIdByStatus(param);
-			log.debug("bookList = {}" , bookList);
+			ItemIdByStatus = searchService.selectBooKItemIdByStatus(param);
+			log.debug("ItemIdByStatus = {}" , ItemIdByStatus);
 		} catch (Exception e) {
-			
+			log.error("내 책 조회 오류", e);
+			throw e;
 		}
-		return ResponseEntity.ok(bookList);
+		return ResponseEntity.ok(ItemIdByStatus);
 	}
 	
 	@GetMapping("/myScrap.do")
@@ -289,7 +394,6 @@ public class MypageController {
 		// 파일저장위치
         String saveDirectory = application.getRealPath("/resources/upload/profile");
 		log.debug(loginMember.getRenamedFilename());
-        
 		try {
 			if(loginMember.getRenamedFilename() != null) {
 				Member profileMember =  memberService.selectOneMemberByNickname(nickname);
@@ -321,7 +425,6 @@ public class MypageController {
 	@GetMapping("/nicknameCheck.do")
 	public ResponseEntity<?> nicknameCheck(@RequestParam String nickname){
 		log.debug("nickname = {}", nickname);
-		
 		Map<String, Object> map = new HashMap<>();
 		try {
 			MemberEntity member = memberService.selectOneMemberByNickname(nickname);
@@ -416,7 +519,6 @@ public class MypageController {
 				updateResult = memberService.miniUpdateMember(updateMember);	
 				log.debug("updateResult = {}", updateResult);
 			}
-
 			redirectAttr.addFlashAttribute("msg", "Mini프로필을 성공적으로 수정했습니다.");
 		} 
 		catch(Exception e) {
@@ -426,4 +528,61 @@ public class MypageController {
 		return "redirect:/mypage/myMiniProfile.do"; 
 	}
 
+	/* status 책 뿌려주기 */
+	@GetMapping("/statusBook")
+	public ResponseEntity<?> statusBook(@AuthenticationPrincipal Member loginMember, @RequestParam String itemId){
+		log.debug("itemId = {}", itemId);
+		String ttbkey = "ttbiaj96820130001";
+		String itemIdType = "ISBN13"; 
+		String output = "js";
+		String Cover = "Big";
+		String Version = "20131101";
+		String url = ALADDIN_URL + "ItemLookUp.aspx?ttbkey=" + ttbkey
+				+ "&itemIdType=" + itemIdType
+				+ "&ItemId=" + itemId
+				+ "&output=" + output
+				+ "&Cover=" + Cover
+				+ "&Version=" + Version;
+		Resource resource = resourceLoader.getResource(url);
+		return ResponseEntity.ok(resource);
+	}
+	
+	/* 읽고있는 책 뿌려주기 */
+	@GetMapping("/myReadingBook")
+	public ResponseEntity<?> myReadingBook(@AuthenticationPrincipal Member loginMember, @RequestParam String itemId){
+		log.debug("itemId = {}", itemId);
+		String ttbkey = "ttbiaj96820130001";
+		String itemIdType = "ISBN13"; 
+		String output = "js";
+		String Cover = "Big";
+		String Version = "20131101";
+		String url = ALADDIN_URL + "ItemLookUp.aspx?ttbkey=" + ttbkey
+				+ "&itemIdType=" + itemIdType
+				+ "&ItemId=" + itemId
+				+ "&output=" + output
+				+ "&Cover=" + Cover
+				+ "&Version=" + Version;
+		Resource resource = resourceLoader.getResource(url);
+		return ResponseEntity.ok(resource);
+	}
+	
+	/* 마이픽 뿌려주기 */
+	@GetMapping("/myPickBook")
+	public ResponseEntity<?> myPickBook(@AuthenticationPrincipal Member loginMember, @RequestParam String itemId){
+		log.debug("마이픽 itemId = {}", itemId);
+		String ttbkey = "ttbiaj96820130001";
+		String itemIdType = "ISBN13"; 
+		String output = "js";
+		String Cover = "Big";
+		String Version = "20131101";
+		String url = ALADDIN_URL + "ItemLookUp.aspx?ttbkey=" + ttbkey
+				+ "&itemIdType=" + itemIdType
+				+ "&ItemId=" + itemId
+				+ "&output=" + output
+				+ "&Cover=" + Cover
+				+ "&Version=" + Version;
+		Resource resource = resourceLoader.getResource(url);
+		return ResponseEntity.ok(resource);
+	}
+	
 }
