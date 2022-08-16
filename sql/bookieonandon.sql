@@ -456,7 +456,6 @@ select * from user_tables;
 -- 전체 컬럼 조회
 select * from user_tab_columns;
 
-
 select * from user_sequences; -- 시퀀스 조회
 select * from member;
 select * from authority;
