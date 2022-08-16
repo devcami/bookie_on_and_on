@@ -169,7 +169,7 @@ public class MypageController {
 
 
 	@GetMapping("/myMainProfile.do")
-	public void myMainProfile(Model model, @RequestParam Member loginMember) {
+	public void myMainProfile(Model model, @AuthenticationPrincipal Member loginMember) {
 		log.debug("model = {}", model);
 		log.debug("loginMember = {}", loginMember);
 		String memberId = loginMember.getMemberId();
@@ -246,7 +246,7 @@ public class MypageController {
 	@GetMapping("/myBook.do")
 	public void myBook() {}
 
-	/* */
+	/* 내 책 전체 itemId 가져오기 */
 	@GetMapping("/myBookAllItemId")
 	public ResponseEntity<?> myBookAllItemId(@AuthenticationPrincipal Member loginMember){
 		String memberId = loginMember.getMemberId();
@@ -376,15 +376,15 @@ public class MypageController {
 	
 	@GetMapping("/myScrap.do")
 	public void myScrap() {}
+
+	@GetMapping("/myDokooList.do")
+	public void myBookClub() {}
 	
-	@GetMapping("/myDokoo.do")
-	public void myDokoo() {}
-	
-	@GetMapping("/myPheed.do")
+	@GetMapping("/myPheedList.do")
 	public void myPheed() {}
 	
-	@GetMapping("/myBookClub.do")
-	public void myBookClub() {}
+	@GetMapping("/myClubList.do")
+	public void myClubList() {}
 	
 	/* 마이프로필 삭제 */
 	@GetMapping("/myProfileDelete.do")
@@ -531,45 +531,26 @@ public class MypageController {
 	/* status 책 뿌려주기 */
 	@GetMapping("/statusBook")
 	public ResponseEntity<?> statusBook(@AuthenticationPrincipal Member loginMember, @RequestParam String itemId){
-		log.debug("itemId = {}", itemId);
-		String ttbkey = "ttbiaj96820130001";
-		String itemIdType = "ISBN13"; 
-		String output = "js";
-		String Cover = "Big";
-		String Version = "20131101";
-		String url = ALADDIN_URL + "ItemLookUp.aspx?ttbkey=" + ttbkey
-				+ "&itemIdType=" + itemIdType
-				+ "&ItemId=" + itemId
-				+ "&output=" + output
-				+ "&Cover=" + Cover
-				+ "&Version=" + Version;
-		Resource resource = resourceLoader.getResource(url);
-		return ResponseEntity.ok(resource);
+		log.debug("status itemId = {}", itemId);
+		return getBookInfo(itemId);
 	}
 	
 	/* 읽고있는 책 뿌려주기 */
 	@GetMapping("/myReadingBook")
 	public ResponseEntity<?> myReadingBook(@AuthenticationPrincipal Member loginMember, @RequestParam String itemId){
-		log.debug("itemId = {}", itemId);
-		String ttbkey = "ttbiaj96820130001";
-		String itemIdType = "ISBN13"; 
-		String output = "js";
-		String Cover = "Big";
-		String Version = "20131101";
-		String url = ALADDIN_URL + "ItemLookUp.aspx?ttbkey=" + ttbkey
-				+ "&itemIdType=" + itemIdType
-				+ "&ItemId=" + itemId
-				+ "&output=" + output
-				+ "&Cover=" + Cover
-				+ "&Version=" + Version;
-		Resource resource = resourceLoader.getResource(url);
-		return ResponseEntity.ok(resource);
+		log.debug("읽는 중 itemId = {}", itemId);
+		return getBookInfo(itemId);
 	}
 	
 	/* 마이픽 뿌려주기 */
 	@GetMapping("/myPickBook")
 	public ResponseEntity<?> myPickBook(@AuthenticationPrincipal Member loginMember, @RequestParam String itemId){
 		log.debug("마이픽 itemId = {}", itemId);
+		return getBookInfo(itemId);
+	}
+	
+	/* 알라딘 itemId불러오기 */
+	public ResponseEntity<?> getBookInfo(String itemId){
 		String ttbkey = "ttbiaj96820130001";
 		String itemIdType = "ISBN13"; 
 		String output = "js";

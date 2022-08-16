@@ -103,15 +103,15 @@ document.addEventListener('DOMContentLoaded', function() {
 		<img src="${pageContext.request.contextPath}/resources/images/icon/scrap.png" alt="스크랩"/ style="width: 70px; height : 80px;">
 		<span>스크랩</span>
     </a>
-    <a class="record" href="${pageContext.request.contextPath}/mypage/myDokoo.do" style="color:black">
+    <a class="record" href="${pageContext.request.contextPath}/mypage/myDokooList.do" style="color:black">
 		<img src="${pageContext.request.contextPath}/resources/images/icon/dokoo_icon.png" alt="독후감"/ style="width: 70px; height : 80px;">
 		<span>독후감</span>
     </a>
-    <a class="record" href="${pageContext.request.contextPath}/mypage/myPheed.do" style="color:black">
+    <a class="record" href="${pageContext.request.contextPath}/mypage/myPheedList.do" style="color:black">
 		<img src="${pageContext.request.contextPath}/resources/images/icon/pheed_icon.png" alt="피드"/ style="width: 70px; height : 80px;">
 		<span>피드</span>
     </a>
-    <a class="record" href="${pageContext.request.contextPath}/mypage/myBookClub.do" style="color:black">
+    <a class="record" href="${pageContext.request.contextPath}/mypage/myClubList.do" style="color:black">
 		<img src="${pageContext.request.contextPath}/resources/images/icon/bookclub.png" alt="북클럽"/ style="width: 70px; height : 80px;">
 		<span>북클럽</span>
     </a>
