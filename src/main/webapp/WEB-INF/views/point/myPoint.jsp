@@ -238,6 +238,9 @@ const getNowDateTime = () => {
 		return nowDateTime;
 }
 
+// 환불버튼 누르면
+
+
 
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

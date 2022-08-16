@@ -31,7 +31,6 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @RequestMapping("/point")
 @Slf4j
-@SessionAttributes({ "next" })
 public class PointController {
 
 	@Autowired
@@ -40,7 +39,7 @@ public class PointController {
 	@Autowired
 	ServletContext application;
 	
-	@GetMapping("/myPoint.do")
+	@PostMapping("/myPoint.do")
 	public ModelAndView myPoint(
 			@AuthenticationPrincipal Member loginMember,
 			ModelAndView mav) {

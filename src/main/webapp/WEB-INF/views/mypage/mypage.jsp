@@ -115,8 +115,8 @@ document.addEventListener('DOMContentLoaded', function() {
 		<img src="${pageContext.request.contextPath}/resources/images/icon/bookclub.png" alt="북클럽"/ style="width: 70px; height : 80px;">
 		<span>북클럽</span>
     </a>
-    <a class="record" href="${pageContext.request.contextPath}/point/myPoint.do" style="color:black">
-		<img src="${pageContext.request.contextPath}/resources/images/icon/point-icon.png" alt="포인트"/ style="width: 70px; height : 80px;">
+    <a class="record" onclick="moveToPointPage();" style="color:black; cursor: pointer;">
+		<img src="${pageContext.request.contextPath}/resources/images/icon/point-icon.png" alt="포인트" style="width: 70px; height : 80px;">
 		<span>일단 여기쓰세요 포인!!!!!!트</span>
     </a>
 </div>
@@ -163,7 +163,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
 </section>
 
+<form:form
+	name="pointFrm"
+	method="post" 
+	action="${pageContext.request.contextPath}/point/myPoint.do"/>
+
 <script>
+
+moveToPointPage = () => {
+	const frm = document.pointFrm
+    frm.submit();
+}
+
 document.querySelector(".profile-settings-btn").addEventListener("click", (e) => {
 	location.href = "${pageContext.request.contextPath}/mypage/myMiniProfile.do";
 });

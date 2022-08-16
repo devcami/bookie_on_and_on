@@ -243,6 +243,9 @@
 		<input type="hidden" name="memberId" value="${loginMember.username}" />
 		<input type="hidden" name="deposit" value="${club.deposit}" />
 		<input type="hidden" name="myPoint" id="myPoint" value="" />
+		<input type="hidden" name="clubEnd" value="${club.clubEnd}"/>
+		<input type="hidden" name="totalMission" value="${club.missionCnt}" />
+		
 	</form:form>
 
 	<form:form

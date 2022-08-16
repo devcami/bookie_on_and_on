@@ -29,7 +29,7 @@ create table authority(
     constraint pk_authority primary key(member_id, auth),
     constraint fk_authority_member_id foreign key(member_id) references member(member_id) on delete cascade
 );
-
+select * from authority;
 -- 3. interest
 create table interest(
     member_id varchar2(200),
@@ -202,7 +202,9 @@ create table mission (
     constraint fk_mission_club_no foreign key(club_no) references club(club_no) on delete cascade,
     constraint pk_mission_no primary key(mission_no)
 );
-select * from mission;
+
+alter table mission add foreign key(m_item_id, club_no) references club_book(item_id, club_no) on delete cascade;
+
 create sequence seq_mission_no;
 
 -- 15. mission_status
@@ -234,6 +236,9 @@ create table my_club (
     club_no      number not null,
     member_id   varchar2(200) not null,
     deposit      number not null,
+    club_end date,
+    mission_cnt number,
+    club_status varchar2(2),
     constraint pk_my_club_no primary key (club_no, member_id),
     constraint fk_my_club_member_id foreign key(member_id) references member(member_id) on delete cascade
 );
@@ -1100,3 +1105,50 @@ select * from club;
 update club set club_end = sysdate - 3 where club_no = 50;
 update club set club_end = sysdate - 2 where club_no = 53;
 update club set club_end = sysdate - 1 where club_no = 59;
+
+select * from point_status;
+select * from my_club;
+select * from mission;
+select * from mission_status;
+select * from mission where club_no = 55;
+update mission_status set club_no = 45 where mission_no in (37, 38, 39, 40);
+commit;
+select count(*) from mission_status where club_no = 55 and member_id = 'tmddbs' and status = 'P';
+
+select * from point_status;
+
+delete from point_status where point_no = 22;
+update my_club set club_status = 'I' where club_no = 55 and member_id = 'tmddbs';
+commit;
+
+select * from chat_member;
+
+create table chat_member (
+    chatroom_id varchar2(50),
+    member_id varchar2(50),
+    last_check number default 0,
+    created_at date default sysdate,
+    deleted_at date,
+    constraint pk_chat_member primary key(chatroom_id, member_id)
+);
+alter table chat_member add club_no number;
+
+commit;
+
+create table chat_log (
+    no number,
+    chatroom_id varchar2(50),
+    member_id varchar2(50),
+    msg varchar2(4000),
+    time number,
+    constraint pk_chat_log_no primary key(no),
+    constraint fk_chat_log foreign key(chatroom_id, member_id) references chat_member(chatroom_id, member_id)
+);
+create sequence seq_chat_log_no;
+
+select * from chat_member;
+select * from chat_log;
+delete from chat_log where member_id = 'tmddbs';
+alter table chat_log add nickname varchar2(100);
+alter table chat_log add renamed_filename varchar2(256);
+commit;

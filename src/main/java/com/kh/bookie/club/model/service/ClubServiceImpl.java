@@ -357,11 +357,10 @@ public class ClubServiceImpl implements ClubService {
 			// 날짜 지났는데 미션 안되어있으면 (ms가 널인경우)
 			if(now.isAfter(missionList.get(i).getMendDate()) && ms == null) {
 				ms = new MissionStatus();
-//				log.debug("missionNo = {}", missionNo);
-//				log.debug("memberId = {}", memberId);
 				ms.setMissionNo(missionNo);
 				ms.setMemberId(memberId);
 				ms.setStatus("F");
+				ms.setClubNo(clubNo);
 				log.debug("두번째 ms = {}", ms);
 				int result = clubDao.insertFailMissionStatus(ms);
 			}

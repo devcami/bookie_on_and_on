@@ -220,7 +220,7 @@
 
 		<div id="bottom-menu">
 			<button type="button" onclick="frmSubmit();" id="btn-enroll" class="mybtn last-btn">등 록</button>
-			<button type="button" id="btn-cancel" class="mybtn last-btn">취 소</button>	    	
+			<button type="button" onclick="cancelAll();" id="btn-cancel" class="mybtn last-btn">취 소</button>	    	
 		</div>
 
 		<div id="additionalInfo">
@@ -431,12 +431,15 @@ const ckNop = () => {
 	const minimumNop = $('#minimumNop').val();
 	const maximumNop = $('#maximumNop').val();
 	
+	console.log('minimumNop ', minimumNop);
+	console.log('maximumNop ', maximumNop);
+	
 	if(minimumNop != '' && maximumNop != ''){
-		if(minimumNop >= maximumNop) {
-			$('#nopMsg').css('display', '');
+		if(minimumNop <= maximumNop) {
+			$('#nopMsg').css('display', 'none');			
 		}
 		else {
-			$('#nopMsg').css('display', 'none');			
+			$('#nopMsg').css('display', '');
 		}
 	}
 }
@@ -709,8 +712,8 @@ document.querySelector("#btn-more").onclick = () => {
                </div>
                `;
                container.insertAdjacentHTML('beforeend', div);
-               
                ckSelectedBook(isbn13, btnDivId);
+               
             });
             
          },
@@ -1232,6 +1235,12 @@ const deleteMission = (e) => {
 // 폼이 제출되기 전에!! 
 const frmSubmit = () => {
 	
+	
+	console.log(booksDiv);
+	console.log(selectedBooks);
+	
+	return;
+	
 	/**************유효성검사***************/
 	// 제목 입력했는지
 	if($('#title').val() == ''){
@@ -1331,6 +1340,18 @@ const frmSubmit = () => {
  	frm.action = `${pageContext.request.contextPath}/club/enrollClub.do`
 	frm.method = "POST";
 	frm.submit();
+	
+}
+
+
+const cancelAll = () => {
+	const yn = confirm("등록을 취소하시겠습니까?");
+	if(yn){
+		location.href = `${pageContext.request.contextPath}/club/clubList.do`;
+	}
+	else {
+		return;
+	}
 	
 }
 </script>
