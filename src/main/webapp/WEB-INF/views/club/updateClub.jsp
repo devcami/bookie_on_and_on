@@ -1,3 +1,7 @@
+<%@page import="java.util.Collections"%>
+<%@page import="java.util.Collection"%>
+<%@page import="java.util.HashMap"%>
+<%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -7,12 +11,17 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/enrollClub.css" />
 <jsp:include page="/WEB-INF/views/common/header.jsp">
-	<jsp:param value="북클럽 등록" name="title"/>
+	<jsp:param value="북클럽 수정" name="title"/>
 </jsp:include>
+<script>
+	let missionCnt = 0;
+	let cnt = 1;
+</script>
 <section id="content">
+${club}
+
 	<div id="top-menu">
-		<h1>북클럽 등록</h1>	
-		<!-- <button id="btn-enroll" class="mybtn">등 록</button> -->	  
+		<h1>북클럽 수정</h1>	 
 	</div>
 	<form:form name="clubEnrollFrm" >
 		<div id="intro-div" class="divs">
@@ -24,12 +33,13 @@
 		    	id="title"
 		    	name="title"
 		    	class="form-control col-form-label-sm basic-input"  
-		    	aria-describedby="emailHelp" placeholder="제목을 입력하세요.">
+		    	aria-describedby="emailHelp" placeholder="제목을 입력하세요."
+		    	value="${club.title}">
 		  </div>
 		  <div class="form-group">
 		  	<i class="fa-solid fa-pencil"></i>
 		    <label for="content">한 줄 설명</label>
-		    <textarea name="content" class="form-control" id="clubDesc" rows="2"></textarea>
+		    <textarea name="content" class="form-control" id="clubDesc" rows="2">${club.content}</textarea>
 		    <small id="emailHelp" class="form-text text-muted">북클럽에 대한 간단한 설명을 적어주세요!</small>
   		  </div>
 		</div>
@@ -42,11 +52,19 @@
 				</div>
 				<div class="row">
 					<div class="col">
-				      <input type="date" name="recruitStart" id="recruitStart" class="form-control col-form-label-sm basic-input" placeholder="First name">
+				      <input 
+				      	type="date" 
+				      	name="recruitStart" id="recruitStart" 
+				      	class="form-control col-form-label-sm basic-input"
+				      	value="${club.recruitStart}">
 				    </div>
 				    <span>~</span>
 				    <div class="col" >
-				      <input type="date" name="recruitEnd" id="recruitEnd" class="form-control col-form-label-sm basic-input" placeholder="Last name">
+				      <input 
+				      	type="date" 
+				      	name="recruitEnd" id="recruitEnd" 
+				      	class="form-control col-form-label-sm basic-input"
+				      	value="${club.recruitEnd}">
 				    </div>
 				</div>
 			 </div>
@@ -60,11 +78,19 @@
 				</div>
 				<div class="row">
 					<div class="col">
-				      <input type="date" name="clubStart" id="clubStart" class="form-control col-form-label-sm basic-input" >
+				      <input 
+				      	type="date" 
+				      	name="clubStart" id="clubStart" 
+				      	class="form-control col-form-label-sm basic-input" 
+				      	value="${club.clubStart}">
 				    </div>
 				    <span>~</span>
 				    <div class="col">
-				      <input type="date" name="clubEnd" id="clubEnd" class="form-control col-form-label-sm basic-input" >
+				      <input 
+				      	type="date" 
+				      	name="clubEnd" id="clubEnd" 
+				      	class="form-control col-form-label-sm basic-input" 
+				      	value="${club.clubEnd}">
 				    </div>
 				</div>
 			 </div>
@@ -88,7 +114,8 @@
 			      	name="minimumNop" 
 			      	id="minimumNop"
 			      	class="form-control col-form-label-sm basic-input" 
-			      	placeholder="최소 인원" dir="rtl">
+			      	placeholder="최소 인원" dir="rtl"
+			      	value="${club.minimumNop}">
 			   	  <span>명</span>
 			    </div>
 			 </div>
@@ -103,7 +130,8 @@
 			      	name="maximumNop" 
 			      	id="maximumNop" 
 			      	class="form-control col-form-label-sm basic-input" 
-			      	placeholder="최대 인원" dir="rtl">
+			      	placeholder="최대 인원" dir="rtl"
+			      	value="${club.maximumNop}">
 			      <span>명</span>
 			    </div>
 			 </div>
@@ -122,7 +150,8 @@
 			      	id="deposit" 
 			      	name="deposit"
 			      	class="form-control col-form-label-sm basic-input" 
-			      	placeholder="금액을 입력하세요" dir="rtl">
+			      	placeholder="금액을 입력하세요" dir="rtl"
+			      	value="${club.deposit}">
 			      <i class="fa-solid fa-won-sign"></i>
 			    </div>
 			 </div>
@@ -132,29 +161,29 @@
 					<label class="my-1" for="inlineFormCustomSelectPref">분야</label>				
 				</div>
 				<div class="col interest-col">
-				 	<input type="checkbox" name="interests" value="경제"/>
+				 	<input type="checkbox" name="interests" <c:if test="${fn:contains(club.interest, '경제')}">checked</c:if> value="경제"/>
 				 	<label for="경제">경제</label>	
-				 	<input type="checkbox" name="interests" value="공학"/>
+				 	<input type="checkbox" name="interests" <c:if test="${fn:contains(club.interest, '공학')}">checked</c:if> value="공학"/>
 				 	<label for="공학">공학</label>	
-				 	<input type="checkbox" name="interests" value="문학"/>
+				 	<input type="checkbox" name="interests" <c:if test="${fn:contains(club.interest, '문학')}">checked</c:if> value="문학"/>
 				 	<label for="문학">문학</label>	
-				 	<input type="checkbox" name="interests" value="자기계발"/>
+				 	<input type="checkbox" name="interests" <c:if test="${fn:contains(club.interest, '자기계발')}">checked</c:if> value="자기계발"/>
 				 	<label for="자기계발">자기계발</label>	
-				 	<input type="checkbox" name="interests" value="언어"/>
+				 	<input type="checkbox" name="interests" <c:if test="${fn:contains(club.interest, '언어')}">checked</c:if> value="언어"/>
 				 	<label for="언어">언어</label>	
-				 	<input type="checkbox" name="interests" value="취미"/>
+				 	<input type="checkbox" name="interests" <c:if test="${fn:contains(club.interest, '취미')}">checked</c:if> value="취미"/>
 				 	<label for="취미">취미</label>	
-				 	<input type="checkbox" name="interests" value="에세이"/>
+				 	<input type="checkbox" name="interests" <c:if test="${fn:contains(club.interest, '에세이')}">checked</c:if> value="에세이"/>
 				 	<label for="에세이">에세이</label>	
-				 	<input type="checkbox" name="interests" value="예술"/>
+				 	<input type="checkbox" name="interests" <c:if test="${fn:contains(club.interest, '예술')}">checked</c:if> value="예술"/>
 				 	<label for="예술">예술</label>	
-				 	<input type="checkbox" name="interests" value="교육"/>
+				 	<input type="checkbox" name="interests" <c:if test="${fn:contains(club.interest, '교육')}">checked</c:if> value="교육"/>
 				 	<label for="교육">교육</label>	
-				 	<input type="checkbox" name="interests" value="인문학"/>
+				 	<input type="checkbox" name="interests" <c:if test="${fn:contains(club.interest, '인문학')}">checked</c:if> value="인문학"/>
 				 	<label for="인문학">인문학</label>	
-				 	<input type="checkbox" name="interests" value="종교"/>
+				 	<input type="checkbox" name="interests" <c:if test="${fn:contains(club.interest, '종교')}">checked</c:if> value="종교"/>
 				 	<label for="종교">종교</label>	
-				 	<input type="checkbox" name="interests" value="기타"/>
+				 	<input type="checkbox" name="interests" <c:if test="${fn:contains(club.interest, '기타')}">checked</c:if> value="기타"/>
 				 	<label for="기타">기타</label>		
 				</div>
 			 </div>
@@ -165,11 +194,10 @@
 			<p id="books-p"><strong>읽는 책</strong></p>
 			<small id="books-small" class="form-text text-muted">등록 가능한 책은 최대 4권 입니다.</small>
 			<p id="bLabel" style="font-size: medium; margin-top: 10px !important;">📋 기본정보를 먼저 입력해주세요!</p>
-			
 			<div id="bookWrapper">
-			<!--
-			 	여기에 책이 하나씩 추가됨.
-			 -->
+			<!-- 
+				여기에 책이 하나씩 추가됨. 
+			-->
 			</div>
 			
 
@@ -184,27 +212,7 @@
 				<span style="display:none;" id="cPage">1</span>
 			</div>
 		</div>
-		
-<!-- 		<button 
-			type="button" 
-			id="btn-add-book"
-			class="btn gap-2 col-12"
-			onclick="addBookTest();"
-			data-container="body" 
-			data-toggle="popover" 
-			data-placement="top" 
-			data-content="📋 기본정보를 먼저 입력해주세요!">
-		  책 추가
-		</button>
- -->
-		
-<!-- 		<script>
-		
-		 $(function () {
-		    $( '[data-toggle="popover"]' ).popover()
-		  } );
-		
-		</script> -->
+
 		
 
 		<div id="mission-div" class="divs">
@@ -215,6 +223,61 @@
 			<!-- 
 				여기에 미션이 하나씩 추가됨
 			 -->	  
+			 <c:set var="cnt" value="1" />
+			 <c:set var="book" value="${club.bookList}"/>
+			 <%
+			 	List<HashMap<String, Object>> item = (List<HashMap<String, Object>>) pageContext.getAttribute("book");
+			 	System.out.println("여기 있다" + item);	
+			    Collections.reverse(item);
+			 	pageContext.setAttribute("books", item);
+			 %>
+			 
+			 
+			 <c:forEach items="${books}" var="book">
+			 		<div class="card" id="m${book.itemId}">
+					    <div class="card-header" id="head${book.itemId}">
+					      <h5 class="mb-0">
+					        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#col${book.itemId}" aria-expanded="false" aria-controls="col${book.itemId}">
+					          Book <i>&lt;${book.bookTitle}&gt;</i> 미션
+					        </button>
+					      </h5>
+					    </div>
+					    <div id="col${book.itemId}" class="collapse" aria-labelledby="head${book.itemId}" data-parent="#missionContainer" style="">
+					      <div class="card-body">
+					      	<table>
+					      		<tbody id="missionWrapper${book.itemId}">
+						      		<tr id="addMissionLabel">
+				      					<td colspan="4" style="margin-bottom: 17px;">🧡책에 대한 미션을 등록해주세요!</td>
+				      				</tr>	
+			 						<c:forEach items="${book.missionList}" var="mission" varStatus="vs">
+									<tr class="=&quot;head-tr&quot;" id="mission${cnt}">
+										<td><input class="missionInput" type="text" name="missionName" id="mName${cnt}" value="${mission.title}" readonly=""></td>
+										<td><input class="missionInput" type="text" name="missionDeposit" id="mDeposit${cnt}" value="${mission.point}원" readonly=""></td>
+										<td><input class="missionInput" type="text" name="missionDate" id="mEndDate${cnt}" value="~ ${mission.mendDate}" readonly=""></td>
+										<td value="${book.itemId}">
+											<button type="button" class="mybtn" onclick="editMission(this);" value="${cnt}">수정</button>
+											<button type="button" class="mybtn" onclick="deleteMission(this);" value="${cnt}">삭제</button>
+										</td>
+										<input type="hidden" name="missionContent" id="mContent${cnt}" value="${mission.content}">
+									</tr>
+									<c:if test="${vs.last}">
+										<script>
+											missionCnt = missionCnt + ${vs.count};
+											cnt = cnt + ${vs.count};
+										</script>
+									</c:if>
+									 <c:set var="cnt" value="${cnt + 1}" />
+									</c:forEach>
+								</tbody>
+					      	</table>
+						    <button type="button" value="${book.itemId}" id="plus${book.itemId}" class="btn gap-1 col-1 mission-btn" onclick="plusMission(this);" data-toggle="modal" data-target="#addMissionModal" data-whatever="@mdo">
+						    +
+						    </button>
+					      </div>
+					    </div>
+					  </div>
+			 </c:forEach>
+			 
 			</div>
 		</div>
 
@@ -224,7 +287,8 @@
 		</div>
 
 		<div id="additionalInfo">
-			<input type="hidden" name="finalDeposit" id="finalDeposit" />			
+			<input type="hidden" name="clubNo" id="clubNo" value="${club.clubNo}" />			
+			<input type="hidden" name="delBook" id="" />						
 		</div>
 
 		
@@ -345,13 +409,116 @@
 		<input type="hidden" />
 		<!-- <input type="hidden" name="currentBook" value="" /> -->
 	</form> --%>
-	
 
+
+
+
+
+
+<script>
+	const selectedBooks = new Array();
+	const booksDiv = new Object();
+</script>
+	
+<c:forEach items="${club.bookList}" var="book">
+	<script>
+		selectedBooks.push("${book.itemId}");
+		const arr${book.itemId} = new Object();
+	</script>
+	
+	<c:forEach items="${book.missionList}" var="mission">
+		${mission}
+	</c:forEach>
+	
+</c:forEach>
 
 <script>
 
 window.onload = function(){
-	document.getElementById('recruitStart').value = new Date().toISOString().substring(0, 10);
+	
+	const container = document.querySelector('#bookWrapper');
+	const missionContainer = document.getElementById('missionContainer');
+	const addBookModalContainer = document.querySelector("#modal-header-bottom");
+	
+	console.log('미션cnt ', missionCnt);
+	console.log('cnt ', cnt);
+	
+	selectedBooks.forEach((item, index) => {
+		
+		const missionArr = "arr" + item;
+		
+		console.log(missionArr);
+		
+		let itemId = selectedBooks[index];
+		
+	 	$.ajax({
+	 		url : '${pageContext.request.contextPath}/club/selectBook.do',
+			data : {
+				ttbkey : 'ttbiaj96820130001', // 우리 접속 키
+				itemIdType : 'ISBN13', 
+				ItemId : itemId,
+				output : 'js', // json형태로 받을게,
+				Cover : 'mini',
+				Version : '20131101' // 2013년 버전으로 줘라
+			},
+			success(resp){
+				const {item} = resp;
+				console.log(item[0]);
+				const book = item[0];
+				
+				const div = `
+						<div class="book-container" id="book\${itemId}">
+			              <div class="book-table">
+		                    <input type="hidden" name="isbn13" value="\${itemId}">
+		                    <input type="hidden" name="bookImg" value="\${book.cover}">
+		                    <table class="tbl">
+		                       <tbody><tr>
+		                          <td rowspan="4">
+		                             <img src="\${book.cover}" style="width:65px;">
+		                          </td>
+		                          <td colspan="5" class="book-title">\${book.title}</td>
+		                       </tr>
+		                       <tr>
+		                          <td class="book-author">\${book.author}</td>
+		                       </tr>
+		                       <tr>
+		                          <td colspan="2" class="book-p">출판사 : \${book.publisher} 🧡 출판일 : \${book.pubDate}</td>
+		                       </tr>
+		                    </tbody></table>
+		                 </div>
+		                 <div>
+	                     	<button type="button" class="btn deleteBook-btn" onclick="deleteBook(this);" value="\${itemId}">삭제</button>
+	                    </div>
+					  </div>`;
+					 
+				// 읽는 책 부분에 추가
+				container.insertAdjacentHTML('beforeend', div);
+				
+				// booksDiv에도 추가
+				booksDiv[itemId] = document.getElementById(`book\${itemId}`);
+				
+				// 책 추가 모달 작은 이미지 추가
+				
+				console.log(addBookModalContainer);
+				const imgSrc = book.cover;
+				const smallImgId = "smallImg" + itemId; 
+				
+ 				const smallBookDiv = `
+					<div class="img-btn" id=\${smallImgId}>
+				      <img src=\${imgSrc} style="width:65px;">
+				      <button type="button" class="close x-btn" value=\${itemId} onclick = "modalDeleteBook(this);" >
+				      	 <span aria-hidden="true">&times;</span>
+				      </button>				      
+			    	</div>
+				`;
+				
+				addBookModalContainer.insertAdjacentHTML('beforeend', smallBookDiv); 
+				
+				
+			},
+			error : console.log
+		}); 
+	});
 }
 
 /************** 기본정보 유효성검사 ************/
@@ -431,15 +598,12 @@ const ckNop = () => {
 	const minimumNop = $('#minimumNop').val();
 	const maximumNop = $('#maximumNop').val();
 	
-	console.log('minimumNop ', minimumNop);
-	console.log('maximumNop ', maximumNop);
-	
 	if(minimumNop != '' && maximumNop != ''){
-		if(minimumNop <= maximumNop) {
-			$('#nopMsg').css('display', 'none');			
+		if(minimumNop >= maximumNop) {
+			$('#nopMsg').css('display', '');
 		}
 		else {
-			$('#nopMsg').css('display', '');
+			$('#nopMsg').css('display', 'none');			
 		}
 	}
 }
@@ -533,6 +697,15 @@ const addBookTest = () => {
 			getPage(1, maxResult);
 		 	setTimeout(() => window.scrollTo(0, 0), 1000)
 		}
+		
+		
+/* 		selectedBooks.forEach((itemId) => {
+			const btnDiv = `
+				<div id="btnDiv\${itemId}">
+	                <button type="button" class="mybtn btn-plus noclick" onclick="modalAddBook(this);" value="\${itemId}">+</button>
+	                <input type="hidden" name="img" value="https://image.aladin.co.kr/product/29857/0/covermini/895469991x_1.jpg">
+	             </div>`;
+		}); */
 	} 
 	
 	$('#addBookModal').on('shown.bs.modal', function (e) {
@@ -712,7 +885,10 @@ document.querySelector("#btn-more").onclick = () => {
                </div>
                `;
                container.insertAdjacentHTML('beforeend', div);
+               ckUnSelected(isbn13);
                ckSelectedBook(isbn13, btnDivId);
+               
+               
                
             });
             
@@ -725,8 +901,7 @@ document.querySelector("#btn-more").onclick = () => {
 
 /******************************************************************************/
 
-const selectedBooks = [];  
-const booksDiv = new Object();
+
 
 const modalAddBook = (e) => {
 // 	console.log("선택된 책 isbn", e.value);
@@ -779,6 +954,18 @@ const delBook = (isbn) => {
 	delete booksDiv[isbn];
 }
 
+const ckUnSelected = (isbn) => {
+	
+	const btnId = "btnDiv" + isbn;
+	const div = document.getElementById(btnId);
+	
+	if(div != null) {
+		div.firstElementChild.classList.remove('noclick');
+		div.firstElementChild.disabled = '';		
+	};
+
+}
+
 const modalDeleteBook = (e) => {
 	
 //	console.log("삭제전",booksDiv);
@@ -788,10 +975,7 @@ const modalDeleteBook = (e) => {
 	const container = document.querySelector("#modal-header-bottom");
 	container.removeChild(e.parentElement);
 
-	const btnId = "btnDiv" + isbn;
-	const div = document.getElementById(btnId);
-	div.firstElementChild.classList.remove('noclick');
-	div.firstElementChild.disabled = '';
+	ckUnSelected(isbn);
 	
 	
 	const divId = "#book" + isbn;
@@ -880,7 +1064,7 @@ const showAddBookBtn = () => {
 }
 
 
- 
+
 const enrollBook = () => {
 	
 	if(selectedBooks.length == 4){
@@ -983,6 +1167,17 @@ const deleteBook = (e) => {
 		showAddBookBtn();
 	}
 	
+	// mCount 빼
+	console.log("원래 ", missionCnt);
+	const mId = '#missionWrapper' + isbn;
+	const missionWrapper = document.querySelector(mId);
+	console.log(missionWrapper);
+	const mNo = missionWrapper.childElementCount - 2; 
+	console.log("삭제한 책 미션 수 ", mNo);
+	missionCnt = missionCnt - mNo;
+	
+	console.log("삭제후 ", missionCnt);
+	
 	// 미션 삭제
 	$(`#m\${isbn}`).remove();
 	
@@ -991,7 +1186,6 @@ const deleteBook = (e) => {
 	if(missionContainer.childElementCount == 0){
 		document.querySelector('#mLabel').style.display = '';
 	}
-	
 	
 }
 
@@ -1076,10 +1270,6 @@ const hideMissionModal = () => {
    	}
    	
 }
-
-
-let cnt = 1;
-let missionCnt = 0;
 
 // 미션 모달에서 등록 버튼 누르면 
 const enrollMission = () => {
@@ -1235,12 +1425,6 @@ const deleteMission = (e) => {
 // 폼이 제출되기 전에!! 
 const frmSubmit = () => {
 	
-	
-	console.log(booksDiv);
-	console.log(selectedBooks);
-	
-	return;
-	
 	/**************유효성검사***************/
 	// 제목 입력했는지
 	if($('#title').val() == ''){
@@ -1310,13 +1494,16 @@ const frmSubmit = () => {
 	const additionalInfo = document.querySelector('#additionalInfo');
 	
 	selectedBooks.forEach((isbn) => {
-		const tbodyId = "missionWrapper" + isbn;
-		const mCnt = document.getElementById(tbodyId).childElementCount - 1;
+		const tbodyId = "#missionWrapper" + isbn;
+		const mCnt = $(tbodyId).children('tr').length - 1; 
+		console.log('mCnt = ', mCnt);
 		const mInput = `
 			<input type="hidden" name="mCount" value="\${mCnt}" />
 		`;
+		
 		additionalInfo.insertAdjacentHTML('beforeend', mInput);
 	});
+
 
 	const divs = Object.values(booksDiv);
 	divs.forEach((div) => {
@@ -1330,30 +1517,32 @@ const frmSubmit = () => {
 		additionalInfo.insertAdjacentHTML('beforeend', nameInput);
 		
 	});
-	
+
 	
 	// 따옴표 검사해서 바꿔치기해
 	$('#title').val().replace(/\"/g, '&quot;');
 	$('#clubDesc').val().replace(/\"/g, '&quot;');
 	
 	
- 	frm.action = `${pageContext.request.contextPath}/club/enrollClub.do`
+ 	frm.action = `${pageContext.request.contextPath}/club/updateClub.do`;
 	frm.method = "POST";
 	frm.submit();
 	
 }
 
 
+
 const cancelAll = () => {
-	const yn = confirm("등록을 취소하시겠습니까?");
+	const yn = confirm("수정을 취소하시겠습니까?");
 	if(yn){
-		location.href = `${pageContext.request.contextPath}/club/clubList.do`;
+		location.href = `${pageContext.request.contextPath}/club/clubAnn.do?clubNo=${club.clubNo}`;
 	}
 	else {
 		return;
 	}
 	
 }
+
 </script>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

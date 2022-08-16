@@ -12,6 +12,16 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param value="미션 승인 페이지" name="title"/>
 </jsp:include>
+      <div class="row">
+        <div class="col-12">
+          <div class="row col-12 btn-group">
+			<a href="${pageContext.request.contextPath}/admin/reportList.do" class="btn red"    id="report" >신고</a>
+			<a href="${pageContext.request.contextPath}/admin/qnaList.do" class="btn purple" id="question">Q & A</a>
+			<a href="${pageContext.request.contextPath}/admin/sendAlarm.do" class="btn green"  id="alarm">알림전송</a>
+			<a href="${pageContext.request.contextPath}/admin/missionCheck.do" class="btn blue"  id="mission">미션확인</a>
+	     </div>
+        </div>
+      </div>
 <section id="content">
 	<div id="head">
 		<h3>승인 대기중인 미션</h3>

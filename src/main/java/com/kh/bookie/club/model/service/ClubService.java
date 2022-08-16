@@ -86,5 +86,7 @@ public interface ClubService {
 
 	Club getClubDetailInfo(int clubNo);
 
+	int deleteClub(int clubNo);
+
 
 }

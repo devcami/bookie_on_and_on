@@ -1,10 +1,14 @@
 package com.kh.bookie.ws;
 
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 
+import com.kh.bookie.chat.model.service.ChatService;
 import com.kh.bookie.ws.payload.Payload;
 
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +17,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class StompController {
 
+	@Autowired
+	ChatService chatService;
 	
 	/**
 	 * 사용자가 /app/def로 메세지를 전송한 경우
@@ -48,6 +54,19 @@ public class StompController {
 	public Payload adminNotice(Payload payload, @DestinationVariable String memberId) {
 		log.debug("memberId = {}", memberId);
 		log.debug("payload = {}", payload);
+		return payload;
+	}
+	
+	
+	// @MessageMapping은 /app을 떼고, @SendTo는 /app을 붙여서.
+	@MessageMapping("/chat/{chatroomId}")
+	@SendTo({"/app/chat/{chatroomId}"})
+	public Map<String, Object> chat(Map<String, Object> payload, @DestinationVariable String chatroomId) {
+		
+		log.debug("payload = {}", payload);
+		
+		int result = chatService.insertChatLog(payload);
+		
 		return payload;
 	}
 	

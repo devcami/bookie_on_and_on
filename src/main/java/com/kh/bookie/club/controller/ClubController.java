@@ -62,7 +62,7 @@ public class ClubController {
 	
 	@GetMapping("/clubList.do")
 	public ModelAndView clubList(
-			@RequestParam(defaultValue = "1") int cPage,
+			@RequestParam(required = false, defaultValue = "1") int cPage,
 			@RequestParam(required = false) String sortType,
 			ModelAndView mav,
 			HttpServletRequest request,
@@ -518,6 +518,8 @@ public class ClubController {
 			@RequestParam int clubNo,
 			@RequestParam int deposit,
 			@RequestParam int myPoint,
+			@RequestParam String clubEnd,
+			@RequestParam List<Integer> totalMission,
 			RedirectAttributes redirectAttr
 			) {
 		
@@ -528,7 +530,16 @@ public class ClubController {
 			map.put("clubNo", clubNo);
 			map.put("deposit", deposit);
 			map.put("myPoint", myPoint);
+			
+			LocalDate clubEndDate = LocalDate.parse(clubEnd, DateTimeFormatter.ISO_DATE);
+			map.put("clubEnd", clubEndDate);
+			
+			int missionCnt = 0;
+			for(int i = 0; i < totalMission.size(); i++) {
+				missionCnt += totalMission.get(i);
+			}
 
+			map.put("missionCnt", missionCnt);
 			int result = clubService.joinClub(map);
 			
 			redirectAttr.addFlashAttribute("msg", "북클럽에 신청되었습니다!");
@@ -951,12 +962,8 @@ public class ClubController {
 		
 		try {
 			
-//			log.debug("미션갈때 clubNo = {}", clubNo);
-//			log.debug("미션갈때 memberId = {}", memberId);
-			
-			
 			List<Mission> missions = clubService.getMissionsForOneMember(clubNo, memberId);
-			
+
 			mav.addObject("missions", missions);
 			mav.addObject("clubNo", clubNo);
 			mav.addObject("memberId", memberId);
@@ -981,6 +988,7 @@ public class ClubController {
 									@RequestParam String itemIdType,
 									@RequestParam String ItemId,
 									@RequestParam String output,
+									@RequestParam(required = false) String Cover,
 									@RequestParam String Version) {
 		log.debug("오긴해?");
 		String url = ALADDIN_URL + "ItemLookUp.aspx?ttbkey=" + ttbkey
@@ -1020,6 +1028,7 @@ public class ClubController {
 			ms.setMissionNo(missionNo);
 			ms.setAnswer(answer);			
 			ms.setStatus("I");
+			ms.setClubNo(clubNo);
 			
 			if(type.equals("update")) {
 				MissionStatus tempMs = clubService.selectOneMissionStatus(ms);
@@ -1070,6 +1079,163 @@ public class ClubController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		
+	}
+	
+	@PostMapping("/deleteClub.do")
+	public String deleteClub(
+			RedirectAttributes redirectAttr,
+			@RequestParam int clubNo
+			) {
+		
+		try {
+			
+			log.debug("clubNo = {}", clubNo);
+			int result = clubService.deleteClub(clubNo);
+			redirectAttr.addFlashAttribute("msg", "북클럽이 삭제되었습니다!");
+			
+		} catch(Exception e) {
+			log.error("북클럽 삭제 오류!", e);
+			throw e;
+		}
+		return "redirect:/club/clubList.do";
+	}
+	
+	@GetMapping("/updateClub.do/{clubNo}")
+	public ModelAndView updateClub(
+			ModelAndView mav,
+			@PathVariable int clubNo
+			) {
+		
+		try {
+			
+			log.debug("club = {}", clubNo);
+			
+			Map<String, Object> param = new HashMap<>();
+			param.put("clubNo", clubNo);
+			
+			Club club = clubService.selectOneClub(param);
+			mav.addObject("club", club);
+			mav.setViewName("club/updateClub");
+			
+		} catch(Exception e) {
+			log.error("북클럽 삭제 오류!", e);
+			throw e;
+		}
+		return mav;
+	}
+	
+	@PostMapping("/updateClub.do")
+	public String updateClub(
+			RedirectAttributes redirectAttr, 
+			Club club, 
+			@RequestParam List<String> isbn13,
+			@RequestParam List<String> bookImg, 
+			@RequestParam(required = false) List<String> interests,
+			@RequestParam(required = false) List<String> missionName,
+			@RequestParam(required = false) List<String> missionDate,
+			@RequestParam(required = false) List<String> missionContent,
+			@RequestParam(required = false) List<String> mCount,
+			@RequestParam List<String> bookName) {
+
+		List<ClubBook> bookList = new ArrayList<>();
+		List<Mission> missionList = new ArrayList<>();
+
+		try {
+
+			log.debug("club = {}", club);
+			log.debug("isbn13 = {}", isbn13);
+			log.debug("bookImg = {}", bookImg);
+			log.debug("missionName = {}", missionName);
+			log.debug("missionDate = {}", missionDate);
+			log.debug("missionContent = {}", missionContent);
+			log.debug("mCount = {}", mCount);
+			log.debug("bookName = {}", bookName);
+
+			log.debug("interests = {}", interests);
+			String interest = "";
+
+			for(int m = 0; m < interests.size(); m++) {
+				interest += interests.get(m);
+				interest += ",";
+			}
+			interest = interest.substring(0, interest.length()-1);
+			club.setInterest(interest);
+			club.setBookCount(isbn13.size());
+			
+			
+			int totalMissionCnt = 0;
+			
+			if(!mCount.isEmpty()) {
+				String missionCnt = "";			
+				for(int n = 0; n < mCount.size(); n++) {
+					missionCnt += mCount.get(n);
+					missionCnt += ",";
+					
+					totalMissionCnt = totalMissionCnt + Integer.parseInt(mCount.get(n));
+					
+				}				
+				missionCnt = missionCnt.substring(0, missionCnt.length()-1);
+				club.setMissionCnt(missionCnt);
+			}
+			
+			log.debug("totalMissionCnt = {}", totalMissionCnt);
+			// 디파짓 계산
+			int deposit = club.getDeposit()  / totalMissionCnt;
+			
+
+			
+			for (int i = 0; i < isbn13.size(); i++) {
+				ClubBook book = new ClubBook();
+				book.setItemId(isbn13.get(i));
+				book.setImgSrc(bookImg.get(i));
+				book.setBookTitle(bookName.get(i));
+
+				bookList.add(book);
+				
+				
+				if(mCount.size() != 0) {
+					int mCnt = Integer.parseInt(mCount.get(i));
+					
+					for(int j = 0; j < mCnt; j++) { 
+						
+						Mission mission = new Mission(); 
+						
+						mission.setItemId(isbn13.get(i));
+						mission.setContent(missionContent.get(j)); 
+						mission.setPoint(deposit);
+						mission.setTitle(missionName.get(j));
+						mission.setMendDate(LocalDate.parse(missionDate.get(j).substring(2), DateTimeFormatter.ISO_DATE));
+						
+						missionList.add(mission);
+					}
+					
+					for(int k = mCnt-1; k >= 0 ; k--) {
+						missionContent.remove(k);
+						missionName.remove(k);
+						missionDate.remove(k);
+					}
+					
+				}
+				 
+
+			}
+			
+			club.setBookList(bookList);
+			club.setMissionList(missionList);
+			
+			log.debug("club = {}", club);
+			
+//			int result = clubService.updateClub(club);
+			redirectAttr.addAttribute("clubNo", club.getClubNo());
+			redirectAttr.addFlashAttribute("msg", "북클럽이 수정되었습니다!");
+
+		} catch (Exception e) {
+			log.error("북클럽 수정 오류!!", e);
+			redirectAttr.addFlashAttribute("msg", "북클럽 수정에 실패했습니다!");
+			throw e;
+		}
+
+		return "redirect:/club/clubAnn.do?clubNo=" + club.getClubNo();
 	}
 	
 }

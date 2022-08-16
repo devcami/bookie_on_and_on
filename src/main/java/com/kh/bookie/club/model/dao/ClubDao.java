@@ -74,7 +74,7 @@ public interface ClubDao {
 	@Select("select count(*) from my_club where club_no = #{clubNo} and member_id = #{memberId}")
 	int checkClubJoined(Map<String, Object> param);
 
-	@Insert("insert into my_club values(#{clubNo}, #{memberId}, #{deposit})")
+	@Insert("insert into my_club values(#{clubNo}, #{memberId}, #{deposit}, #{clubEnd}, #{missionCnt}, 'I')")
 	int joinClub(Map<String, Object> map);
 
 	@Update("update member set point = #{restPoint} where member_id = #{memberId}")
@@ -137,7 +137,7 @@ public interface ClubDao {
 	@Update("update mission_status set status = #{status}, answer = #{answer}, renamed_filename = #{renamedFilename}, original_filename = #{originalFilename}, updated_at = sysdate where mission_no = #{missionNo} and member_id = #{memberId}")
 	int missionStatusUpdate(MissionStatus ms);
 
-	@Insert("insert into mission_status values(#{missionNo}, #{memberId}, #{status}, #{answer}, #{renamedFilename}, #{originalFilename}, sysdate)")
+	@Insert("insert into mission_status values(#{missionNo}, #{memberId}, #{status}, #{answer}, #{renamedFilename}, #{originalFilename}, sysdate, #{clubNo})")
 	int missionStatusInsert(MissionStatus ms);
 
 	@Select("select * from mission_status where mission_no = #{missionNo} and member_id = #{memberId}")
@@ -156,6 +156,12 @@ public interface ClubDao {
 
 	@Select("select m.member_id, m.nickname, m.renamed_filename from my_club mc left join member m on mc.member_id = m.member_id where mc.club_no = #{clubNo}")
 	List<Member> getClubMemberList(int clubNo);
+
+	@Insert("insert into mission_status values(#{missionNo}, #{memberId}, #{status}, null, null, null, sysdate, #{clubNo})")
+	int insertFailMissionStatus(MissionStatus ms);
+
+	@Delete("delete from club where club_no = #{clubNo}")
+	int deleteClub(int clubNo);
 
 	
 

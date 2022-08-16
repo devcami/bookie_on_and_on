@@ -26,6 +26,7 @@ public class MissionStatus {
 	private LocalDateTime updatedAt;
 	
 	private Mission mission;
+	private int clubNo;
 	
 	
 }

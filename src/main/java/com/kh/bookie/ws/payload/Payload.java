@@ -14,4 +14,7 @@ public class Payload {
 	private String msg;
 	private long time;
 	private Type type;
+	
+	private String nickname;
+	private String profiles;
 }
