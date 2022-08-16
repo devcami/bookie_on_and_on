@@ -9,6 +9,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/mypage.css"/>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/main.css" />
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/clubAnn.css" />
 <script src='${pageContext.request.contextPath}/resources/js/main.js'></script>
 <%
 	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -16,6 +17,12 @@
 	System.out.println(loginMember.getNickname());
 	String nickname = loginMember.getNickname();
 %>
+<style>
+#myPick-book-div{
+	border-bottom: 1px dashed grey;
+    padding-bottom: 35px;
+}
+</style>
 <script>
 /* 달력출력 스크립트 */
 document.addEventListener('DOMContentLoaded', function() {
@@ -112,10 +119,6 @@ document.addEventListener('DOMContentLoaded', function() {
 		<img src="${pageContext.request.contextPath}/resources/images/icon/point-icon.png" alt="포인트"/ style="width: 70px; height : 80px;">
 		<span>일단 여기쓰세요 포인!!!!!!트</span>
     </a>
-    <a class="record" href="${pageContext.request.contextPath}/member/emailCertified.do" style="color:black">
-		<img src="${pageContext.request.contextPath}/resources/images/icon/point-icon.png" alt="포인트"/ style="width: 70px; height : 80px;">
-		<span>인증테스트</span>
-    </a>
 </div>
 
 
@@ -125,7 +128,8 @@ document.addEventListener('DOMContentLoaded', function() {
 <div class="start-mypage" style="white-space: nowrap; padding: 10 20 10 20;">
 <h1>읽고 있는 책</h1>
 </div>
-데이터 가져와서 쏴
+<div id="book-div" style="border: none; padding-bottom: 0px;">
+</div>
 
 <hr class="bar" style="border: solid 10px #f6f5f5; margin-top: 3rem;">
 
@@ -133,7 +137,8 @@ document.addEventListener('DOMContentLoaded', function() {
 <div class="start-mypage" style="white-space: nowrap; padding: 10 20 10 20;">
 <h1>마이픽</h1>
 </div>
-있으면 보여주고 없으면 공란으로 분기처리
+<div id="myPick-book-div" style="border: none; padding-bottom: 0px;">
+</div>
 
 <hr class="bar" style="border: solid 10px #f6f5f5; margin-top: 3rem;">
 
@@ -165,24 +170,88 @@ document.querySelector(".profile-settings-btn").addEventListener("click", (e) =>
 
 /* 마이페이지 로딩시 내 책 정보 뿌려주기 */
 window.onload = function(){
-	/* 읽고 있는 책 찾아 뿌리기 */
+	const container = document.querySelector("#book-div");
+	const myPickContainer = document.querySelector("#myPick-book-div");
+	var itemId = [];
+	var myPickItemId = [];
+	/* 읽는 중인 itemId를 찾아오기 */
 	$.ajax({
-		url: `${pageContext.request.contextPath}/mypage/myReadingBook.do`,
+		url: `${pageContext.request.contextPath}/mypage/getItemId.do`,
 		method : "get",
 		success(data){
-			console.log(data);
- 		},
+			itemId = data;
+			console.log(itemId);
+			/* 읽고 있는 책 찾아 뿌리기 */
+			itemId.forEach((value, index, array)=>{
+				$.ajax({
+					url: `${pageContext.request.contextPath}/mypage/myReadingBook.do`,
+					data: {
+						itemId : value
+					},
+					method : "get",
+					success(data){
+						const {item} = data;
+						console.log(item);
+						console.log(item.length);
+						item.forEach((book)=>{
+							const {isbn13, title, author, publisher, pubDate, cover} = book;
+							console.log(isbn13,cover);
+							const div = `
+										<div id="book-imgs" class="d-inline">
+											<img src=\${cover}  value=\${isbn13} onclick="bookEnroll(this);">
+										</div>`;
+							container.insertAdjacentHTML('beforeend', div);
+						})
+			 		},
+					error : console.log
+				});	
+ 			});
+		},
 		error : console.log
 	});
-	/* 마이픽 뿌려주기 */
+			
+	/* 마이픽 itemId 가져오기 */
 	$.ajax({
-		url: `${pageContext.request.contextPath}/mypage/myPickBook.do`,
-		method : "get",
+		url: '${pageContext.request.contextPath}/mypage/getmyPickItemId.do',
+		method: 'get',
 		success(data){
 			console.log(data);
- 		},
+			myPickItemId = data;
+			console.log("myPickItemId : " + myPickItemId);
+			myPickItemId.forEach ((value, index, array) =>{
+				/* 마이픽 뿌려주기 */
+				$.ajax({
+					url: `${pageContext.request.contextPath}/mypage/myPickBook.do`,
+					method : "get",
+					data : {
+						itemId : value
+					},
+					success(data){
+						const {item} = data;
+						console.log(item);
+						console.log(item.length);
+						item.forEach((book)=>{
+							const {isbn13, title, author, publisher, pubDate, cover} = book;
+							console.log(isbn13,cover);
+							const div = `
+										<div id="book-imgs" class="d-inline">
+											<img src=\${cover}  value=\${isbn13} onclick="bookEnroll(this);">
+										</div>`;
+							myPickContainer.insertAdjacentHTML('beforeend', div);
+						})
+			 		},
+					error : console.log
+				});
+			});
+		},
 		error : console.log
 	});
+	
+};
+
+const bookEnroll = (e) => {
+	const isbn13 = $(e).attr('value');
+	location.href = "${pageContext.request.contextPath}/search/bookEnroll.do?isbn13=" + isbn13;
 };
 
 </script>

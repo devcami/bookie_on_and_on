@@ -6,13 +6,15 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/myBook.css" />
+<sec:authentication property="principal" var="loginMember" scope="page"/>
+<fmt:requestEncoding value="utf-8"></fmt:requestEncoding>
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param value="책검색" name="title"/>
 </jsp:include>
+
 <section id="content">
-	<div id="book-container">
+	<div id="book-status-container">
 		<div class="book-eval">
-			
 			<div class="btn-group" role="group" aria-label="Basic radio toggle button group">
 			  <input type="radio" class="btn-check" name="status" id="btnradio1" value="읽고 싶은" autocomplete="off" onclick="getItemId(event)">
 			  <label class="btn btn-outline-primary btn-status" for="btnradio1">읽고 싶은</label>
@@ -28,15 +30,14 @@
 			  
 			  <input type="radio" class="btn-check" name="status" id="btnradio5" value="중단" autocomplete="off" onclick="getItemId(event)">
 			  <label class="btn btn-outline-primary btn-status" for="btnradio5">중단</label>
+
+			  <input type="radio" class="btn-check" name="status" id="btnradio6" value="전체" autocomplete="off" onclick="getAll(event)">
+			  <label class="btn btn-outline-primary btn-status" for="btnradio6">전체</label>
 			</div>
 		</div>
 	</div>
-	<div class="" id="book-container">
+	<div id="book-container">
 		<p id="resultP"></p>
-	</div>
-	<div id='btn-more-container'>
-		<button id="btn-more" class="btn gap-2 col-12" type="button">더보기</button>
-		<span style="display:none;" id="cPage">1</span>
 	</div>
 </section>
 <script>
@@ -73,7 +74,6 @@ window.addEventListener('load', () => {
 	const intY = getCookie("intY");
 	const cPageVal = getCookie("cPageVal");
 	// console.log(intY, cPageVal);
-	document.querySelector("#cPage").innerText = cPageVal; 
 	if(cPageVal > 1){
 		maxResult = cPageVal * maxResult;
 	}
@@ -93,109 +93,141 @@ window.addEventListener('load', () => {
 });
 
 window.addEventListener('scroll', (e) => {
-	const nowPage = document.querySelector("#cPage").innerText;
 	let intY = window.scrollY;	
 	setCookie("intY", intY, "1");
 	//console.log(nowPage);
-	setCookie("cPageVal", nowPage, "1");
+	// setCookie("cPageVal", nowPage, "1");
 });
 
-document.querySelector("#btn-more").onclick = () => {
-	let c = Number(document.querySelector("#cPage").innerText);
-	document.querySelector("#cPage").innerText = c + 1;
-	maxResult = 20;
-	getPage(c + 1, maxResult);
-};
+function reload(){
+	location.reload();
+}
 
 function getItemId(event) {	
 	const status = event.target.value;
+	const container = document.querySelector("#book-container");
+	container.innerHTML = null;
+	container.innerHTML = `<p id="resultP"></p>`;
+	document.querySelector("#resultP").innerText = '${loginMember.nickname}' + ' 님의 책목록입니다.';
+	var itemId = [];
 	console.log(status);
 	
-	/* itemId찾아오기 */
+	/* Ststus에 맞는 itemId찾아오기 */
 	$.ajax({
-		url: `${pageContext.request.contextPath}/mypage/getItemId.do`,
+		url: '${pageContext.request.contextPath}/mypage/getItemIdByStatus.do',
 		method : "get",
 		data : {status :status},
 		success(data){
 			console.log(data);
-			console.log(typeof data);
-			console.log(data.length);
-			
- 		},
-		error : console.log
-	});
-};
-
-const getPage = (cPage, maxResult) => {
-	console.log(cPage, maxResult);
-	// const searchApi = 'https://cors-anywhere.herokuapp.com/';
-	const container = document.querySelector("#book-container");
-	
-	
-	let book = {
-			ttbkey : 'ttbiaj96820130001',
-			QueryType : 'Bestseller',
-			SearchTarget: 'Book',
-			Start : cPage,
-			MaxResults : maxResult,
-			Output : 'js',
-			Cover : 'mini',
-			Version : '20131101',
-			Query : ''
-	};
-	if('${param.searchType}' == ''){
-		//url = '{pageContext.request.contextPath}/search/selectBookList.do' 
-		//"http://www.aladin.co.kr/ttb/api/ItemList.aspx";
-		document.querySelector("#resultP").innerText = "베스트 도서 200선";
-	} else{
-		//url = '{pageContext.request.contextPath}/search/selectBookByKeyword.do' 
-		//"http://www.aladin.co.kr/ttb/api/ItemSearch.aspx";
-		book.QueryType = '${param.searchType}';
-		document.querySelector("#resultP").innerText = "검색 결과";
-	}
-	if('${param.searchKeyword}' != ''){
-		book.Query = '${param.searchKeyword}';
-	}
-	console.log(JSON.stringify(book));
-	$.ajax({
-		url : `${pageContext.request.contextPath}/search/selectBookList.do`,
-		data : book,
-		contentType : "application/json; charset=utf-8",
-		success(resp){
-			//console.log(resp);
-			const {item} = resp;
+			itemId = data;
 			const divNon = `
 				<div>
 					<p style="text-align:center"> 검색된 결과가 없습니다. </p>
 				</div>`
-			if(item.length == 0){
+			if(itemId.length == 0){
 				container.insertAdjacentHTML('beforeend', divNon);
-				const btn = document.querySelector("#btn-more")
-				btn.disabled = "disabled";
-				btn.style.cursor = "not-allowed";
-			} 
-			item.forEach((book) => {
-				const {isbn13, title, author, publisher, pubDate, cover} = book;
-				const div = `
-					<div class="book-table" onclick="bookEnroll(this);">
-						<input type="hidden" name="isbn13" value=\${isbn13} />
-						<table class="tbl">
-							<tr>
-								<td rowspan="4">
-									<img src=\${cover} style="width:65px;" />
-								</td>
-								<td colspan="5" class="book-title">\${title}</td>
-							</tr>
-							<tr>
-								<td class="book-author">\${author}</td>
-							</tr>
-							<tr>
-								<td colspan="2" class="book-p">출판사 : \${publisher} 🧡 출판일 : \${pubDate}</td>
-							</tr>
-						</table>
-					</div>`;
-				container.insertAdjacentHTML('beforeend', div);
-			});
+			}
+			/* 읽고 있는 책 찾아 뿌리기 */
+			itemId.forEach((value, index, array)=>{
+				$.ajax({
+					url: `${pageContext.request.contextPath}/mypage/statusBook.do`,
+					data: {
+						itemId : value
+					},
+					method : "get",
+					success(data){
+						const {item} = data;
+						item.forEach((book) => {
+							const {isbn13, title, author, publisher, pubDate, cover} = book;
+							console.log(isbn13, title, author, publisher, pubDate, cover);
+							const div = `
+								<div class="book-table" onclick="bookEnroll(this);">
+									<input type="hidden" name="isbn13" value=\${isbn13} />
+									<table class="tbl">
+										<tr>
+											<td rowspan="4">
+												<img src=\${cover} style="width:65px;" />
+											</td>
+											<td colspan="5" class="book-title">\${title}</td>
+										</tr>
+										<tr>
+											<td class="book-author">\${author}</td>
+										</tr>
+										<tr>
+											<td colspan="2" class="book-p">출판사 : \${publisher} 🧡 출판일 : \${pubDate}</td>
+										</tr>
+									</table>
+								</div>`;
+							container.insertAdjacentHTML('beforeend', div);
+						});
+			 		},
+					error : console.log
+				});	
+	 		})
+		},
+		error : console.log
+		});
+};
+
+/* 페이지 로딩시 전체 책 정보 */
+const getPage = (cPage, maxResult) => {
+	console.log(cPage, maxResult);
+	const container = document.querySelector("#book-container");
+	document.querySelector("#resultP").innerText = '${loginMember.nickname}' + ' 님의 책목록입니다.';
+
+	$.ajax({
+		url : '${pageContext.request.contextPath}/mypage/myBookAllItemId.do',
+		success(data){
+			console.log(data);
+			console.log(data);
+			itemId = data;
+			const divNon = `
+				<div>
+					<p style="text-align:center"> 검색된 결과가 없습니다. </p>
+				</div>`
+			if(itemId.length == 0){
+				container.insertAdjacentHTML('beforeend', divNon);
+			}
+			/* 읽고 있는 책 찾아 뿌리기 */
+			itemId.forEach((value, index, array)=>{
+				$.ajax({
+					url: `${pageContext.request.contextPath}/mypage/statusBook.do`,
+					data: {
+						itemId : value
+					},
+					method : "get",
+					success(data){
+						const {item} = data;
+						console.log(item);
+						console.log(item.length);
+						item.forEach((book) => {
+							const {isbn13, title, author, publisher, pubDate, cover} = book;
+							console.log("여기어디?2");
+							console.log(isbn13, title, author, publisher, pubDate, cover);
+							const div = `
+								<div class="book-table" onclick="bookEnroll(this);">
+									<input type="hidden" name="isbn13" value=\${isbn13} />
+									<table class="tbl">
+										<tr>
+											<td rowspan="4">
+												<img src=\${cover} style="width:65px;" />
+											</td>
+											<td colspan="5" class="book-title">\${title}</td>
+										</tr>
+										<tr>
+											<td class="book-author">\${author}</td>
+										</tr>
+										<tr>
+											<td colspan="2" class="book-p">출판사 : \${publisher} 🧡 출판일 : \${pubDate}</td>
+										</tr>
+									</table>
+								</div>`;
+							container.insertAdjacentHTML('beforeend', div);
+						});
+			 		},
+					error : console.log
+				});	
+	 		})
 		},
 		error : console.log,
 		complete(){
@@ -206,6 +238,71 @@ const getPage = (cPage, maxResult) => {
 			}
 		}
 	});
+};
+
+/* 전체 책 정보 */
+function getAll(event){
+	const container = document.querySelector("#book-container");
+	container.innerHTML = null;
+	container.innerHTML = `<p id="resultP"></p>`;
+	document.querySelector("#resultP").innerText = '${loginMember.nickname}' + ' 님의 책목록입니다.';
+	var itemId = [];
+	console.log(status);
+	
+	$.ajax({
+		url: '${pageContext.request.contextPath}/mypage/myBookAllItemId.do',
+		method : "get",
+		data : {status :status},
+		success(data){
+			console.log(data);
+			itemId = data;
+			const divNon = `
+				<div>
+					<p style="text-align:center"> 검색된 결과가 없습니다. </p>
+				</div>`
+			if(itemId.length == 0){
+				container.insertAdjacentHTML('beforeend', divNon);
+			}
+			/* 읽고 있는 책 찾아 뿌리기 */
+			itemId.forEach((value, index, array)=>{
+				$.ajax({
+					url: `${pageContext.request.contextPath}/mypage/statusBook.do`,
+					data: {
+						itemId : value
+					},
+					method : "get",
+					success(data){
+						const {item} = data;
+						item.forEach((book) => {
+							const {isbn13, title, author, publisher, pubDate, cover} = book;
+							console.log(isbn13, title, author, publisher, pubDate, cover);
+							const div = `
+								<div class="book-table" onclick="bookEnroll(this);">
+									<input type="hidden" name="isbn13" value=\${isbn13} />
+									<table class="tbl">
+										<tr>
+											<td rowspan="4">
+												<img src=\${cover} style="width:65px;" />
+											</td>
+											<td colspan="5" class="book-title">\${title}</td>
+										</tr>
+										<tr>
+											<td class="book-author">\${author}</td>
+										</tr>
+										<tr>
+											<td colspan="2" class="book-p">출판사 : \${publisher} 🧡 출판일 : \${pubDate}</td>
+										</tr>
+									</table>
+								</div>`;
+							container.insertAdjacentHTML('beforeend', div);
+						});
+			 		},
+					error : console.log
+				});	
+	 		})
+		},
+		error : console.log
+		});
 };
 
 <%-- 책 클릭 시 내 서재에 등록 폼  --%>
