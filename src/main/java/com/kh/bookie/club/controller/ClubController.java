@@ -2,6 +2,7 @@ package com.kh.bookie.club.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
@@ -981,6 +982,7 @@ public class ClubController {
 	
 	/**
 	 * 알라딘 API - 검색한 한권 정보 가져오기 
+	 * @throws IOException 
 	 */
 	@GetMapping("/selectBook.do")
 	public ResponseEntity<?> selectBook(
@@ -989,7 +991,7 @@ public class ClubController {
 									@RequestParam String ItemId,
 									@RequestParam String output,
 									@RequestParam(required = false) String Cover,
-									@RequestParam String Version) {
+									@RequestParam String Version) throws IOException {
 		log.debug("오긴해?");
 		String url = ALADDIN_URL + "ItemLookUp.aspx?ttbkey=" + ttbkey
 					+ "&itemIdType=" + itemIdType
@@ -997,6 +999,7 @@ public class ClubController {
 					+ "&output=" + output
 					+ "&Version=" + Version;
 		Resource resource = resourceLoader.getResource(url);
+		
 		return ResponseEntity.ok(resource);
 	}
 	
