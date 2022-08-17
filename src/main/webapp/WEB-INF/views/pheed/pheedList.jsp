@@ -15,7 +15,7 @@
 <sec:authentication property="principal" var="loginMember"/>
 <div id="pheed-container" >
 	<div id="pheed-header">
-		<div class="btns">
+		<div class="btns m-0">
 			<button type="button" class="btn btn-lg btn-link btn-pheed" onclick="location.href='${pageContext.request.contextPath}/pheed/pheedFList.do'">팔로워</button>
 			<button type="button" class="btn btn-lg btn-link btn-pheed" onclick="location.href='${pageContext.request.contextPath}/pheed/pheedCList.do'" id="btn-pheed-c">발견</button>
 			<button type="button" class="btn btn-lg btn-link " id="btn-pheed-enroll" onclick="location.href='${pageContext.request.contextPath}/pheed/pheedEnroll.do'"><i class="fa-solid fa-plus"></i></button>
@@ -78,7 +78,7 @@
 								</c:if>
 							</span>
 						  	<button type="button" 
-						  			class="btn btn-report float-right m-2" data-no="${pheed.pheedNo}" onclick="openReportModal(this);"><i class="fa-solid fa-ellipsis text-dark"></i></button>
+						  			class="btn btn-report float-right m-2" data-no="${pheed.pheedNo}" data-category="pheed" onclick="openReportModal(this);"><i class="fa-solid fa-ellipsis text-dark"></i></button>
 							<c:if test="${pheed.member.nickname eq loginMember.nickname}">
 							<button type="button" class="float-right btn-sm btn-update mt-3 mb-3 mr-2" data-no="${pheed.pheedNo}" onclick="updatePheed(this);">수정</button>	
 							</c:if>
@@ -261,7 +261,7 @@ function getReadList(cPage) {
 										div+=`  
     										</span>
     									  	<button type="button" 
-    									  			class="btn btn-report float-right" data-no="\${pheedNo}"  onclick="openReportModal(this);"><i class="fa-solid fa-ellipsis"></i></button>`;
+    									  			class="btn btn-report float-right" data-no="\${pheedNo}" data-category="pheed"  onclick="openReportModal(this);"><i class="fa-solid fa-ellipsis"></i></button>`;
     									  	if(nickname == '${loginMember.nickname}'){
     									  		div += `<button type="button" class="float-right btn-sm btn-update mt-3 mb-3 mr-2" data-no="\${pheedNo}" onclick="updatePheed(this);">수정</button>`;	
     									  	}
@@ -881,6 +881,7 @@ const updatePheed = (e) => {
 <%-- 신고창 열기 --%>
 function openReportModal(e){
 	console.log(e.dataset.no);
+	console.log(e.dataset.category);
 	$('#beenziNo').val(e.dataset.no);
 	$('#category').val(e.dataset.category);
 	$('#reportModal').modal('show');

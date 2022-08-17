@@ -2,7 +2,7 @@
 section#content	{
 	margin: 0 auto;
 	padding: 20px 30px;
-	min-height:600px;
+	min-height:700px;
 	border-radius: 5px;
 }
 
@@ -134,6 +134,7 @@ section#content	{
 	font-size: 34px;
 	margin: 0 3px;
 	background-color: white;
+	color: #000 !important;
 }
 #content .pheed-container .pheed .pheed-sns .pheed-sns-icons .btn-group #btn-report{
 	float: right;
@@ -200,7 +201,7 @@ section#content	{
     position: fixed;
     top: 0;
     left: 0;
-    width: 35%;
+    width: 28%;
     height: 88%;
     z-index: 100;
     transform: translateX(-100%);

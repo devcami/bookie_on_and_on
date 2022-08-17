@@ -10,7 +10,7 @@
 	<jsp:param value="북클럽리스트" name="title"/>
 </jsp:include>
 <sec:authentication property="principal" var="loginMember"/>
-<section id="content">
+<section id="content" style="min-height:800px;">
 	<h1>알림</h1>	
 	<c:forEach items="${list}" var="alarm">
 		<div class="card p-3 mt-3 shadow" onclick="readAlarm(this)" data-alarm-no="${alarm.alarmNo}">

@@ -157,6 +157,13 @@ input::file-selector-button:hover {
 	transition:800ms ease all;
 }
 
+li.list-group-item{
+	display: flex;
+    align-items: center;
+}
+li.list-group-item img{
+    margin-right: 10px;
+}
 li.list-group-item:hover{
 	background-color : #cbda469d;
 	cursor: pointer;
