@@ -83,14 +83,17 @@ button#btn-mypage{
 	width: 100%;
 	display: flex;
 	justify-content: space-between;
+	/* flex-wrap: wrap; */
+	overflow-x:scroll;
 }
 .article-div .people-div{
-	width: 350px;
 	margin: 10px;
 }
 .article-div .people-div .card{
 	border: 2px solid #CCDA46;
 	border-radius: 16px;
+	width: 350px;
+	height : 200px;
 }
 
 
@@ -118,21 +121,18 @@ button#btn-mypage{
 .people-div .card-title{
 	display: flex;
 }
+.people-div .card-body .card-text{
+	height : 27px;
+}
 .people-div .card-body a{
 	color : #FE9801;
-	font-size : 22px;
+	font-size : 35px;
 }
 .people-div .card-body a:hover{
 	text-decoration:underline;
 }
-.people-div .card-title span.title-span{
-	font-size : 35px;
-	margin-left: 20px;
-}
-.people-div .card-title label{
-	position: absolute;
-	left: 220px;
-	top: 28px;
+.people-div label{
+	width: 100%;
 }
 
 
@@ -150,7 +150,7 @@ span.myPickSpan {
 	letter-spacing:2px;
 	text-decoration:none;
 	text-align:center;
-	width:100px;
+	width:100%;
 	height:40px;
 	line-height:40px;
 	cursor:pointer;

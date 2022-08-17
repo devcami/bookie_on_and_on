@@ -461,7 +461,6 @@ select * from user_tables;
 -- 전체 컬럼 조회
 select * from user_tab_columns;
 
-
 select * from user_sequences; -- 시퀀스 조회
 select * from member;
 select * from authority;
@@ -1129,10 +1128,13 @@ create table chat_member (
     last_check number default 0,
     created_at date default sysdate,
     deleted_at date,
-    constraint pk_chat_member primary key(chatroom_id, member_id)
+    constraint pk_chat_member primary key(chatroom_id, member_id),
+    constraint fk_chat_member_club_no foreign key(club_no) references club(club_no) on delete cascade,
+    constraint fk_chat_member_id foreign key(member_id) references member(member_id) on delete cascade
 );
 alter table chat_member add club_no number;
-
+alter table chat_member add constraint fk_chat_member_club_no foreign key(club_no) references club(club_no) on delete cascade;
+alter table chat_member add constraint fk_chat_member_id foreign key(member_id) references member(member_id) on delete cascade;
 commit;
 
 create table chat_log (
@@ -1141,10 +1143,14 @@ create table chat_log (
     member_id varchar2(50),
     msg varchar2(4000),
     time number,
+    nickname varchar2(100),
+    renamed_filename varchar2(256),
     constraint pk_chat_log_no primary key(no),
     constraint fk_chat_log foreign key(chatroom_id, member_id) references chat_member(chatroom_id, member_id)
 );
 create sequence seq_chat_log_no;
+alter table chat_member add constraint fk_chat_log_member_id foreign key(member_id) references member(member_id) on delete cascade;
+alter table chat_member add constraint fk_chat_log_chatroom_id foreign key(chatroom_id, member_id) references chat_member(chatroom_id, member_id) on delete cascade;
 
 select * from chat_member;
 select * from chat_log;
@@ -1152,3 +1158,6 @@ delete from chat_log where member_id = 'tmddbs';
 alter table chat_log add nickname varchar2(100);
 alter table chat_log add renamed_filename varchar2(256);
 commit;
+
+select * from point_status;
+update point_status set updated_at = sysdate - 80 where point_no = 3;

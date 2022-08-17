@@ -20,7 +20,7 @@
 		</div>
 	</div>
 </div>
-<section id="content">
+<section id="content" style="min-height:800px;">
 	<div id="top-title" class="text-center m-3">
 		<h1>📝 문의글 작성 📝</h1>
 	</div>

@@ -70,5 +70,33 @@
 				dual
 		</selectKey>
 	</insert>
+	
+	
+	<select id="getMyPointStatusListTemp" resultMap="pointStatusMapTemp">
+		select 
+			* 
+		from 
+			point_status 
+		where 
+			member_id = #{memberId}
+	        <![CDATA[
+           AND 
+           updated_at >= #{start}
+           AND 
+           updated_at <= #{end}
+           ]]>
+		order by 
+			updated_at desc
+	</select>
+	<resultMap type="pointStatus" id="pointStatusMapTemp">
+		<id column="point_no" property="pointNo"/>
+		<result column="member_id" property="memberId"/>
+		<result column="content" property="content"/>
+		<result column="point" property="point"/>
+		<result column="total_point" property="totalPoint"/>
+		<result column="updated_at" property="updatedAt"/>
+		<result column="imp_uid" property="impUid"/>
+		<result column="status" property="status"/>
+	</resultMap>
 
 </mapper>

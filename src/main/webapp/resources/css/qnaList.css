@@ -104,7 +104,13 @@ section#content	{
 	background-color : #ffd79a7b; 
 	margin-bottom: 10px;
 }
+textarea.commentContent{
+	height: 250px;
+}
 textarea#commentContent{
 	background-color : #ffd79a7b; 
+	height: 250px;
+}
+textarea#content{
 	height: 250px;
 }
