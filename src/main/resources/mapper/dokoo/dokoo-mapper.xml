@@ -69,7 +69,7 @@
 	</resultMap>
 	
 	<select id="getReadBookList" resultType="book">
-		select distinct item_id, member_id from book_ing where member_id = #{memberId} and ended_at is not null
+		select distinct item_id, member_id from book_ing where member_id = #{memberId}
 	</select>
 	
 	<insert id="dokooEnroll">
