@@ -25,9 +25,12 @@ public interface PointDao {
 	int updateTotalPointInMember(PointStatus pointStatus);
 
 	List<PointStatus> getMyPointStatusList(Map<String, Object> map);
-
+	
 	@Select("select * from my_club where club_end < sysdate and club_status = 'I' and member_id = #{memberId}")
 	List<MyClub> getMyClubStatus(Map<String, Object> map);
+
+	@Select("select * from my_club where club_end < sysdate and club_status = 'I' and member_id = #{memberId}")
+	List<MyClub> getMyClubStatusTemp(String memberId);
 
 	@Select("select count(*) from mission_status where club_no = #{clubNo} and member_id = #{memberId} and status = 'P'")
 	int getTotalPassMission(MyClub myClub);
@@ -36,6 +39,9 @@ public interface PointDao {
 
 	@Update("update my_club set club_status = 'E' where club_no = #{clubNo} and member_id = #{memberId}")
 	int updateMyClubStatus(MyClub myClub);
+
+	
+	List<PointStatus> getMyPointStatusListTemp(Map<String, Object> map);
 	
 
 	

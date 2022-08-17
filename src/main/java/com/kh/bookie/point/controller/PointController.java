@@ -57,6 +57,10 @@ public class PointController {
 	        Calendar currentCalendar = Calendar.getInstance();
 	        String month  = df.format(currentCalendar.get(Calendar.MONTH) + 1);
 	        
+	        int lastMonth = currentCalendar.get(Calendar.MONTH);
+	        int lastlastMonth = currentCalendar.get(Calendar.MONTH) - 1;
+	        
+	        
 	        LocalDate start = YearMonth.now().atDay(1);
 	        LocalDate end   = YearMonth.now().atEndOfMonth();
 	        
@@ -68,11 +72,14 @@ public class PointController {
 	        log.debug("month = {}", month);
 	        
 	        
-	        List<PointStatus> list = pointService.getMyPointStatusList(map);
+//	        List<PointStatus> list = pointService.getMyPointStatusList(map);
 
-//	        log.debug("list = {}", list);
+	        List<List<PointStatus>> totalList = pointService.getMyPointStatusListTemp(memberId);
+	        
 	        mav.addObject("month", month);
-	        mav.addObject("list", list);
+	        mav.addObject("lastMonth", lastMonth);
+	        mav.addObject("lastlastMonth", lastlastMonth);
+	        mav.addObject("totalList", totalList);
 		} catch (Exception e) {
 			log.error("내 포인트 페이지 조회 오류", e);
 			throw e;

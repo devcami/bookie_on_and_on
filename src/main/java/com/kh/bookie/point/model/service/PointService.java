@@ -11,6 +11,8 @@ public interface PointService {
 
 	List<PointStatus> getMyPointStatusList(Map<String, Object> map);
 
+	List<List<PointStatus>> getMyPointStatusListTemp(String memberId);
+
 	
 
 }

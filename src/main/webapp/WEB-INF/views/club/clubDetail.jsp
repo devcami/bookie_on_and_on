@@ -147,7 +147,7 @@ ${club}
 
 		<!-- 페이스메이커 모달 시작 -->
 		<div class="modal fade" id="paceMakerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-		  <div class="modal-dialog" role="document">
+		  <div class="modal-dialog modal-dialog-scrollable" role="document">
 		    <div class="modal-content">
 		      <div class="modal-header book-modal-header">
 		      	<div class="modal-head-text">
@@ -200,7 +200,7 @@ ${club}
 	  <!-- 모달 끝 -->	
 	  
 	  <!-- 디파짓 모달 시작 -->
-		<div class="modal fade" id="depositModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+		<div class="modal fade modal-dialog-scrollable" id="depositModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
 		  <div class="modal-dialog" role="document">
 		    <div class="modal-content">
 		      <div class="modal-header book-modal-header">
@@ -246,6 +246,20 @@ ${club}
 	  <!-- 모달 끝 -->	
 
 <script>
+
+$(".modal").on("click", function(e){
+    posY = $(window).scrollTop();
+    
+    $("html, body").addClass("not_scroll");
+/*     $(".nav").css("display","block");
+    $(".cont").css("top",-posY); */
+});
+
+$(".modal").on("click", function(){
+    $("html, body").removeClass("not_scroll");
+/*     $(".nav").css("display","none"); */
+/*     posY = $(window).scrollTop(posY); */
+});
 
 const bookEnroll = (e) => {
 	const isbn13 = e.dataset.itemId;

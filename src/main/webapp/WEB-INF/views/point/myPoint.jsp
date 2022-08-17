@@ -24,45 +24,69 @@
 		</div>
 
 	</div>
-	<div id="point-container" class="shadow">
-		<div id="point-top" class="mb-3">
-			<h3>${month}월 내역</h3>
+	<div id="point-wrapper" style="position: relative;">
+		<div id="month-container">
+			<span class="months" data-no="3" style="background: #FFA1A1;" onclick="showOtherMonth(this);">${lastlastMonth}월</span>		
+			<span class="months" data-no="2" style="background: #FFD59E;" onclick="showOtherMonth(this);">${lastMonth}월</span>		
+			<span class="months" data-no="1" style="background: #FFF8BC;" onclick="showOtherMonth(this);">${month}월</span>		
 		</div>
-		<div id="point-bottom">
-			<div id="header" class="flex-center-space mb-2">
-				<span class="plusMinus">+/-</span>
-				<span class="money">금액</span>
-				<span class="content">내용</span>
-				<span class="occur-date">발생일</span>
-				<span class="total-point">누적 포인트</span>			
+		<c:forEach items="${totalList}" var="list" varStatus="vs">
+		
+		<c:if test="${vs.count eq 1}">
+			 <div class="point-container shadow" id="container${vs.count}" style="background: #FFF8BC;">
+			 	<div class="point-top mb-3">
+					<h3>${month}월 내역</h3>
+				</div>			
+		</c:if>
+		<c:if test="${vs.count eq 2}">
+			 <div class="point-container shadow" id="container${vs.count}" style="display: none; background: #FFD59E;">			
+				<div class="point-top mb-3">
+					<h3>${lastMonth}월 내역</h3>
+				</div>
+		</c:if>
+		<c:if test="${vs.count eq 3}">
+			 <div class="point-container shadow" id="container${vs.count}" style="display: none; background: #FFA1A1;">			
+				<div class="point-top mb-3">
+					<h3>${lastlastMonth}월 내역</h3>
+				</div>
+		</c:if>
+			<div class="point-bottom">
+				<div id="pointHeader" class="header flex-center-space mb-2">
+					<span class="plusMinus">+/-</span>
+					<span class="money">금액</span>
+					<span class="content">내용</span>
+					<span class="occur-date">발생일</span>
+					<span class="total-point">누적 포인트</span>			
+				</div>
+				<c:forEach items="${list}" var="ps">
+					<c:if test='${ps.status eq "P"}'>
+						<div id="pointDiv${ps.pointNo}" class="pointInOut flex-center-space mb-1 plus">
+							<span class="plusMinus" style="color: green;">+</span>
+							<span class="money">${ps.point}</span>
+							<span class="content">${ps.content}</span>
+							<fmt:parseDate value="${ps.updatedAt}" pattern="yyyy-MM-dd'T'HH:mm" var="updatedAt"/>
+							<span class="occur-date">
+								<fmt:formatDate value="${updatedAt}" pattern="yy/MM/dd HH:mm"/>
+							</span>
+							<span class="total-point">${ps.totalPoint}</span>
+						</div>
+					</c:if>
+					<c:if test='${ps.status eq "M"}'>
+						<div id="pointDiv${ps.pointNo}" class="pointInOut flex-center-space mb-1 minus">
+							<span class="plusMinus" style="color: red;">-</span>
+							<span class="money">${ps.point}</span>
+							<span class="content">${ps.content}</span>
+							<fmt:parseDate value="${ps.updatedAt}" pattern="yyyy-MM-dd'T'HH:mm" var="updatedAt"/>
+							<span class="occur-date">
+								<fmt:formatDate value="${updatedAt}" pattern="yy/MM/dd HH:mm"/>
+							</span>
+							<span class="total-point">${ps.totalPoint}</span>
+						</div>
+					</c:if>
+				</c:forEach>
 			</div>
-			<c:forEach items="${list}" var="ps">
-				<c:if test='${ps.status eq "P"}'>
-					<div id="pointDiv${ps.pointNo}" class="pointInOut flex-center-space mb-1 plus">
-						<span class="plusMinus" style="color: green;">+</span>
-						<span class="money">${ps.point}</span>
-						<span class="content">${ps.content}</span>
-						<fmt:parseDate value="${ps.updatedAt}" pattern="yyyy-MM-dd'T'HH:mm" var="updatedAt"/>
-						<span class="occur-date">
-							<fmt:formatDate value="${updatedAt}" pattern="yy/MM/dd HH:mm"/>
-						</span>
-						<span class="total-point">${ps.totalPoint}</span>
-					</div>
-				</c:if>
-				<c:if test='${ps.status eq "M"}'>
-					<div id="pointDiv${ps.pointNo}" class="pointInOut flex-center-space mb-1 minus">
-						<span class="plusMinus" style="color: red;">-</span>
-						<span class="money">${ps.point}</span>
-						<span class="content">${ps.content}</span>
-						<fmt:parseDate value="${ps.updatedAt}" pattern="yyyy-MM-dd'T'HH:mm" var="updatedAt"/>
-						<span class="occur-date">
-							<fmt:formatDate value="${updatedAt}" pattern="yy/MM/dd HH:mm"/>
-						</span>
-						<span class="total-point">${ps.totalPoint}</span>
-					</div>
-				</c:if>
-			</c:forEach>
 		</div>
+		</c:forEach>
 	</div>
 
 </section>
@@ -99,6 +123,23 @@
 
 
 <script>
+
+const showOtherMonth = (e) => {
+	const no = e.dataset.no;
+	console.log(no);
+	
+	const containerId = "#container" + no;
+	
+	// 모든 포인트 안보이게 해
+	$('#container1').css('display', 'none');
+	$('#container2').css('display', 'none');
+	$('#container3').css('display', 'none');
+
+	// 선택한 월 포인트만 보이게 해
+	$(containerId).css('display', '');
+	
+}
+
 document.querySelector("#btn-charge").addEventListener('click', (e) => {
 	// 충전하기 버튼 누르면 모달 보여줘
 	$('#paymentModal').modal('show');
@@ -181,12 +222,16 @@ document.querySelector("#charge-btn").addEventListener('click', (e) => {
   	    		success(resp){
   	    			console.log(resp);
   	    			const {msg, pointStatus} = resp;
+  	    			  	    			
+   	    			Swal.fire({
+  	    		      icon: 'success',
+  	    		      title: `\${msg}`
+  	    		    });
   	    			
-  	    			alert(msg);
   	    			const dateTime = getNowDateTime();
 
   	    			// 모달 밖에 지금 충전된 내역 추가해
-  	    			const container = document.querySelector("#header");
+  	    			const container = document.querySelector("#pointHeader");
   	    			
   	    			const div = `
   	    				<div id="pointDiv\${pointStatus.pointNo}" class="pointInOut flex-center-space mb-1 plus">
@@ -200,24 +245,34 @@ document.querySelector("#charge-btn").addEventListener('click', (e) => {
   	    			// 모달 밖에 포인트 바꿔
   	    			container.insertAdjacentHTML('afterend', div);
   	    			
-  	    			// 모달 밖에 큰 내 포인트도 바꿔
-  	    			document.querySelector('#myPointH4').innerHTML = `\${pointStatus.totalPoint}`;
+  	    			// 모달 밖에 내 포인트도 바꿔
+  	    			document.querySelector('#myPointH4').innerHTML = pointStatus.totalPoint;
   	    			
   	    			// 모달 안에 인풋 내용 지워 
   	    			document.querySelector("#chargePoint").value = '';
 
   	    			// 포인트 충전 모달 닫어
-  	    			$('#paymentModal').modal('hide');
-  	    			
-
+  	    			$('#paymentModal').modal('hide'); 
   	    			
   	    		},
   	    		error: console.log
   	    	});
   	    } else {
-  	        var msg = '결제가 취소되었습니다.';
+  	        let msg = '결제가 취소되었습니다.';
   	        
-  	        alert(msg);
+  	        // alert(msg);
+  	        
+  	     	Swal.fire({
+  		      icon: 'error',
+  		      title: `\${msg}`,
+  		    });
+  	     	
+  	  		// 모달 안에 인풋 내용 지워 
+  			document.querySelector("#chargePoint").value = '';
+  	  		
+  	   		// 포인트 충전 모달 닫어
+  			$('#paymentModal').modal('hide');
+ 
   	    }
   	});
 });

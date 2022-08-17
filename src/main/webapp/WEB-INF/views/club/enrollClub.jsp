@@ -641,16 +641,13 @@ document.querySelector("#btn-more").onclick = () => {
 			Query : ''
 	};
 	
-
-	if('${param.searchType}' == ''){
-        // url = searchApi + "http://www.aladin.co.kr/ttb/api/ItemList.aspx";
-     } else{
-        // url = searchApi + "http://www.aladin.co.kr/ttb/api/ItemSearch.aspx";
-        book.QueryType = '${param.searchType}';
-     }
+	 if('${param.searchType}' != ''){
+		 book.QueryType = '${param.searchType}';
+	 }
      if('${param.searchKeyword}' != ''){
         book.Query = '${param.searchKeyword}';
      }
+     
      
      if(queryType == 'All'){
         console.log('처음로딩');
@@ -739,7 +736,15 @@ const modalAddBook = (e) => {
 	
 	
 	if(container.childElementCount > 4){
-		alert('등록 가능한 책은 최대 4권입니다.');
+		
+		
+		/* alert('등록 가능한 책은 최대 4권입니다.'); */
+		
+		Swal.fire({
+	      icon: 'warning',
+	      title: '등록 가능한 책은 최대 4권입니다.',
+	    });
+		
 		return;
 	}
 	
@@ -1089,13 +1094,25 @@ const enrollMission = () => {
 	
 	// 내용이 모두 채워져 있는지 유효성 검사
    	if(!$('#mName').val() || !$('#mEndDate').val() || !$('#mContent').val()) {
-   		alert('모든 칸을 입력해주세요');
+   		// alert('모든 칸을 입력해주세요');
+   		Swal.fire({
+  	      icon: 'warning',
+  	      title: '모든 칸을 입력해주세요',
+  	    });
+   		
    		return;
    	}
 
 	// 미션 날짜가 북클럽 기간 사이가 아닐때 유효성 검사
 	if(!(mEndDate >= clubStart && mEndDate <= clubEnd)){
-		alert('북클럽 기간과 미션 기한을 확인해주세요.');
+		
+		// alert('북클럽 기간과 미션 기한을 확인해주세요.');
+		
+		Swal.fire({
+  	      icon: 'warning',
+  	      title: '모든 칸을 입력해주세요',
+  	    });
+		
 		return;	
 	}
 
@@ -1239,57 +1256,107 @@ const frmSubmit = () => {
 	console.log(booksDiv);
 	console.log(selectedBooks);
 	
-	return;
-	
 	/**************유효성검사***************/
 	// 제목 입력했는지
 	if($('#title').val() == ''){
-		alert('북클럽 제목을 입력해주세요');
+		 // alert('북클럽 제목을 입력해주세요');
+		
+		Swal.fire({
+	      icon: 'warning',
+	      title: '북클럽 제목을 입력해주세요.',
+	    });
+				
 		return;
 	}
 	// 북클럽 설명 입력했는지
 	if($('#clubDesc').val().length < 10){
-		alert('북클럽 설명은 최소 10자 이상 적어주세요.');
+ 		// alert('북클럽 설명은 최소 10자 이상 적어주세요.');
+		
+		Swal.fire({
+	      icon: 'warning',
+	      title: '북클럽 설명은 최소 10자 이상 적어주세요.',
+	    });
+		
 		return;
 	}
 	
 	//날짜 다 입력했는지
 	if($('#recruitStart').val() == '' || $('#recruitEnd').val() == ''){
-		alert("북클럽 모집 기간을 입력해주세요.");
+		/* alert("북클럽 모집 기간을 입력해주세요."); */
+		
+		Swal.fire({
+	      icon: 'warning',
+	      title: '북클럽 모집 기간을 입력해주세요.',
+	    });
+		
 		return;
 	}
 	
 	//날짜 다 입력했는지
 	if($('#clubStart').val() == '' || $('#clubEnd').val() == ''){
-		alert("북클럽 모집 기간을 입력해주세요.");
+		// alert("북클럽 기간을 입력해주세요.");
+		
+		Swal.fire({
+	      icon: 'warning',
+	      title: '북클럽 기간을 입력해주세요.',
+	    });
+		
 		return;
 	}
 	
 	// 날짜 기간 맞는지
 	if($('#recruitStart').val() > $('#recruitEnd').val()) {
-		alert("북클럽 모집 마감일은 모집 시작일 이후여야 합니다!");
+		// alert("북클럽 모집 마감일은 모집 시작일 이후여야 합니다!");
+		
+		Swal.fire({
+	      icon: 'warning',
+	      title: '북클럽 모집 마감일은 모집 시작일 이후여야 합니다!',
+	    });
+		
 		return;
 	}
 	
 	if($('#recruitEnd').val() > $('#clubStart').val()) {
-		alert("북클럽 시작일은 모집 마감일 이후여야 합니다!");
+		// alert("북클럽 시작일은 모집 마감일 이후여야 합니다!");
+		
+		Swal.fire({
+	      icon: 'warning',
+	      title: '북클럽 시작일은 모집 마감일 이후여야 합니다!',
+	    });
+		
 		return;
 	}
 	
 	if($('#clubStart').val() > $('#clubEnd').val()) {
-		alert("북클럽 마감일은 북클럽 시작일 이후여야 합니다!");
+		// alert("북클럽 마감일은 북클럽 시작일 이후여야 합니다!");
+		
+		Swal.fire({
+	      icon: 'warning',
+	      title: '북클럽 마감일은 북클럽 시작일 이후여야 합니다!',
+	    });
+		
 		return;
 	}
 	
 	// 북클럽 분야 선택했는지
 	if($("input:checkbox[name=interests]:checked").length == 0){
-		alert("북클럽 분야를 최소 한 개 이상 선택해주세요.");
+		// alert("북클럽 분야를 최소 한 개 이상 선택해주세요.");
+		Swal.fire({
+	      icon: 'warning',
+	      title: '북클럽 분야를 최소 한 개 이상 선택해주세요.',
+	    });
+		
 		return;
 	}
 	
 	//책 한권이라도 추가했는지
 	if(selectedBooks.length == 0){
-		alert("북클럽에서 읽을 책을 최소 한 권 이상 골라주세요.");
+		// alert("북클럽에서 읽을 책을 최소 한 권 이상 골라주세요.");
+		Swal.fire({
+	      icon: 'warning',
+	      title: '북클럽에서 읽을 책을 최소 한 권 이상 골라주세요.',
+	    });
+		
 		return;
 	}
 
@@ -1299,7 +1366,12 @@ const frmSubmit = () => {
 		let mId = "#missionWrapper" + selectedBooks[i];
 		let missionCnt = document.querySelector(mId).childElementCount;
 		if(missionCnt == 1){
-			alert("책마다 최소 한 개 이상의 미션을 등록해주세요!");
+			// alert("책마다 최소 한 개 이상의 미션을 등록해주세요!");
+			Swal.fire({
+		      icon: 'warning',
+		      title: '책마다 최소 한 개 이상의 미션을 등록해주세요!',
+		    });
+			
 			return;
 		}
 	}
@@ -1345,15 +1417,30 @@ const frmSubmit = () => {
 
 
 const cancelAll = () => {
-	const yn = confirm("등록을 취소하시겠습니까?");
-	if(yn){
-		location.href = `${pageContext.request.contextPath}/club/clubList.do`;
-	}
-	else {
-		return;
-	}
+	
+	Swal.fire({
+	      title: '북클럽 등록을 취소하시겠습니까?',
+/* 	      text: "다시 되돌릴 수 없습니다. 신중하세요.", */
+	      icon: 'warning',
+	      showCancelButton: true,
+	      confirmButtonColor: '#fe9801;',
+	      cancelButtonColor: '#d33',
+	      confirmButtonText: '확인',
+	      cancelButtonText: '취소',
+	      reverseButtons: true, // 버튼 순서 거꾸로
+	      
+	    }).then((result) => {
+	      if (result.isConfirmed) {
+	    	  location.href = `${pageContext.request.contextPath}/club/clubList.do`;
+	      }
+	      else {
+	    	  return;
+	      }
+	    });
 	
 }
+
+
 </script>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
