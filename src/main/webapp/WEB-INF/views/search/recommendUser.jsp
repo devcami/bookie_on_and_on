@@ -78,9 +78,19 @@ window.addEventListener('load', () => {
 									div += `<i class="fa-solid fa-user-large user-icon"></i>
 										</div>`;
 								}
-							div += ` <span class="title-span">\${nickname}</span>
-									<label>
-								    	<input type="checkbox" name="follow-btn" class="follow-btn" onclick="followEvent(this);" data-follower-id="\${memberId}"`;
+							div += `<a href="${pageContext.request.contextPath}/mypage/mypage.do?memberId=\${memberId}" class="card-link ml-3">\${nickname}</a>
+									</div>`;
+							if(introduce != null){
+								if(introduce.length > 20){
+									div += `<p class="card-text">\${introduce.substr(0,20)}...</p>`;
+								} else{
+									div += `<p class="card-text">\${introduce}</p>`;
+								}
+							} else {
+								div += `<p class="card-text"></p>`;
+							}
+							div += `<label>
+								    	<input type="checkbox" name="follow-btn" class="follow-btn" onclick="followEvent(this);" data-follower-id="\${memberId}"`; //card-title end
 						
 							const followers = '${followers}'; // tmddbs,tester,..
 							const followerArr = followers.split(','); // 배열
@@ -92,15 +102,9 @@ window.addEventListener('load', () => {
 							});	   
 							div += `/>
 								    	<span class="mypickSpan">follow</span>
-									</label>
-								</div>`; //card-title end
+									</label>`; 
 							
-							
-							if(introduce != null){
-								div += `<p class="card-text">\${introduce}</p>`;
-							}
-								div += `
-										<a href="${pageContext.request.contextPath}/mypage/mypage.do?memberId=\${memberId}" class="card-link">\${nickname}님의 피드 구경가기</a>
+							div += `
 								</div>
 							</div>
 						</div>

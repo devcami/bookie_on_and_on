@@ -20,7 +20,7 @@
 		</div>
 	</div>
 </div>
-<section id="content">
+<section id="content" style="min-height:800px;">
 	<div class="text-center m-4" id="subtitle-div">
 		<h1>1:1 문의</h1>
 		<p>궁금하신 점이 있으신가요?</p>
