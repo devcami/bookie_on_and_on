@@ -54,6 +54,12 @@ public interface SearchDao {
 
 	int insertFollower(Map<String, Object> map);
 
-	List<Book> selectBooKItemIdByStatus(Map<String, Object> param);
+	List<String> selectBooKItemIdByStatus(Map<String, Object> param);
+
+	List<String> selectBooKItemId(Map<String, Object> param);
+
+	List<String> selectMyPickItemId(Map<String, Object> param);
+
+	List<String> selectMyBookAllItemId(String memberId);
 
 }

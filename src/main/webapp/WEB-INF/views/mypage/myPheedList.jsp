@@ -15,7 +15,7 @@
 <sec:authentication property="principal" var="loginMember"/>
 <div id="pheed-container" >
 	<div id="pheed-header">
-		<div class="btns m-0">
+		<div class="btns">
 			<button type="button" class="btn btn-lg btn-link btn-pheed" onclick="location.href='${pageContext.request.contextPath}/pheed/pheedFList.do'">팔로워</button>
 			<button type="button" class="btn btn-lg btn-link btn-pheed" onclick="location.href='${pageContext.request.contextPath}/pheed/pheedCList.do'" id="btn-pheed-c">발견</button>
 			<button type="button" class="btn btn-lg btn-link " id="btn-pheed-enroll" onclick="location.href='${pageContext.request.contextPath}/pheed/pheedEnroll.do'"><i class="fa-solid fa-plus"></i></button>
@@ -78,7 +78,7 @@
 								</c:if>
 							</span>
 						  	<button type="button" 
-						  			class="btn btn-report float-right m-2" data-no="${pheed.pheedNo}" data-category="pheed" onclick="openReportModal(this);"><i class="fa-solid fa-ellipsis text-dark"></i></button>
+						  			class="btn btn-report float-right m-2" data-no="${pheed.pheedNo}" onclick="openReportModal(this);"><i class="fa-solid fa-ellipsis text-dark"></i></button>
 							<c:if test="${pheed.member.nickname eq loginMember.nickname}">
 							<button type="button" class="float-right btn-sm btn-update mt-3 mb-3 mr-2" data-no="${pheed.pheedNo}" onclick="updatePheed(this);">수정</button>	
 							</c:if>
@@ -112,68 +112,8 @@
 
 <input type="hidden" name="cPage" value="1" id="cPage"/>
 <script>
-function selectBook(cPage, list){
-	// 		1~10 11~20 21~30..
-	//cPage  1 	   2     3 ..
-	// console.log(${fn:length(list)});
-	// 얘가 1개가 마지막인데 2번 더돌아서 나는거거든.. innerText.title 오류가..
-	let j = (cPage - 1) * 3 + 1;
-	if(list != null){
-		//console.log(list);
-		list.forEach((pheed) => {
-			const {itemId} = pheed;
-			$.ajax({
-				url : '${pageContext.request.contextPath}/search/selectBook.do',
-				data : {
-					ttbkey : 'ttbiaj96820130001',
-					itemIdType : 'ISBN13', 
-					ItemId : itemId,
-					output : 'js',
-					Cover : 'Big',
-					Version : '20131101'
-				},
-				async: false,
-				success(resp){
-					const {item} = resp;
-					const {title, isbn13} = item[0];
-					console.log(title, j);
-					document.querySelector(`#book-title\${j}`).innerText = title;
-					j++;
-				},
-				error : console.log
-			});
-		});
-	}
-	else{
-		
-	<c:forEach items="${list}" var="pheed">
-		$.ajax({
-			url : '${pageContext.request.contextPath}/search/selectBook.do',
-			data : {
-				ttbkey : 'ttbiaj96820130001',
-				itemIdType : 'ISBN13', 
-				ItemId : ${pheed.itemId},
-				output : 'js',
-				Cover : 'Big',
-				Version : '20131101'
-			},
-			async: false,
-			success(resp){
-				const {item} = resp;
-				const {title, isbn13} = item[0];
-				console.log(title, j);
-				document.querySelector(`#book-title\${j}`).innerText = title;
-				j++;
-			},
-			error : console.log
-		});
-	</c:forEach>
-	
-	}
-}
-
 function getReadList(cPage) { 
-	console.log(cPage)
+	//console.log(cPage)
 
 	const container = document.querySelector("#content");
     // 비동기로 다음장 가져오기
@@ -261,7 +201,7 @@ function getReadList(cPage) {
 										div+=`  
     										</span>
     									  	<button type="button" 
-    									  			class="btn btn-report float-right" data-no="\${pheedNo}" data-category="pheed"  onclick="openReportModal(this);"><i class="fa-solid fa-ellipsis"></i></button>`;
+    									  			class="btn btn-report float-right" data-no="\${pheedNo}"  onclick="openReportModal(this);"><i class="fa-solid fa-ellipsis"></i></button>`;
     									  	if(nickname == '${loginMember.nickname}'){
     									  		div += `<button type="button" class="float-right btn-sm btn-update mt-3 mb-3 mr-2" data-no="\${pheedNo}" onclick="updatePheed(this);">수정</button>`;	
     									  	}
@@ -282,7 +222,7 @@ function getReadList(cPage) {
     				vsCount = vsCount + 1;
     				container.insertAdjacentHTML('beforeend', div);
     			});
-   				selectBook(cPage, list);
+   				selectBook(cPage);
    				clickEvent();
     		}
     	},
@@ -307,9 +247,6 @@ function infiniteScroll(){
     } 
 }
 window.addEventListener('scroll', infiniteScroll);
-
-window.addEventListener('load', selectBook(1));
-
 
 <%-- 피드 댓글 상세보기 연결 --%>
 const pheedComment = (e) => {
@@ -791,6 +728,38 @@ const closeComment = () => {
 	sidebar.style.zIndex="100";
 }
 
+function selectBook(cPage){
+	// 		1~10 11~20 21~30..
+	//cPage  1 	   2     3 ..
+	console.log(${fn:length(list)});
+	// 얘가 1개가 마지막인데 2번 더돌아서 나는거거든.. innerText.title 오류가..
+	<c:forEach items="${list}" var="pheed">
+	for(let i = (((cPage - 1) * 3) + 1); i <= (cPage * 3); i++){
+		$.ajax({
+			url : '${pageContext.request.contextPath}/search/selectBook.do',
+			data : {
+				ttbkey : 'ttbiaj96820130001',
+				itemIdType : 'ISBN13', 
+				ItemId : ${pheed.itemId},
+				output : 'js',
+				Cover : 'Big',
+				Version : '20131101'
+			},
+			success(resp){
+				const {item} = resp;
+				const {title, isbn13} = item[0];
+				//console.log(title, isbn13);
+				document.querySelector(`#book-title\${i}`).innerText = title;
+			},
+			error : console.log
+		});
+	}
+	</c:forEach>
+	
+}
+
+window.addEventListener('load', selectBook(1));
+
 <%-- 상단 피드 헤더 바 --%>
 let header = document.querySelector("#header-container")
 let headerHeight = header.clientHeight;
@@ -881,7 +850,6 @@ const updatePheed = (e) => {
 <%-- 신고창 열기 --%>
 function openReportModal(e){
 	console.log(e.dataset.no);
-	console.log(e.dataset.category);
 	$('#beenziNo').val(e.dataset.no);
 	$('#category').val(e.dataset.category);
 	$('#reportModal').modal('show');

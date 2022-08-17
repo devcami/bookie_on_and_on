@@ -12,7 +12,7 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param value="관리자페이지" name="title"/>
 </jsp:include>
-<section id="content" style="min-height: 500px;">
+<section id="content" style="min-height: 800px;">
 
 <div class="container" >
       <div class="row">
