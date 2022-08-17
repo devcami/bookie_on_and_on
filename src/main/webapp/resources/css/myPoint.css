@@ -1,9 +1,11 @@
 @charset "UTF-8";
 section#content	{
 	margin: 0 auto;
-	padding: 20px 30px;
+	padding: 0 30px;
 	min-height:600px;
 	border-radius: 5px;
+	position: relative;
+	height: 100%
 }
 
 /* 버튼 */
@@ -61,30 +63,30 @@ h1 {
 
 
 /***** 포인트 내역 조회 부분 ******/
-#point-container {
+.point-container {
 	display: flex;
 	flex-direction: column;
-	margin: 1rem;
+	margin: 0 1rem;
 	padding: 1rem;
-	
-	background: bisque;
+	position: absolute;
+	width: 94.5%;
     border-radius: 20px;
 }
-#point-top {
+.point-top {
 	text-align: center;
 }
 
-#point-top h3 {
+.point-top h3 {
 	font-size: 2.3rem !important;
 }
 
-#point-bottom {
+.point-bottom {
 	display: flex;
 	flex-direction: column;
 	width: 100%;
 	
 }
-#header {
+.header {
 	font-size: 25px;
 }
 
@@ -150,3 +152,23 @@ h1 {
     font-size: larger;
 }
 
+/*********** alert 창 버튼 ********/
+.swal2-styled.swal2-confirm {
+
+	    background-color: #fe9801 !important;
+}
+
+
+/************ 월 인덱스 *************/
+#month-container {
+	position: absolute;
+    top: -23px;
+    left: 45px;
+}
+.months {
+	padding: 10px 10px;
+    text-align: center;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+	cursor: pointer;
+}
