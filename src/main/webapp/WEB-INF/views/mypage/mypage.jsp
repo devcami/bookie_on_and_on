@@ -23,17 +23,6 @@
     padding-bottom: 35px;
 }
 </style>
-<script>
-/* 달력출력 스크립트 */
-document.addEventListener('DOMContentLoaded', function() {
-  var calendarEl = document.getElementById('calendar');
-  var calendar = new FullCalendar.Calendar(calendarEl, {
-    initialView: 'dayGridMonth'
-  });
-  calendar.render();
-});
-
-</script>
 <sec:authentication property="principal" var="loginMember" scope="page"/>
 <fmt:requestEncoding value="utf-8"></fmt:requestEncoding>
 <jsp:include page="/WEB-INF/views/common/header.jsp">
@@ -258,6 +247,8 @@ window.onload = function(){
 		error : console.log
 	});
 	
+	/* 슈발 로드될때 몇개를 가져와 슈발 */
+	
 };
 
 const bookEnroll = (e) => {
@@ -265,5 +256,27 @@ const bookEnroll = (e) => {
 	location.href = "${pageContext.request.contextPath}/search/bookEnroll.do?isbn13=" + isbn13;
 };
 
+/* 달력출력 스크립트 */
+document.addEventListener('DOMContentLoaded', function() {
+	var calendarEl = document.getElementById('calendar');
+	var calendar = new FullCalendar.Calendar(calendarEl, {
+		initialView : 'dayGridMonth', // 초기 로드 될때 보이는 캘린더 화면(기본 설정: 달)
+		headerToolbar : { // 헤더에 표시할 툴 바
+			start : 'prev next today',
+			center : 'title',
+			end : 'dayGridMonth,dayGridWeek,dayGridDay'
+		},
+		titleFormat : function(date) {
+			return date.date.year + '년 ' + (parseInt(date.date.month) + 1) + '월';
+		},
+		//initialDate: '2021-07-15', // 초기 날짜 설정 (설정하지 않으면 오늘 날짜가 보인다.)
+		selectable : true, // 달력 일자 드래그 설정가능
+		droppable : true,
+		editable : true,
+		nowIndicator: true, // 현재 시간 마크
+		locale: 'ko' // 한국어 설정
+	});
+	calendar.render();
+});
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

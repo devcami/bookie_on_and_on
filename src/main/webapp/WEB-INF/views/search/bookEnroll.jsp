@@ -13,7 +13,7 @@
 <sec:authentication property="principal" var="loginMember"/>
 <div id="title-header" class="" style="display:none">
 	<p id="title-p">
-		<i class="fa-solid fa-angle-left" onclick="location.href='${pageContext.request.contextPath}/search/searchForm.do'"></i>
+		<i class="fa-solid fa-angle-left" onclick="back()"></i>
 	</p>
 </div>
 <section id="content">
@@ -689,5 +689,9 @@ const deselect = () => {
 	document.querySelector("#book-status").value = "";
 	document.querySelector("#book-score").value = "0";
 };
+
+function back(){
+	history.back();
+}
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
