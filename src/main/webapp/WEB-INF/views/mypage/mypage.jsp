@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/main.css" />
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/clubAnn.css" />
 <script src='${pageContext.request.contextPath}/resources/js/main.js'></script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/locales-all.js"></script>
 <%
 	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 	Member loginMember = (Member) authentication.getPrincipal();
@@ -274,7 +275,17 @@ document.addEventListener('DOMContentLoaded', function() {
 		droppable : true,
 		editable : true,
 		nowIndicator: true, // 현재 시간 마크
-		locale: 'ko' // 한국어 설정
+		locale: 'ko', // 한국어 설정
+		events :[
+			{
+			title : '지금????',
+			start : '2022-08-17',
+			end : '2022-08-17',
+			url : '${pageContext.request.contextPath}/mypage/myBook.do',
+			backgroundColor: '#CCDA46',
+			image : '${pageContext.request.contextPath}/resources/images/icon/dokoo_icon.png'
+			}
+		]
 	});
 	calendar.render();
 });
