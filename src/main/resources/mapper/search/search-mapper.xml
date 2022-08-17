@@ -220,23 +220,44 @@
 			member_id = #{memberId} and following_member_id = #{followingMemberId}
 	</delete>
 	
-	<select id="selectBooKItemIdByStatus" resultMap="bookItemIdMap">
+	<select id="selectBooKItemIdByStatus" resultType="string">
 		select 
-			* 
+			item_id 
 		from 
 			book 
 		where 
 			member_id = #{memberId} and status = #{status}
 	</select>
 	
-	<resultMap type="book" id="bookItemIdMap">
-		<id column="item_id" property="itemId"/>
-		<result column="member_id" property="memberId"/>
-		<result column="status" property="status"/>
-		<result column="score" property="score"/>
-		<result column="content" property="content"/>
-		<result column="my_pick" property="myPick"/>
-		<result column="enroll_date" property="enrollDate"/>
-	</resultMap>
+	<select id="selectBooKItemId" resultType="string">
+		select
+			item_id
+		from
+			book
+		where
+			member_id = #{memberId}
+			and
+			status = #{status}
+	</select>
+	
+	<select id="selectMyPickItemId" resultType="string">
+		select
+			item_id
+		from
+			book
+		where
+			member_id = #{memberId}
+			and
+			my_pick = #{myPick}
+	</select>
+	
+	<select id="selectMyBookAllItemId" resultType="string">
+		select
+			item_id
+		from
+			book
+		where
+			member_id = #{memberId}
+	</select>
 	
 </mapper>

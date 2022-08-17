@@ -118,14 +118,6 @@
             <div style="clear: both;"></div>
           </li>
           <li>
-         <div class="item-thumbnail" >
-              <a title="" href="http://www.fostrap.com/2016/04/free-material-design-template-blogger-md-fostrap.html" target="_blank">
-               <img alt="배송지관리" class="circle" 
-               src="${pageContext.request.contextPath}/resources/images/icon/smile.png" title="배송지관리" border="0" height="72" width="72"> </a> 
-               <span class="title"><a title=" " href="http://www.fostrap.com/2016/04/free-material-design-template-blogger-md-fostrap.html">배송지관리</a></span> </div>
-            <div style="clear: both;"></div>
-          </li>
-          <li>
          <div class="item-thumbnail">
               <a title="" href="http://www.fostrap.com/2016/04/free-material-design-template-blogger-md-fostrap.html" target="_blank">
                <img alt="포인트관리" class="circle" 
@@ -161,12 +153,13 @@
 			 <div style="clear: both;"></div>
           </li>
           <li>
-         <div class="item-thumbnail" style="line-height: 42px;">
-              <a title="" href="http://www.fostrap.com/2016/04/free-material-design-template-blogger-md-fostrap.html" target="_blank">
-               <img alt="알림설정" class="circle" 
-               src="${pageContext.request.contextPath}/resources/images/icon/smile.png" title="알림설정" border="0" height="72" width="72"> </a> 
-               <span class="title"><a title=" " href="http://www.fostrap.com/2016/04/free-material-design-template-blogger-md-fostrap.html">알림설정</a></span> </div>
-            <div style="clear: both;"></div>
+	         <div class="item-thumbnail" style="line-height: 42px;">
+				<img alt="신고관리" class="circle" src="${pageContext.request.contextPath}/resources/images/icon/smile.png" title="나의 Q&A 목록" border="0" height="72" width="72"> 
+				<span class="title">
+					<a href="${pageContext.request.contextPath}/mypage/qnaList.do?memberId=${loginMember.memberId}">나의 신고목록</a>
+				</span> 
+			 </div>
+			 <div style="clear: both;"></div>
           </li>
         </ul>
       </div>   
