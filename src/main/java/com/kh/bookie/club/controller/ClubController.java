@@ -367,7 +367,9 @@ public class ClubController {
 	public ModelAndView clubAnn(
 			ModelAndView mav,
 			@RequestParam int clubNo,
-			@RequestParam(required = false) String memberId) {
+			@RequestParam(required = false) String memberId,
+			@RequestParam(required=false) String deposit,
+			@RequestParam(required = false) String type) {
 
 		Map<String, Object> param = new HashMap<>();
 		
@@ -376,9 +378,16 @@ public class ClubController {
 			param.put("clubNo", clubNo);
 			param.put("memberId", memberId);
 			
+			// 취소한 경우라면
+			if(type != null) {
+				param.put("deposit", Integer.parseInt(deposit));
+				param.put("content", "북클럽 디파짓 환불");
+				param.put("status", "P");
+				int result = clubService.cancelClubJoin(param);
+			}
+			
 			Club club = clubService.selectOneClub(param);
-
-			log.debug("bookMission = {}", club.getBookList().get(0).getMissionList());
+			
 						
 			mav.addObject("club", club);
 			

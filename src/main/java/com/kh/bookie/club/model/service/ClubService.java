@@ -88,5 +88,7 @@ public interface ClubService {
 
 	int deleteClub(int clubNo);
 
+	int cancelClubJoin(Map<String, Object> param);
+
 
 }

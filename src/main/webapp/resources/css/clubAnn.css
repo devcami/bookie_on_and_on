@@ -270,7 +270,12 @@ section#content {
 	display: flex;
     justify-content: flex-end;
 	margin-top: 15px;
-	
+	align-items: center;
+}
+#btn-div p {
+	margin-bottom: 0px;
+    font-size: 30px;
+    margin-right: 30px;
 }
 #btn-div button {
 	width: 100%;

@@ -409,37 +409,24 @@
 		<result column="d_start" property="dStart" />
 	</resultMap>
 	
-<!-- 	<select id="getClubDetailInfo" resultMap="clubDetailMap">
-	select
-	    c.deposit,
-	    c.title,
-	    c.content,
-	    trunc(sysdate - c.club_start)+1 d_start,
-	    trunc(c.club_end - sysdate)+1 d_end,
-	    (select count(*) from mission where club_no = #{clubNo}) total_mission,
-	    cb.img_src,
-	    cb.item_id,
-	    cb.book_title
-	from 
-	    club c 
-	    	join club_book cb on c.club_no = cb.club_no
-	where
-		c.club_no = #{clubNo}
-	</select>
-	<resultMap type="club" id="clubDetailMap">
-		<id column="club_no" property="clubNo"/>
-		<result column="deposit" property="deposit" />
-		<result column="title" property="title" />
-		<result column="content" property="content" />
-		<result column="d_start" property="dStart" />
-		<result column="d_end" property="dEnd" />
-		<result column="total_mission" property="totalMission" />
-		<result column="d_start" property="dStart" />
-		<collection property="bookList" javaType="arrayList" ofType="clubBook">
-            <id column="item_id" property="itemId"/>
-            <result column="img_src" property="imgSrc"/>
-            <result column="book_title" property="bookTitle"/>
-         </collection>
-	</resultMap> -->
+	<insert id="addPointStatusRefundDeposit">
+		insert into 
+			point_status 
+		values(
+			seq_point_no.nextval, 
+			#{memberId}, 
+			#{content}, 
+			#{deposit}, 
+			#{totalPoint}, 
+			default, 
+			null, 
+			#{status})
+		<selectKey keyProperty="pointNo" resultType="_int" order="AFTER">
+			select
+				seq_point_no.currval
+			from
+				dual
+		</selectKey>
+	</insert>
 	
 </mapper>

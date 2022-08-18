@@ -163,6 +163,13 @@ public interface ClubDao {
 	@Delete("delete from club where club_no = #{clubNo}")
 	int deleteClub(int clubNo);
 
+	@Delete("delete from my_club where club_no = #{clubNo} and member_id = #{memberId}")
+	int cancelClubJoin(Map<String, Object> param);
+
+	@Update("update member set point = point + #{deposit} where member_id = #{memberId}")
+	int refundDeposit(Map<String, Object> param);
 	
+	int addPointStatusRefundDeposit(Map<String, Object> param);
+
 
 }
