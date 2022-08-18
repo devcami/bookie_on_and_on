@@ -193,7 +193,8 @@
 						<button onclick="joinClub();">신청하기</button>						
 					</c:if>
 					<c:if test="${club.isJoined == 1}">
-						<button onclick="joinClub();" id="btn-disabled">이미 신청하신 북클럽입니다!</button>						
+						<p>이미 신청하신 북클럽입니다!</p>
+						<button onclick="cancelJoin();" id="btn-disabled" style="width: 55%; cursor: pointer !important;">북클럽 신청 취소</button>
 					</c:if>							
 				</c:if>
 				<!-- 모집중이면서 인원이 다 찬 경우 -->
@@ -202,8 +203,11 @@
 				</c:if>
 			</c:if>
 			<!-- 날짜가 지난 북클럽일때 -->			
-			<c:if test="${club.recruitEnd lt nowDate}">
+			<c:if test="${club.recruitEnd lt nowDate && club.isJoined == 0}">
 				<button id="btn-disabled">모집일이 지난 북클럽입니다😥</button>
+			</c:if>
+			<c:if test="${club.recruitEnd lt nowDate && club.isJoined == 1}">
+				<button id="btn-disabled">이미 신청하신 북클럽입니다!</button>
 			</c:if>
 		</sec:authorize>
 		<sec:authorize access="isAnonymous()">
@@ -515,6 +519,44 @@ const joinClub = () => {
 	
 }
 
+/**************** 회원의 클럽 신청 취소 ***************/
+const cancelJoin = () => {
+	const memberId = '${loginMember.username}';
+	console.log(memberId);
+	
+	Swal.fire({
+	      title: '북클럽 신청을 취소하시겠습니까?',
+ 	      text: "지불한 디파짓은 포인트로 다시 환불됩니다.",
+	      icon: 'warning',
+	      showCancelButton: true,
+	      confirmButtonColor: '#fe9801;',
+	      cancelButtonColor: '#d33',
+	      confirmButtonText: '확인',
+	      cancelButtonText: '취소',
+	      reverseButtons: true, // 버튼 순서 거꾸로
+	      
+	    }).then((result) => {
+	      if (result.isConfirmed) {
+	    	  
+	    	  Swal.fire({
+			      icon: 'success',
+			      title: '신청이 취소되었습니다!'
+			    });
+	    	 
+	    	  const clubNo = '${club.clubNo}';
+	    	  const memberId = '${loginMember.username}';
+	    	  const deposit = '${club.deposit}';
+	    	  const type = 'cancel';
+	    	  
+	    	  
+	    	  location.href = `${pageContext.request.contextPath}/club/clubAnn.do?clubNo=\${clubNo}&memberId=\${memberId}&deposit=\${deposit}&type=\${type}`;
+	      }
+	      else {
+	    	  return;
+	      }
+	    });
+	 
+}
 
 
 </script>
