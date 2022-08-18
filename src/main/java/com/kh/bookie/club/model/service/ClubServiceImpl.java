@@ -409,5 +409,25 @@ public class ClubServiceImpl implements ClubService {
 	public int deleteClub(int clubNo) {
 		return clubDao.deleteClub(clubNo);
 	}
+	
+	@Override
+	public int cancelClubJoin(Map<String, Object> param) {
+		// 먼저 my_club에서 삭제해
+		int result = clubDao.cancelClubJoin(param);
+		
+		// 디파짓 member의 point에 다시 돌려줘
+		result = clubDao.refundDeposit(param);
+		
+		// 방금 업데이트된 멤버의 포인트 가져와
+		String memberId = (String) param.get("memberId");
+		int myPoint = clubDao.checkMyPoint(memberId);
+		
+		param.put("totalPoint", myPoint);
+		
+		// point_status도 북클럽 취소해서 디파짓 환불된 내역 추가해
+		result = clubDao.addPointStatusRefundDeposit(param);
+		
+		return result;
+	}
 
 }

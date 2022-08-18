@@ -21,7 +21,15 @@ create table member (
     constraint ck_member_gender check (gender in ('M', 'F'))
 );
 alter table member add email varchar2(50);
+select * from point_status;
 select * from member;
+select * from my_club;
+
+update member set point = 12000 where member_id = 'sinsa';
+commit;
+
+delete from point_status where member_id = 'sinsa';
+
 -- 2. authority
 create table authority(
     member_id varchar2(200),
