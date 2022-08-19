@@ -191,11 +191,28 @@ section#dokoo-content #dokoo-container{
 #dokoo-content #dokoo-container #dokoo-info span{
 	font-size: 22px;
 }
+#dokoo-content #dokoo-container #dokoo-info #writer .user-icon-back{
+	top: 25px;
+	width:40px;
+	height:40px;
+	border-radius: 50%;
+	background-color: #c7c7c7;
+	display: inline-block;
+}
+#dokoo-content #dokoo-container #dokoo-info #writer .user-icon{
+	font-size: 25px;
+	position: relative;
+	top: 9px;
+	left: 7.5px;
+	color: #FFF;
+	text-shadow: 0 0 3px #5454544a;
+}
 #dokoo-content #dokoo-container #dokoo-info #writer span{
 	font-size: 30px;
+	position: relative;
+	top: 9px;
 }
 #dokoo-content #dokoo-container #dokoo-info #writer p{
-	padding-left: 60px;
 }
 
 

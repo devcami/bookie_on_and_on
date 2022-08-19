@@ -28,13 +28,20 @@
 				<p id="book-category" class="text-secondary"></p>
 			</div>
 			<div class="p-3" id="writer">
-				<!-- 프로필사진 -->				
+				<!-- 프로필사진 -->		
+				<c:if test="${dokoo.member.renamedFilename != null}">
 				<img class="rounded-circle shadow-1-strong m-1"
 							src="${pageContext.request.contextPath}/resources/upload/profile/${dokoo.member.renamedFilename}"
 							alt="avatar" width="40" height="40" />
+				</c:if>
+				<c:if test="${dokoo.member.renamedFilename == null}">
+				<div class="user-icon-back">
+					<i class="fa-solid fa-user-large user-icon"></i>
+				</div>
+				</c:if>
 							
 				<span class="p-2">${dokoo.member.nickname}</span>
-				<p class="text-secondary">
+				<p class="text-secondary p-2">
 					<fmt:parseDate value="${dokoo.enrollDate}" pattern="yyyy-MM-dd'T'HH:mm" var="enrollDate"/>
 					<fmt:formatDate value="${enrollDate}" pattern="yyyy/MM/dd HH:mm"/>
 				</p>
