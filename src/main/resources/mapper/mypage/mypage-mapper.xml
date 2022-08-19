@@ -83,4 +83,90 @@
 		<result column="ended_at" property="endedAt"/>
 	</resultMap>
 	
+	
+	<select id="selectMyClubList" resultMap="clubListCollectionMap">
+		select
+		    *
+		from (
+		    select
+		    	<if test="sortType == null">
+		        row_number() over (order by c.club_start desc) rnum,
+		        </if>
+		    	<if test="sortType != null">
+		        row_number() over (order by c.club_start) rnum,
+		        </if>
+		        c.*,
+		        (select count(*) from my_club where club_no = c.club_no) current_nop,
+		        (select count(*) from likes_club where club_no = c.club_no) likes_Cnt
+		    from
+		        club c 
+		        	left join my_club mc on c.club_no = mc.club_no 
+		    where
+		        member_id = #{memberId})
+		where rnum between #{start} and #{end}
+	</select>
+	<resultMap type="club" id="clubListCollectionMap">
+		<id column="club_no" property="clubNo"/>
+		<result column="title" property="title"/>
+		<result column="content" property="content"/>
+		<result column="recruit_start" property="recruitStart"/>
+		<result column="recruit_end" property="recruitEnd"/>
+		<result column="club_start" property="clubStart"/>
+		<result column="club_end" property="clubEnd"/>
+		<result column="maximum_nop" property="maximumNop"/>
+		<result column="minimum_nop" property="minimumNop"/>
+		<result column="deposit" property="deposit"/>
+		<result column="current_nop" property="currentNop"/>
+		<result column="interest" property="interest"/>
+		<result column="likes_cnt" property="likesCnt"/>
+		<result column="mission_cnt" property="missionCnt"/>
+		<result column="book_Count" property="bookCount"/>
+	</resultMap>
+	
+	<select id="selectMyPheedList" resultType="pheed">
+		select 
+    		ph.*,
+    		(select count(*) from likes_pheed where pheed_no = ph.pheed_no) likes_cnt 
+		from 
+    		(select row_number() over (order by enroll_date desc) rnum, p.* from pheed p) ph
+		where
+    		(rnum between #{cPage} and #{numPerPage}) and member_id = #{memberId}
+	</select>
+	
+	
+	<select id="selectMyDokooList" resultMap="dokooCollectionMap">
+		select
+        tb.*,
+        m.*
+    from
+         (select 
+                row_number() over(order by enroll_date desc) rnum, 
+                d.* 
+            from 
+                dokoo d
+            where member_id = #{memberId}) tb 
+                left join member m on tb.member_id = m.member_id
+    where 
+        rnum between #{start} and #{end}
+    order by
+        tb.enroll_date desc
+	</select>
+	<resultMap type="dokoo" id="dokooCollectionMap">
+		<id column="dokoo_no" property="dokooNo"/>
+		<result column="member_id" property="memberId"/>
+		<result column="item_id" property="itemId"/>
+		<result column="title" property="title"/>
+		<result column="content" property="content"/>
+		<result column="enroll_date" property="enrollDate"/>
+		<result column="is_opened" property="isOpened"/>
+		
+		<association property="member" javaType="member">
+			<id column="member_id" property="memberId"/>
+			<result column="nickname" property="nickname"/>
+			<result column="renamed_filename" property="renamedFilename"/>
+		</association>
+		
+	</resultMap>
+	
+	
 </mapper>

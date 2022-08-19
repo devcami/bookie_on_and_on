@@ -12,7 +12,7 @@
 <div id="dokoo-container" class="p-3 m-3" style="background-image:url('${pageContext.request.contextPath}/resources/images/background_dokoo.PNG');">
 	<section id="content" class="">
 		<div id="title" class="text-center">
-			<h1>📙 독후감 📙</h1>
+			<h1>📙 내가 쓴 독후감 📙</h1>
 			<button type="button" class="btn btn-lg btn-link" id="btn-dokoo-enroll" onclick="location.href='${pageContext.request.contextPath}/dokoo/dokooEnroll.do';">
 				<i class="fa-solid fa-plus"></i>
 			</button>
@@ -32,7 +32,7 @@
 					<fmt:parseDate value="${dokoo.enrollDate}" pattern="yyyy-MM-dd'T'HH:mm" var="enrollDate"/>
 						<tr data-no="${dokoo.dokooNo}">
 							<td class="dokoo-no">
-								${totalContent - ((cPage - 1) * 10 + vs.index)}
+								${totalContent - ((cPage - 1) * 10 + vs.index)+3}
 							</td>
 							<td class="dokoo-title">${dokoo.title}</td>
 							<td class="dokoo-nickname">${dokoo.member.nickname}</td>

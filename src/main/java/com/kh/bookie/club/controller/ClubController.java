@@ -152,7 +152,7 @@ public class ClubController {
 	        log.debug("authentication member = {} ", loginMember.getMemberId());
 			
 			Map<String, Object> map = new HashMap<>();	
-			int numPerPage = 2;
+			int numPerPage = 8;
 			int start = ((cPage - 1) * numPerPage) + 1;
 			int end = cPage * numPerPage;
 
