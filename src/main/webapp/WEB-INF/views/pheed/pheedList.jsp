@@ -337,8 +337,6 @@ const pheedComment = (e) => {
 		method : 'GET',
 		success(resp){
 			//console.log(resp);
-			
-			
 			const {comments} = resp;
 				
 			comments.forEach((comment) => {

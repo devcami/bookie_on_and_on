@@ -10,6 +10,8 @@
 		from
 			qna q
 				left join member m on q.member_id = m.member_id
+		where
+			q.member_id = #{memberId}
 		order by
 			q.enroll_date desc
 	</select>
@@ -35,7 +37,8 @@
 			#{memberId},
 			#{title},
 			#{content},
-			sysdate
+			sysdate,
+			default
 		)
 	</insert>
 	

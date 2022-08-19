@@ -118,7 +118,7 @@ public class MypageController {
 	@GetMapping("/qnaEnroll.do")
 	public void qnaEnroll() {}
 	
-	@PostMapping("/qnaEnroll.do")
+	@PostMapping("/enrollQna.do")
 	public String qnaEnroll(Qna qna) {
 		try {
 			log.debug("qna = {}", qna);
