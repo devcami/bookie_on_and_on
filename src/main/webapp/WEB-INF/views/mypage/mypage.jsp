@@ -33,25 +33,29 @@
 <!-- 프로필 -->
 <section style="background-color: #fcfbf9;">
 <div class="start-mypage" style="white-space: nowrap; padding: 10 20 10 20;">
-	<h1 style="display:inline;">내서재</h1>
-	<a href="${pageContext.request.contextPath}/mypage/mypageSetting.do" style="color: grey;"><i class="fa-solid fa-gear" style="float: right; font-size: 25;  padding-top: 6px;"></i></a>
+	<h1 style="display:inline;">"${member.nickname}"님 서재</h1>
+	<c:if test="${loginMember.memberId eq member.memberId}">
+		<a href="${pageContext.request.contextPath}/mypage/mypageSetting.do" style="color: grey;"><i class="fa-solid fa-gear" style="float: right; font-size: 25;  padding-top: 6px;"></i></a>
+	</c:if>
 </div> 
 <div class="container">
 	<div class="profile">
-		<c:if test="${empty loginMember.originalFilename}">
+		<c:if test="${empty member.originalFilename}">
 		<div class="profile-image">
 			<img src="${pageContext.request.contextPath}/resources/images/icon/non-profile.png" alt="사진이없어요~"  width="200" height="200">
 		</div>
 		</c:if>
-		<c:if test="${not empty loginMember.originalFilename}">
+		<c:if test="${not empty member.originalFilename}">
 		<div class="profile-image">
-			<img src="${pageContext.request.contextPath}/resources/upload/profile/${loginMember.renamedFilename}" alt="멋지고이쁜내사진"  width="200" height="200">
+			<img src="${pageContext.request.contextPath}/resources/upload/profile/${member.renamedFilename}" alt="멋지고이쁜내사진"  width="200" height="200">
 		</div> 
 		</c:if>
 		<div class="profile-user-settings">
-			<h1 class="profile-user-name">${loginMember.nickname}</h1>
-			<button class="btn profile-edit-btn" style="font-size: 1em;">Edit Mini Profile</button>
-			<button class="btn profile-settings-btn" aria-label="profile settings" style="margin-left: 0;"><i class="fas fa-cog" aria-hidden="true"></i></button>
+			<h1 class="profile-user-name">${member.nickname}</h1>
+			<c:if test="${loginMember.memberId eq member.memberId}">
+				<button class="btn profile-edit-btn" style="font-size: 1em;">Edit Mini Profile</button>
+				<button class="btn profile-settings-btn" aria-label="profile settings" style="margin-left: 0;"><i class="fas fa-cog" aria-hidden="true"></i></button>
+			</c:if>
 		</div>
 		<div class="profile-stats">
 			<ul>
@@ -64,16 +68,18 @@
 </div>
 <!-- End of container -->
 <!-- 말풍선 라인 -->
-<c:if test="${empty loginMember.introduce}">
+<c:if test="${empty member.introduce}">
 <div class="myprofile-body">
-	<p style="max-width: 32em;">${loginMember.nickname}님은 어떤 분이신가요?<br />
-	<a href="${pageContext.request.contextPath}/mypage/myMiniProfile.do">공개프로필</a>을 꾸며보세요.
+	<p style="max-width: 32em;">${member.nickname}님은 어떤 분이신가요?<br />
+	<c:if test="${loginMember.memberId eq member.memberId}">
+		<a href="${pageContext.request.contextPath}/mypage/myMiniProfile.do">공개프로필</a>을 꾸며보세요.
+	</c:if>
 	</p>
 </div>
 </c:if>
-<c:if test="${not empty loginMember.introduce}">
+<c:if test="${not empty member.introduce}">
 	<div class="myprofile-body">
-		<p style="max-width: 32em;">${loginMember.introduce}</p>
+		<p style="max-width: 32em;">${member.introduce}</p>
 	</div>
 </c:if> 
 
@@ -85,7 +91,7 @@
 <h1>기록</h1>
 </div>
 <div>
-	<a class="record" href="${pageContext.request.contextPath}/mypage/myBook.do" style="color:black">
+	<a class="record" href="${pageContext.request.contextPath}/mypage/myBook.do?memberId=${member.memberId}" style="color:black">
 		<img src="${pageContext.request.contextPath}/resources/images/icon/mypage_booking.png" alt="내서재책"/ style="width: 70px; height : 80px;">
 		<span>책</span>
     </a>
@@ -145,7 +151,7 @@
 
 <!-- 읽은 책 그래프 -->
 <div class="start-mypage" style="white-space: nowrap; padding: 10 20 10 20;">
-<h1>읽은 책</h1>
+<h1>읽은 책 그래프</h1>
 </div>
 
 <hr class="bar" style="border: solid 10px #f6f5f5; margin-top: 3rem;">
@@ -163,22 +169,33 @@
 moveToPointPage = () => {
 	const frm = document.pointFrm
     frm.submit();
+};
+
+if(document.querySelector(".profile-edit-btn")){
+	document.querySelector(".profile-edit-btn").addEventListener("click", (e) => {
+		location.href = "${pageContext.request.contextPath}/mypage/myMiniProfile.do";
+	});	
 }
 
-document.querySelector(".profile-settings-btn").addEventListener("click", (e) => {
-	location.href = "${pageContext.request.contextPath}/mypage/myMiniProfile.do";
-});
+if(document.querySelector(".profile-settings-btn")){
+	document.querySelector(".profile-settings-btn").addEventListener("click", (e) => {
+		location.href = "${pageContext.request.contextPath}/mypage/myMiniProfile.do";
+	});
+}
 
 /* 마이페이지 로딩시 내 책 정보 뿌려주기 */
 window.onload = function(){
+	const memberId = "${member.memberId}";
+	console.log("memberId = " + memberId);
 	const container = document.querySelector("#book-div");
 	const myPickContainer = document.querySelector("#myPick-book-div");
 	var itemId = [];
 	var myPickItemId = [];
 	/* 읽는 중인 itemId를 찾아오기 */
 	$.ajax({
-		url: `${pageContext.request.contextPath}/mypage/getItemId.do`,
+		url: `${pageContext.request.contextPath}/mypage/getIngItemId.do`,
 		method : "get",
+		data : {memberId : memberId},
 		success(data){
 			itemId = data;
 			/* console.log(itemId); */
@@ -199,7 +216,14 @@ window.onload = function(){
 							/* console.log(isbn13,cover); */
 							const div = `
 										<div id="book-imgs" class="d-inline">
-											<img src=\${cover}  value=\${isbn13} onclick="bookEnroll(this);">
+											<c:choose>
+												<c:when test="${loginMember.memberId eq member.memberId}">
+													<img src=\${cover}  value=\${isbn13} onclick="bookEnroll(this);">
+												</c:when>
+												<c:otherwise>
+													<img src=\${cover}  value=\${isbn13}>	
+												</c:otherwise>
+											</c:choose>
 										</div>`;
 							container.insertAdjacentHTML('beforeend', div);
 						})
@@ -215,6 +239,7 @@ window.onload = function(){
 	$.ajax({
 		url: '${pageContext.request.contextPath}/mypage/getmyPickItemId.do',
 		method: 'get',
+		data : {memberId : memberId},
 		success(data){
 			/* console.log(data); */
 			myPickItemId = data;
@@ -236,7 +261,14 @@ window.onload = function(){
 							console.log(isbn13,cover);
 							const div = `
 										<div id="book-imgs" class="d-inline">
-											<img src=\${cover}  value=\${isbn13} onclick="bookEnroll(this);">
+											<c:choose>
+												<c:when test="${loginMember.memberId eq member.memberId}">
+													<img src=\${cover}  value=\${isbn13} onclick="bookEnroll(this);">
+												</c:when>
+												<c:otherwise>
+													<img src=\${cover}  value=\${isbn13}>	
+												</c:otherwise>
+											</c:choose>
 										</div>`;
 							myPickContainer.insertAdjacentHTML('beforeend', div);
 						})

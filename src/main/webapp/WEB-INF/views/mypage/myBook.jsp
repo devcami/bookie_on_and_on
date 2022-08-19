@@ -106,9 +106,10 @@ function reload(){
 function getItemId(event) {	
 	const status = event.target.value;
 	const container = document.querySelector("#book-container");
+	const memberId = "${member.memberId}";
 	container.innerHTML = null;
 	container.innerHTML = `<p id="resultP"></p>`;
-	document.querySelector("#resultP").innerText = '${loginMember.nickname}' + ' 님의 책목록입니다.';
+	document.querySelector("#resultP").innerText = '${member.nickname}' + ' 님의 책목록입니다.';
 	var itemId = [];
 	console.log(status);
 	
@@ -116,7 +117,7 @@ function getItemId(event) {
 	$.ajax({
 		url: '${pageContext.request.contextPath}/mypage/getItemIdByStatus.do',
 		method : "get",
-		data : {status :status},
+		data : {status :status, memberId :memberId},
 		success(data){
 			console.log(data);
 			itemId = data;
@@ -141,7 +142,14 @@ function getItemId(event) {
 							const {isbn13, title, author, publisher, pubDate, cover} = book;
 							console.log(isbn13, title, author, publisher, pubDate, cover);
 							const div = `
-								<div class="book-table" onclick="bookEnroll(this);">
+								<c:choose>
+									<c:when test="${loginMember.memberId eq member.memberId}">
+										<div class="book-table" onclick="bookEnroll(this);">	
+									</c:when>
+									<c:otherwise>
+										<div class="book-table">	
+									</c:otherwise>
+								</c:choose>
 									<input type="hidden" name="isbn13" value=\${isbn13} />
 									<table class="tbl">
 										<tr>
@@ -171,12 +179,14 @@ function getItemId(event) {
 
 /* 페이지 로딩시 전체 책 정보 */
 const getPage = (cPage, maxResult) => {
+	const memberId = "${member.memberId}";
 	console.log(cPage, maxResult);
 	const container = document.querySelector("#book-container");
-	document.querySelector("#resultP").innerText = '${loginMember.nickname}' + ' 님의 책목록입니다.';
+	document.querySelector("#resultP").innerText = '${member.nickname}' + ' 님의 책목록입니다.';
 
 	$.ajax({
 		url : '${pageContext.request.contextPath}/mypage/myBookAllItemId.do',
+		data : { memberId :memberId },
 		success(data){
 			console.log(data);
 			console.log(data);
@@ -205,7 +215,14 @@ const getPage = (cPage, maxResult) => {
 							console.log("여기어디?2");
 							console.log(isbn13, title, author, publisher, pubDate, cover);
 							const div = `
-								<div class="book-table" onclick="bookEnroll(this);">
+								<c:choose>
+									<c:when test="${loginMember.memberId eq member.memberId}">
+										<div class="book-table" onclick="bookEnroll(this);">	
+									</c:when>
+									<c:otherwise>
+										<div class="book-table">	
+									</c:otherwise>
+								</c:choose>
 									<input type="hidden" name="isbn13" value=\${isbn13} />
 									<table class="tbl">
 										<tr>
@@ -242,17 +259,19 @@ const getPage = (cPage, maxResult) => {
 
 /* 전체 책 정보 */
 function getAll(event){
+	const status = event.target.value;
 	const container = document.querySelector("#book-container");
+	const memberId = "${member.memberId}";
 	container.innerHTML = null;
 	container.innerHTML = `<p id="resultP"></p>`;
-	document.querySelector("#resultP").innerText = '${loginMember.nickname}' + ' 님의 책목록입니다.';
+	document.querySelector("#resultP").innerText = '${member.nickname}' + ' 님의 책목록입니다.';
 	var itemId = [];
 	console.log(status);
 	
 	$.ajax({
 		url: '${pageContext.request.contextPath}/mypage/myBookAllItemId.do',
 		method : "get",
-		data : {status :status},
+		data : {status :status, memberId :memberId},
 		success(data){
 			console.log(data);
 			itemId = data;
@@ -277,7 +296,14 @@ function getAll(event){
 							const {isbn13, title, author, publisher, pubDate, cover} = book;
 							console.log(isbn13, title, author, publisher, pubDate, cover);
 							const div = `
-								<div class="book-table" onclick="bookEnroll(this);">
+								<c:choose>
+									<c:when test="${loginMember.memberId eq member.memberId}">
+										<div class="book-table" onclick="bookEnroll(this);">	
+									</c:when>
+									<c:otherwise>
+										<div class="book-table">	
+									</c:otherwise>
+								</c:choose>
 									<input type="hidden" name="isbn13" value=\${isbn13} />
 									<table class="tbl">
 										<tr>
