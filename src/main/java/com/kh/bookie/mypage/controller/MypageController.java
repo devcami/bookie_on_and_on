@@ -387,7 +387,7 @@ public class MypageController {
 	public void myClubList() {}
 	
 	/* 마이프로필 삭제 */
-	@GetMapping("/myProfileDelete.do")
+	@PostMapping("/myProfileDelete.do")
 	public String myProfileDelete(@AuthenticationPrincipal Member loginMember, RedirectAttributes redirectAttr) {
 		String nickname = loginMember.getNickname(); 
 		log.debug("nickname = {}", nickname);

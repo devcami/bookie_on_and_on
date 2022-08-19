@@ -42,15 +42,28 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <!-- 프로필 -->
 <section style="background-color: #fcfbf9;">
-<div class="start-mypage" style="white-space: nowrap; padding: 10 20 10 20;">
-	<h1 style="display:inline;">내서재</h1>
-	<a href="${pageContext.request.contextPath}/mypage/mypageSetting.do" style="color: grey;"><i class="fa-solid fa-gear" style="float: right; font-size: 25;  padding-top: 6px;"></i></a>
+<c:if test="${param.memberId eq loginMember.memberId}">
+<div class="start-mypage d-flex m-0 w-100" style="white-space: nowrap; padding: 10 30;     justify-content: space-between;">
+	<h1>내서재</h1>
+	<a href="${pageContext.request.contextPath}/mypage/mypageSetting.do" style="color: grey;" class="float-right">
+		<i class="fa-solid fa-bars" style="font-size: 25;  padding-top: 6px;"></i>
+	</a>
 </div> 
+</c:if>
+<c:if test="${param.memberId ne loginMember.memberId}">
+<div class="start-mypage d-flex m-0 w-100" style="white-space: nowrap; padding: 10 30;     justify-content: space-between;">
+	<h1>님의 피드</h1>
+	<a href="${pageContext.request.contextPath}/mypage/mypageSetting.do" style="color: grey;" class="float-right">
+		<i class="fa-solid fa-bars" style="font-size: 25;  padding-top: 6px;"></i>
+	</a>
+</div> 
+</c:if>
+
 <div class="container">
 	<div class="profile">
 		<c:if test="${empty loginMember.originalFilename}">
 		<div class="profile-image">
-			<img src="${pageContext.request.contextPath}/resources/images/icon/non-profile.png" alt="사진이없어요~"  width="200" height="200">
+			<img src="${pageContext.request.contextPath}/resources/images/icon/none-profile-img.png" alt="사진이없어요~"  width="150" height="150">
 		</div>
 		</c:if>
 		<c:if test="${not empty loginMember.originalFilename}">
@@ -58,16 +71,23 @@ document.addEventListener('DOMContentLoaded', function() {
 			<img src="${pageContext.request.contextPath}/resources/upload/profile/${loginMember.renamedFilename}" alt="멋지고이쁜내사진"  width="200" height="200">
 		</div> 
 		</c:if>
-		<div class="profile-user-settings">
+		<div class="profile-user-settings d-flex" style="flex-direction: column;">
 			<h1 class="profile-user-name">${loginMember.nickname}</h1>
-			<button class="btn profile-edit-btn" style="font-size: 1em;">Edit Mini Profile</button>
-			<button class="btn profile-settings-btn" aria-label="profile settings" style="margin-left: 0;"><i class="fas fa-cog" aria-hidden="true"></i></button>
+			<c:if test="${loginMember.memberId eq param.memberId}">
+			<button class="btn profile-settings-btn m-0 p-0 text-left" style="font-size: 1em;" aria-label="profile settings">공개프로필 수정<i class="fas fa-cog ml-2" aria-hidden="true"></i></button>
+			</c:if>
 		</div>
-		<div class="profile-stats">
+		<div class="profile-stats text-center">
 			<ul>
 				<li><span class="profile-stat-count follower">0</span> followers</li>
 				<li><span class="profile-stat-count following">0</span> following</li>
 			</ul>
+		</div>
+		<div class="w-100 text-center">
+			<label>
+				<input type="checkbox" name="follow-btn" class="follow-btn" onclick="followEvent(this);" data-follower-id="\${memberId}"/>
+				<span class="mypickSpan">follow</span>
+			</label>
 		</div>
 	</div>
 	<!-- End of profile section -->
