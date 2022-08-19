@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
 import com.kh.bookie.member.model.dto.Member;
+import com.kh.bookie.mypage.model.dto.BookIng;
 import com.kh.bookie.mypage.model.dto.Qna;
 
 @Mapper
@@ -16,5 +17,7 @@ public interface MypageDao {
 	int qnaEnroll(Qna qna);
 
 	Qna selectOneQna(int qnaNo);
+
+	List<BookIng> SelectMyBookIngList(String memberId);
 
 }

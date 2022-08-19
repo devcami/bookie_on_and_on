@@ -1,16 +1,12 @@
 package com.kh.bookie.mypage.controller;
 
 import java.io.File;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -32,16 +28,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import com.kh.bookie.common.HelloSpringUtils;
 import com.kh.bookie.member.model.dto.Member;
 import com.kh.bookie.member.model.dto.MemberEntity;
 import com.kh.bookie.member.model.service.MemberService;
-import com.kh.bookie.mypage.model.dto.Book;
+import com.kh.bookie.mypage.model.dto.BookIng;
 import com.kh.bookie.mypage.model.dto.Qna;
 import com.kh.bookie.mypage.model.service.MypageService;
 import com.kh.bookie.search.model.service.SearchService;
@@ -84,17 +76,16 @@ public class MypageController {
 	
 	/* 마이페이지 */
 	@GetMapping("/mypage.do")
-	public void mypage(Model model, @AuthenticationPrincipal Member loginMember) {
-		String memberId = loginMember.getMemberId();
-		Map<String, Object> map = new HashMap<>();
+	public void mypage(Model model, @AuthenticationPrincipal Member loginMember, @RequestParam String memberId) {
+		log.debug("마이페이지 memberId = {}", memberId);
 		try {
 			Member member = memberService.selectOneMember(memberId);
 			model.addAttribute("member", member);
+
 		} catch (Exception e) {
-			log.error("내서재 조회오류", e);
+			log.error("파이페이지 조회오류", e);
 			throw e;
 		}
-		
 	}
 	
 	@GetMapping("/mypageSetting.do")
@@ -170,14 +161,12 @@ public class MypageController {
 
 	@GetMapping("/myMainProfile.do")
 	public void myMainProfile(Model model, @AuthenticationPrincipal Member loginMember) {
-		log.debug("model = {}", model);
-		log.debug("loginMember = {}", loginMember);
+		log.debug("메인프로필 model = {}", model);
+		log.debug("메인프로필 loginMember = {}", loginMember);
 		String memberId = loginMember.getMemberId();
 		try {
 			// 
 //			Member member = memberService.selectInterests(memberId);
-			
-			
 		} catch (Exception e) {
 			log.error("내프로필 조회 오류", e);
 			e.printStackTrace();
@@ -244,12 +233,21 @@ public class MypageController {
 	
 	/* 내 책정보 */
 	@GetMapping("/myBook.do")
-	public void myBook() {}
+	public void myBook(Model model, @RequestParam String memberId) {
+		log.debug("마이북맴버아이디 = {}",memberId);
+		try {
+			Member member = memberService.selectOneMember(memberId);
+			log.debug("마이북member = {}",member);
+			model.addAttribute("member", member);
+		} catch (Exception e) {
+			log.error("member 조회오류", e);
+			throw e;
+		}
+	}
 
 	/* 내 책 전체 itemId 가져오기 */
 	@GetMapping("/myBookAllItemId")
-	public ResponseEntity<?> myBookAllItemId(@AuthenticationPrincipal Member loginMember){
-		String memberId = loginMember.getMemberId();
+	public ResponseEntity<?> myBookAllItemId(@AuthenticationPrincipal Member loginMember, @RequestParam String memberId){
 		List<String> itemIdList = new ArrayList<>();
 		try {
 			itemIdList = searchService.selectMyBookAllItemId(memberId);
@@ -262,9 +260,8 @@ public class MypageController {
 	}
 	
 	/* 내 서재 읽는중 책 itemId 가져오기 */
-	@GetMapping("/getItemId")
-	public ResponseEntity<?> getItemId(@AuthenticationPrincipal Member loginMember){
-		String memberId = loginMember.getMemberId();
+	@GetMapping("/getIngItemId")
+	public ResponseEntity<?> getItemId(@RequestParam String memberId){
 		String status = "읽는 중";
 		Map<String, Object> param = new HashMap<>();
 		param.put("status", status);
@@ -283,8 +280,7 @@ public class MypageController {
 	
 	/* 내 서재 마이픽 책 itemId 가져오기 */
 	@GetMapping("/getmyPickItemId")
-	public ResponseEntity<?> getmyPickItemId(@AuthenticationPrincipal Member loginMember){
-		String memberId = loginMember.getMemberId();
+	public ResponseEntity<?> getmyPickItemId(@RequestParam String memberId){
 		String myPick = "1"; // 마이픽이 1로 된 책들 itemId가져오기
 		Map<String, Object> param = new HashMap<>();
 		param.put("memberId", memberId);
@@ -300,66 +296,11 @@ public class MypageController {
 		return ResponseEntity.ok(myPickItemIdList);
 	}
 	
-//	/* 내 서재의 책 status별 정보 */
-//	@GetMapping("/getItemId.do")
-//	public List<Map<String, Object>> getItemId(@AuthenticationPrincipal Member loginMember, @RequestParam String status) {
-//			String memberId = loginMember.getMemberId();
-//			Map<String, Object> param = new HashMap<>();
-//			param.put("memberId", memberId);
-//			param.put("status", status);
-//			List<Book> bookList = new ArrayList<>();
-//			bookList = searchService.selectBooKItemIdByStatus(param);
-//			int i = 0;
-//			String itemId[] = {};				
-//			if(bookList != null && bookList.size() > 0) {
-//				for(Book book : bookList) {
-//					itemId[i++] = book.getItemId();
-//				}
-//			}
-//			log.debug("itemId = {}", itemId);
-//	        String serviceKey = "ttbiaj96820130001";
-//	        try {
-//	        	for(String id : itemId) {
-//	        		String urlStr = "http://www.aladin.co.kr/ttb/api/ItemLookUp.aspx";
-//	        		urlStr += "?" + URLEncoder.encode("ttbkey", "UTF-8") + "=" + serviceKey;
-//	        		urlStr += "&" + URLEncoder.encode("itemIdType", "UTF-8") + "=ISBN";
-//	        		urlStr += "&" + URLEncoder.encode("ItemId", "UTF-8") + "="+id;
-//	        		urlStr += "&" + URLEncoder.encode("output", "UTF-8") + "=xml";
-//	        		urlStr += "&" + URLEncoder.encode("Version", "UTF-8") + "=20131101";
-//	        		
-//	        		System.out.println(urlStr);
-//	        		
-//	        		// xml 파싱
-//	        		Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(urlStr);
-//	        		XPath xpath = XPathFactory.newInstance().newXPath();
-//	        		
-//	        		NodeList nList = document.getElementsByTagName("item");
-//	        		Node nNode = nList.item(0);
-//	        		if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-//	        			Element eElement = (Element) nNode;
-//	        			getTagValue("cover", eElement); // title
-//	        			getTagValue("itemId", eElement); // itemId
-//	        		}
-//	        	};	
-//			} catch (Exception e) {
-//				log.error("내 책 조회 오류", e);
-//			}
-//	        return null;
-//	    }
-//	    
-//	      // tag값의 정보를 가져오는 함수
-//	   public static String getTagValue(String tag, Element eElement) {
-//	          String result = "";
-//	       NodeList nlList = eElement.getElementsByTagName(tag).item(0).getChildNodes();
-//	       result = nlList.item(0).getTextContent();
-//	        System.out.println(result);
-//	       return result;
-//	   }
+
 
 	/* 내 서재의 책 status별 정보 */
 	@GetMapping("/getItemIdByStatus.do")
-	public ResponseEntity<?> getItemId(@AuthenticationPrincipal Member loginMember, @RequestParam String status) {
-		String memberId = loginMember.getMemberId();
+	public ResponseEntity<?> getItemId(@RequestParam String status, @RequestParam String memberId) {
 		Map<String, Object> param = new HashMap<>();
 		param.put("memberId", memberId);
 		param.put("status", status);
@@ -372,6 +313,20 @@ public class MypageController {
 			throw e;
 		}
 		return ResponseEntity.ok(ItemIdByStatus);
+	}
+	
+	/* 달력에 뿌려줄 book_ing 가져오기 */
+	@GetMapping("/myBookIngList.do")
+	public ResponseEntity<?> myBookIngList(@RequestParam String memberId){
+		List<BookIng> bookIngList = new ArrayList<>();
+		try {
+			bookIngList = mypageService.SelectMyBookIngList(memberId);
+			log.debug("내 부킹부킹붕킹 bookIngList = {}" , bookIngList);
+		} catch (Exception e) {
+			log.error("bookIng 조회 오류", e);
+			throw e;
+		}
+		return ResponseEntity.ok(bookIngList);
 	}
 	
 	@GetMapping("/myScrap.do")
@@ -530,22 +485,29 @@ public class MypageController {
 
 	/* status 책 뿌려주기 */
 	@GetMapping("/statusBook")
-	public ResponseEntity<?> statusBook(@AuthenticationPrincipal Member loginMember, @RequestParam String itemId){
+	public ResponseEntity<?> statusBook(@RequestParam String itemId){
 		log.debug("status itemId = {}", itemId);
 		return getBookInfo(itemId);
 	}
 	
 	/* 읽고있는 책 뿌려주기 */
 	@GetMapping("/myReadingBook")
-	public ResponseEntity<?> myReadingBook(@AuthenticationPrincipal Member loginMember, @RequestParam String itemId){
+	public ResponseEntity<?> myReadingBook(@RequestParam String itemId){
 		log.debug("읽는 중 itemId = {}", itemId);
 		return getBookInfo(itemId);
 	}
 	
-	/* 마이픽 뿌려주기 */
+	/* 마이픽 책 뿌려주기 */
 	@GetMapping("/myPickBook")
-	public ResponseEntity<?> myPickBook(@AuthenticationPrincipal Member loginMember, @RequestParam String itemId){
+	public ResponseEntity<?> myPickBook(@RequestParam String itemId){
 		log.debug("마이픽 itemId = {}", itemId);
+		return getBookInfo(itemId);
+	}
+	
+	/* 달력에 읽은 책 뿌려주기 */
+	@GetMapping("/myEndedAtBook")
+	public ResponseEntity<?> myEndedAtBook(@RequestParam String itemId){
+		log.debug("달력 itemId = {}", itemId);
 		return getBookInfo(itemId);
 	}
 	
@@ -565,5 +527,61 @@ public class MypageController {
 		Resource resource = resourceLoader.getResource(url);
 		return ResponseEntity.ok(resource);
 	}
+	
+//	/* 내 서재의 책 status별 정보 */
+//	@GetMapping("/getItemId.do")
+//	public List<Map<String, Object>> getItemId(@AuthenticationPrincipal Member loginMember, @RequestParam String status) {
+//			String memberId = loginMember.getMemberId();
+//			Map<String, Object> param = new HashMap<>();
+//			param.put("memberId", memberId);
+//			param.put("status", status);
+//			List<Book> bookList = new ArrayList<>();
+//			bookList = searchService.selectBooKItemIdByStatus(param);
+//			int i = 0;
+//			String itemId[] = {};				
+//			if(bookList != null && bookList.size() > 0) {
+//				for(Book book : bookList) {
+//					itemId[i++] = book.getItemId();
+//				}
+//			}
+//			log.debug("itemId = {}", itemId);
+//	        String serviceKey = "ttbiaj96820130001";
+//	        try {
+//	        	for(String id : itemId) {
+//	        		String urlStr = "http://www.aladin.co.kr/ttb/api/ItemLookUp.aspx";
+//	        		urlStr += "?" + URLEncoder.encode("ttbkey", "UTF-8") + "=" + serviceKey;
+//	        		urlStr += "&" + URLEncoder.encode("itemIdType", "UTF-8") + "=ISBN";
+//	        		urlStr += "&" + URLEncoder.encode("ItemId", "UTF-8") + "="+id;
+//	        		urlStr += "&" + URLEncoder.encode("output", "UTF-8") + "=xml";
+//	        		urlStr += "&" + URLEncoder.encode("Version", "UTF-8") + "=20131101";
+//	        		
+//	        		System.out.println(urlStr);
+//	        		
+//	        		// xml 파싱
+//	        		Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(urlStr);
+//	        		XPath xpath = XPathFactory.newInstance().newXPath();
+//	        		
+//	        		NodeList nList = document.getElementsByTagName("item");
+//	        		Node nNode = nList.item(0);
+//	        		if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+//	        			Element eElement = (Element) nNode;
+//	        			getTagValue("cover", eElement); // title
+//	        			getTagValue("itemId", eElement); // itemId
+//	        		}
+//	        	};	
+//			} catch (Exception e) {
+//				log.error("내 책 조회 오류", e);
+//			}
+//	        return null;
+//	    }
+//	    
+//	      // tag값의 정보를 가져오는 함수
+//	   public static String getTagValue(String tag, Element eElement) {
+//	          String result = "";
+//	       NodeList nlList = eElement.getElementsByTagName(tag).item(0).getChildNodes();
+//	       result = nlList.item(0).getTextContent();
+//	        System.out.println(result);
+//	       return result;
+//	   }
 	
 }

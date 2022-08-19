@@ -150,7 +150,7 @@ const memberId = '<sec:authentication property="principal.username"/>';
                     	<sec:authorize access="hasRole('ROLE_USER')"> 
                     		
                     		<c:if test="${loginMember.memberId != 'admin'}">
-                    		<a class="nav-link" href="${pageContext.request.contextPath}/mypage/mypage.do">
+                    		<a class="nav-link" href="${pageContext.request.contextPath}/mypage/mypage.do?memberId=${loginMember.memberId}">
 				    			<c:if test="${fn:contains(uri, '/bookie/WEB-INF/views/mypage')}">
 	                    		<img src="${pageContext.request.contextPath}/resources/images/icon/i_mypage_on.png" alt="mypageicon" />내서재
 				    			</c:if>

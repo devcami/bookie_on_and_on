@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.kh.bookie.member.model.dto.Member;
 import com.kh.bookie.mypage.model.dao.MypageDao;
+import com.kh.bookie.mypage.model.dto.BookIng;
 import com.kh.bookie.mypage.model.dto.Qna;
 
 @Service
@@ -28,5 +29,10 @@ public class MypageServiceImpl implements MypageService {
 	@Override
 	public Qna selectOneQna(int qnaNo) {
 		return mypageDao.selectOneQna(qnaNo);
+	}
+
+	@Override
+	public List<BookIng> SelectMyBookIngList(String memberId) {
+		return mypageDao.SelectMyBookIngList(memberId);
 	}
 }
