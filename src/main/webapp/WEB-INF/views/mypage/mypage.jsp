@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/main.css" />
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/clubAnn.css" />
 <script src='${pageContext.request.contextPath}/resources/js/main.js'></script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/locales-all.js"></script>
 <%
 	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 	Member loginMember = (Member) authentication.getPrincipal();
@@ -23,17 +24,6 @@
     padding-bottom: 35px;
 }
 </style>
-<script>
-/* 달력출력 스크립트 */
-document.addEventListener('DOMContentLoaded', function() {
-  var calendarEl = document.getElementById('calendar');
-  var calendar = new FullCalendar.Calendar(calendarEl, {
-    initialView: 'dayGridMonth'
-  });
-  calendar.render();
-});
-
-</script>
 <sec:authentication property="principal" var="loginMember" scope="page"/>
 <fmt:requestEncoding value="utf-8"></fmt:requestEncoding>
 <jsp:include page="/WEB-INF/views/common/header.jsp">
@@ -42,15 +32,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <!-- 프로필 -->
 <section style="background-color: #fcfbf9;">
-<c:if test="${param.memberId eq loginMember.memberId}">
+<c:if test="${member.memberId eq loginMember.memberId}">
 <div class="start-mypage d-flex m-0 w-100" style="white-space: nowrap; padding: 10 30;     justify-content: space-between;">
-	<h1>내서재</h1>
+	<h1 style="display:inline;">"${member.nickname}"님 서재</h1>
 	<a href="${pageContext.request.contextPath}/mypage/mypageSetting.do" style="color: grey;" class="float-right">
 		<i class="fa-solid fa-bars" style="font-size: 25;  padding-top: 6px;"></i>
 	</a>
 </div> 
 </c:if>
-<c:if test="${param.memberId ne loginMember.memberId}">
+<c:if test="${member.memberId ne loginMember.memberId}">
 <div class="start-mypage d-flex m-0 w-100" style="white-space: nowrap; padding: 10 30;     justify-content: space-between;">
 	<h1>님의 피드</h1>
 	<a href="${pageContext.request.contextPath}/mypage/mypageSetting.do" style="color: grey;" class="float-right">
@@ -61,18 +51,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <div class="container">
 	<div class="profile">
-		<c:if test="${empty loginMember.originalFilename}">
+		<c:if test="${empty member.originalFilename}">
 		<div class="profile-image">
 			<img src="${pageContext.request.contextPath}/resources/images/icon/none-profile-img.png" alt="사진이없어요~"  width="150" height="150">
 		</div>
 		</c:if>
-		<c:if test="${not empty loginMember.originalFilename}">
+		<c:if test="${not empty member.originalFilename}">
 		<div class="profile-image">
-			<img src="${pageContext.request.contextPath}/resources/upload/profile/${loginMember.renamedFilename}" alt="멋지고이쁜내사진"  width="200" height="200">
+			<img src="${pageContext.request.contextPath}/resources/upload/profile/${member.renamedFilename}" alt="멋지고이쁜내사진"  width="200" height="200">
 		</div> 
 		</c:if>
 		<div class="profile-user-settings d-flex" style="flex-direction: column;">
-			<h1 class="profile-user-name">${loginMember.nickname}</h1>
+			<h1 class="profile-user-name">${member.nickname}</h1>
 			<c:if test="${loginMember.memberId eq param.memberId}">
 			<button class="btn profile-settings-btn m-0 p-0 text-left" style="font-size: 1em;" aria-label="profile settings">공개프로필 수정<i class="fas fa-cog ml-2" aria-hidden="true"></i></button>
 			</c:if>
@@ -94,16 +84,18 @@ document.addEventListener('DOMContentLoaded', function() {
 </div>
 <!-- End of container -->
 <!-- 말풍선 라인 -->
-<c:if test="${empty loginMember.introduce}">
+<c:if test="${empty member.introduce}">
 <div class="myprofile-body">
-	<p style="max-width: 32em;">${loginMember.nickname}님은 어떤 분이신가요?<br />
-	<a href="${pageContext.request.contextPath}/mypage/myMiniProfile.do">공개프로필</a>을 꾸며보세요.
+	<p style="max-width: 32em;">${member.nickname}님은 어떤 분이신가요?<br />
+	<c:if test="${loginMember.memberId eq member.memberId}">
+		<a href="${pageContext.request.contextPath}/mypage/myMiniProfile.do">공개프로필</a>을 꾸며보세요.
+	</c:if>
 	</p>
 </div>
 </c:if>
-<c:if test="${not empty loginMember.introduce}">
+<c:if test="${not empty member.introduce}">
 	<div class="myprofile-body">
-		<p style="max-width: 32em;">${loginMember.introduce}</p>
+		<p style="max-width: 32em;">${member.introduce}</p>
 	</div>
 </c:if> 
 
@@ -115,7 +107,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <h1>기록</h1>
 </div>
 <div>
-	<a class="record" href="${pageContext.request.contextPath}/mypage/myBook.do" style="color:black">
+	<a class="record" href="${pageContext.request.contextPath}/mypage/myBook.do?memberId=${member.memberId}" style="color:black">
 		<img src="${pageContext.request.contextPath}/resources/images/icon/mypage_booking.png" alt="내서재책"/ style="width: 70px; height : 80px;">
 		<span>책</span>
     </a>
@@ -175,7 +167,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <!-- 읽은 책 그래프 -->
 <div class="start-mypage" style="white-space: nowrap; padding: 10 20 10 20;">
-<h1>읽은 책</h1>
+<h1>읽은 책 그래프</h1>
 </div>
 
 <hr class="bar" style="border: solid 10px #f6f5f5; margin-top: 3rem;">
@@ -193,25 +185,36 @@ document.addEventListener('DOMContentLoaded', function() {
 moveToPointPage = () => {
 	const frm = document.pointFrm
     frm.submit();
+};
+
+if(document.querySelector(".profile-edit-btn")){
+	document.querySelector(".profile-edit-btn").addEventListener("click", (e) => {
+		location.href = "${pageContext.request.contextPath}/mypage/myMiniProfile.do";
+	});	
 }
 
-document.querySelector(".profile-settings-btn").addEventListener("click", (e) => {
-	location.href = "${pageContext.request.contextPath}/mypage/myMiniProfile.do";
-});
+if(document.querySelector(".profile-settings-btn")){
+	document.querySelector(".profile-settings-btn").addEventListener("click", (e) => {
+		location.href = "${pageContext.request.contextPath}/mypage/myMiniProfile.do";
+	});
+}
 
 /* 마이페이지 로딩시 내 책 정보 뿌려주기 */
 window.onload = function(){
+	const memberId = "${member.memberId}";
+	console.log("memberId = " + memberId);
 	const container = document.querySelector("#book-div");
 	const myPickContainer = document.querySelector("#myPick-book-div");
 	var itemId = [];
 	var myPickItemId = [];
 	/* 읽는 중인 itemId를 찾아오기 */
 	$.ajax({
-		url: `${pageContext.request.contextPath}/mypage/getItemId.do`,
+		url: `${pageContext.request.contextPath}/mypage/getIngItemId.do`,
 		method : "get",
+		data : {memberId : memberId},
 		success(data){
 			itemId = data;
-			console.log(itemId);
+			/* console.log(itemId); */
 			/* 읽고 있는 책 찾아 뿌리기 */
 			itemId.forEach((value, index, array)=>{
 				$.ajax({
@@ -222,14 +225,21 @@ window.onload = function(){
 					method : "get",
 					success(data){
 						const {item} = data;
-						console.log(item);
-						console.log(item.length);
+						/* console.log(item); */
+						/* console.log(item.length); */
 						item.forEach((book)=>{
 							const {isbn13, title, author, publisher, pubDate, cover} = book;
-							console.log(isbn13,cover);
+							/* console.log(isbn13,cover); */
 							const div = `
 										<div id="book-imgs" class="d-inline">
-											<img src=\${cover}  value=\${isbn13} onclick="bookEnroll(this);">
+											<c:choose>
+												<c:when test="${loginMember.memberId eq member.memberId}">
+													<img src=\${cover}  value=\${isbn13} onclick="bookEnroll(this);">
+												</c:when>
+												<c:otherwise>
+													<img src=\${cover}  value=\${isbn13}>	
+												</c:otherwise>
+											</c:choose>
 										</div>`;
 							container.insertAdjacentHTML('beforeend', div);
 						})
@@ -245,10 +255,11 @@ window.onload = function(){
 	$.ajax({
 		url: '${pageContext.request.contextPath}/mypage/getmyPickItemId.do',
 		method: 'get',
+		data : {memberId : memberId},
 		success(data){
-			console.log(data);
+			/* console.log(data); */
 			myPickItemId = data;
-			console.log("myPickItemId : " + myPickItemId);
+			/* console.log("myPickItemId : " + myPickItemId); */
 			myPickItemId.forEach ((value, index, array) =>{
 				/* 마이픽 뿌려주기 */
 				$.ajax({
@@ -259,14 +270,21 @@ window.onload = function(){
 					},
 					success(data){
 						const {item} = data;
-						console.log(item);
-						console.log(item.length);
+						/* console.log(item); */
+						/* console.log(item.length); */
 						item.forEach((book)=>{
 							const {isbn13, title, author, publisher, pubDate, cover} = book;
 							console.log(isbn13,cover);
 							const div = `
 										<div id="book-imgs" class="d-inline">
-											<img src=\${cover}  value=\${isbn13} onclick="bookEnroll(this);">
+											<c:choose>
+												<c:when test="${loginMember.memberId eq member.memberId}">
+													<img src=\${cover}  value=\${isbn13} onclick="bookEnroll(this);">
+												</c:when>
+												<c:otherwise>
+													<img src=\${cover}  value=\${isbn13}>	
+												</c:otherwise>
+											</c:choose>
 										</div>`;
 							myPickContainer.insertAdjacentHTML('beforeend', div);
 						})
@@ -277,7 +295,6 @@ window.onload = function(){
 		},
 		error : console.log
 	});
-	
 };
 
 const bookEnroll = (e) => {
@@ -285,5 +302,77 @@ const bookEnroll = (e) => {
 	location.href = "${pageContext.request.contextPath}/search/bookEnroll.do?isbn13=" + isbn13;
 };
 
+/* 달력출력 스크립트 */
+document.addEventListener('DOMContentLoaded', function() {
+	var calendarEl = document.getElementById('calendar');
+	var bookIngList = [];
+	var itemId = [];
+		$.ajax({
+			url: `${pageContext.request.contextPath}/mypage/myBookIngList.do`,
+			method : "get",
+			success(data){
+				bookIngList = data;
+				console.log("부킹붕킹붕킹" + bookIngList);
+				console.log(data);
+				/* 읽은 책 찾아 뿌리기 */
+				bookIngList.forEach((value, index, array)=>{
+					console.log(value.endedAt);
+					console.log(value.itemId);
+					if(value.endedAt){
+						$.ajax({
+							url: `${pageContext.request.contextPath}/mypage/myEndedAtBook.do`,
+							data: {
+								itemId : value.itemId
+							},
+							method : "get",
+							success(data){
+								const {item} = data;
+								console.log(item);
+								console.log(item.length);
+								item.forEach((bookIng)=>{
+									const {isbn13, title, author, publisher, pubDate, cover, itemId, endedAt} = bookIng;
+								})
+					 		},
+							error : console.log
+						});	
+					}
+	 			}); 
+			},
+			error : console.log
+		});
+
+	console.log("부킹퍼킹리스트 있냐고" + bookIngList);
+	
+	var calendar = new FullCalendar.Calendar(calendarEl, {
+		initialView : 'dayGridMonth', // 초기 로드 될때 보이는 캘린더 화면(기본 설정: 달)
+		headerToolbar : { // 헤더에 표시할 툴 바
+			start : 'prev next today',
+			center : 'title',
+			end : 'dayGridMonth,dayGridWeek,dayGridDay'
+		},
+		titleFormat : function(date) {
+			return date.date.year + '년 ' + (parseInt(date.date.month) + 1) + '월';
+		},
+		//initialDate: '2021-07-15', // 초기 날짜 설정 (설정하지 않으면 오늘 날짜가 보인다.)
+		selectable : true, // 달력 일자 드래그 설정가능
+		droppable : true,
+		editable : true,
+		nowIndicator: true, // 현재 시간 마크
+		locale: 'ko', // 한국어 설정
+		events :[
+			{
+			start : '2022-08-17',
+			end : '2022-08-17',
+			url : '${pageContext.request.contextPath}/mypage/myBook.do',
+			borderColor : 'white',
+			backgroundColor : 'white'
+			}
+		],
+		eventContent: {
+			  html: `<img src="${pageContext.request.contextPath}/resources/images/icon/dokoo_icon.png" class="event-icon" style="width: 3.5rem; height: 5rem" />`,
+		},
+	});
+	calendar.render();
+});
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
