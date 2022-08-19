@@ -181,7 +181,7 @@ window.onload = function(){
 		method : "get",
 		success(data){
 			itemId = data;
-			console.log(itemId);
+			/* console.log(itemId); */
 			/* 읽고 있는 책 찾아 뿌리기 */
 			itemId.forEach((value, index, array)=>{
 				$.ajax({
@@ -192,11 +192,11 @@ window.onload = function(){
 					method : "get",
 					success(data){
 						const {item} = data;
-						console.log(item);
-						console.log(item.length);
+						/* console.log(item); */
+						/* console.log(item.length); */
 						item.forEach((book)=>{
 							const {isbn13, title, author, publisher, pubDate, cover} = book;
-							console.log(isbn13,cover);
+							/* console.log(isbn13,cover); */
 							const div = `
 										<div id="book-imgs" class="d-inline">
 											<img src=\${cover}  value=\${isbn13} onclick="bookEnroll(this);">
@@ -216,9 +216,9 @@ window.onload = function(){
 		url: '${pageContext.request.contextPath}/mypage/getmyPickItemId.do',
 		method: 'get',
 		success(data){
-			console.log(data);
+			/* console.log(data); */
 			myPickItemId = data;
-			console.log("myPickItemId : " + myPickItemId);
+			/* console.log("myPickItemId : " + myPickItemId); */
 			myPickItemId.forEach ((value, index, array) =>{
 				/* 마이픽 뿌려주기 */
 				$.ajax({
@@ -229,8 +229,8 @@ window.onload = function(){
 					},
 					success(data){
 						const {item} = data;
-						console.log(item);
-						console.log(item.length);
+						/* console.log(item); */
+						/* console.log(item.length); */
 						item.forEach((book)=>{
 							const {isbn13, title, author, publisher, pubDate, cover} = book;
 							console.log(isbn13,cover);
@@ -247,9 +247,6 @@ window.onload = function(){
 		},
 		error : console.log
 	});
-	
-	/* 슈발 로드될때 몇개를 가져와 슈발 */
-	
 };
 
 const bookEnroll = (e) => {
@@ -260,6 +257,44 @@ const bookEnroll = (e) => {
 /* 달력출력 스크립트 */
 document.addEventListener('DOMContentLoaded', function() {
 	var calendarEl = document.getElementById('calendar');
+	var bookIngList = [];
+	var itemId = [];
+		$.ajax({
+			url: `${pageContext.request.contextPath}/mypage/myBookIngList.do`,
+			method : "get",
+			success(data){
+				bookIngList = data;
+				console.log("부킹붕킹붕킹" + bookIngList);
+				console.log(data);
+				/* 읽은 책 찾아 뿌리기 */
+				bookIngList.forEach((value, index, array)=>{
+					console.log(value.endedAt);
+					console.log(value.itemId);
+					if(value.endedAt){
+						$.ajax({
+							url: `${pageContext.request.contextPath}/mypage/myEndedAtBook.do`,
+							data: {
+								itemId : value.itemId
+							},
+							method : "get",
+							success(data){
+								const {item} = data;
+								console.log(item);
+								console.log(item.length);
+								item.forEach((bookIng)=>{
+									const {isbn13, title, author, publisher, pubDate, cover, itemId, endedAt} = bookIng;
+								})
+					 		},
+							error : console.log
+						});	
+					}
+	 			}); 
+			},
+			error : console.log
+		});
+
+	console.log("부킹퍼킹리스트 있냐고" + bookIngList);
+	
 	var calendar = new FullCalendar.Calendar(calendarEl, {
 		initialView : 'dayGridMonth', // 초기 로드 될때 보이는 캘린더 화면(기본 설정: 달)
 		headerToolbar : { // 헤더에 표시할 툴 바
@@ -278,14 +313,16 @@ document.addEventListener('DOMContentLoaded', function() {
 		locale: 'ko', // 한국어 설정
 		events :[
 			{
-			title : '지금????',
 			start : '2022-08-17',
 			end : '2022-08-17',
 			url : '${pageContext.request.contextPath}/mypage/myBook.do',
-			backgroundColor: '#CCDA46',
-			image : '${pageContext.request.contextPath}/resources/images/icon/dokoo_icon.png'
+			borderColor : 'white',
+			backgroundColor : 'white'
 			}
-		]
+		],
+		eventContent: {
+			  html: `<img src="${pageContext.request.contextPath}/resources/images/icon/dokoo_icon.png" class="event-icon" style="width: 3.5rem; height: 5rem" />`,
+		},
 	});
 	calendar.render();
 });

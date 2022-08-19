@@ -1,16 +1,12 @@
 package com.kh.bookie.mypage.controller;
 
 import java.io.File;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -32,16 +28,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import com.kh.bookie.common.HelloSpringUtils;
 import com.kh.bookie.member.model.dto.Member;
 import com.kh.bookie.member.model.dto.MemberEntity;
 import com.kh.bookie.member.model.service.MemberService;
-import com.kh.bookie.mypage.model.dto.Book;
+import com.kh.bookie.mypage.model.dto.BookIng;
 import com.kh.bookie.mypage.model.dto.Qna;
 import com.kh.bookie.mypage.model.service.MypageService;
 import com.kh.bookie.search.model.service.SearchService;
@@ -374,6 +366,21 @@ public class MypageController {
 		return ResponseEntity.ok(ItemIdByStatus);
 	}
 	
+	/* 달력에 뿌려줄 book_ing 가져오기 */
+	@GetMapping("/myBookIngList.do")
+	public ResponseEntity<?> myBookIngList(@AuthenticationPrincipal Member loginMember){
+		String memberId = loginMember.getMemberId();
+		List<BookIng> bookIngList = new ArrayList<>();
+		try {
+			bookIngList = mypageService.SelectMyBookIngList(memberId);
+			log.debug("내 부킹부킹붕킹 bookIngList = {}" , bookIngList);
+		} catch (Exception e) {
+			log.error("bookIng 조회 오류", e);
+			throw e;
+		}
+		return ResponseEntity.ok(bookIngList);
+	}
+	
 	@GetMapping("/myScrap.do")
 	public void myScrap() {}
 
@@ -542,10 +549,17 @@ public class MypageController {
 		return getBookInfo(itemId);
 	}
 	
-	/* 마이픽 뿌려주기 */
+	/* 마이픽 책 뿌려주기 */
 	@GetMapping("/myPickBook")
 	public ResponseEntity<?> myPickBook(@AuthenticationPrincipal Member loginMember, @RequestParam String itemId){
 		log.debug("마이픽 itemId = {}", itemId);
+		return getBookInfo(itemId);
+	}
+	
+	/* 달력에 읽은 책 뿌려주기 */
+	@GetMapping("/myEndedAtBook")
+	public ResponseEntity<?> myEndedAtBook(@AuthenticationPrincipal Member loginMember, @RequestParam String itemId){
+		log.debug("달력 itemId = {}", itemId);
 		return getBookInfo(itemId);
 	}
 	

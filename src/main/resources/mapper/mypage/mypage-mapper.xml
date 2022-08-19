@@ -64,4 +64,20 @@
 		</collection>
 	</resultMap>
 	
+	<select id="SelectMyBookIngList" resultMap="MyBookIngMap">
+		select
+			*
+		from
+			book_ing
+		where
+			member_id = #{memberId}
+	</select>
+	
+	<resultMap type="bookIng" id="MyBookIngMap">
+		<id column="ing_no" property="ingNo"/>
+		<result column="member_id" property="memberId"/>
+		<result column="started_at" property="startedAt"/>
+		<result column="ended_at" property="endedAt"/>
+	</resultMap>
+	
 </mapper>
