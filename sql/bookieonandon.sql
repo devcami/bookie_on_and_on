@@ -1169,3 +1169,29 @@ commit;
 
 select * from point_status;
 update point_status set updated_at = sysdate - 80 where point_no = 3;
+
+select 
+    		ph.*,
+    		(select count(*) from likes_pheed where pheed_no = ph.pheed_no) likes_cnt 
+		from 
+    		(select row_number() over (order by enroll_date desc) rnum, p.* from pheed p) ph
+        where member_id = 'tmddbs';
+        
+        
+select
+        tb.*,
+        m.*
+    from
+         (select 
+                row_number() over(order by enroll_date desc) rnum, 
+                d.* 
+            from 
+                dokoo d
+            where member_id = 'tmddbs') tb 
+                left join member m on tb.member_id = m.member_id
+    where 
+        rnum between 1 and 2
+    order by
+        tb.enroll_date desc;
+
+        
