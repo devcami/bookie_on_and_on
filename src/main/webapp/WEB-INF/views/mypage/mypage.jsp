@@ -271,13 +271,13 @@ moveToPointPage = () => {
 
 if(document.querySelector(".profile-edit-btn")){
 	document.querySelector(".profile-edit-btn").addEventListener("click", (e) => {
-		location.href = "${pageContext.request.contextPath}/mypage/myMiniProfile.do";
+		location.href = "${pageContext.request.contextPath}/mypage/myMiniProfile.do?memberId=${member.memberId}";
 	});	
 }
 
 if(document.querySelector(".profile-settings-btn")){
 	document.querySelector(".profile-settings-btn").addEventListener("click", (e) => {
-		location.href = "${pageContext.request.contextPath}/mypage/myMiniProfile.do";
+		location.href = "${pageContext.request.contextPath}/mypage/myMiniProfile.do?memberId=${member.memberId}";
 	});
 }
 
@@ -477,9 +477,9 @@ document.addEventListener('DOMContentLoaded', function() {
 	
 	function drawStacked() {
 	  var data = google.visualization.arrayToDataTable([
-	      ['Genre', 'Fantasy & Sci Fi', 'Romance', 'Mystery/Crime', 'General',
-	       'Western', 'Literature', { role: 'annotation' } ],
-	      ['1', 10, 24, 20, 32, 18, 5, ''],
+	      ['이건뭐야?', '책이름 1', '책이름 2', '책이름 3', '책이름 4',
+	       '책이름 5', '책이름 6', { role: 'annotation' } ],
+	      ['1', 0, 0, 0, 0, 0, 0, ''],
 	      ['2', 16, 22, 23, 30, 16, 9, ''],
 	      ['3', 16, 22, 23, 30, 16, 9, ''],
 	      ['4', 16, 22, 23, 30, 16, 9, ''],
@@ -494,12 +494,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	    ]);
 	
 	  var view = new google.visualization.DataView(data);
-	  view.setColumns([0, 1, 2, 3, 4, 5, 6, 
-	                   { calc: "stringify",
-	                     sourceColumn: 1,
-	                     type: "string",
-	                     role: "annotation" },
-	                   7]);
+	  view.setColumns([0, 1, 2, 3, 4, 5, 6, 7, { calc: "stringify", sourceColumn: 1, type: "string", role: "annotation" }, 7]);
 	
 	  var options = {
 	          width: 800,
