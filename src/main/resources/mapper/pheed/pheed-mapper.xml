@@ -42,7 +42,8 @@
 	<select id="selectPheedCommentList" resultType="pheedComment">
 		select 
 			c.*,
-			(select renamed_filename from member m where m.nickname = c.nickname) renamed_filename
+			(select renamed_filename from member m where m.nickname = c.nickname) renamed_filename,
+			(select member_id from member m where m.nickname = c.nickname) member_id
 		from 
 			pheed_comment c
 		where 

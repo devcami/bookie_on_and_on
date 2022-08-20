@@ -73,7 +73,7 @@ a:hover {
 	        <input class="form-field" id="form-nickname" name="newNickname" type="text" onblur="nickChech();" value="${loginMember.nickname}" required>
 			<span class="guide ok" id="nickok">이 닉네임은 사용 가능합니다.</span>
 			<span class="guide error" id="nickerror1">이 닉네임은 이미 사용중입니다.</span>
-			<span class="guide error" id="nickerror2">이 닉네임은 유효하지 않습니다.</span>
+			<span class="guide error" id="nickerror2">이 닉네임은 유효하지 않습니다. 2-10자 사이의 문자(숫자 포함 가능)로 만들어 주세요.</span>
 			<input type="hidden" id="nicknameValid" name="nicknameValid" value="0" /> <%-- 사용불가 0 사용가능 중복검사 통과 시 1 --%>
 		  </div>
 	      <p class="form-label" style="margin-top: 10px; color: orange;">소개 : </p>
@@ -114,18 +114,25 @@ function nickChech() {
 				if(available){
 					// 유효성검사
 				    if(!/^[a-zA-Z0-9ㄱ-ㅎ|ㅏ-ㅣ|가-힣]{2,10}$/.test(nickVal)){
-				        alert('닉네임을 2-10자 사이의 문자(숫자 포함 가능)로 만들어 주세요.');
 						document.querySelector("#nickerror2").style.display = "inline";	
 						document.querySelector("#nickok").style.display = "none";	
 						document.querySelector("#nicknameValid").value = "0";
 				        return false;
+				        
 				    } else{
-					document.querySelector("#nickerror1").style.display = "none";	
-					document.querySelector("#nickok").style.display = "inline";	
-					document.querySelector("#nicknameValid").value = "1";				    	
+						document.querySelector("#nickerror1").style.display = "none";	
+						document.querySelector("#nickok").style.display = "inline";	
+						document.querySelector("#nicknameValid").value = "1";				    	
 				    }
 				}
 				else {
+					// 중복이긴 해 근데 내 지금 닉네임이랑 똑같애 그럼 사용가능
+					if(nickVal == '${loginMember.nickname}'){
+						document.querySelector("#nickerror1").style.display = "none";	
+						document.querySelector("#nickok").style.display = "inline";	
+						document.querySelector("#nicknameValid").value = "1";	
+						return;
+					}
 					document.querySelector("#nickerror1").style.display = "inline";	
 					document.querySelector("#nickok").style.display = "none";	
 					document.querySelector("#nicknameValid").value = "0";
@@ -183,15 +190,18 @@ const loadImage = (input) => {
 };   
 
 
-
+/* 제출 시 닉네임 유효성검사 */
 document.querySelector("#quiz-form").addEventListener ('submit', (e) => {
-	console.log(availableall);
-	const delFile = document.querySelector("#delFile");
-	if(!availableall){
-		alert("사용불가 닉네임입니다. 다시 확인하세요.");
-		return false;
-	};
+
+	// 아무것도 안했을 때
+	if(availableall == ""){
+		document.querySelector("#quiz-form").submit();
+		return;
+	}
+	
+	// 변경할려고 시도했는데 못쓰는 닉네임일때
 	if(document.querySelector("#nicknameValid").value == 0){
+		e.preventDefault();
 		alert("사용불가 닉네임입니다. 다시 확인하세요.");
 		return false;
 	};

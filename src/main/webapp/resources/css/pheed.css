@@ -74,6 +74,16 @@ section#content	{
 	/* box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4); */
 }
 /* 프로필 */
+#content .pheed-container .pheed-writer .text-link{
+	font-size: 40px;
+}
+a.text-link{
+	color: #000;
+}
+a.text-link:hover{
+	color: #FE9801;
+}
+
 #content .pheed-container .pheed-writer .profile{
 	position:relative;
 	top: 25px;
@@ -201,7 +211,7 @@ section#content	{
     position: fixed;
     top: 0;
     left: 0;
-    width: 28%;
+    width: 32%;
     height: 88%;
     z-index: 100;
     transform: translateX(-100%);
@@ -241,8 +251,10 @@ hr{
     font-size: 22px;
     width: 73%;
 }
+div.coComment-div span.text-secondary {
+    float: right;
+}
 div.comment-div span.text-secondary {
-
     float: right;
 }
 
@@ -257,7 +269,7 @@ div.comment-div span.text-secondary {
 
 /****** 대댓글 *************/
 .co-div {
-    width: 460px;
+   width: 100%;
    justify-content: space-between;
 
 }
@@ -265,24 +277,27 @@ div.comment-div span.text-secondary {
     justify-content: flex-start;
 }
 .co-right {
-   display: flex;
+    display: flex;
     flex-direction: row;
     align-items: flex-end;
     margin-left: 10px;
+    justify-content: flex-end;
+}
+.co-writer span{
+	font-size: 22px;
 }
 .co-writer {
     justify-content: flex-start;
-    width: 150px;
     padding-right: 15px;
     color: #FE9801;
 }
 .c-content {
    display: flex;
-   width: 310px;
+   margin-left: 60px;
 }
 .co-Content {
    display: flex;
-   width: 200px;
+   margin-left: 73px;
 }
 .flex-center{
 	display: flex;

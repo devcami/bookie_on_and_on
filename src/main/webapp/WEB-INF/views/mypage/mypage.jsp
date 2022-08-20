@@ -33,19 +33,16 @@
 <!-- 프로필 -->
 <section style="background-color: #fcfbf9;">
 <c:if test="${member.memberId eq loginMember.memberId}">
-<div class="start-mypage d-flex m-0 w-100" style="white-space: nowrap; padding: 10 30;     justify-content: space-between;">
-	<h1 style="display:inline;">"${member.nickname}"님 서재</h1>
+<div class="start-mypage d-flex m-0 w-100" style="white-space: nowrap; padding: 10 30; justify-content: space-between;">
+	<h1 style="display:inline;">[${member.nickname}] 님의 서재</h1>
 	<a href="${pageContext.request.contextPath}/mypage/mypageSetting.do" style="color: grey;" class="float-right">
-		<i class="fa-solid fa-bars" style="font-size: 25;  padding-top: 6px;"></i>
+		<i class="fa-solid fa-bars" style="font-size: 25; padding-top: 6px;"></i>
 	</a>
 </div> 
 </c:if>
 <c:if test="${member.memberId ne loginMember.memberId}">
-<div class="start-mypage d-flex m-0 w-100" style="white-space: nowrap; padding: 10 30;     justify-content: space-between;">
-	<h1>님의 피드</h1>
-	<a href="${pageContext.request.contextPath}/mypage/mypageSetting.do" style="color: grey;" class="float-right">
-		<i class="fa-solid fa-bars" style="font-size: 25;  padding-top: 6px;"></i>
-	</a>
+<div class="start-mypage d-flex m-0 w-100" style="white-space: nowrap; padding: 10 30; justify-content: space-between;">
+	<h1 style="display:inline;">[${member.nickname}] 님의 서재</h1>
 </div> 
 </c:if>
 
@@ -67,18 +64,20 @@
 			<button class="btn profile-settings-btn m-0 p-0 text-left" style="font-size: 1em;" aria-label="profile settings">공개프로필 수정<i class="fas fa-cog ml-2" aria-hidden="true"></i></button>
 			</c:if>
 		</div>
-		<div class="profile-stats text-center">
+		<div class="profile-stats">
 			<ul>
-				<li><span class="profile-stat-count follower">0</span> followers</li>
-				<li><span class="profile-stat-count following">0</span> following</li>
+				<li onclick="location.href='${pageContext.request.contextPath}/mypage/followList.do?memberId=${member.memberId}&follower=follower';"><span class="profile-stat-count follower" id="followers-cnt"></span> followers</li>
+				<li onclick="location.href='${pageContext.request.contextPath}/mypage/followList.do?memberId=${member.memberId}&follower=following';"><span class="profile-stat-count following" id="following-cnt"></span> following</li>
 			</ul>
 		</div>
-		<div class="w-100 text-center">
+		<c:if test="${loginMember.memberId ne member.memberId}">
+		<div class="w-100">
 			<label>
-				<input type="checkbox" name="follow-btn" class="follow-btn" onclick="followEvent(this);" data-follower-id="\${memberId}"/>
+				<input type="checkbox" name="follow-btn" id="follow-btn" class="follow-btn" onclick="followEvent(this);" data-follower-id="${member.memberId}"/>
 				<span class="mypickSpan">follow</span>
 			</label>
 		</div>
+		</c:if>
 	</div>
 	<!-- End of profile section -->
 </div>
@@ -181,6 +180,82 @@
 	action="${pageContext.request.contextPath}/point/myPoint.do"/>
 
 <script>
+/* 마이페이지 로딩 시 팔로우 내역과 팔로우 수 가져오기 */
+window.addEventListener('load', () => {
+	const memberId = '${member.memberId}';
+	$.ajax({
+		url : "${pageContext.request.contextPath}/mypage/getFollow.do",
+		method : 'get',
+		data : {
+			memberId
+		},
+		success(resp){
+			console.log(resp);	
+			const {followersCnt, followingCnt, followers} = resp;
+			document.querySelector("#followers-cnt").innerText = followersCnt;
+			document.querySelector("#following-cnt").innerText = followingCnt;
+			
+			// 팔로워 체크 처리
+			if(followers){
+				const followerArr = followers.split(','); 
+				followerArr.forEach((f) => {
+					if(memberId == f){
+						document.querySelector("#follow-btn").checked = true;
+					}
+				});
+			}
+		},
+		error:console.log
+	});
+});
+
+/* 팔로우 버튼 클릭 시 팔로잉 이벤트 */
+const followEvent = (e) => {
+	const followingMemberId = e.dataset.followerId;
+	
+	const csrfHeader = '${_csrf.headerName}';
+	const csrfToken = '${_csrf.token}';
+	const headers = {};
+	headers[csrfHeader] = csrfToken; // 전송하는 헤더에 추가하여 전송
+	
+	// 팔로우 되어있는 사람 취소
+	if(!e.checked){
+		$.ajax({
+			url : '${pageContext.request.contextPath}/search/deleteFollower.do',
+			method : 'post',
+			headers,
+			data : {
+				memberId:'${loginMember.memberId}',
+				followingMemberId
+			},
+			success(resp){
+				e.checked = false;
+				let cnt = Number(document.querySelector("#followers-cnt").innerText);
+				document.querySelector("#followers-cnt").innerText = cnt - 1;
+			},
+			error: console.log
+		});
+	}
+	// 팔로우 안되어있는 사람 등록
+	else{
+		$.ajax({
+			url : '${pageContext.request.contextPath}/search/insertFollower.do',
+			method : 'post',
+			headers,
+			data : {
+				memberId:'${loginMember.memberId}',
+				followingMemberId
+			},
+			success(resp){
+				e.checked = true;
+				let cnt = Number(document.querySelector("#followers-cnt").innerText);
+				document.querySelector("#followers-cnt").innerText = cnt + 1;
+			},
+			error: console.log
+		});
+	}
+
+}
 
 moveToPointPage = () => {
 	const frm = document.pointFrm
@@ -200,7 +275,7 @@ if(document.querySelector(".profile-settings-btn")){
 }
 
 /* 마이페이지 로딩시 내 책 정보 뿌려주기 */
-window.onload = function(){
+window.addEventListener('load', () => {
 	const memberId = "${member.memberId}";
 	console.log("memberId = " + memberId);
 	const container = document.querySelector("#book-div");
@@ -295,7 +370,7 @@ window.onload = function(){
 		},
 		error : console.log
 	});
-};
+});
 
 const bookEnroll = (e) => {
 	const isbn13 = $(e).attr('value');

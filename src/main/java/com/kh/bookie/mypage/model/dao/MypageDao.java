@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
+import com.kh.bookie.member.model.dto.Follower;
 import com.kh.bookie.member.model.dto.Member;
 import com.kh.bookie.mypage.model.dto.BookIng;
 import com.kh.bookie.mypage.model.dto.Qna;
@@ -19,5 +20,13 @@ public interface MypageDao {
 	Qna selectOneQna(int qnaNo);
 
 	List<BookIng> SelectMyBookIngList(String memberId);
+
+	int getFollowers(String memberId);
+
+	int getFollowing(String memberId);
+
+	List<Follower> selectFollowerList(String memberId);
+
+	List<Follower> selectFollowingList(String memberId);
 
 }

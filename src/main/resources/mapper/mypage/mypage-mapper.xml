@@ -42,6 +42,43 @@
 		)
 	</insert>
 	
+	<select id="getFollowing" resultType="_int">
+		select
+			count(*)
+		from
+			follower
+		where
+			member_id = #{memberId}
+	</select>
+	
+	<select id="getFollowers" resultType="_int">
+		select
+			count(*)
+		from
+			follower
+		where
+			following_member_id = #{memberId}
+	</select>
+	
+	<select id="selectFollowerList" resultType="follower">
+		select
+			*
+		from
+			follower
+		where
+			following_member_id = #{memberId}
+	</select>
+	
+	<select id="selectFollowingList" resultType="follower">
+		select
+			*
+		from
+			follower
+		where
+			member_id = #{memberId}
+	</select>
+	
+	
 	<select id="selectOneQna" resultMap="qnaOneCollectionMap">
 		select
 			*

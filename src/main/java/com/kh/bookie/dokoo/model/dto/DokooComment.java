@@ -11,4 +11,5 @@ import lombok.ToString;
 @ToString(callSuper = true)
 public class DokooComment extends DokooCommentEntity {
 	private String renamedFilename;
+	private String memberId;
 }

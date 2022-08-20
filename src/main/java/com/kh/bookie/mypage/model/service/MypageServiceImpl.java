@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.kh.bookie.member.model.dto.Follower;
 import com.kh.bookie.member.model.dto.Member;
 import com.kh.bookie.mypage.model.dao.MypageDao;
 import com.kh.bookie.mypage.model.dto.BookIng;
@@ -19,6 +20,26 @@ public class MypageServiceImpl implements MypageService {
 	@Override
 	public List<Qna> selectMyQnaList(String memberId) {
 		return mypageDao.selectMyQnaList(memberId);
+	}
+	
+	@Override
+	public int getFollowers(String memberId) {
+		return mypageDao.getFollowers(memberId);
+	}
+	
+	@Override
+	public int getFollowing(String memberId) {
+		return mypageDao.getFollowing(memberId);
+	}
+	
+	@Override
+	public List<Follower> selectFollowerList(String memberId) {
+		return mypageDao.selectFollowerList(memberId);
+	}
+	
+	@Override
+	public List<Follower> selectFollowingList(String memberId) {
+		return mypageDao.selectFollowingList(memberId);
 	}
 	
 	@Override
