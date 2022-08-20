@@ -137,7 +137,7 @@
 <div class="start-mypage" style="white-space: nowrap; padding: 10 20 10 20;">
 <h1>기록</h1>
 </div>
-<div>
+<div class="d-flex" id="record">
 	<a class="record" href="${pageContext.request.contextPath}/mypage/myBook.do?memberId=${member.memberId}" style="color:black">
 		<img src="${pageContext.request.contextPath}/resources/images/icon/mypage_booking.png" alt="내서재책"/ style="width: 70px; height : 80px;">
 		<span>책</span>
@@ -160,7 +160,7 @@
     </a>
     <a class="record" onclick="moveToPointPage();" style="color:black; cursor: pointer;">
 		<img src="${pageContext.request.contextPath}/resources/images/icon/point-icon.png" alt="포인트" style="width: 70px; height : 80px;">
-		<span>일단 여기쓰세요 포인!!!!!!트</span>
+		<span>포인트</span>
     </a>
 </div>
 
