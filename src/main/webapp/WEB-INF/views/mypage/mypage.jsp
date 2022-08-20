@@ -186,8 +186,13 @@
 <h1>읽은 책 그래프</h1>
 </div>
 <div id="columnchart_values" style="width: 900px; height: 300px;"></div>
-<hr class="bar" style="border: solid 10px #f6f5f5; margin-top: 3rem;">
-
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
 
 </section>
 
