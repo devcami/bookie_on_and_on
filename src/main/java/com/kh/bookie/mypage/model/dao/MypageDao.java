@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
+import com.kh.bookie.member.model.dto.Follower;
 import com.kh.bookie.club.model.dto.Club;
 import com.kh.bookie.dokoo.model.dto.Dokoo;
 import com.kh.bookie.member.model.dto.Member;
@@ -24,6 +25,14 @@ public interface MypageDao {
 
 	List<BookIng> SelectMyBookIngList(String memberId);
 
+	int getFollowers(String memberId);
+
+	int getFollowing(String memberId);
+
+	List<Follower> selectFollowerList(String memberId);
+
+	List<Follower> selectFollowingList(String memberId);
+	
 	List<Club> selectMyClubList(Map<String, Object> map);
 
 	@Select("select count(*) from my_club where member_id = #{memberId}")

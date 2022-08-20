@@ -41,14 +41,14 @@ a:hover {
     		action="${pageContext.request.contextPath}/mypage/myMiniProfileUpdate.do" 
 			method="POST"
 			enctype="multipart/form-data">
-	     <h3 style="text-align: center;">Mini Profile</h3>
-	     <a href="${pageContext.request.contextPath}/mypage/myProfileDelete.do" class="profile-delete"><h6 style="text-align: center;">프로필삭제</h6></a>
+	     <h3 style="text-align: center;">공개프로필 수정</h3>
+	     <h6 class="profile-delete" style="text-align: center; cursor:pointer;" onclick="deleteProfileImg();">프로필삭제</h6>
 	    	<div class="gravatar" style="padding-top: 0px;">
 		      <c:if test="${empty loginMember.originalFilename}">
-		      <img id="img-satya" src="${pageContext.request.contextPath}/resources/images/icon/non-profile.png" alt="사진이없어요~"  width="200" height="200">
+		      <img id="img-satya" src="${pageContext.request.contextPath}/resources/images/icon/none-profile-img.png" alt="사진이없어요~"  width="200" height="200">
 			  </c:if>
 			  <c:if test="${not empty loginMember.originalFilename}">
-			  <img src="${pageContext.request.contextPath}/resources/upload/profile/${loginMember.renamedFilename}" alt="멋지고이쁜내사진"  width="200" height="200" style="border-radius: 50%;">
+			  <img id="img-satya" src="${pageContext.request.contextPath}/resources/upload/profile/${loginMember.renamedFilename}" alt="멋지고이쁜내사진"  width="200" height="200" style="border-radius: 50%;">
 			  </c:if>
 	    	</div>
 	    	<c:if test="${not empty loginMember.originalFilename}">
@@ -59,13 +59,12 @@ a:hover {
 			</c:if>
 			<div class="input-group mb-3" style="padding-top:10px;">
 			  <div class="custom-file">
+			    <input type="file" class="custom-file-input" name="upFile" id="upFile"  onchange="loadImage(this);">
 			  <c:if test="${empty loginMember.originalFilename}">
-			    <input type="file" class="custom-file-input" name="upFile" id="upFile">
-			    <label class="custom-file-label" for="upFile">프로필 사진을 추가하세요!</label>
+			    <label class="custom-file-label" for="upFile" id="profile-label">프로필 사진을 추가하세요!</label>
 			  </c:if>
 			  <c:if test="${not empty loginMember.originalFilename}">
-			    <input type="file" class="custom-file-input" name="upFile" id="upFile">
-			    <label class="custom-file-label" for="upFile">${loginMember.originalFilename}</label>
+			    <label class="custom-file-label" for="upFile" id="profile-label">${loginMember.originalFilename}</label>
 			  </c:if>
 			  </div>
 			</div>
@@ -74,14 +73,14 @@ a:hover {
 	        <input class="form-field" id="form-nickname" name="newNickname" type="text" onblur="nickChech();" value="${loginMember.nickname}" required>
 			<span class="guide ok" id="nickok">이 닉네임은 사용 가능합니다.</span>
 			<span class="guide error" id="nickerror1">이 닉네임은 이미 사용중입니다.</span>
-			<span class="guide error" id="nickerror2">이 닉네임은 유효하지 않습니다.</span>
+			<span class="guide error" id="nickerror2">이 닉네임은 유효하지 않습니다. 2-10자 사이의 문자(숫자 포함 가능)로 만들어 주세요.</span>
 			<input type="hidden" id="nicknameValid" name="nicknameValid" value="0" /> <%-- 사용불가 0 사용가능 중복검사 통과 시 1 --%>
 		  </div>
 	      <p class="form-label" style="margin-top: 10px; color: orange;">소개 : </p>
-	          <input class="form-field" id="form-introduce" name="introduce" type="text" value="${loginMember.introduce}">
+	          <input class="form-field" id="form-introduce" name="introduce" type="text" value="${loginMember.introduce}" placeholder="나에 대해 짧게 설명해주세요!">
 	      <p class="form-label" style="margin-top: 10px; color: orange;">SNS : </p>
-	          <input class="form-field" id="form-sns" name="sns" type="url" value="${loginMember.sns}">
-	      <div id="submit-btn">
+	          <input class="form-field" id="form-sns" name="sns" type="url" value="${loginMember.sns}" placeholder="sns주소를 추가해주세요!">
+	      <div id="submit-btn" class="text-center">
 	          <input type="submit" value="정보수정">
 	      </div>
     	</form:form>
@@ -115,18 +114,25 @@ function nickChech() {
 				if(available){
 					// 유효성검사
 				    if(!/^[a-zA-Z0-9ㄱ-ㅎ|ㅏ-ㅣ|가-힣]{2,10}$/.test(nickVal)){
-				        alert('닉네임을 2-10자 사이의 문자(숫자 포함 가능)로 만들어 주세요.');
 						document.querySelector("#nickerror2").style.display = "inline";	
 						document.querySelector("#nickok").style.display = "none";	
 						document.querySelector("#nicknameValid").value = "0";
 				        return false;
+				        
 				    } else{
-					document.querySelector("#nickerror1").style.display = "none";	
-					document.querySelector("#nickok").style.display = "inline";	
-					document.querySelector("#nicknameValid").value = "1";				    	
+						document.querySelector("#nickerror1").style.display = "none";	
+						document.querySelector("#nickok").style.display = "inline";	
+						document.querySelector("#nicknameValid").value = "1";				    	
 				    }
 				}
 				else {
+					// 중복이긴 해 근데 내 지금 닉네임이랑 똑같애 그럼 사용가능
+					if(nickVal == '${loginMember.nickname}'){
+						document.querySelector("#nickerror1").style.display = "none";	
+						document.querySelector("#nickok").style.display = "inline";	
+						document.querySelector("#nicknameValid").value = "1";	
+						return;
+					}
 					document.querySelector("#nickerror1").style.display = "inline";	
 					document.querySelector("#nickok").style.display = "none";	
 					document.querySelector("#nicknameValid").value = "0";
@@ -141,22 +147,61 @@ function nickChech() {
 	return true;
 };
 
-/* 프로필삭제 a링크 이동금지 */
-document.querySelector(".profile-delete").addEventListener ("click", (e) =>{
-	if(!`${loginMember.renamedFilename}`){
-		alert("프로필사진이 없습니다.");
-		return false; 
+/* 프로필삭제 클릭 시 비동기로 삭제처리 */
+const deleteProfileImg = () => {
+	/* 등록된 프로필이 없으면 프로필삭제 제출 막기 */
+	if('${loginMember.renamedFilename}' == ''){
+		return; 
 	}
-});
+	else{
+		const csrfHeader = '${_csrf.headerName}';
+		const csrfToken = '${_csrf.token}';
+		const headers = {};
+		headers[csrfHeader] = csrfToken;
+		$.ajax({
+			url : "${pageContext.request.contextPath}/mypage/myProfileDelete.do",
+			method : 'post',
+			headers,
+			success(resp){
+				//console.log(resp);
+				console.log('프로필사진 삭제 성공');
+				document.querySelector("#img-satya").src = '${pageContext.request.contextPath}/resources/images/icon/none-profile-img.png';
+				document.querySelector("#profile-label").innerText = "프로필 사진을 추가하세요!";
+			},
+			error: console.log
+		});
+	}
+}
 
+<%-- img 미리보기 --%>
+const loadImage = (input) => {
+    console.log(input.files);
+    if(input.files[0]){
+       const fr = new FileReader();
+       fr.readAsDataURL(input.files[0]);
+       fr.onload = (e) => {
+          console.log(e.target.result);
+          document.querySelector("#img-satya").src = e.target.result;
+		}
+	} 
+    if(input.files.length == 0){
+        document.querySelector("#img-satya").src = '${pageContext.request.contextPath}/resources/images/icon/none-profile-img.png';
+    }
+};   
+
+
+/* 제출 시 닉네임 유효성검사 */
 document.querySelector("#quiz-form").addEventListener ('submit', (e) => {
-	console.log(availableall);
-	const delFile = document.querySelector("#delFile");
-	if(!availableall){
-		alert("사용불가 닉네임입니다. 다시 확인하세요.");
-		return false;
-	};
+
+	// 아무것도 안했을 때
+	if(availableall == ""){
+		document.querySelector("#quiz-form").submit();
+		return;
+	}
+	
+	// 변경할려고 시도했는데 못쓰는 닉네임일때
 	if(document.querySelector("#nicknameValid").value == 0){
+		e.preventDefault();
 		alert("사용불가 닉네임입니다. 다시 확인하세요.");
 		return false;
 	};

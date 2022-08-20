@@ -115,6 +115,7 @@ public class DokooController {
 		try {
 			log.debug("dokooComment = {}", dc);
 			int result = dokooService.commentEnroll(dc);
+			
 			return ResponseEntity.ok(dc);
 		} catch (Exception e) {
 			log.error("댓글 등록 오류", e);

@@ -40,7 +40,9 @@
 				</div>
 				</c:if>
 							
-				<span class="p-2">${dokoo.member.nickname}</span>
+				<span class="p-2">
+					<a href="${pageContext.request.contextPath}/mypage/mypage.do?memberId=${dokoo.member.memberId}" class="text-link ml-1">${dokoo.member.nickname}</a>
+				</span>
 				<p class="text-secondary p-2">
 					<fmt:parseDate value="${dokoo.enrollDate}" pattern="yyyy-MM-dd'T'HH:mm" var="enrollDate"/>
 					<fmt:formatDate value="${enrollDate}" pattern="yyyy/MM/dd HH:mm"/>
@@ -106,7 +108,10 @@
 								<img class="rounded-circle shadow-1-strong m-1"
 									<%-- loginMember가 아니고 댓글단 사람 프로필 가져와야돼 --%>
                           			src="${pageContext.request.contextPath}/resources/upload/profile/${comment.renamedFilename}"
-									alt="avatar" width="40" height="40"> <span>${comment.nickname}</span>
+									alt="avatar" width="40" height="40"> 
+								<span>
+									<a href="${pageContext.request.contextPath}/mypage/mypage.do?memberId=${comment.memberId}" class="text-link ml-1">${comment.nickname}</a>	
+								</span>
 							</div>
 							<div class="co-Content" id="contentDiv${comment.dokooCNo}">
 								<span id="contentSpan${comment.dokooCNo}">${comment.content}</span>
@@ -153,8 +158,8 @@
 							<div class="co-writer flex-center">
 								<img class="rounded-circle shadow-1-strong m-1"
 									<%-- loginMember가 아니고 댓글단 사람 프로필 가져와야돼 --%>
-                          src="${pageContext.request.contextPath}/resources/upload/profile/${comment.renamedFilename}"
-									alt="avatar" width="40" height="40"> <span>${comment.nickname}</span>
+                         			src="${pageContext.request.contextPath}/resources/upload/profile/${comment.renamedFilename}" alt="avatar" width="40" height="40"> 
+                         		<span><a href="${pageContext.request.contextPath}/mypage/mypage.do?memberId=${comment.memberId}" class="text-link ml-1">${comment.nickname}</a></span>
 							</div>
 							<div class="co-Content" id="contentDiv${comment.dokooCNo}">
 								<span id="contentSpan${comment.dokooCNo}">${comment.content}</span>
@@ -291,7 +296,9 @@ const enrollComment = () => {
                         class="rounded-circle shadow-1-strong m-1" 
                         src="${pageContext.request.contextPath}/resources/upload/profile/${loginMember.renamedFilename}" 
                         alt="avatar" width="40" height="40">
-                     <span>${loginMember.nickname}</span>
+                     <span>
+                     <a href="${pageContext.request.contextPath}/mypage/mypage.do?memberId=${loginMember.memberId}" class="text-link ml-1">${loginMember.nickname}</a>
+                     </span>
                   </div>
                   <div class="co-Content" id="contentDiv\${dokooCNo}">
                         <span id="contentSpan\${dokooCNo}">\${content}</span>      
@@ -524,7 +531,9 @@ const enrollCommentRef = (e) => {
                         class="rounded-circle shadow-1-strong m-1" 
                         src="${pageContext.request.contextPath}/resources/upload/profile/${loginMember.renamedFilename}" 
                         alt="avatar" width="40" height="40">
-                     <span>\${nickname}</span>
+                     <span>
+                     <a href="${pageContext.request.contextPath}/mypage/mypage.do?memberId=${loginMember.memberId}" class="text-link ml-1">\${nickname}</a>
+                     </span>
                   </div>
                   <div class="co-Content" id="contentDiv\${dokooCNo}">
                      <span id="contentSpan\${dokooCNo}">\${commentContent}</span>                                          
@@ -552,11 +561,11 @@ const enrollCommentRef = (e) => {
          $(coRefDivId).remove();
          
          // 답글 버튼 취소에서 다시 답글로 바꾸기 
-            const commentRefBtnId = "#commentRefBtn" + commentRef;
-         	console.log(commentRefBtnId);
-            const commentRefBtn = document.querySelector(commentRefBtnId);
-            console.log(commentRefBtn);
-            commentRefBtn.innerHTML = '답글';
+         const commentRefBtnId = "#commentRefBtn" + commentRef;
+      	 console.log(commentRefBtnId);
+         const commentRefBtn = document.querySelector(commentRefBtnId);
+         console.log(commentRefBtn);
+         commentRefBtn.innerHTML = '답글';
 
       },
       error : console.log

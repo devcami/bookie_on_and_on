@@ -42,7 +42,7 @@
 						<i class="fa-solid fa-user-large user-icon"></i>
 					</c:if>
 				</div>
-				<h2>${pheed.member.nickname}</h2>
+				<h2><a href="${pageContext.request.contextPath}/mypage/mypage.do?memberId=${pheed.member.memberId}" class="text-link ml-1">${pheed.member.nickname}</a></h2>
 			</div>
 			<c:if test="${pheed.attach != null}">
 				<div class="pheed-img">
@@ -221,7 +221,7 @@ function getReadList(cPage) {
    									}
     							div += `
     							</div>
-    							<h2>\${nickname}</h2>
+    							<h2><a href="${pageContext.request.contextPath}/mypage/mypage.do?memberId=\${memberId}" class="text-link ml-1">\${nickname}</a></h2>
     						</div>
    							<div class="pheed-img">`;
    							if(renamedFilename != null){
@@ -341,7 +341,7 @@ const pheedComment = (e) => {
 				
 			comments.forEach((comment) => {
 				//console.log(comment);
-				const {pheedCNo, pheedNo, nickname, content, commentRef, createdAt, renamedFilename} = comment;
+				const {pheedCNo, pheedNo, nickname, content, commentRef, createdAt, renamedFilename, memberId} = comment;
 				//console.log(pheedCNo, pheedNo, nickname, content, commentRef, createdAt);
 				const {year, monthValue, dayOfMonth, hour, minute, second} = createdAt;
 				const date = new Date(year, monthValue, dayOfMonth, hour, minute, second);
@@ -354,20 +354,21 @@ const pheedComment = (e) => {
 		         
 		        const fmtCreatedAt = yy + "/" + MM + "/" + dd + " " + hh + ":" + mm		         
 				
-				
-				
 				const wrapper = document.querySelector("#comment-wrapper");
 				let div = ''; 
 				// 일반 댓글
 				if(commentRef == 0){
 					div +=
-					`<div class="co-div flex-center comment-div" id="comment\${pheedCNo}">
-						<div class="co-left flex-center">
-							<div class="co-writer flex-center">
+					`<div class="co-div comment-div" id="comment\${pheedCNo}">
+						<div class="co-left">
+							<div class="co-writer">
 								<img class="rounded-circle shadow-1-strong m-1"
 								<%-- loginMember가 아니고 댓글단 사람 프로필 가져와야돼 --%>
 		              			src="${pageContext.request.contextPath}/resources/upload/profile/\${renamedFilename}"
-								alt="avatar" width="40" height="40"> <span>\${nickname}</span>
+								alt="avatar" width="40" height="40"> 
+		              			<span>
+		              			<a href="${pageContext.request.contextPath}/mypage/mypage.do?memberId=\${memberId}" class="text-link ml-1">\${nickname}</a>
+		              			</span>
 							</div>
 							<div class="c-content" id="contentDiv\${pheedCNo}">
 								<span id="contentSpan\${pheedCNo}">\${content}</span>
@@ -392,8 +393,7 @@ const pheedComment = (e) => {
 							data-category="pheed_comment">신고</a> • 
 						`;
 					}
-					div += 
-								`
+					div += `
 							<a href="#!" id="commentRefBtn\${pheedCNo}" class="link-grey" onclick="showCommentRefInput(this);"
 								data-pheed-no="\${pheedNo}"
 								data-comment-no="\${pheedCNo}">답글</a>
@@ -409,14 +409,16 @@ const pheedComment = (e) => {
 				// 대댓글
 				if(commentRef != 0){
 					div += 
-					`<div class="co-div flex-center coComment-div" id="coComment\${pheedCNo}">
-						<div class="co-left flex-center" style="margin-left: 40px;">
-							↳
-							<div class="co-writer flex-center">
-								<img class="rounded-circle shadow-1-strong m-1"
+					`<div class="co-div coComment-div" id="coComment\${pheedCNo}">
+						<div class="co-left" style="margin-left: 40px;">
+							<div class="co-writer">
+								↳<img class="rounded-circle shadow-1-strong m-1"
 									<%-- loginMember가 아니고 댓글단 사람 프로필 가져와야돼 --%>
 			                        src="${pageContext.request.contextPath}/resources/upload/profile/\${renamedFilename}"
-									alt="avatar" width="40" height="40"> <span>\${nickname}</span>
+									alt="avatar" width="40" height="40"> 
+			                     <span>
+			                     <a href="${pageContext.request.contextPath}/mypage/mypage.do?memberId=\${memberId}" class="text-link ml-1">\${nickname}</a>
+			                     </span>
 							</div>
 							<div class="co-Content" id="contentDiv\${pheedCNo}">
 								<span id="contentSpan\${pheedCNo}">\${content}</span>
@@ -476,7 +478,7 @@ const enrollComment = (e) => {
       },
       success(resp){
          console.log(resp);
-         const {pheedNo, content, pheedCNo} = resp;
+         const {pheedNo, content, pheedCNo, memberId} = resp;
          console.log("댓글 등록 후 : ", pheedNo)
          const container = document.querySelector("#comment-wrapper")
          
@@ -498,7 +500,9 @@ const enrollComment = (e) => {
                         class="rounded-circle shadow-1-strong m-1" 
                         src="${pageContext.request.contextPath}/resources/upload/profile/${loginMember.renamedFilename}" 
                         alt="avatar" width="40" height="40">
-                     <span>${loginMember.nickname}</span>
+                     <span>
+                     <a href="${pageContext.request.contextPath}/mypage/mypage.do?memberId=\${memberId}" class="text-link ml-1">\${nickname}</a>
+                     </span>
                   </div>
                   <div class="c-content" id="contentDiv\${pheedCNo}">
                         <span id="contentSpan\${pheedCNo}">\${content}</span>      
@@ -689,7 +693,6 @@ const enrollCommentRef = (e) => {
    const pheedNo = e.dataset.pheedNo;
    console.log(pheedNo);
    
-   
    // 입력한 내용 들고와
    const coRefInputId = "#coRef" + commentRef;
    const commentContent = document.querySelector(coRefInputId).value;
@@ -713,7 +716,7 @@ const enrollCommentRef = (e) => {
       },
       success(data){
          console.log(data);
-         const {pheedCNo, nickname} = data;
+         const {pheedCNo, nickname, memberId} = data;
          
          // 날짜는 못가져오니까 날짜 만들어 시부렁
          var today = new Date();
@@ -727,15 +730,16 @@ const enrollCommentRef = (e) => {
          const createdAt = year + "/" + month + "/" + day + " " + hours + ":" + minutes;
          
          const div = `
-            <div class="co-div flex-center coComment-div" id="coComment\${pheedCNo}">
-               <div class="co-left flex-center" style="margin-left: 40px;">
-               	  ↳
-                  <div class="co-writer flex-center">
-                     <img 
+            <div class="co-div coComment-div" id="coComment\${pheedCNo}">
+               <div class="co-left" style="margin-left: 40px;">
+                  <div class="co-writer">
+                     ↳<img 
                         class="rounded-circle shadow-1-strong m-1" 
                         src="${pageContext.request.contextPath}/resources/upload/profile/${loginMember.renamedFilename}" 
                         alt="avatar" width="40" height="40">
-                     <span>\${nickname}</span>
+                     <span>
+                     <a href="${pageContext.request.contextPath}/mypage/mypage.do?memberId=\${memberId}" class="text-link ml-1">\${nickname}</a>
+                     </span>
                   </div>
                   <div class="co-Content" id="contentDiv\${pheedCNo}">
                      <span id="contentSpan\${pheedCNo}">\${commentContent}</span>                                          

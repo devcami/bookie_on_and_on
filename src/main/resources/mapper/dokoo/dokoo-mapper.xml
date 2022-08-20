@@ -51,7 +51,8 @@
 	<select id="selectDokooComments" resultMap="dokooCommentMap">
 	  select 
         c.*, 
-        (select renamed_filename from member m where m.nickname = c.nickname) renamed_filename 
+        (select renamed_filename from member m where m.nickname = c.nickname) renamed_filename ,
+        (select member_id from member m where m.nickname = c.nickname) member_id 
       from 
       	dokoo_comment c 
       where 
@@ -66,6 +67,7 @@
 		<result column="created_at" property="createdAt"/>
 		<result column="content" property="content"/>
 		<result column="renamed_filename" property="renamedFilename"/>
+		<result column="member_id" property="memberId"/>
 	</resultMap>
 	
 	<select id="getReadBookList" resultType="book">
@@ -103,6 +105,12 @@
 			default,
 			#{content},
 			default)
+		<selectKey keyProperty="dokooCNo" resultType="_int" order="AFTER">
+			select
+				seq_dokooc_no.currval
+			from
+				dual
+		</selectKey>
 	</insert>
 	
 	<delete id="commentDel">
@@ -131,6 +139,12 @@
 			default,
 			#{content},
 			2)
+		<selectKey keyProperty="dokooCNo" resultType="_int" order="AFTER">
+			select
+				seq_dokooc_no.currval
+			from
+				dual
+		</selectKey>
 	</insert>
 	
 	<select id="getDokooLikes" resultMap="dokooSnsMap">
