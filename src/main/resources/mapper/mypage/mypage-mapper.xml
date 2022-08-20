@@ -60,24 +60,34 @@
 			following_member_id = #{memberId}
 	</select>
 	
-	<select id="selectFollowerList" resultType="follower">
+	<select id="selectFollowerList" resultMap="followerMap">
 		select
-			*
+		    *
 		from
-			follower
+		    follower f join member m
+		        on f.member_id = m.member_id
 		where
 			following_member_id = #{memberId}
 	</select>
 	
-	<select id="selectFollowingList" resultType="follower">
+	<select id="selectFollowingList" resultMap="followerMap">
 		select
-			*
+		    *
 		from
-			follower
+		    follower f join member m
+		        on f.following_member_id = m.member_id
 		where
-			member_id = #{memberId}
+		    f.member_id = #{memberId}
 	</select>
 	
+	<resultMap type="follower" id="followerMap">
+		<result column="member_id" property="memberId"/>
+		<result column="following_member_id" property="followingMemberId"/>
+		<association property="member" javaType="member">
+			<result column="nickname" property="nickname"/>
+			<result column="renamed_filename" property="renamedFilename"/>
+		</association>
+	</resultMap>
 	
 	<select id="selectOneQna" resultMap="qnaOneCollectionMap">
 		select
