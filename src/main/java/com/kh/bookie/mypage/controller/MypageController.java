@@ -94,8 +94,8 @@ public class MypageController {
 		log.debug("마이페이지 memberId = {}", memberId);
 		try {
 			Member member = memberService.selectOneMember(memberId);
+			log.debug("이 죽일놈의 사진 초기화 = {}" ,member.getRenamedFilename());
 			model.addAttribute("member", member);
-
 		} catch (Exception e) {
 			log.error("파이페이지 조회오류", e);
 			throw e;
@@ -224,7 +224,6 @@ public class MypageController {
 		log.debug("메인프로필 loginMember = {}", loginMember);
 		String memberId = loginMember.getMemberId();
 		try {
-			// 
 //			Member member = memberService.selectInterests(memberId);
 		} catch (Exception e) {
 			log.error("내프로필 조회 오류", e);
