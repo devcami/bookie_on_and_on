@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -27,16 +28,22 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.kh.bookie.club.model.dto.Club;
+import com.kh.bookie.club.model.service.ClubService;
 import com.kh.bookie.common.HelloSpringUtils;
 import com.kh.bookie.member.model.dto.Follower;
+import com.kh.bookie.dokoo.model.dto.Dokoo;
 import com.kh.bookie.member.model.dto.Member;
 import com.kh.bookie.member.model.dto.MemberEntity;
 import com.kh.bookie.member.model.service.MemberService;
 import com.kh.bookie.mypage.model.dto.BookIng;
 import com.kh.bookie.mypage.model.dto.Qna;
 import com.kh.bookie.mypage.model.service.MypageService;
+import com.kh.bookie.pheed.model.dto.Pheed;
+import com.kh.bookie.pheed.model.service.PheedService;
 import com.kh.bookie.search.model.service.SearchService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -51,6 +58,12 @@ public class MypageController {
 	
 	@Autowired
 	MemberService memberService;
+	
+	@Autowired
+	ClubService clubService;
+	
+	@Autowired
+	PheedService pheedService;
 	
 	@Autowired
 	SearchService searchService;
@@ -379,13 +392,189 @@ public class MypageController {
 	public void myScrap() {}
 
 	@GetMapping("/myDokooList.do")
-	public void myBookClub() {}
+	public ModelAndView myBookClub(
+			@RequestParam(defaultValue = "1") int cPage, 
+			ModelAndView mav, 
+			HttpServletRequest request, 
+			@AuthenticationPrincipal Member loginMember) {
+		
+		try {
+			 Map<String, Object> map = new HashMap<>();	
+				
+			 log.debug("authentication member = {} ", loginMember);
+		     log.debug("authentication member = {} ", loginMember.getMemberId());
+			
+			String memberId = loginMember.getMemberId();
+			int numPerPage = 10;
+			
+			
+			// 목록 조회
+			
+			int start = ((cPage - 1) * numPerPage) + 1;
+			int end = cPage * numPerPage;
+			
+			
+			map.put("cPage", cPage);
+			map.put("numPerPage", numPerPage);
+			map.put("memberId", memberId);
+			map.put("start", start);
+			map.put("end", end);
+
+			List<Dokoo> list = mypageService.selectMyDokooList(map);
+			log.debug("list = {}", list);
+			mav.addObject("list", list);
+			
+			// pagebar
+			int totalMyDokoo = mypageService.selectTotalMyDokoo(memberId);
+			String url = request.getRequestURI();
+			String pagebar = HelloSpringUtils.getPagebar(cPage, numPerPage, totalMyDokoo, url);
+			mav.addObject("pagebar", pagebar);
+			mav.addObject("totalMyDokoo", totalMyDokoo);
+			mav.addObject("cPage", cPage);
+			
+			mav.setViewName("mypage/myDkList");
+		} catch (Exception e) {
+			log.error("독후감 목록 조회 오류", e);
+			mav.addObject("msg", "독후감 목록 조회 오류");
+		}
+		return mav;
+	}
 	
 	@GetMapping("/myPheedList.do")
-	public void myPheed() {}
+	public ModelAndView myPheed(
+			ModelAndView mav, 
+			@AuthenticationPrincipal Member loginMember) {
+		try {
+			
+			Map<String, Object> map = new HashMap<>();
+	        log.debug("authentication member = {} ", loginMember);
+	        log.debug("authentication member = {} ", loginMember.getMemberId());
+	        String memberId = loginMember.getMemberId();
+				
+	        	
+			// 멤버 있으면 북클럽 찜 리스트 가져와 
+			List<String> pheedWishList = pheedService.getPheedWishListbyMemberId(loginMember.getUsername());
+			
+			String wishStr = "";
+			for(int i = 0; i < pheedWishList.size(); i++) {
+				wishStr += pheedWishList.get(i);
+				wishStr +=  ",";
+			}
+			
+			mav.addObject("wishStr", wishStr);
+			
+			// 멤버 있으면 북클럽 하트 리스트 가져와 
+			List<String> pheedLikesList = pheedService.getPheedLikesListbyMemberId(loginMember.getUsername());
+			
+			String likesStr = "";
+			for(int j = 0;  j < pheedLikesList.size(); j++) {
+				likesStr += pheedLikesList.get(j);
+				likesStr +=  ",";
+			}
+			mav.addObject("likesStr", likesStr);
+			
+			
+			
+			// 목록 조회
+			int cPage = 1;
+			int numPerPage = 3;
+			map.put("cPage", cPage);
+			map.put("numPerPage", numPerPage);
+			map.put("memberId", memberId);
+			
+			List<Pheed> list = mypageService.selectMyPheedList(map);
+			log.debug("list = {}", list);
+			mav.addObject("list", list);
+			
+			mav.setViewName("mypage/myPhd");
+			
+		} catch (Exception e) {
+			log.error("내가 작성한 피드 목록 조회 오류", e);
+			mav.addObject("msg", "내가 작성한 피드 목록 조회 오류");
+			throw e;
+		}
+		return mav;
+		
+		
+		
+	}
 	
 	@GetMapping("/myClubList.do")
-	public void myClubList() {}
+	public ModelAndView myClubList(
+			@RequestParam(required = false, defaultValue = "1") int cPage,
+			@RequestParam(required = false) String sortType,
+			ModelAndView mav,
+			HttpServletRequest request,
+			@AuthenticationPrincipal Member loginMember
+			) {
+		
+		try {
+			
+			log.debug("sortType = {}", sortType);
+	        log.debug("authentication member = {} ", loginMember);
+			
+	        
+	        String memberId = loginMember.getMemberId();
+
+			List<String> clubWishList = clubService.getClubWishListbyMemberId(loginMember.getMemberId());
+
+			
+			String wishStr = "";
+			for(int i = 0; i < clubWishList.size(); i++) {
+				wishStr += clubWishList.get(i);
+				wishStr +=  ",";
+			}
+			
+			mav.addObject("wishStr", wishStr);
+			
+			// 멤버 있으면 북클럽 하트 리스트 가져와 
+			List<String> clubLikesList = clubService.getClubLikesListbyMemberId(loginMember.getUsername());
+			
+			String likesStr = "";
+			for(int j = 0;  j < clubLikesList.size(); j++) {
+				likesStr += clubLikesList.get(j);
+				likesStr +=  ",";
+			}
+			mav.addObject("likesStr", likesStr);
+				
+			
+			Map<String, Object> map = new HashMap<>();	
+			int numPerPage = 3;
+			int start = ((cPage - 1) * numPerPage) + 1;
+			int end = cPage * numPerPage;
+			
+			map.put("memberId", memberId);
+			map.put("sortType", sortType);
+			map.put("start", start);
+			map.put("end", end);
+			
+			List<Club> list = mypageService.selectMyClubList(map);
+			mav.addObject("list", list);
+			
+			log.debug("여기 = {}", list);
+			
+			// 페이지 바
+			int totalMyClub = mypageService.selectTotalMyClub(map);
+			String url = request.getRequestURI();
+			String pagebar = "";
+			if(sortType == null) {
+				pagebar = HelloSpringUtils.getPagebar(cPage, numPerPage, totalMyClub, url);				
+			}
+			else {
+				pagebar = HelloSpringUtils.getPagebarWithSortType(cPage, numPerPage, totalMyClub, url, sortType);
+			}
+			mav.addObject("pagebar", pagebar);
+			mav.addObject("sortType", sortType);
+			
+		} catch(Exception e) {
+			log.error("내가 신청한 북클럽 조회 오류!!", e);
+			mav.addObject("msg", "내가 신청한 북클럽 조회에 실패했습니다!");
+			throw e;
+		}
+		
+		return mav;
+		
+	}
 	
 	/* 마이프로필 삭제 */
 	@PostMapping("/myProfileDelete.do")

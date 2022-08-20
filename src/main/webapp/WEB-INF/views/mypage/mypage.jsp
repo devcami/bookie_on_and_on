@@ -12,6 +12,38 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/clubAnn.css" />
 <script src='${pageContext.request.contextPath}/resources/js/main.js'></script>
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/locales-all.js"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+  google.charts.load("current", {packages:['corechart']});
+  google.charts.setOnLoadCallback(drawChart);
+  function drawChart() {
+    var data = google.visualization.arrayToDataTable([
+        ['Genre', 'Fantasy & Sci Fi', 'Romance', 'Mystery/Crime', 'General',
+         'Western', 'Literature', { role: 'annotation' } ],
+        ['2010', 10, 24, 20, 32, 18, 5, ''],
+        ['2020', 16, 22, 23, 30, 16, 9, ''],
+        ['2030', 28, 19, 29, 30, 12, 13, '']
+      ]);
+
+    var view = new google.visualization.DataView(data);
+    view.setColumns([0, 1,
+                     { calc: "stringify",
+                       sourceColumn: 1,
+                       type: "string",
+                       role: "annotation" },
+                     2]);
+
+    var options = {
+            width: 600,
+            height: 400,
+            legend: { position: 'top', maxLines: 3 },
+            bar: { groupWidth: '75%' },
+            isStacked: true,
+    };
+    var chart = new google.visualization.ColumnChart(document.getElementById("columnchart_values"));
+    chart.draw(view, options);
+}
+</script>
 <%
 	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 	Member loginMember = (Member) authentication.getPrincipal();
@@ -168,7 +200,7 @@
 <div class="start-mypage" style="white-space: nowrap; padding: 10 20 10 20;">
 <h1>읽은 책 그래프</h1>
 </div>
-
+<div id="columnchart_values" style="width: 900px; height: 300px;"></div>
 <hr class="bar" style="border: solid 10px #f6f5f5; margin-top: 3rem;">
 
 
@@ -277,7 +309,6 @@ if(document.querySelector(".profile-settings-btn")){
 /* 마이페이지 로딩시 내 책 정보 뿌려주기 */
 window.addEventListener('load', () => {
 	const memberId = "${member.memberId}";
-	console.log("memberId = " + memberId);
 	const container = document.querySelector("#book-div");
 	const myPickContainer = document.querySelector("#myPick-book-div");
 	var itemId = [];
@@ -349,7 +380,6 @@ window.addEventListener('load', () => {
 						/* console.log(item.length); */
 						item.forEach((book)=>{
 							const {isbn13, title, author, publisher, pubDate, cover} = book;
-							console.log(isbn13,cover);
 							const div = `
 										<div id="book-imgs" class="d-inline">
 											<c:choose>
@@ -382,41 +412,53 @@ document.addEventListener('DOMContentLoaded', function() {
 	var calendarEl = document.getElementById('calendar');
 	var bookIngList = [];
 	var itemId = [];
-		$.ajax({
-			url: `${pageContext.request.contextPath}/mypage/myBookIngList.do`,
-			method : "get",
-			success(data){
-				bookIngList = data;
-				console.log("부킹붕킹붕킹" + bookIngList);
-				console.log(data);
-				/* 읽은 책 찾아 뿌리기 */
-				bookIngList.forEach((value, index, array)=>{
-					console.log(value.endedAt);
-					console.log(value.itemId);
-					if(value.endedAt){
-						$.ajax({
-							url: `${pageContext.request.contextPath}/mypage/myEndedAtBook.do`,
-							data: {
-								itemId : value.itemId
-							},
-							method : "get",
-							success(data){
-								const {item} = data;
-								console.log(item);
-								console.log(item.length);
-								item.forEach((bookIng)=>{
-									const {isbn13, title, author, publisher, pubDate, cover, itemId, endedAt} = bookIng;
-								})
-					 		},
-							error : console.log
-						});	
-					}
-	 			}); 
-			},
-			error : console.log
-		});
-
-	console.log("부킹퍼킹리스트 있냐고" + bookIngList);
+	var list = [];
+	var coverList = [];
+	$.ajax({
+		url: `${pageContext.request.contextPath}/mypage/myBookIngList.do`,
+		data : {memberId : memberId},
+		async:false,
+		method : "get",
+		success(data){
+			bookIngList = data;
+			/* 읽은 책 찾아 뿌리기 */
+		 	bookIngList.forEach((value, index, array)=>{
+				if(value.endedAt){
+					$.ajax({
+						url: `${pageContext.request.contextPath}/mypage/myEndedAtBook.do`,
+						async:false,
+						data: {
+							itemId : value.itemId
+						},
+						method : "get",
+						success(data){
+							const {item} = data;
+							console.log(item);
+							console.log(item.length);
+							item.forEach((bookIng)=>{
+								const {cover, isbn13} = bookIng;
+								const year = value.endedAt.year;
+								const month = value.endedAt.monthValue.toString().length == 1 ? '0'+value.endedAt.monthValue : value.endedAt.monthValue;
+								const day = value.endedAt.dayOfMonth.toString().length == 1 ? '0'+value.endedAt.dayOfMonth : value.endedAt.dayOfMonth;
+								list.push(
+									{
+									start : year + '-' + month + '-' + day,
+									end : year + '-' + month + '-' + day,
+									url : "${pageContext.request.contextPath}/search/bookEnroll.do?isbn13=" + isbn13,
+									borderColor : '#fcfbf9',
+									backgroundColor : '#fcfbf9',
+									cover : cover,
+									}
+								);
+							})
+				 		},
+						error : console.log
+					});	
+				}
+ 			}); 
+		},
+		error : console.log
+	}); 
 	
 	var calendar = new FullCalendar.Calendar(calendarEl, {
 		initialView : 'dayGridMonth', // 초기 로드 될때 보이는 캘린더 화면(기본 설정: 달)
@@ -434,18 +476,18 @@ document.addEventListener('DOMContentLoaded', function() {
 		editable : true,
 		nowIndicator: true, // 현재 시간 마크
 		locale: 'ko', // 한국어 설정
-		events :[
-			{
-			start : '2022-08-17',
-			end : '2022-08-17',
-			url : '${pageContext.request.contextPath}/mypage/myBook.do',
-			borderColor : 'white',
-			backgroundColor : 'white'
+		events: list,
+		eventContent: function(arg) {
+			let coverImg = document.createElement('img')
+			console.log("위치확인");
+			console.log(arg.event._def.extendedProps.cover);
+			if (arg.event._def.extendedProps.cover) {
+				coverImg.setAttribute("src", "" + arg.event._def.extendedProps.cover + "");
+				coverImg.setAttribute("style", "width: 3.5rem; height: 5rem");
 			}
-		],
-		eventContent: {
-			  html: `<img src="${pageContext.request.contextPath}/resources/images/icon/dokoo_icon.png" class="event-icon" style="width: 3.5rem; height: 5rem" />`,
-		},
+			let arrayOfDomNodes = [ coverImg ]
+			return { domNodes: arrayOfDomNodes }
+		}
 	});
 	calendar.render();
 });

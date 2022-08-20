@@ -7,52 +7,35 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/clubList.css" />
 <jsp:include page="/WEB-INF/views/common/header.jsp">
-	<jsp:param value="마이북클럽리스트" name="title"/>
+	<jsp:param value="북클럽리스트" name="title"/>
 </jsp:include>
 <sec:authorize access="isAuthenticated()">
 	<sec:authentication property="principal" var="loginMember"/>
 </sec:authorize>
 <section id="content">
 	<div id="menu">
-		<h1>마이북클럽리스트</h1>
+		<h1>북클럽리스트</h1>
 		<div id="menu-left">
 			<select id="sortType" name="sortType" class="form-control d-inline form-select">
 		      <option ${sortType eq null ? 'selected' : ''} value="newList">최신순</option>
+		      <option ${sortType eq "oldList" ? 'selected' : ''} value="oldList">오래된 순</option>
 		    </select>
-			<sec:authorize access="hasRole('ROLE_ADMIN')">
-			    <button 
-			    	id="btn-enroll"
-			    	class="btn btn-sm" 
-			    	onclick="location.href='${pageContext.request.contextPath}/club/enrollClub.do';">북클럽 등록</button>	    	
-			</sec:authorize>
-			<sec:authorize access="hasRole('ROLE_USER')"> 
-			    <button 
-			    	id="btn-enroll"
-			    	class="btn btn-sm" 
-			    	onclick="location.href='${pageContext.request.contextPath}/club/enrollClub.do';">나의 북클럽</button>
-			</sec:authorize>
-			<%-- <sec:authorize access="hasRole('ROLE_CLUB')"> --%>
-			<button 
-			    	id="btn-enroll"
-			    	class="btn btn-sm" 
-			    	onclick="myBookClubDetail(this);"
-			    	data-club-no="45">북클럽 상세 페이지</button>
-			<%-- </sec:authorize> --%>
+<%-- 		    <button 
+		    	id="btn-enroll"
+		    	class="btn btn-sm" 
+		    	onclick="location.href='${pageContext.request.contextPath}/club/oldClubList.do';">마감된 북클럽</button>    --%>	
 		</div>	
 	</div>
 	<div id="clubListDiv">
 	<jsp:useBean id="today" class="java.util.Date" />
 	<fmt:formatDate value='${today}' pattern='yyyy-MM-dd' var="nowDate"/>
 	<c:forEach items="${list}" var="club" varStatus="vs">
-		<%-- 모집중인 경우 --%>
-		<c:if test="${club.recruitEnd ge nowDate && club.maximumNop ne club.currentNop}">
+		<%-- 북클럽 활동중인 경우 --%>
+		<c:if test="${club.clubEnd ge nowDate}">
 			<div class="bookCard" id="card${club.clubNo}" data-no="${club.clubNo}">
 				<div class="card-top" style="background-color: #ffa50021;">
 					<div class='badge-div'>
-						<h6><span class="badge badge-pill badge-light">모집중</span></h6>
-						<c:if test="${club.maximumNop - 1 == currentNop}">
-							<h6><span class="badge badge-pill badge-danger alert-badge">마감임박</span></h6>						
-						</c:if>
+						<h6><span class="badge badge-pill badge-light">진행중</span></h6>
 					</div>
 					<div class="img-div">
 						<c:forEach items="${club.bookList}" var="clubBook" varStatus="bs">
@@ -85,22 +68,22 @@
 							<span>개</span>					
 						</div>
 					</div>
-						<span class="text-status">진행중</span>	
+						<span class="text-status">진행중인 북클럽입니다!</span>	
 					<div class="date-div">
-						<span class="text-date">${club.recruitStart}</span>
+						<span class="text-date">${club.clubStart}</span>
 						<span class="text-date">~</span>
-						<span class="text-date">${club.recruitEnd}</span>
+						<span class="text-date">${club.clubEnd}</span>
 					</div>
 				</div>
 			</div>
 		</c:if>
-		<%-- 모집중인 경우 끝 --%>
+		<%-- 진행중인 북클럽인 경우 끝 --%>
 		
-		<%-- 마감된 경우 --%>
-		<c:if test="${club.recruitEnd lt nowDate || club.maximumNop eq club.currentNop}">
+		<%-- 종료된 북클럽인 경우 --%>
+		<c:if test="${club.clubEnd lt nowDate}">
 			<div class="bookCard" id="card${club.clubNo}" data-no="${club.clubNo}">
 				<div class="card-top" style="background-color: #dee2e6;">
-					<div class='badge-div'>
+ 					<div class='badge-div' style="visibility: hidden;">
 						<h6><span class="badge badge-pill badge-secondary alert-badge">인원마감</span></h6>
 					</div>
 					<div class="img-div">
@@ -128,11 +111,11 @@
 							<span>개</span>					
 						</div>
 					</div>
-						<span class="text-status">인원마감</span>			
+						<span class="text-status">종료된 북클럽입니다!</span>			
 					<div class="date-div">
-						<span class="text-date">${club.recruitStart}</span>
+						<span class="text-date">${club.clubStart}</span>
 						<span class="text-date">~</span>
-						<span class="text-date">${club.recruitEnd}</span>
+						<span class="text-date">${club.clubEnd}</span>
 					</div>
 				</div>
 			</div>
@@ -154,16 +137,13 @@
 		const selected = e.target.value;
 		
 		if(selected == 'oldList'){
-			location.href = `${pageContext.request.contextPath}/club/clubList.do?sortType=\${selected}`;
+			location.href = `${pageContext.request.contextPath}/mypage/myClubList.do?sortType=\${selected}`;
 		}
 		else{
-			location.href = "${pageContext.request.contextPath}/club/clubList.do";
+			location.href = "${pageContext.request.contextPath}/mypage/myClubList.do";
 		}
 	});
 	
-	
-	// hello-spring boardList.jsp에서 가져와
-
 
 	window.addEventListener('load', (e) => {
 		
@@ -174,17 +154,9 @@
 				const target = e.target;
 				const currentCard = $(target).parents('.bookCard');
 				const clubNo = $(currentCard).attr('data-no');
-				
-				let memberId = ''; 
-				if('${loginMember}'){
-					memberId = "${loginMember.username}";
-					location.href = '${pageContext.request.contextPath}/club/clubAnn.do?clubNo=' + clubNo + "&memberId=" + memberId;
-				} else {
-					location.href = '${pageContext.request.contextPath}/club/clubAnn.do?clubNo=' + clubNo;					
-				}
 
-				
-				
+				location.href = `${pageContext.request.contextPath}/club/clubDetail.do/\${clubNo}`;
+
 				
 			});	
 		})		
