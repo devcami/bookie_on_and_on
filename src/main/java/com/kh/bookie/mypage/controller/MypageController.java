@@ -34,6 +34,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.kh.bookie.club.model.dto.Club;
 import com.kh.bookie.club.model.service.ClubService;
 import com.kh.bookie.common.HelloSpringUtils;
+import com.kh.bookie.member.model.dto.Follower;
 import com.kh.bookie.dokoo.model.dto.Dokoo;
 import com.kh.bookie.member.model.dto.Member;
 import com.kh.bookie.member.model.dto.MemberEntity;
@@ -146,6 +147,51 @@ public class MypageController {
 			throw e;
 		}
 	}
+	
+	@GetMapping("/getFollow.do")
+	public ResponseEntity<?> getFollow(@RequestParam String memberId, @AuthenticationPrincipal Member loginMember) {
+		Map<String, Object> map = new HashMap<>();
+		try {
+			int followersCnt = mypageService.getFollowers(memberId);
+			int followingCnt = mypageService.getFollowing(memberId);
+			
+			map.put("followingCnt", followingCnt);	
+			map.put("followersCnt", followersCnt);	
+			
+			// 넘길 때 로그인 유저의 팔로워 같이 넘기기
+			String loginMemberId = loginMember.getMemberId();
+			List<Follower> followerList = searchService.selectFollowerList(loginMemberId);
+			if(!followerList.isEmpty()) {
+				String followers = "";
+				for(Follower follower : followerList) {
+					 followers += follower.getFollowingMemberId() + ",";
+				}
+				map.put("followers", followers);
+			}
+		} catch (Exception e) {
+			log.error("팔로워 가져오기 오류", e);
+			e.printStackTrace();
+		}
+		return ResponseEntity.ok(map);
+	}
+	
+	@GetMapping("/followList.do")
+	public void followList(@RequestParam String memberId, Model model, @RequestParam String follower) {
+		try {
+			List<Follower> list = null;
+			if(follower.equals("follower")) {
+				list = mypageService.selectFollowerList(memberId);
+				model.addAttribute("list", list);
+			} else if(follower.equals("following")) {
+				list = mypageService.selectFollowingList(memberId);
+				model.addAttribute("list", list);
+			}
+		} catch (Exception e) {
+			log.error("팔로우 리스트 조회 오류", e);
+			e.printStackTrace();
+		}
+	}
+	
 	
 	@GetMapping("/myMiniProfile.do")
 	public void myMiniProfile() {}
@@ -531,7 +577,7 @@ public class MypageController {
 	}
 	
 	/* 마이프로필 삭제 */
-	@GetMapping("/myProfileDelete.do")
+	@PostMapping("/myProfileDelete.do")
 	public String myProfileDelete(@AuthenticationPrincipal Member loginMember, RedirectAttributes redirectAttr) {
 		String nickname = loginMember.getNickname(); 
 		log.debug("nickname = {}", nickname);
@@ -555,8 +601,6 @@ public class MypageController {
 				int result = memberService.deleteMemberProfile(nickname);
 				log.debug("{}의 MemberProfile 레코드 삭제", nickname);	
 			}
-			
-			redirectAttr.addFlashAttribute("msg", "Mini프로필을 성공적으로 수정했습니다.");
 			
 		} catch (Exception e) {
 			log.error("프로필 삭제 오류", e);
@@ -663,13 +707,13 @@ public class MypageController {
 				updateResult = memberService.miniUpdateMember(updateMember);	
 				log.debug("updateResult = {}", updateResult);
 			}
-			redirectAttr.addFlashAttribute("msg", "Mini프로필을 성공적으로 수정했습니다.");
+			redirectAttr.addFlashAttribute("msg", "공개 프로필을 성공적으로 수정했습니다.");
 		} 
 		catch(Exception e) {
 			log.error("미니프로필 수정 오류", e);
 			e.printStackTrace();
 		}
-		return "redirect:/mypage/myMiniProfile.do"; 
+		return "redirect:/mypage/mypage.do?memberId=" + loginMember.getMemberId(); 
 	}
 
 	/* status 책 뿌려주기 */

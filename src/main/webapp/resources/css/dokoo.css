@@ -207,7 +207,13 @@ section#dokoo-content #dokoo-container{
 	color: #FFF;
 	text-shadow: 0 0 3px #5454544a;
 }
-#dokoo-content #dokoo-container #dokoo-info #writer span{
+a.text-link:hover{
+	color: #FE9801;
+}
+a.text-link{
+	color: #000;
+}
+#dokoo-content #dokoo-container #dokoo-info #writer a{
 	font-size: 30px;
 	position: relative;
 	top: 9px;
@@ -304,6 +310,10 @@ hr{
     margin-right: 10px;
     font-size: 22px;
     width: 73%;
+}
+div.coComment-div span.text-secondary {
+    float: right;
+    font-size: 14px;
 }
 div.comment-div span.text-secondary {
     float: right;

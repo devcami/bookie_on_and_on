@@ -13,4 +13,5 @@ import lombok.ToString;
 @ToString(callSuper = true)
 public class PheedComment extends PheedCommentEntity {
 	private String renamedFilename;
+	private String memberId;
 }
