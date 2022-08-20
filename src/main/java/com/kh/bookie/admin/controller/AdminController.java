@@ -69,6 +69,17 @@ public class AdminController {
 		
 	}
 	
+	@GetMapping("/memberDetail.do")
+	public void memberDetail(@RequestParam String memberId, Model model) {
+		try {
+			Member member = memberService.selectOneMember(memberId);
+			model.addAttribute("member", member);
+		} catch (Exception e) {
+			log.error("회원 상세보기 오류", e);
+			e.printStackTrace();
+		}
+	}
+	
 	@GetMapping("/missionCheck.do")
 	public ModelAndView missionCheck(
 			ModelAndView mav,

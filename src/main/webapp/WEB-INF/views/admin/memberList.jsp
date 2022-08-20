@@ -18,6 +18,7 @@
       <div class="row">
         <div class="col-12">
           <div class="row col-12 btn-group">
+          	<a href="${pageContext.request.contextPath}/admin/memberList.do" class="btn yellow"    id="member" >회원목록</a>
 			<a href="${pageContext.request.contextPath}/admin/reportList.do" class="btn red"    id="report" >신고</a>
 			<a href="${pageContext.request.contextPath}/admin/qnaList.do" class="btn purple" id="question">Q & A</a>
 			<a href="${pageContext.request.contextPath}/admin/sendAlarm.do" class="btn green"  id="alarm">알림전송</a>
@@ -28,6 +29,7 @@
     </div>
 
     <div class="container mt-4">
+	  
       <table class="table table-fixed text-center">
         <thead>
           <tr>
@@ -40,9 +42,9 @@
             <th scope="col" colspan="2">권한</th>
           </tr>
         </thead>
-       	<tbody>
+       	<tbody class="tbody">
 			<c:forEach items="${list}" var="member" varStatus="vs">
-				<tr data-member-id="${member.memberId}">
+				<tr data-member-id="${member.memberId}" onclick="location.href='${pageContext.request.contextPath}/admin/memberDetail.do?memberId=${member.memberId}'">
 					<td>${member.memberId}</td>
 					<td>${member.nickname}</td>
 		            <td>${member.email}</td>
