@@ -37,4 +37,10 @@ public interface MemberService {
 
 	int deleteMember(String memberId);
 
+	Member kakaoLogin(String snsId);
+
+	int KakaoJoin(Member member);
+
+	String findUserIdBySnsId(String snsId);
+
 }

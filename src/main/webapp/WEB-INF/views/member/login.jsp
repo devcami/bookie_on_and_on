@@ -5,6 +5,7 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/login.css" />
+<script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
 <fmt:requestEncoding value="utf-8"></fmt:requestEncoding>
 <jsp:include page="/WEB-INF/views/common/header.jsp" >
 <jsp:param value="로그인" name="title"/>
@@ -15,7 +16,7 @@
 		<div class="card-body">
 			<h1 class="card-title text-center ">로그인</h1>
 			<div class="card-text">
-				<form:form method="post">
+				<form:form method="post" name="loginFrm">
 					<c:if test="${param.error != null}">
 						<div class="alert alert-danger alert-dismissible fade show" role="alert">
 							<span class="text-plain">아이디 또는 비밀번호가 일치하지 않습니다.</span>
@@ -24,16 +25,14 @@
 							</button>
 						</div>
 					</c:if>
-
-						<label for="exampeleInputEmail1">회원 아이디👨‍👩‍👦‍👦</label> 
-						<input type="text" class="form-control form-control-sm" name="memberId"
-							placeholder="User ID..." required>
-						<br />
-						<label for="exampeleInputPassword">비밀번호🔒</label> 
-						<input type="password" class="form-control form-control-sm"
-							id="password" name="password" placeholder="User Password..."
-							required>
-					</div>
+					<label for="exampeleInputEmail1">회원 아이디👨‍👩‍👦‍👦</label> 
+					<input type="text" class="form-control form-control-sm" name="memberId"
+						placeholder="User ID..." required>
+					<br />
+					<label for="exampeleInputPassword">비밀번호🔒</label> 
+					<input type="password" class="form-control form-control-sm"
+						id="password" name="password" placeholder="User Password..."
+						required>
 					<div class="text-center">
 						<input type="checkbox" class="form-check-input" name="remember-me" id="remember-me" />
 						<label for="remember-me" class="form-check-label">Remember me</label>
@@ -44,12 +43,21 @@
 					</div>
 					<button type="submit" class="btn btn-primary btn-block">로그인</button>
 					<button type="button" class="btn btn-primary btn-block" onclick="location.href='${pageContext.request.contextPath}/member/memberEnroll.do'">회원가입</button>
+					<a href="${pageContext.request.contextPath}/kakao_login.do">
+						<img id="kakao" src="${pageContext.request.contextPath}/resources/images/icon/kakao_login_medium_wide.png">
+					</a>
 				</form:form>
 			</div>
 		</div>
 	</div>
 </div>
+<script>
+//카카오로그인
+Kakao.init('057ff0aa472813117d2205a428300779');
+//초기화 여부 판단
+console.log('초기화여부판단:',Kakao.isInitialized());
 
+</script>
 
 
 

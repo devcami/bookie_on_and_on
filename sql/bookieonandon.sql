@@ -20,7 +20,8 @@ create table member (
     constraint uq_member_nickname unique (nickname),
     constraint ck_member_gender check (gender in ('M', 'F'))
 );
-alter table member add email varchar2(50);
+alter table member modify gender char(1) null;
+commit;
 select * from point_status;
 select * from member;
 select * from my_club;
@@ -210,7 +211,9 @@ create table mission (
     constraint fk_mission_club_no foreign key(club_no) references club(club_no) on delete cascade,
     constraint pk_mission_no primary key(mission_no)
 );
-
+alter table member add sns_id varchar2(500);
+commit;
+select * from member;
 alter table mission add foreign key(m_item_id, club_no) references club_book(item_id, club_no) on delete cascade;
 
 create sequence seq_mission_no;
