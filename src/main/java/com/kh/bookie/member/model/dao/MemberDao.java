@@ -25,7 +25,7 @@ public interface MemberDao {
 
    int insertInterest(Map<String, Object> map);
 
-   int deleteMemberProfile(String nickname);
+   int deleteMemberProfile(String memberId);
 
    int miniUpdateMember(Member logingMember);
 

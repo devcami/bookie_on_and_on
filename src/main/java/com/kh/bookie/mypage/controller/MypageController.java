@@ -616,8 +616,8 @@ public class MypageController {
 				}
 				
 				// b. 레코드삭제
-				int result = memberService.deleteMemberProfile(nickname);
-				log.debug("{}의 MemberProfile 레코드 삭제", nickname);	
+				int result = memberService.deleteMemberProfile(memberId);
+				log.debug("{}의 MemberProfile 레코드 삭제", memberId);	
 			}
 			
 		} catch (Exception e) {
@@ -705,8 +705,8 @@ public class MypageController {
 				}
 				
 				// b. 레코드삭제
-				int delResult = memberService.deleteMemberProfile(nickname);
-				log.debug("{}의 MemberProfile 레코드 삭제", nickname);
+				int delResult = memberService.deleteMemberProfile(memberId);
+				log.debug("{}의 MemberProfile 레코드 삭제", memberId);
 			}
 			
 			int updateResult;
