@@ -103,31 +103,31 @@
         <ul>
           <li>
          <div class="item-thumbnail">
-              <a title="" href="http://www.fostrap.com/2016/04/free-material-design-template-blogger-md-fostrap.html" target="_blank">
+              <a title="" href="${pageContext.request.contextPath}/mypage/myMainProfile.do" target="_blank">
                <img alt="상세프로필설정" class="circle" 
                src="${pageContext.request.contextPath}/resources/images/icon/smile.png" title="상세프로필설정" border="0" height="72" width="72"> </a> 
                <span class="title"><a title="" href="${pageContext.request.contextPath}/mypage/myMainProfile.do">상세프로필설정</a></span> </div>
             <div style="clear: both;"></div>
           </li>
           <li>
-         <div class="item-thumbnail" ">
-              <a title="" href="http://www.fostrap.com/2016/04/free-material-design-template-blogger-md-fostrap.html" target="_blank">
+         <div class="item-thumbnail"  onclick="moveToPointPage()">
+              <a title="" href="${pageContext.request.contextPath}/mypage/myPasswordUpdateFrm.do" target="_blank">
                <img alt="비밀번호변경" class="circle" 
                src="${pageContext.request.contextPath}/resources/images/icon/smile.png" title="비밀번호변경" border="0" height="72" width="72"> </a> 
                <span class="title"><a title=" " href="${pageContext.request.contextPath}/mypage/myPasswordUpdateFrm.do">비밀번호변경</a></span> </div>
             <div style="clear: both;"></div>
           </li>
-          <li>
+          <li onclick="moveToPointPage()">
          <div class="item-thumbnail">
               <a title="" href="http://www.fostrap.com/2016/04/free-material-design-template-blogger-md-fostrap.html" target="_blank">
                <img alt="포인트관리" class="circle" 
                src="${pageContext.request.contextPath}/resources/images/icon/smile.png" title="포인트관리" border="0" height="72" width="72"> </a> 
-               <span class="title"><a title=" " href="http://www.fostrap.com/2016/04/free-material-design-template-blogger-md-fostrap.html">포인트관리</a></span> </div>
+               <span class="title"><a title=" " href="">포인트관리</a></span> </div>
             <div style="clear: both;"></div>
           </li>
           <li>
          <div class="item-thumbnail">
-              <a title="" href="http://www.fostrap.com/2016/04/free-material-design-template-blogger-md-fostrap.html" target="_blank">
+              <a title="" href="${pageContext.request.contextPath}/mypage/deleteMember.do" target="_blank">
                <img alt="회원탈퇴" class="circle" 
                src="${pageContext.request.contextPath}/resources/images/icon/smile.png" title="회원탈퇴" border="0" height="72" width="72"> </a> 
                <span class="title"><a title=" " href="${pageContext.request.contextPath}/mypage/deleteMember.do">회원탈퇴</a></span> </div>
@@ -163,39 +163,21 @@
           </li>
         </ul>
       </div>   
-      <!-- 기능설정 end -->
-      
-      <!-- 기능설정 start -->
-      <div class="f-title">
-        <h1> 기능설정 </h1>
-      </div>
-      <div class="widget-content popular-posts">
-        <ul>
-          <li>
-         <div class="item-thumbnail" style="line-height: 42px;">
-              <a title="" href="http://www.fostrap.com/2016/04/free-material-design-template-blogger-md-fostrap.html" target="_blank">
-               <img alt="사진자동 저장" class="circle" 
-               src="${pageContext.request.contextPath}/resources/images/icon/smile.png" title="사진자동 저장" border="0" height="72" width="72"> </a> 
-               <span class="title"><a title=" " href="http://www.fostrap.com/2016/04/free-material-design-template-blogger-md-fostrap.html">사진자동 저장</a></span> </div>
-            <div style="clear: both;"></div>
-          </li>
-          <li>
-         <div class="item-thumbnail" style="line-height: 42px;">
-              <a title="" href="http://www.fostrap.com/2016/04/free-material-design-template-blogger-md-fostrap.html" target="_blank">
-               <img alt="알림설정" class="circle" 
-               src="${pageContext.request.contextPath}/resources/images/icon/smile.png" title="알림설정" border="0" height="72" width="72"> </a> 
-               <span class="title"><a title=" " href="http://www.fostrap.com/2016/04/free-material-design-template-blogger-md-fostrap.html">알림설정</a></span> </div>
-            <div style="clear: both;"></div>
-          </li>
-        </ul>
-      </div>
-      <!-- 기능설정 end -->   
+      <!-- 기능설정 end --> 
    </div>
+
 </section>
+<!-- 포인트페이지 -->
+<form:form
+	name="pointFrm"
+	method="post" 
+	action="${pageContext.request.contextPath}/point/myPoint.do"/>
 
 <script>
-document.querySelector(".profile-settings-btn").addEventListener("click", (e) => {
-   location.href = "${pageContext.request.contextPath}/mypage/myMiniProfile.do";
-});
+moveToPointPage = () => {
+	const frm = document.pointFrm
+    frm.submit();
+};
+
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

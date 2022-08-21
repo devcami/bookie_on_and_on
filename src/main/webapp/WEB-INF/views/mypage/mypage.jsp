@@ -283,7 +283,6 @@ if(document.querySelector(".profile-settings-btn")){
 
 /* 마이페이지 로딩시 내 책 정보 뿌려주기 */
 window.addEventListener('load', () => {
-	console.log("사진이 왜 엑박으로 뜨는지?");
 	const picture = "${member.renamedFilename}";
 	console.log(picture);
 	const memberId = "${member.memberId}";
