@@ -18,7 +18,7 @@ form{
 }
 .login-form{
     width: 450px;
-    height: 500px;
+    height: 550px;
     margin: 20px;
    
 }
@@ -45,8 +45,14 @@ button.btn-primary{
 button.btn-primary:hover{
 	background-color: #CCDA46;
 }
-
-
+#kakaolink{
+    margin: 1rem auto;
+    display: block;
+    width: 100%;
+}
+#kakaolink img{
+	width: 100%;
+}
 
 /*********** 회원가입 CSS ***********/
 /* 회원 가입 */

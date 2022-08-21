@@ -410,13 +410,21 @@ create table point_status (
     constraint ck_point_status check (status in ('M', 'P'))
 );
 create sequence seq_point_no;
-
+SELECT a.osuser
+               ,a.SID
+               ,a.serial#
+               ,a.status
+               ,b.sql_text
+  FROM v$session a
+              ,v$sqlarea b
+WHERE a.sql_address = b.address;
 -- 트리거
 select * from user_triggers;
 drop trigger trigger_dokoo_comment;
 drop trigger trigger_pheed_comment;
 drop trigger trigger_chat_comment;
 drop trigger trigger_club_chat;
+drop trigger trigger_chat_log;
 commit;
 
 create trigger trigger_chat_comment 
@@ -462,6 +470,20 @@ begin
     end if;
 end;
 /
+
+
+create trigger trigger_chat_log 
+    after 
+    update on member 
+    for each row 
+begin 
+    if updating then 
+    update chat_log set nickname = :new.nickname where nickname = :old.nickname;
+    end if;
+end;
+/
+
+commit;
 --==============================================
 -- 조회
 --==============================================
@@ -1195,4 +1217,7 @@ select
     order by
         tb.enroll_date desc;
 
-        
+update member
+set nickname = 'devcami'
+where member_id = 'devcami';
+commit;
