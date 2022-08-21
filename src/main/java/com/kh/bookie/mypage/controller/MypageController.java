@@ -176,16 +176,23 @@ public class MypageController {
 	}
 	
 	@GetMapping("/followList.do")
-	public void followList(@RequestParam String memberId, Model model, @RequestParam String follower) {
+	public void followList(@RequestParam String memberId, Model model, @RequestParam String follower, @AuthenticationPrincipal Member loginMember) {
 		try {
+			String loginMemberId = loginMember.getMemberId();
 			List<Follower> list = null;
+			List<Follower> myFollowerList = null;
 			if(follower.equals("follower")) {
 				list = mypageService.selectFollowerList(memberId);
-				model.addAttribute("list", list);
+				model.addAttribute("followerList", list);
 			} else if(follower.equals("following")) {
 				list = mypageService.selectFollowingList(memberId);
-				model.addAttribute("list", list);
+				model.addAttribute("followingList", list);
 			}
+			
+			// 로그인 한 사람의 팔로워 목록 같이 보내기
+			myFollowerList = searchService.selectFollowerList(loginMemberId);
+			model.addAttribute("myFollowerList", myFollowerList);
+			
 		} catch (Exception e) {
 			log.error("팔로우 리스트 조회 오류", e);
 			e.printStackTrace();

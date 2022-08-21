@@ -3,7 +3,9 @@ package com.kh.bookie.member.model.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 
 import com.kh.bookie.admin.model.dto.Alarm;
 import com.kh.bookie.member.model.dto.Member;
@@ -41,4 +43,17 @@ public interface MemberDao {
 
    int deleteMember(String memberId);
 
+   // snsId로 회원정보가져오기 
+   @Select("select member_id, email, phone from member where sns_id = #{snsId}")
+   Member kakaoSelect(String snsId);
+
+   @Insert("insert into member values (#{memberId}, #{password}, default, #{nickname}, null, null, null, null, null, null, null, default, #{email}, #{snsId})")
+   int kakaoInsert(Member member);
+
+   int authorize(Member member); //회원 권한?
+
+   @Select("select member_id from member where sns_id = #{snsId}")
+   String findUserIdBySnsId(String snsId);
+   
+   
 }
