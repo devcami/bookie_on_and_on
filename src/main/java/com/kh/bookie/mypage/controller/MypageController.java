@@ -94,8 +94,8 @@ public class MypageController {
 		log.debug("마이페이지 memberId = {}", memberId);
 		try {
 			Member member = memberService.selectOneMember(memberId);
+			log.debug("이 죽일놈의 사진 초기화 = {}" ,member.getRenamedFilename());
 			model.addAttribute("member", member);
-
 		} catch (Exception e) {
 			log.error("파이페이지 조회오류", e);
 			throw e;
@@ -201,7 +201,18 @@ public class MypageController {
 	
 	
 	@GetMapping("/myMiniProfile.do")
-	public void myMiniProfile() {}
+	public void myMiniProfile(@RequestParam String memberId, Model model) {
+		log.debug("여긴나와? = {}", "여기가문제야?");
+		log.debug("미니프로필수정 memberId = {}", memberId);
+		try {
+			Member member = memberService.selectOneMember(memberId);
+			log.debug("이 죽일놈의 사진 초기화 = {}" ,member.getRenamedFilename());
+			model.addAttribute("member", member);
+		} catch (Exception e) {
+			log.error("마이페이지 조회오류", e);
+			throw e;
+		}
+	}
 	
 	/* 회원탈퇴 */
 	@GetMapping("/deleteMember.do")
@@ -231,7 +242,6 @@ public class MypageController {
 		log.debug("메인프로필 loginMember = {}", loginMember);
 		String memberId = loginMember.getMemberId();
 		try {
-			// 
 //			Member member = memberService.selectInterests(memberId);
 		} catch (Exception e) {
 			log.error("내프로필 조회 오류", e);
@@ -585,14 +595,15 @@ public class MypageController {
 	
 	/* 마이프로필 삭제 */
 	@PostMapping("/myProfileDelete.do")
-	public String myProfileDelete(@AuthenticationPrincipal Member loginMember, RedirectAttributes redirectAttr) {
-		String nickname = loginMember.getNickname(); 
+	public String myProfileDelete(@RequestParam String memberId, RedirectAttributes redirectAttr) {
+		Member member = memberService.selectOneMember(memberId);
+		String nickname = member.getNickname(); 
 		log.debug("nickname = {}", nickname);
 		// 파일저장위치
         String saveDirectory = application.getRealPath("/resources/upload/profile");
-		log.debug(loginMember.getRenamedFilename());
+		log.debug(member.getRenamedFilename());
 		try {
-			if(loginMember.getRenamedFilename() != null) {
+			if(member.getRenamedFilename() != null) {
 				Member profileMember =  memberService.selectOneMemberByNickname(nickname);
 				log.debug("profileMember = {}", profileMember);
 				
@@ -613,7 +624,7 @@ public class MypageController {
 			log.error("프로필 삭제 오류", e);
 			throw e;
 		}
-		return "redirect:/mypage/myMiniProfile.do";
+		return "redirect:/mypage/myMiniProfile.do?memberId=" + memberId;
 	}
 	
 	/* nicknameCheck */
@@ -659,19 +670,29 @@ public class MypageController {
 					RedirectAttributes redirectAttr,
 					@RequestParam("upFile") MultipartFile upFile,
 					@RequestParam String delFile,
+					@RequestParam String memberId,
 					@AuthenticationPrincipal Member loginMember) throws Exception {
-		String nickname = loginMember.getNickname();
 		log.debug("upFile = {}", upFile);
 		log.debug("delFile = {}", delFile);
 		log.debug("sns = {}", sns);
 		log.debug("introduce = {}", introduce);
 		log.debug("newNickname = {}", newNickname);
+		log.debug("로긴맴버 리네임드파일 = {}", loginMember.getRenamedFilename());
+		log.debug("로긴맴버 오리지날파일 = {}", loginMember.getOriginalFilename());
+		log.debug("memberId = {}", memberId);
+		
+		Member member = memberService.selectOneMember(memberId);
+		log.debug("맴버 = {}", member.getNickname());
+		log.debug("맴버 = {}", member.getPhone());
+		log.debug("리네임드파일 = {}", member.getRenamedFilename());
+		log.debug("오리지날파일 = {}", member.getOriginalFilename());
+		String nickname = member.getNickname();
 		
 		// 파일저장위치
         String saveDirectory = application.getRealPath("/resources/upload/profile");
 		try {
 			// 1. 첨부파일 삭제 (파일 삭제)
-			if(delFile == "0" && (loginMember.getRenamedFilename() != null)) {
+			if(delFile == "0" && (member.getRenamedFilename() != null)) {
 				Member profileMember =  memberService.selectOneMemberByNickname(nickname);
 				log.debug("profileMember = {}", profileMember);
 				
@@ -689,7 +710,7 @@ public class MypageController {
 			}
 			
 			int updateResult;
-			Member updateMember = loginMember;
+			Member updateMember = member;
 			// 2. 첨부파일 등록 (파일 저장)
 			if(upFile.getSize() > 0) {
 				log.debug("요기?");
@@ -706,8 +727,8 @@ public class MypageController {
 			}
 			else {
 				// 3. 맴버 간단수정
-				updateMember.setOriginalFilename(loginMember.getOriginalFilename());
-				updateMember.setRenamedFilename(loginMember.getRenamedFilename());
+				updateMember.setOriginalFilename(member.getOriginalFilename());
+				updateMember.setRenamedFilename(member.getRenamedFilename());
 				updateMember.setNickname(newNickname);
 				updateMember.setIntroduce(introduce);
 				updateMember.setSns(sns);

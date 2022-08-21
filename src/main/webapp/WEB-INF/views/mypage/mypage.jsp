@@ -13,37 +13,7 @@
 <script src='${pageContext.request.contextPath}/resources/js/main.js'></script>
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/locales-all.js"></script>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-<script type="text/javascript">
-  google.charts.load("current", {packages:['corechart']});
-  google.charts.setOnLoadCallback(drawChart);
-  function drawChart() {
-    var data = google.visualization.arrayToDataTable([
-        ['Genre', 'Fantasy & Sci Fi', 'Romance', 'Mystery/Crime', 'General',
-         'Western', 'Literature', { role: 'annotation' } ],
-        ['2010', 10, 24, 20, 32, 18, 5, ''],
-        ['2020', 16, 22, 23, 30, 16, 9, ''],
-        ['2030', 28, 19, 29, 30, 12, 13, '']
-      ]);
 
-    var view = new google.visualization.DataView(data);
-    view.setColumns([0, 1,
-                     { calc: "stringify",
-                       sourceColumn: 1,
-                       type: "string",
-                       role: "annotation" },
-                     2]);
-
-    var options = {
-            width: 600,
-            height: 400,
-            legend: { position: 'top', maxLines: 3 },
-            bar: { groupWidth: '75%' },
-            isStacked: true,
-    };
-    var chart = new google.visualization.ColumnChart(document.getElementById("columnchart_values"));
-    chart.draw(view, options);
-}
-</script>
 <%
 	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 	Member loginMember = (Member) authentication.getPrincipal();
@@ -81,14 +51,14 @@
 <div class="container">
 	<div class="profile">
 		<c:if test="${empty member.originalFilename}">
-		<div class="profile-image">
-			<img src="${pageContext.request.contextPath}/resources/images/icon/none-profile-img.png" alt="사진이없어요~"  width="150" height="150">
-		</div>
+			<div class="profile-image">
+				<img src="${pageContext.request.contextPath}/resources/images/icon/none-profile-img.png" alt="사진이없어요~"  width="150" height="150">
+			</div>
 		</c:if>
 		<c:if test="${not empty member.originalFilename}">
-		<div class="profile-image">
-			<img src="${pageContext.request.contextPath}/resources/upload/profile/${member.renamedFilename}" alt="멋지고이쁜내사진"  width="200" height="200">
-		</div> 
+			<div class="profile-image">
+				<img src="${pageContext.request.contextPath}/resources/upload/profile/${member.renamedFilename}" alt="멋지고이쁜내사진"  width="200" height="200">
+			</div> 
 		</c:if>
 		<div class="profile-user-settings d-flex" style="flex-direction: column;">
 			<h1 class="profile-user-name">${member.nickname}</h1>
@@ -201,8 +171,13 @@
 <h1>읽은 책 그래프</h1>
 </div>
 <div id="columnchart_values" style="width: 900px; height: 300px;"></div>
-<hr class="bar" style="border: solid 10px #f6f5f5; margin-top: 3rem;">
-
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
 
 </section>
 
@@ -296,18 +271,20 @@ moveToPointPage = () => {
 
 if(document.querySelector(".profile-edit-btn")){
 	document.querySelector(".profile-edit-btn").addEventListener("click", (e) => {
-		location.href = "${pageContext.request.contextPath}/mypage/myMiniProfile.do";
+		location.href = "${pageContext.request.contextPath}/mypage/myMiniProfile.do?memberId=${member.memberId}";
 	});	
 }
 
 if(document.querySelector(".profile-settings-btn")){
 	document.querySelector(".profile-settings-btn").addEventListener("click", (e) => {
-		location.href = "${pageContext.request.contextPath}/mypage/myMiniProfile.do";
+		location.href = "${pageContext.request.contextPath}/mypage/myMiniProfile.do?memberId=${member.memberId}";
 	});
 }
 
 /* 마이페이지 로딩시 내 책 정보 뿌려주기 */
 window.addEventListener('load', () => {
+	const picture = "${member.renamedFilename}";
+	console.log(picture);
 	const memberId = "${member.memberId}";
 	const container = document.querySelector("#book-div");
 	const myPickContainer = document.querySelector("#myPick-book-div");
@@ -414,6 +391,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	var itemId = [];
 	var list = [];
 	var coverList = [];
+	const memberId = "${member.memberId}";
 	$.ajax({
 		url: `${pageContext.request.contextPath}/mypage/myBookIngList.do`,
 		data : {memberId : memberId},
@@ -491,5 +469,41 @@ document.addEventListener('DOMContentLoaded', function() {
 	});
 	calendar.render();
 });
+</script>
+<script type="text/javascript">
+	google.charts.load('current', {packages: ['corechart', 'bar']});
+	google.charts.setOnLoadCallback(drawStacked);
+	
+	function drawStacked() {
+	  var data = google.visualization.arrayToDataTable([
+	      ['이건뭐야?', '책이름 1', '책이름 2', '책이름 3', '책이름 4',
+	       '책이름 5', '책이름 6', { role: 'annotation' } ],
+	      ['1', 0, 0, 0, 0, 0, 0, ''],
+	      ['2', 16, 22, 23, 30, 16, 9, ''],
+	      ['3', 16, 22, 23, 30, 16, 9, ''],
+	      ['4', 16, 22, 23, 30, 16, 9, ''],
+	      ['5', 16, 22, 23, 30, 16, 9, ''],
+	      ['6', 16, 22, 23, 30, 16, 9, ''],
+	      ['7', 16, 22, 23, 30, 16, 9, ''],
+	      ['8', 16, 22, 23, 30, 16, 9, ''],
+	      ['9', 16, 22, 23, 30, 16, 9, ''],
+	      ['10', 16, 22, 23, 30, 16, 9, ''],
+	      ['11', 16, 22, 23, 30, 16, 9, ''],
+	      ['12', 28, 19, 29, 30, 12, 13, '']
+	    ]);
+	
+	  var view = new google.visualization.DataView(data);
+	  view.setColumns([0, 1, 2, 3, 4, 5, 6, 7, { calc: "stringify", sourceColumn: 1, type: "string", role: "annotation" }, 7]);
+	
+	  var options = {
+	          width: 800,
+	          height: 500,
+	          legend: { position: 'top', maxLines: 3 },
+	          bar: { groupWidth: '75%' },
+	          isStacked: true,
+	  };
+	  var chart = new google.visualization.ColumnChart(document.getElementById("columnchart_values"));
+	  chart.draw(view, options);
+}
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
