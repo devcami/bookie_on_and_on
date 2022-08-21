@@ -116,8 +116,7 @@ public class MemberController {
          e.printStackTrace();
       }
       
-   };
-   
+   }
 
 	/**
 	 * 로그인 성공시 후처리

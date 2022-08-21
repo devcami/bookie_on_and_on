@@ -6,16 +6,103 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/recommendUser.css" />
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/follower.css" />
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param value="유저 추천" name="title"/>
 </jsp:include>
 <sec:authentication property="principal" var="loginMember"/>
 <section id="content">
 	<div id="container-div">
-		<c:forEach items="${list}" var="follow" varStatus="vs">
-			<p>${follow}</p>
-		
-		</c:forEach>
+		<c:if test="${not empty followerList}">
+			<c:forEach items="${followerList}" var="follow" varStatus="vs">
+				<div class="card m-2">
+					<div class="card-body follow-box d-flex">
+						<div class="d-flex" style="align-items: center;">
+							<div class="card-profile">
+								<c:if test="${not empty follow.member.renamedFilename}">
+								<img src="${pageContext.request.contextPath}/resources/upload/profile/${follow.member.renamedFilename}" alt="프로필이미지"/>
+								</c:if>
+								<c:if test="${empty follow.member.renamedFilename}">
+								<i class="fa-solid fa-user-large user-icon follow-icon"></i>
+								</c:if>
+							</div>
+							<div class="user-nickname">
+								<a href="${pageContext.request.contextPath}/mypage/mypage.do?memberId=${follow.memberId}" class="card-link ml-3">${follow.member.nickname}</a>
+							</div>
+						</div>
+						<div>
+							<label>
+								<c:set var="done_loop" value="false"/>
+								<c:set var="i" value="1"/>
+								<c:forEach items="${myFollowerList}" var="myFollow">
+									<c:if test="${done_loop ne true}">
+										<c:set var="i" value="1"/>
+										<c:if test="${myFollow.followingMemberId eq follow.memberId}">
+											<c:set var="i" value="${i+1}"/>
+										</c:if>
+										<c:if test="${i eq 2}">
+											<c:set var="done_loop" value="true"/>
+										</c:if>
+									</c:if>
+								</c:forEach>
+								<c:if test="${i eq 2}">
+									<input type="checkbox" name="follow-btn" id="follow-btn" class="follow-btn" onclick="followEvent(this);" data-follower-id="${follow.memberId}" checked/>
+								</c:if>
+								<c:if test="${i eq 1}">
+									<input type="checkbox" name="follow-btn" id="follow-btn" class="follow-btn" onclick="followEvent(this);" data-follower-id="${follow.memberId}"/>
+								</c:if>
+								<span class="followSpan">follow</span>
+							</label>
+						</div>
+					</div>
+				</div>
+			</c:forEach>
+		</c:if>
+		<c:if test="${not empty followingList}">
+			<c:forEach items="${followingList}" var="follow" varStatus="vs">
+				<div class="card m-2">
+					<div class="card-body follow-box d-flex">
+						<div class="d-flex" style="align-items: center;">
+							<div class="card-profile">
+								<c:if test="${not empty follow.member.renamedFilename}">
+								<img src="${pageContext.request.contextPath}/resources/upload/profile/${follow.member.renamedFilename}" alt="프로필이미지"/>
+								</c:if>
+								<c:if test="${empty follow.member.renamedFilename}">
+								<i class="fa-solid fa-user-large user-icon follow-icon"></i>
+								</c:if>
+							</div>
+							<div class="user-nickname">
+								<a href="${pageContext.request.contextPath}/mypage/mypage.do?memberId=${follow.followingMemberId}" class="card-link ml-3">${follow.member.nickname}</a>
+							</div>
+						</div>
+						<div>
+							<label>
+								<c:set var="done_loop" value="false"/>
+								<c:set var="i" value="1"/>
+								<c:forEach items="${myFollowerList}" var="myFollow">
+									<c:if test="${done_loop ne true}">
+										<c:set var="i" value="1"/>
+										<c:if test="${myFollow.followingMemberId eq follow.followingMemberId}">
+											<c:set var="i" value="${i+1}"/>
+										</c:if>
+										<c:if test="${i eq 2}">
+											<c:set var="done_loop" value="true"/>
+										</c:if>
+									</c:if>
+								</c:forEach>
+								<c:if test="${i eq 2}">
+									<input type="checkbox" name="follow-btn" id="follow-btn" class="follow-btn" onclick="followEvent(this);" data-follower-id="${follow.memberId}" checked/>
+								</c:if>
+								<c:if test="${i eq 1}">
+									<input type="checkbox" name="follow-btn" id="follow-btn" class="follow-btn" onclick="followEvent(this);" data-follower-id="${follow.memberId}"/>
+								</c:if>
+								<span class="followSpan">follow</span>
+							</label>
+						</div>
+					</div>
+				</div>
+			</c:forEach>
+		</c:if>
 	</div>
 </section>
 

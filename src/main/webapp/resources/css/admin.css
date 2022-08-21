@@ -104,6 +104,12 @@ th[type="head-line2"]{
      color: #f3f3f3;  
      
 }
+.tbody tr{
+	cursor: pointer;
+}
+.tbody tr:hover{
+	background-color : #b5b5b54a;
+}
 
 #reportTbl tr:hover{
 	cursor: pointer;
@@ -273,4 +279,16 @@ div.comment-div span.text-secondary {
 .pheed-container .pheed .pheed-content .book-info p{
 	font-size: 20px;
 	color: #adadad;
+}
+
+/****** 회원 상세 테이블 ******/
+#detail-tbl{
+	font-size: 20px;
+}
+#detail-tbl th{
+	width : 150px;
+	border-right: 1px solid #adadad;
+}
+#detail-tbl td{
+	padding-left: 20px !important;
 }

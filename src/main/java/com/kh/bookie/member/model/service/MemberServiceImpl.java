@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +22,7 @@ public class MemberServiceImpl implements MemberService {
    
    @Autowired
    MemberDao memberDao;
-
+   
    @Override
    public Member selectOneMember(String memberId) {
       return memberDao.selectOneMember(memberId);
@@ -88,5 +90,27 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public int deleteMember(String memberId) {
 		return memberDao.deleteMember(memberId);
+	}
+
+	// 카카오 로그인
+	@Override
+	public Member kakaoLogin(String snsId) {
+		return memberDao.kakaoSelect(snsId);
+	}
+	
+	// 카카오 가입
+	@Override
+	public int KakaoJoin(Member member) {
+		int result = memberDao.kakaoInsert(member);
+		Map<String, Object> map = new HashMap<>();
+		map.put("memberId", member.getMemberId());
+		map.put("auth", MemberService.ROLE_USER); // enum or interface에 상수처리
+		result = memberDao.insertAuthority(map);
+		return result;
+	}
+	
+	@Override
+	public String findUserIdBySnsId(String snsId) {
+		return memberDao.findUserIdBySnsId(snsId);
 	}
 }

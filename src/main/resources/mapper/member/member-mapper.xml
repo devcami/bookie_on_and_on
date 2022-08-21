@@ -31,7 +31,8 @@
          </if>
          #{sns},         
          default,
-         #{email})
+         #{email},
+         null)
    </insert>
    
    <insert id="insertAuthority">

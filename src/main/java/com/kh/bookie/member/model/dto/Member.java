@@ -19,6 +19,7 @@ public class Member extends MemberEntity implements UserDetails{
 	Interest interests;
 	String[] interestEnroll;
 	String interest;
+	String snsId;
 	
 	private static final long serialVersionUID = 1L;
 	
