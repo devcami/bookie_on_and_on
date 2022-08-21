@@ -152,15 +152,6 @@
 			 </div>
 			 <div style="clear: both;"></div>
           </li>
-          <li>
-	         <div class="item-thumbnail" style="line-height: 42px;">
-				<img alt="신고관리" class="circle" src="${pageContext.request.contextPath}/resources/images/icon/smile.png" title="나의 Q&A 목록" border="0" height="72" width="72"> 
-				<span class="title">
-					<a href="${pageContext.request.contextPath}/mypage/qnaList.do?memberId=${loginMember.memberId}">나의 신고목록</a>
-				</span> 
-			 </div>
-			 <div style="clear: both;"></div>
-          </li>
         </ul>
       </div>   
       <!-- 기능설정 end --> 

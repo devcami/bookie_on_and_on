@@ -1191,5 +1191,10 @@ select
         rnum between 1 and 2
     order by
         tb.enroll_date desc;
-
         
+select * from member;
+--delete from member where member_id = 'tester2';
+
+commit;
+
+update member set renamed_filename = null, original_filename = null where nickname = 'tmddbs';
