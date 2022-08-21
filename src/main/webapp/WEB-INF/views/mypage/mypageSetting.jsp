@@ -85,7 +85,7 @@
 </jsp:include>
 <sec:authentication property="principal" var="loginMember"/>
 <!-- 뒤로가기 -->
-<div id="title-header" class="">
+<div id="title-header" class="" >
 	<div id="header-div">
 		<div id="title-header-left">
 			<i class="fa-solid fa-angle-left" onclick="location.href='/bookie/mypage/mypage.do'"></i>		
@@ -94,7 +94,7 @@
 </div>
 <!-- 메뉴 -->
 <section style="background-color: #fcfbf9;">
-   <div>
+   <div style="min-height:800px;">
       <!-- 계정관리 start -->
       <div class="f-title">
         <h1> 계정관리 </h1>

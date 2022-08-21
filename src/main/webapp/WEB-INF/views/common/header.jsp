@@ -152,7 +152,12 @@ const memberId = '<sec:authentication property="principal.username"/>';
                     		<c:if test="${loginMember.memberId != 'admin'}">
                     		<a class="nav-link" href="${pageContext.request.contextPath}/mypage/mypage.do?memberId=${loginMember.memberId}">
 				    			<c:if test="${fn:contains(uri, '/bookie/WEB-INF/views/mypage')}">
-	                    		<img src="${pageContext.request.contextPath}/resources/images/icon/i_mypage_on.png" alt="mypageicon" />내서재
+				    				<c:if test="${param.memberId eq loginMember.memberId}">
+			                    		<img src="${pageContext.request.contextPath}/resources/images/icon/i_mypage_on.png" alt="mypageicon" />내서재
+				    				</c:if>
+				    				<c:if test="${param.memberId ne loginMember.memberId}">
+			                    		<img src="${pageContext.request.contextPath}/resources/images/icon/i_mypage.png" alt="mypageicon" />내서재
+				    				</c:if>
 				    			</c:if>
 				    			<c:if test="${!fn:contains(uri, '/bookie/WEB-INF/views/mypage')}">
 	                    		<img src="${pageContext.request.contextPath}/resources/images/icon/i_mypage.png" alt="mypageicon" />내서재
