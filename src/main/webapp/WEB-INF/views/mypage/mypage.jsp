@@ -175,7 +175,7 @@ table tr td{
 <div id="book-graph" style="border: none; padding-bottom: 0px;">
 	<table id="book-grapt-table">
 	    <tbody id="book-grapt-table-body">
-	        <tr>
+	        <tr id="month0">
 	            <td style="border-right: thin;"></td>
 	            <td>1월</td>
 	            <td>2월</td>
@@ -503,6 +503,8 @@ window.addEventListener('load', () => {
 	var itemId = [];
 	var list = [];
 	const memberId = "${member.memberId}";
+	let i = 1;
+	
 	$.ajax({
 		url: `${pageContext.request.contextPath}/mypage/myBookIngList.do`,
 		data : {memberId : memberId},
@@ -510,9 +512,13 @@ window.addEventListener('load', () => {
 		method : "get",
 		success(data){
 			bookIngList = data;
+			console.log(i);
 			/* 읽은 책 찾아 뿌리기 */
 			let i = 1;
 		 	bookIngList.forEach((value, index, array)=>{
+		 		if(!value.endedAt){
+		 			i--;
+		 		}
 				if(value.endedAt){
 					$.ajax({
 						url: `${pageContext.request.contextPath}/mypage/myEndedAtBook.do`,
@@ -523,16 +529,80 @@ window.addEventListener('load', () => {
 						method : "get",
 						success(data){
 							const {item} = data;
-							item.forEach((bookIng) => {
-								console.log(i);
+							item.forEach((bookIng)=> {
 								const {isbn13, title, author, publisher, pubDate, cover} = bookIng;
+								console.log("여긴어디냐");
+								console.log(value.endedAt.monthValue);
+								console.log(i);
 								const month = value.endedAt.monthValue;
+								console.log(bookIng);
 								
-							
+								const div = `<tr id="month\${i}">
+									            <td style="border-right: thin;"></td>
+									            <td></td>
+									            <td></td>
+									            <td></td>
+									            <td></td>
+									            <td></td>
+									            <td></td>
+									            <td></td>
+									            <td></td>
+									            <td></td>
+									            <td></td>
+									            <td></td>
+									            <td></td>
+									        </tr>`;
+								/* if(document.querySelector(`#month\${i-1}`) != null) {
+									const arr = Array.from(document.querySelector(`#month\${i-1}`).children);
+									for(let j = 0; j < arr.length; j++){
+										if(arr[j].chilren.length == 1 && j + 1 == month){
+											container.insertAdjacentHTML('afterbegin', div);
+										} else {
+											document.querySelector(`#month\${i-1}`).children[month].innerHTML = `<img src=\${cover}  value=\${isbn13} onclick="bookEnroll(this);" style="width: 3.5rem; height: 5rem">`;
+										}
+									}
+								} else {
+									container.insertAdjacentHTML('afterbegin', div);
+								} */
+								container.insertAdjacentHTML('afterbegin', div);
+								if(i > 1){
+								 	for(let k = 1; k <= i; k++){
+										for(let j = 1; j < 13; j++){
+											if(document.querySelector(`#month\${k}`).children[j].children.length != 1
+													&& month == j) { i = k; break;}
+						 				}
+									}
+								}
+					        	if(month == 1)
+					        		document.querySelector(`#month\${i}`).children[1].innerHTML = `<img src=\${cover}  value=\${isbn13} onclick="bookEnroll(this);" style="width: 3.5rem; height: 5rem">`;
+					        	if(month == 2)
+					        		document.querySelector(`#month\${i}`).children[2].innerHTML = `<img src=\${cover}  value=\${isbn13} onclick="bookEnroll(this);" style="width: 3.5rem; height: 5rem">`;
+					        	if(month == 3)
+					        		document.querySelector(`#month\${i}`).children[3].innerHTML = `<img src=\${cover}  value=\${isbn13} onclick="bookEnroll(this);" style="width: 3.5rem; height: 5rem">`;
+					        	if(month == 4)
+					        		document.querySelector(`#month\${i}`).children[4].innerHTML = `<img src=\${cover}  value=\${isbn13} onclick="bookEnroll(this);" style="width: 3.5rem; height: 5rem">`;
+					        	if(month == 5)
+					        		document.querySelector(`#month\${i}`).children[5].innerHTML = `<img src=\${cover}  value=\${isbn13} onclick="bookEnroll(this);" style="width: 3.5rem; height: 5rem">`;
+					        	if(month == 6)
+					        		document.querySelector(`#month\${i}`).children[6].innerHTML = `<img src=\${cover}  value=\${isbn13} onclick="bookEnroll(this);" style="width: 3.5rem; height: 5rem">`;
+					        	if(month == 7)
+					        		document.querySelector(`#month\${i}`).children[7].innerHTML = `<img src=\${cover}  value=\${isbn13} onclick="bookEnroll(this);" style="width: 3.5rem; height: 5rem">`;
+					        	if(month == 8)
+					        		document.querySelector(`#month\${i}`).children[8].innerHTML = `<img src=\${cover}  value=\${isbn13} onclick="bookEnroll(this);" style="width: 3.5rem; height: 5rem">`;
+					        	if(month == 9)
+					        		document.querySelector(`#month\${i}`).children[9].innerHTML = `<img src=\${cover}  value=\${isbn13} onclick="bookEnroll(this);" style="width: 3.5rem; height: 5rem">`;
+					        	if(month == 10)
+					        		document.querySelector(`#month\${i}`).children[10].innerHTML = `<img src=\${cover}  value=\${isbn13} onclick="bookEnroll(this);" style="width: 3.5rem; height: 5rem">`;
+					        	if(month == 11)
+					        		document.querySelector(`#month\${i}`).children[11].innerHTML = `<img src=\${cover}  value=\${isbn13} onclick="bookEnroll(this);" style="width: 3.5rem; height: 5rem">`;
+					        	if(month == 12)
+					        		document.querySelector(`#month\${i}`).children[12].innerHTML = `<img src=\${cover}  value=\${isbn13} onclick="bookEnroll(this);" style="width: 3.5rem; height: 5rem">`;
+							})
 				 		},
 						error : console.log
 					});	
 				}
+				i++;   	
  			}); 
 		},
 		error : console.log
