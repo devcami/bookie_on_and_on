@@ -81,8 +81,9 @@ const memberId = '<sec:authentication property="principal.username"/>';
 
 			<img class="sh-right" src="${pageContext.request.contextPath}/resources/images/icon/search.png" alt="검색" onclick="location.href='${pageContext.request.contextPath}/search/searchForm.do'" />
 			 <sec:authorize access="isAuthenticated() && !hasRole('ADMIN')">
-				<i class="fa-regular fa-bell alarm-i" onclick="location.href='${pageContext.request.contextPath}/member/checkAlarm.do'"></i>
-				<span id="unreadCount" class="badge badge-danger rounded-circle unread-count ${unreadCount == 0 ? 'd-none' : ''}">${unreadCount}</span>
+				<i class="fa-regular fa-bell alarm-i" onclick="location.href='${pageContext.request.contextPath}/member/checkAlarm.do'">
+					<span id="unreadCount" class="badge badge-danger rounded-circle unread-count ${unreadCount == 0 ? 'd-none' : ''}">${unreadCount}</span>			
+				</i>
 				<%-- <img class="sh-right" src="${pageContext.request.contextPath}/resources/images/icon/alarm.png" alt="알림"  /> --%>
 			</sec:authorize>
 		</div>
