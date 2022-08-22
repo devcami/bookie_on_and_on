@@ -12,9 +12,9 @@
 </jsp:include>
 
 <div class="global-container">
-	<div class="card login-form">
+	<div class="card login-form ">
 		<div class="card-body">
-			<h1 class="card-title text-center ">로그인</h1>
+			<h1 class="card-title text-center">로그인</h1>
 			<div class="card-text">
 				<form:form method="post" name="loginFrm">
 					<c:if test="${param.error != null}">
@@ -43,7 +43,7 @@
 					</div>
 					<button type="submit" class="btn btn-primary btn-block">로그인</button>
 					<button type="button" class="btn btn-primary btn-block" onclick="location.href='${pageContext.request.contextPath}/member/memberEnroll.do'">회원가입</button>
-					<a href="${pageContext.request.contextPath}/kakao_login.do">
+					<a href="${pageContext.request.contextPath}/kakao_login.do" id="kakaolink">
 						<img id="kakao" src="${pageContext.request.contextPath}/resources/images/icon/kakao_login_medium_wide.png">
 					</a>
 				</form:form>

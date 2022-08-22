@@ -410,13 +410,26 @@ create table point_status (
     constraint ck_point_status check (status in ('M', 'P'))
 );
 create sequence seq_point_no;
+<<<<<<< HEAD
 
 -- �듃由ш굅
+=======
+SELECT a.osuser
+               ,a.SID
+               ,a.serial#
+               ,a.status
+               ,b.sql_text
+  FROM v$session a
+              ,v$sqlarea b
+WHERE a.sql_address = b.address;
+-- 트리거
+>>>>>>> branch 'master' of https://github.com/devcami/bookie_on_and_on.git
 select * from user_triggers;
 drop trigger trigger_dokoo_comment;
 drop trigger trigger_pheed_comment;
 drop trigger trigger_chat_comment;
 drop trigger trigger_club_chat;
+drop trigger trigger_chat_log;
 commit;
 
 create trigger trigger_chat_comment 
@@ -462,6 +475,20 @@ begin
     end if;
 end;
 /
+
+
+create trigger trigger_chat_log 
+    after 
+    update on member 
+    for each row 
+begin 
+    if updating then 
+    update chat_log set nickname = :new.nickname where nickname = :old.nickname;
+    end if;
+end;
+/
+
+commit;
 --==============================================
 -- 議고쉶
 --==============================================
@@ -1195,8 +1222,4 @@ select
     order by
         tb.enroll_date desc;
         
-select * from member;
 
-update member set phone = '01012345678' where nickname = '호싱이';
-
-commit;
