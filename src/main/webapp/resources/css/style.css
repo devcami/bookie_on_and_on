@@ -79,12 +79,15 @@ header div#header-container img.sh-right{
 }
 .unread-count{
 	position: absolute;
-    /* width: 31px; */
-    /* height: 31px; */
+	display: flex;
+	width: 30px;
+    height: 30px;
     top: -10px;
     left: 35px;
-    font-size: 20px !important;
+    font-size: 18px !important;
     text-shadow: none !important;
+    align-items: center;
+    justify-content: center;
 }
 
 /* navbar 통째 */
