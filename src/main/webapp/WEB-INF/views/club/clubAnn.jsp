@@ -14,13 +14,17 @@
 <sec:authorize access="isAuthenticated()">
 	<sec:authentication property="principal" var="loginMember"/>
 </sec:authorize>
+
+<jsp:useBean id="today" class="java.util.Date" />
+<fmt:formatDate value='${today}' pattern='yyyy-MM-dd' var="nowDate"/>
+
 <div id="title-header" class="" style="display: none;">
 	<div id="header-div">
 		<div id="title-header-left">
 			<i class="fa-solid fa-angle-left" onclick="location.href='/bookie/club/clubList.do'"></i>
 			<span>[북클럽] ${club.title}</span>					
 		</div>
-		<c:if test="${club.recruitEnd lt nowDate}">
+		<c:if test="${club.recruitEnd le nowDate}">
 		<sec:authorize access="hasRole('ROLE_USER')">
 			<div id="likeWishDiv">
 				<span class="fa-stack fa-lg" id='h-span'>
@@ -173,8 +177,8 @@
 	</div>
 	<%-- 미션 끝 --%>
 	
-	<jsp:useBean id="today" class="java.util.Date" />
-	<fmt:formatDate value='${today}' pattern='yyyy-MM-dd' var="nowDate"/>
+	
+	
 	<%-- 등록 버튼 --%>
 	<sec:authorize access="isAnonymous()">
 		<p id="plzEnrollMember">🧡이 북클럽이 맘에 드셨나요? 부기온앤온의 회원이 되시면 북클럽 활동이 가능합니다!🧡</p>
