@@ -169,4 +169,44 @@
 			member_id = #{memberId}
 	</delete>
 	
+	<select id="selectInterestBymemberId" resultMap="interestsMap">
+		select
+			*
+		from
+			interest
+		where
+			member_id = #{memberId}
+	</select>
+	
+	<resultMap type="interest" id="interestsMap">
+		<id column="member_id" property="memberId"/>
+		<result column="interest" property="interests"/>
+	</resultMap>
+	
+	<update id="updateInterests">
+		update 
+			interest 
+		set 
+			interest = #{interests}
+		where 
+			member_id = #{memberId}
+	</update>
+	
+	<update id="mainUpdateMember">
+		update 
+			member 
+		set 
+			nickname = #{nickname}, 
+			introduce = #{introduce}, 
+			sns = #{sns}, 
+			original_filename = #{originalFilename}, 
+			renamed_filename = #{renamedFilename},
+			phone = #{phone},
+			gender = #{gender},
+			birthday = #{birthday},
+			email = #{email}
+		where 
+			member_id = #{memberId} 
+	</update>
+	
 </mapper>

@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.bookie.admin.model.dto.Alarm;
 import com.kh.bookie.member.model.dao.MemberDao;
+import com.kh.bookie.member.model.dto.Interest;
 import com.kh.bookie.member.model.dto.Member;
 
 import lombok.NonNull;
@@ -112,5 +113,20 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public String findUserIdBySnsId(String snsId) {
 		return memberDao.findUserIdBySnsId(snsId);
+	}
+
+	@Override
+	public Interest selectInterestBymemberId(String memberId) {
+		return memberDao.selectInterestBymemberId(memberId);
+	}
+
+	@Override
+	public int mainUpdateMember(Member newMember) {
+		return memberDao.mainUpdateMember(newMember);
+	}
+
+	@Override
+	public int updateInterests(Map<String, Object> param) {
+		return memberDao.updateInterests(param);
 	}
 }

@@ -110,8 +110,47 @@ public class MypageServiceImpl implements MypageService {
 	}
 	
 	@Override
-	public List<Dokoo> selectMyDokooList(Map<String, Object> map) {
-		
+	public List<Dokoo> selectMyDokooList(Map<String, Object> map) {	
 		return mypageDao.selectMyDokooList(map);
+	}
+
+	@Override
+	public List<Dokoo> selectWishMyDokooList(Map<String, Object> map) {
+		return mypageDao.selectWishMyDokooList(map);
+	}
+
+	@Override
+	public List<Pheed> selectWishMyPheedFList(Map<String, Object> map) {
+		List<Pheed> list = mypageDao.selectWishMyPheedFList(map);
+		for(Pheed p : list) {
+			PheedAttachment attach = pheedDao.selectAttachment(p.getPheedNo());
+			p.setAttach(attach);
+			Member member = pheedDao.selectMember(p.getMemberId());
+			p.setMember(member);
+		}
+		return list;
+	}
+
+	@Override
+	public List<Club> selectMyScrapClubList(Map<String, Object> map) {
+		// 1. club 찾아와
+		List<Club> list = mypageDao.selectMyScrapClubList(map);
+
+		// 2. club에 사진 할당해
+		for(Club club : list) {
+			List<ClubBook> bookList = clubDao.selectClubBook(club.getClubNo());
+			club.setBookList(bookList);
+		}
+		return list;
+	}
+
+	@Override
+	public int selectTotalMyWishClub(Map<String, Object> map) {
+		return mypageDao.selectTotalMyWishClub(map);
+	}
+
+	@Override
+	public int selectTotalMyWishDokoo(String memberId) {
+		return mypageDao.selectTotalMyWishDokoo(memberId);
 	}
 }

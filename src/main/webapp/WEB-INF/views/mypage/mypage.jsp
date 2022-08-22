@@ -89,7 +89,7 @@
 <div class="myprofile-body">
 	<p style="max-width: 32em;">${member.nickname}님은 어떤 분이신가요?<br />
 	<c:if test="${loginMember.memberId eq member.memberId}">
-		<a href="${pageContext.request.contextPath}/mypage/myMiniProfile.do">공개프로필</a>을 꾸며보세요.
+		<a href="${pageContext.request.contextPath}/mypage/myMiniProfile.do?memberId=${member.memberId}">공개프로필</a>을 꾸며보세요.
 	</c:if>
 	</p>
 </div>
@@ -478,18 +478,18 @@ document.addEventListener('DOMContentLoaded', function() {
 	  var data = google.visualization.arrayToDataTable([
 	      ['이건뭐야?', '책이름 1', '책이름 2', '책이름 3', '책이름 4',
 	       '책이름 5', '책이름 6', { role: 'annotation' } ],
-	      ['1', 0, 0, 0, 0, 0, 0, ''],
-	      ['2', 16, 22, 23, 30, 16, 9, ''],
-	      ['3', 16, 22, 23, 30, 16, 9, ''],
-	      ['4', 16, 22, 23, 30, 16, 9, ''],
-	      ['5', 16, 22, 23, 30, 16, 9, ''],
-	      ['6', 16, 22, 23, 30, 16, 9, ''],
-	      ['7', 16, 22, 23, 30, 16, 9, ''],
-	      ['8', 16, 22, 23, 30, 16, 9, ''],
-	      ['9', 16, 22, 23, 30, 16, 9, ''],
-	      ['10', 16, 22, 23, 30, 16, 9, ''],
-	      ['11', 16, 22, 23, 30, 16, 9, ''],
-	      ['12', 28, 19, 29, 30, 12, 13, '']
+	      ['1월', 0, 0, 0, 0, 0, 0, ''],
+	      ['2월', 16, 22, 23, 30, 16, 9, ''],
+	      ['3월', 16, 22, 23, 30, 16, 9, ''],
+	      ['4월', 16, 22, 23, 30, 16, 9, ''],
+	      ['5월', 16, 22, 23, 30, 16, 9, ''],
+	      ['6월', 16, 22, 23, 30, 16, 9, ''],
+	      ['7월', 16, 22, 23, 30, 16, 9, ''],
+	      ['8월', 16, 22, 23, 30, 16, 9, ''],
+	      ['9월', 16, 22, 23, 30, 16, 9, ''],
+	      ['10월', 16, 22, 23, 30, 16, 9, ''],
+	      ['11월', 16, 22, 23, 30, 16, 9, ''],
+	      ['12월', 28, 19, 29, 30, 12, 13, '']
 	    ]);
 	
 	  var view = new google.visualization.DataView(data);

@@ -51,5 +51,4 @@ public interface PheedService {
 
 	PheedComment selectOnePheedComment(int pheedCNo);
 
-
 }
