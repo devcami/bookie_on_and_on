@@ -14,7 +14,7 @@
 </sec:authorize>
 <section id="content">
 	<div id="menu">
-		<h1>북클럽리스트</h1>
+		<h1>내가 가입한 북클럽리스트</h1>
 		<div id="menu-left">
 			<select id="sortType" name="sortType" class="form-control d-inline form-select">
 		      <option ${sortType eq null ? 'selected' : ''} value="newList">최신순</option>
@@ -68,7 +68,12 @@
 							<span>개</span>					
 						</div>
 					</div>
-						<span class="text-status">진행중인 북클럽입니다!</span>	
+					<c:if test="${club.clubStart ge nowDate}">
+						<span class="text-status">모집중인 북클럽입니다!</span>						
+					</c:if>
+					<c:if test="${club.clubStart le nowDate}">
+						<span class="text-status">진행중인 북클럽입니다!</span>						
+					</c:if>
 					<div class="date-div">
 						<span class="text-date">${club.clubStart}</span>
 						<span class="text-date">~</span>

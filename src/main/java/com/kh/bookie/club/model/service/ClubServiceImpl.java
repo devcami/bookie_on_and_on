@@ -150,6 +150,8 @@ public class ClubServiceImpl implements ClubService {
 		
 		if(param.get("memberId") != null) {
 			club.setIsJoined(clubDao.checkClubJoined(param));
+			club.setIsLiked(clubDao.checkClubLiked(param));
+			club.setIsWished(clubDao.checkClubWished(param));
 		}
 		
 		// log.debug("2. club = {}", club);
