@@ -3,6 +3,7 @@ package com.kh.bookie.dokoo.model.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.session.RowBounds;
@@ -54,6 +55,11 @@ public interface DokooDao {
 	@Select("select * from dokoo_comment where dokooc_no = #{dokooCNo}")
 	DokooComment selectOneDokooComment(int dokooCNo);
 
+	@Delete("delete from likes_dokoo where dokoo_no = #{dokooNo}")
+	int deleteDokooLikes(int dokooNo);
+
+	@Delete("delete from wishlist_dokoo where dokoo_no = #{dokooNo}")
+	int deleteDokooWishlists(int dokooNo);
 	
 	
 }

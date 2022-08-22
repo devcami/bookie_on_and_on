@@ -101,7 +101,12 @@ public class PheedServiceImpl implements PheedService{
 	
 	@Override
 	public int deletePheed(int pheedNo) {
-		return pheedDao.deletePheed(pheedNo);
+		// pheed 삭제될 때 likes_pheed column도 삭제
+		int result = pheedDao.deletePheedLikes(pheedNo);
+		// pheed 삭제될 때 wishlist_pheed column도 삭제
+		result = pheedDao.deletePheedWishlists(pheedNo);
+		result = pheedDao.deletePheed(pheedNo); 
+		return result;
 	}
 	
 	@Override

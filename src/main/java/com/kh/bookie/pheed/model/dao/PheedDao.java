@@ -74,4 +74,10 @@ public interface PheedDao {
 	@Select("select * from pheed_comment where pheedc_no = #{pheedCNo}")
 	PheedComment selectOnePheedComment(int pheedCNo);
 
+	@Delete("delete from likes_pheed where pheed_no = #{pheedNo}")
+	int deletePheedLikes(int pheedNo);
+
+	@Delete("delete from wishlist_pheed where pheed_no = #{pheedNo}")
+	int deletePheedWishlists(int pheedNo);
+
 }
