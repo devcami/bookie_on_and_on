@@ -279,5 +279,6 @@ public class DokooController {
 		}
 		return "redirect:/dokoo/dokooDetail.do?dokooNo=" + dokoo.getDokooNo();
 	}
+	
 }
 
