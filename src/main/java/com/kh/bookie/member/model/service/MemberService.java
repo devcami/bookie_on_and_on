@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.kh.bookie.admin.model.dto.Alarm;
+import com.kh.bookie.member.model.dto.Interest;
 import com.kh.bookie.member.model.dto.Member;
 
 import lombok.NonNull;
@@ -42,5 +43,11 @@ public interface MemberService {
 	int KakaoJoin(Member member);
 
 	String findUserIdBySnsId(String snsId);
+
+	Interest selectInterestBymemberId(String memberId);
+
+	int mainUpdateMember(Member newMember);
+
+	int updateInterests(Map<String, Object> param);
 
 }

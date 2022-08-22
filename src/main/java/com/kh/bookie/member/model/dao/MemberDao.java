@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
 import com.kh.bookie.admin.model.dto.Alarm;
+import com.kh.bookie.member.model.dto.Interest;
 import com.kh.bookie.member.model.dto.Member;
 
 import lombok.NonNull;
@@ -54,6 +55,11 @@ public interface MemberDao {
 
    @Select("select member_id from member where sns_id = #{snsId}")
    String findUserIdBySnsId(String snsId);
-   
+
+   Interest selectInterestBymemberId(String memberId);
+
+   int mainUpdateMember(Member newMember);
+
+   int updateInterests(Map<String, Object> param);
    
 }

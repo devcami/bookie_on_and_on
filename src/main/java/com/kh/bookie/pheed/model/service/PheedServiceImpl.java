@@ -158,4 +158,5 @@ public class PheedServiceImpl implements PheedService{
 	public PheedComment selectOnePheedComment(int pheedCNo) {
 		return pheedDao.selectOnePheedComment(pheedCNo);
 	}
+	
 }

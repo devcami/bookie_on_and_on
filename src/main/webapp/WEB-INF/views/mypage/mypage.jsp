@@ -25,6 +25,9 @@
 	border-bottom: 1px dashed grey;
     padding-bottom: 35px;
 }
+table tr td{
+	width: 3.5rem;
+}
 </style>
 <sec:authentication property="principal" var="loginMember" scope="page"/>
 <fmt:requestEncoding value="utf-8"></fmt:requestEncoding>
@@ -89,7 +92,7 @@
 <div class="myprofile-body">
 	<p style="max-width: 32em;">${member.nickname}님은 어떤 분이신가요?<br />
 	<c:if test="${loginMember.memberId eq member.memberId}">
-		<a href="${pageContext.request.contextPath}/mypage/myMiniProfile.do">공개프로필</a>을 꾸며보세요.
+		<a href="${pageContext.request.contextPath}/mypage/myMiniProfile.do?memberId=${member.memberId}">공개프로필</a>을 꾸며보세요.
 	</c:if>
 	</p>
 </div>
@@ -169,7 +172,29 @@
 <!-- 읽은 책 그래프 -->
 <div class="start-mypage" style="white-space: nowrap; padding: 10 20 10 20;">
 <h1>읽은 책 그래프</h1>
+<div id="book-graph" style="border: none; padding-bottom: 0px;">
+	<table id="book-grapt-table">
+	    <tbody id="book-grapt-table-body">
+	        <tr>
+	            <td style="border-right: thin;"></td>
+	            <td>1월</td>
+	            <td>2월</td>
+	            <td>3월</td>
+	            <td>4월</td>
+	            <td>5월</td>
+	            <td>6월</td>
+	            <td>7월</td>
+	            <td>8월</td>
+	            <td>9월</td>
+	            <td>10월</td>
+	            <td>11월</td>
+	            <td>12월</td>
+	        </tr>
+	    </tbody>
+	</table>
 </div>
+</div>
+
 <div id="columnchart_values" style="width: 900px; height: 300px;"></div>
 <br />
 <br />
@@ -187,6 +212,7 @@
 	action="${pageContext.request.contextPath}/point/myPoint.do"/>
 
 <script>
+
 /* 마이페이지 로딩 시 팔로우 내역과 팔로우 수 가져오기 */
 window.addEventListener('load', () => {
 	const memberId = '${member.memberId}';
@@ -469,28 +495,130 @@ document.addEventListener('DOMContentLoaded', function() {
 	});
 	calendar.render();
 });
+
+/* 읽은책 그래프 만들기 */
+window.addEventListener('load', () => {
+	const container = document.querySelector("#book-grapt-table-body")
+	var bookIngList = [];
+	var itemId = [];
+	var list = [];
+	const memberId = "${member.memberId}";
+	$.ajax({
+		url: `${pageContext.request.contextPath}/mypage/myBookIngList.do`,
+		data : {memberId : memberId},
+		async:false,
+		method : "get",
+		success(data){
+			bookIngList = data;
+			/* 읽은 책 찾아 뿌리기 */
+		 	bookIngList.forEach((value, index, array)=>{
+				if(value.endedAt){
+					$.ajax({
+						url: `${pageContext.request.contextPath}/mypage/myEndedAtBook.do`,
+						async:false,
+						data: {
+							itemId : value.itemId
+						},
+						method : "get",
+						success(data){
+							const {item} = data;
+							console.log(item);
+							console.log(item.length);
+							let i = 1;
+							item.forEach((bookIng)=> {
+								const {isbn13, title, author, publisher, pubDate, cover} = bookIng;
+								console.log("여긴어디냐");
+								console.log(value.endedAt.monthValue);
+								const month = value.endedAt.monthValue;
+								console.log(bookIng);
+								const div = `<tr id="month\${i}">
+									            <td style="border-right: thin;"></td>
+									            <td></td>
+									            <td></td>
+									            <td></td>
+									            <td></td>
+									            <td></td>
+									            <td></td>
+									            <td></td>
+									            <td></td>
+									            <td></td>
+									            <td></td>
+									            <td></td>
+									            <td></td>
+									        </tr>`;
+								if(document.querySelector(`#month\${i-1}`) != null) {
+									const arr = Array.from(document.querySelector(`#month\${i-1}`).children);
+									for(let j = 0; j < arr.length; j++){
+										if(arr[j].chilren.length == 1 && j + 1 == month){
+											container.insertAdjacentHTML('afterbegin', div);
+										} else {
+											document.querySelector(`#month\${i-1}`).children[month].innerHTML = `<img src=\${cover}  value=\${isbn13} onclick="bookEnroll(this);" style="width: 3.5rem; height: 5rem">`;
+										}
+									}
+								} else {
+									container.insertAdjacentHTML('afterbegin', div);
+								}
+						       
+					        	if(month == 1)
+					        		document.querySelector(`#month\${i}`).children[1].innerHTML = `<img src=\${cover}  value=\${isbn13} onclick="bookEnroll(this);" style="width: 3.5rem; height: 5rem">`;
+					        	if(month == 2)
+					        		document.querySelector(`#month\${i}`).children[2].innerHTML = `<img src=\${cover}  value=\${isbn13} onclick="bookEnroll(this);" style="width: 3.5rem; height: 5rem">`;
+					        	if(month == 3)
+					        		document.querySelector(`#month\${i}`).children[3].innerHTML = `<img src=\${cover}  value=\${isbn13} onclick="bookEnroll(this);" style="width: 3.5rem; height: 5rem">`;
+					        	if(month == 4)
+					        		document.querySelector(`#month\${i}`).children[4].innerHTML = `<img src=\${cover}  value=\${isbn13} onclick="bookEnroll(this);" style="width: 3.5rem; height: 5rem">`;
+					        	if(month == 5)
+					        		document.querySelector(`#month\${i}`).children[5].innerHTML = `<img src=\${cover}  value=\${isbn13} onclick="bookEnroll(this);" style="width: 3.5rem; height: 5rem">`;
+					        	if(month == 6)
+					        		document.querySelector(`#month\${i}`).children[6].innerHTML = `<img src=\${cover}  value=\${isbn13} onclick="bookEnroll(this);" style="width: 3.5rem; height: 5rem">`;
+					        	if(month == 7)
+					        		document.querySelector(`#month\${i}`).children[7].innerHTML = `<img src=\${cover}  value=\${isbn13} onclick="bookEnroll(this);" style="width: 3.5rem; height: 5rem">`;
+					        	if(month == 8)
+					        		document.querySelector(`#month\${i}`).children[8].innerHTML = `<img src=\${cover}  value=\${isbn13} onclick="bookEnroll(this);" style="width: 3.5rem; height: 5rem">`;
+					        	if(month == 9)
+					        		document.querySelector(`#month\${i}`).children[9].innerHTML = `<img src=\${cover}  value=\${isbn13} onclick="bookEnroll(this);" style="width: 3.5rem; height: 5rem">`;
+					        	if(month == 10)
+					        		document.querySelector(`#month\${i}`).children[10].innerHTML = `<img src=\${cover}  value=\${isbn13} onclick="bookEnroll(this);" style="width: 3.5rem; height: 5rem">`;
+					        	if(month == 11)
+					        		document.querySelector(`#month\${i}`).children[11].innerHTML = `<img src=\${cover}  value=\${isbn13} onclick="bookEnroll(this);" style="width: 3.5rem; height: 5rem">`;
+					        	if(month == 12)
+					        		document.querySelector(`#month\${i}`).children[12].innerHTML = `<img src=\${cover}  value=\${isbn13} onclick="bookEnroll(this);" style="width: 3.5rem; height: 5rem">`;
+					        	i++;
+					        	
+							})
+				 		},
+						error : console.log
+					});	
+				}
+ 			}); 
+		},
+		error : console.log
+	}); 
+});
+
 </script>
 <script type="text/javascript">
+
 	google.charts.load('current', {packages: ['corechart', 'bar']});
 	google.charts.setOnLoadCallback(drawStacked);
-	
+	const list = [];
 	function drawStacked() {
-	  var data = google.visualization.arrayToDataTable([
-	      ['이건뭐야?', '책이름 1', '책이름 2', '책이름 3', '책이름 4',
-	       '책이름 5', '책이름 6', { role: 'annotation' } ],
-	      ['1', 0, 0, 0, 0, 0, 0, ''],
-	      ['2', 16, 22, 23, 30, 16, 9, ''],
-	      ['3', 16, 22, 23, 30, 16, 9, ''],
-	      ['4', 16, 22, 23, 30, 16, 9, ''],
-	      ['5', 16, 22, 23, 30, 16, 9, ''],
-	      ['6', 16, 22, 23, 30, 16, 9, ''],
-	      ['7', 16, 22, 23, 30, 16, 9, ''],
-	      ['8', 16, 22, 23, 30, 16, 9, ''],
-	      ['9', 16, 22, 23, 30, 16, 9, ''],
-	      ['10', 16, 22, 23, 30, 16, 9, ''],
-	      ['11', 16, 22, 23, 30, 16, 9, ''],
-	      ['12', 28, 19, 29, 30, 12, 13, '']
-	    ]);
+	  var data = google.visualization.arrayToDataTable(
+		  [['bookieonandone', '책이름 1', '책이름 2', '책이름 3', '책이름 4','책이름 5', '책이름 6', { role: 'annotation' } ],
+			  
+		  ['1월', 1, 2, 33, 10, 19, 9,''],
+	      ['2월', 1, 2, 33, 10, 19, 9, ''],
+	      ['3월', 1, 2, 44, 10, 19, 9, ''],
+	      ['4월', 1, 2, 33, 10, 19, 9, ''],
+	      ['5월', 1, 2, 23, 10, 19, 9, ''],
+	      ['6월', 1, 2, 33, 10, 19, 9, ''],
+	      ['7월', 1, 2, 23, 10, 19, 9, ''],
+	      ['8월', 1, 2, 33, 10, 19, 9, ''],
+	      ['9월', 1, 2, 23, 10, 19, 9, ''],
+	      ['10월', 1, 2, 33, 10, 19, 9, ''],
+	      ['11월', 1, 2, 33, 10, 19, 9, ''],
+	      ['12월', 1, 2, 29, 10, 19, 13, '']]
+		  );
 	
 	  var view = new google.visualization.DataView(data);
 	  view.setColumns([0, 1, 2, 3, 4, 5, 6, 7, { calc: "stringify", sourceColumn: 1, type: "string", role: "annotation" }, 7]);
@@ -498,7 +626,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	  var options = {
 	          width: 800,
 	          height: 500,
-	          legend: { position: 'top', maxLines: 3 },
+	          legend: { position: 'top', maxLines: 1},
 	          bar: { groupWidth: '75%' },
 	          isStacked: true,
 	  };

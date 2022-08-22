@@ -39,4 +39,14 @@ public interface MypageService {
 
 	List<Dokoo> selectMyDokooList(Map<String, Object> map);
 
+	List<Dokoo> selectWishMyDokooList(Map<String, Object> map);
+
+	List<Pheed> selectWishMyPheedFList(Map<String, Object> map);
+
+	List<Club> selectMyScrapClubList(Map<String, Object> map);
+
+	int selectTotalMyWishClub(Map<String, Object> map);
+
+	int selectTotalMyWishDokoo(String memberId);
+
 }

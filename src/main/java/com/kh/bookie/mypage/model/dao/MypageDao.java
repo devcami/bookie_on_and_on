@@ -45,4 +45,16 @@ public interface MypageDao {
 
 	List<Dokoo> selectMyDokooList(Map<String, Object> map);
 
+	List<Dokoo> selectWishMyDokooList(Map<String, Object> map);
+
+	List<Pheed> selectWishMyPheedFList(Map<String, Object> map);
+
+	List<Club> selectMyScrapClubList(Map<String, Object> map);
+
+	@Select("select count(*) from wishlist_club where member_id = #{memberId}")
+	int selectTotalMyWishClub(Map<String, Object> map);
+
+	@Select("select count(*) from wishlist_dokoo where member_id = #{memberId}")
+	int selectTotalMyWishDokoo(String memberId);
+
 }

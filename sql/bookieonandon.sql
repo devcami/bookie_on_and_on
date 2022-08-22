@@ -1222,4 +1222,92 @@ select
     order by
         tb.enroll_date desc;
         
+<<<<<<< HEAD
+select * from member;
+select * from interest;
+--delete from member where member_id = 'tester2';
+=======
+>>>>>>> branch 'master' of https://github.com/devcami/bookie_on_and_on.git
 
+<<<<<<< HEAD
+commit;
+
+select
+        tb.*,
+        m.*
+    from
+         (select 
+            row_number() over(order by enroll_date desc) rnum,
+            d.* 
+                from dokoo d 
+                    inner join wishlist_dokoo wd on d.dokoo_no = wd.dokoo_no where d.member_id = 'tmddbs') tb 
+                        left join member m on tb.member_id = m.member_id
+    where 
+        rnum between 1 and 10
+    order by
+        tb.enroll_date desc;
+
+select * from dokoo where member_id = 'tmddbs';
+select row_number() over(order by enroll_date desc) rnum, d.* from dokoo d inner join wishlist_dokoo wd on d.member_id = wd.member_id where member_id = 'tmddbs';
+select * from wishlist_dokoo where member_id = 'tmddbs';
+select * from wishlist_pheed where member_id = 'tmddbs';
+select * from wishlist_club where member_id = 'tmddbs';
+
+select d.* from dokoo d inner join wishlist_dokoo wd on d.dokoo_no = wd.dokoo_no where d.member_id = 'tmddbs';
+select row_number() over(order by enroll_date desc) rnum, d.* from dokoo d inner join wishlist_dokoo wd on d.dokoo_no = wd.dokoo_no where d.member_id = 'tmddbs';
+    
+
+update member set renamed_filename = 'dada', original_filename = 'asdwqad' where nickname = '스으응유은';
+
+select 
+    ph.*,
+    (select count(*) from likes_pheed where pheed_no = ph.pheed_no) likes_cnt 
+from 
+    (select row_number() over (order by enroll_date desc) rnum, p.* from pheed p) ph
+where
+    (rnum between 1 and 10) and member_id = 'tmddbs';
+
+select * from wishlist_dokoo where member_id = 'tmddbs';
+select * from pheed;
+select * from wishlist_pheed where member_id = 'tmddbs';
+delete from wishlist_pheed where pheed_no = 32;
+select * from wishlist_club where member_id = 'tmddbs';
+commit;
+ select
+        ph.*,
+        (select count(*) from likes_pheed where pheed_no = ph.pheed_no) likes_cnt 
+ from
+ (select  row_number() over (order by enroll_date desc) rnum, p.* from pheed p left join wishlist_pheed wp on p.member_id = wp.member_id) ph
+ where 
+        member_id = 'tmddbs';
+
+select * from wishlist_club where member_id = 'tmddbs';
+
+    select
+        *
+    from (
+        select
+            row_number() over (order by c.club_start desc) rnum,
+            c.*,
+            (select count(*) from wishlist_club where club_no = c.club_no) current_nop,
+            (select count(*) from likes_club where club_no = c.club_no) likes_Cnt
+        from
+            club c 
+                left join wishlist_club mc on c.club_no = mc.club_no         
+        where
+            member_id = 'tmddbs';)
+         where rnum between 1 and 10;
+
+
+ select
+            row_number() over (order by c.club_start desc) rnum,
+            c.*,
+            (select count(*) from wishlist_club where club_no = c.club_no) current_nop,
+            (select count(*) from likes_club where club_no = c.club_no) likes_Cnt
+        from
+            club c 
+                left join wishlist_club mc on c.club_no = mc.club_no         
+        where
+            member_id = 'tmddbs';
+=======
+>>>>>>> branch 'master' of https://github.com/devcami/bookie_on_and_on.git

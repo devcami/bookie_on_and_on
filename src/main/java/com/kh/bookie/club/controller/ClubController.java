@@ -1250,5 +1250,5 @@ public class ClubController {
 
 		return "redirect:/club/clubAnn.do?clubNo=" + club.getClubNo();
 	}
-	
+		
 }
