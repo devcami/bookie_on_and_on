@@ -16,33 +16,28 @@
 	<div id="menu">
 		<h1>북클럽리스트</h1>
 		<div id="menu-left">
-			<select id="sortType" name="sortType" class="form-control d-inline form-select">
-		      <option ${sortType eq null ? 'selected' : ''} value="newList">최신순</option>
-		      <option ${sortType eq "oldList" ? 'selected' : ''} value="oldList">마감순</option>
-		    </select>
 			<sec:authorize access="hasRole('ROLE_ADMIN')">
 			    <button 
 			    	id="btn-enroll"
-			    	class="btn btn-sm" 
-			    	onclick="location.href='${pageContext.request.contextPath}/club/enrollClub.do';">북클럽 등록</button>	    	
-			</sec:authorize>
-			<sec:authorize access="hasRole('ROLE_USER')"> 
+			    	class="btn btn-sm mr-1" 
+			    	onclick="location.href='${pageContext.request.contextPath}/club/enrollClub.do';">북클럽 등록</button>	 
 			    <button 
 			    	id="btn-enroll"
-			    	class="btn btn-sm" 
-			    	onclick="location.href='${pageContext.request.contextPath}/club/enrollClub.do';">나의 북클럽</button>
-			    <button 
-			    	id="btn-enroll"
-			    	class="btn btn-sm" 
+			    	class="btn btn-sm mr-1" 
 			    	onclick="location.href='${pageContext.request.contextPath}/club/oldClubList.do';">마감된 북클럽</button>   	
 			</sec:authorize>
-			<%-- <sec:authorize access="hasRole('ROLE_CLUB')"> --%>
-			<button 
+			<sec:authorize access="isAuthenticated() && !hasRole('ADMIN')"> 
+			    <button 
 			    	id="btn-enroll"
-			    	class="btn btn-sm" 
-			    	onclick="myBookClubDetail(this);"
-			    	data-club-no="45">북클럽 상세 페이지</button>
-			<%-- </sec:authorize> --%>
+			    	class="btn btn-sm mr-1" 
+			    	onclick="location.href='${pageContext.request.contextPath}/mypage/myClubList.do';">나의 북클럽</button>
+			</sec:authorize>
+				   	
+			<select id="sortType" name="sortType" class="form-control d-inline form-select ml-2">
+		      <option ${sortType eq null ? 'selected' : ''} value="newList">최신순</option>
+		      <option ${sortType eq "oldList" ? 'selected' : ''} value="oldList">마감순</option>
+		    </select>
+
 		</div>	
 	</div>
 	<div id="clubListDiv">

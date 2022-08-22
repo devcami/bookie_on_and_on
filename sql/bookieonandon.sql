@@ -1,5 +1,5 @@
 --==============================================
--- TABLE 26개
+-- TABLE 26媛�
 --==============================================
 -- 1. member 
 create table member (
@@ -91,7 +91,7 @@ create table book_ing(
 create sequence seq_book_ing_no;
 
 
--- 7. dokoo - 독후감 테이블
+-- 7. dokoo - �룆�썑媛� �뀒�씠釉�
 create table dokoo(
     dokoo_no number not null,
     member_id varchar2(200) not null,
@@ -107,7 +107,7 @@ create table dokoo(
 create sequence seq_dokoo_no;
 
 
--- 8. dokoo_comment - 독후감 댓글 테이블
+-- 8. dokoo_comment - �룆�썑媛� �뙎湲� �뀒�씠釉�
 create table dokoo_comment(
     dokooc_no number not null,
     dokoo_no number not null,
@@ -124,7 +124,7 @@ create table dokoo_comment(
 
 create sequence seq_dokooc_no;
 
--- 9. pheed - 피드 테이블
+-- 9. pheed - �뵾�뱶 �뀒�씠釉�
 create table pheed(
     pheed_no number not null,
     member_id varchar2(200) not null,
@@ -140,7 +140,7 @@ create table pheed(
 
 create sequence seq_pheed_no;
 
--- 10. pheed_attachment - 피드 첨부파일 테이블
+-- 10. pheed_attachment - �뵾�뱶 泥⑤��뙆�씪 �뀒�씠釉�
 create table pheed_attachment(
     attach_no number not null,
     pheed_no number not null,
@@ -153,7 +153,7 @@ create table pheed_attachment(
 
 create sequence seq_pheed_attachment_no;
 
--- 11. pheed_comment - 피드 댓글 테이블
+-- 11. pheed_comment - �뵾�뱶 �뙎湲� �뀒�씠釉�
 create table pheed_comment(
     pheedc_no number not null,
     pheed_no number not null,
@@ -170,7 +170,7 @@ create table pheed_comment(
 
 create sequence seq_pheed_comment_no;
 
--- 12. club - 북클럽 테이블 
+-- 12. club - 遺곹겢�읇 �뀒�씠釉� 
 create table club(
     club_no number not null,
     title varchar2(300) not null,
@@ -281,7 +281,7 @@ create table chat_attachment(
 
 create sequence seq_chat_attachment_no;
 
--- 19. 채팅코멘트 테이블
+-- 19. 梨꾪똿肄붾찘�듃 �뀒�씠釉�
 create table chat_comment(
     comment_no number not null,
     chat_no number not null,
@@ -295,13 +295,13 @@ create table chat_comment(
 select * from chat_comment;
 create sequence seq_comment_no;
 
--- 20. 신고테이블
+-- 20. �떊怨좏뀒�씠釉�
 create table report (
     report_no number not null,
     member_id varchar2(200) not null,
     category varchar2(30) not null,
     beenzi_no number not null,
-    status varchar2(200) not null, -- U(아직처리안됨) or E(처리완료)
+    status varchar2(200) not null, -- U(�븘吏곸쿂由ъ븞�맖) or E(泥섎━�셿猷�)
     content varchar2(1000),
     created_at date default sysdate,
     updated_at date,
@@ -310,42 +310,42 @@ create table report (
 );
 
 create sequence seq_report_no;
--- 21. 찜하기피드 테이블
+-- 21. 李쒗븯湲고뵾�뱶 �뀒�씠釉�
 create table wishlist_pheed (
     pheed_no number not null,
     member_id varchar2(200) not null,
     constraint fk_wishlist_pheed_member_id foreign key(member_id) references member(member_id) on delete set null
 );
 
--- 22. 찜하기독후감 테이블
+-- 22. 李쒗븯湲곕룆�썑媛� �뀒�씠釉�
 create table wishlist_dokoo (
     dokoo_no number not null,
     member_id varchar2(200) not null,
     constraint fk_wishlist_dokoo_member_id foreign key(member_id) references member(member_id) on delete set null
 );
 
--- 23. 찜하기북클럽 테이블
+-- 23. 李쒗븯湲곕턿�겢�읇 �뀒�씠釉�
 create table wishlist_club (
     club_no number not null,
     member_id varchar2(200) not null,
     constraint fk_wishlist_club_member_id foreign key(member_id) references member(member_id) on delete set null
 );
 
--- 24. 좋아요피드 테이블
+-- 24. 醫뗭븘�슂�뵾�뱶 �뀒�씠釉�
 create table likes_pheed (
     pheed_no number not null,
     member_id varchar2(200) not null,
     constraint fk_likes_pheed_member_id foreign key(member_id) references member(member_id) on delete set null
 );
 
--- 25. 좋아요독후감 테이블
+-- 25. 醫뗭븘�슂�룆�썑媛� �뀒�씠釉�
 create table likes_dokoo (
     dokoo_no number not null,
     member_id varchar2(200) not null,
     constraint fk_likes_dokoo_member_id foreign key(member_id) references member(member_id) on delete set null
 );
 
--- 26. 좋아요북클럽 테이블
+-- 26. 醫뗭븘�슂遺곹겢�읇 �뀒�씠釉�
 create table likes_club (
     club_no number not null,
     member_id varchar2(200) not null,
@@ -356,10 +356,10 @@ create table likes_club (
 create table persistent_logins (
     username varchar(64) not null, 
     series varchar(64) primary key, 
-    token varchar(64) not null,  -- username, password, expire time을 단방향 암호화한 값
+    token varchar(64) not null,  -- username, password, expire time�쓣 �떒諛⑺뼢 �븫�샇�솕�븳 媛�
     last_used timestamp not null);
 
--- 알림테이블
+-- �븣由쇳뀒�씠釉�
 create table alarm(
     alarm_no number,
     member_id varchar2(50),
@@ -377,7 +377,7 @@ create table qna(
     title varchar2(200),
     content varchar2(3000),
     enroll_date date,
-    status char(1) default 'U', -- 처리전 U 완료 E
+    status char(1) default 'U', -- 泥섎━�쟾 U �셿猷� E
     constraint pk_qna_no primary key (qna_no)
 );
 alter table qna add status char(1) default 'U';
@@ -410,6 +410,10 @@ create table point_status (
     constraint ck_point_status check (status in ('M', 'P'))
 );
 create sequence seq_point_no;
+<<<<<<< HEAD
+
+-- �듃由ш굅
+=======
 SELECT a.osuser
                ,a.SID
                ,a.serial#
@@ -419,6 +423,7 @@ SELECT a.osuser
               ,v$sqlarea b
 WHERE a.sql_address = b.address;
 -- 트리거
+>>>>>>> branch 'master' of https://github.com/devcami/bookie_on_and_on.git
 select * from user_triggers;
 drop trigger trigger_dokoo_comment;
 drop trigger trigger_pheed_comment;
@@ -485,14 +490,14 @@ end;
 
 commit;
 --==============================================
--- 조회
+-- 議고쉶
 --==============================================
--- 전체 테이블 목록 조회
+-- �쟾泥� �뀒�씠釉� 紐⑸줉 議고쉶
 select * from user_tables;
--- 전체 컬럼 조회
+-- �쟾泥� 而щ읆 議고쉶
 select * from user_tab_columns;
 
-select * from user_sequences; -- 시퀀스 조회
+select * from user_sequences; -- �떆���뒪 議고쉶
 select * from member;
 select * from authority;
 select * from interest;
@@ -527,21 +532,21 @@ select * from persistent_logins;
 
 SELECT 
     TABLE_NAME
-    ,COLUMN_NAME    -- 컬럼 명
-    ,DATA_TYPE      -- 유형
-    ,DATA_LENGTH    -- 데이터 길이
-    ,DATA_PRECISION -- NUMBER 전체 자릿수
-    ,DATA_SCALE     -- NUMBER 소수점이하 표현 자릿수
-    ,NULLABLE       -- NULL 여부
-    ,COLUMN_ID      -- 컬럼 순서
-    ,DATA_DEFAULT   -- 기본 값   
-FROM user_tab_columns; -- 해당 계정에 속한 테이블 
-   --  dba_tab_columns 전체 테이블의 경우 
+    ,COLUMN_NAME    -- 而щ읆 紐�
+    ,DATA_TYPE      -- �쑀�삎
+    ,DATA_LENGTH    -- �뜲�씠�꽣 湲몄씠
+    ,DATA_PRECISION -- NUMBER �쟾泥� �옄由우닔
+    ,DATA_SCALE     -- NUMBER �냼�닔�젏�씠�븯 �몴�쁽 �옄由우닔
+    ,NULLABLE       -- NULL �뿬遺�
+    ,COLUMN_ID      -- 而щ읆 �닚�꽌
+    ,DATA_DEFAULT   -- 湲곕낯 媛�   
+FROM user_tab_columns; -- �빐�떦 怨꾩젙�뿉 �냽�븳 �뀒�씠釉� 
+   --  dba_tab_columns �쟾泥� �뀒�씠釉붿쓽 寃쎌슦 
    
 
 
 -------------------------
--- club <<은성>>
+-- club <<���꽦>>
 -------------------------
 
 alter table mission modify content varchar2(4000);
@@ -641,7 +646,7 @@ select * from chat_attachment;
 select * from chat_comment;
 delete from club_chat where chat_no = 7;
 
-update club_chat set title = '제목제목제목', content = '하이하이' where chat_no = 1;
+update club_chat set title = '�젣紐⑹젣紐⑹젣紐�', content = '�븯�씠�븯�씠' where chat_no = 1;
 
 update club_chat set enroll_date = (sysdate - 4) where chat_no = 1;
 update club_chat set enroll_date = (sysdate - 3) where chat_no = 4;
@@ -689,7 +694,7 @@ select * from chat_attachment;
 select * from chat_comment;
 delete from club_chat where chat_no = 7;
 
-update club_chat set title = '제목제목제목', content = '하이하이' where chat_no = 1;
+update club_chat set title = '�젣紐⑹젣紐⑹젣紐�', content = '�븯�씠�븯�씠' where chat_no = 1;
 
 update club_chat set enroll_date = (sysdate - 4) where chat_no = 1;
 update club_chat set enroll_date = (sysdate - 3) where chat_no = 4;
@@ -720,7 +725,7 @@ where
     
     select * from club_chat;
 ---------------------------------
--- book <<은민>>
+-- book <<��誘�>>
 ---------------------------------
 
 select 
@@ -740,7 +745,7 @@ from
     member m join interest i
         on m.member_id = i.member_id
 where
-    interest like '%언어%';
+    interest like '%�뼵�뼱%';
 
 -- 1~3
 select * 
@@ -793,10 +798,10 @@ select following_member_id from follower where member_id = 'tmddbs';
 update member set point = 20010 where member_id = 'tmddbs';
 select count(*) from club_chat where club_no = 45;
 
-insert into point_status values(seq_point_no.nextval, 'tmddbs', '포인트 충전', 1000, 16030, sysdate-20, null, 'P');
-insert into point_status values(seq_point_no.nextval, 'tmddbs', '북클럽 디파짓 차감', 10000, 6030, sysdate-22, null, 'M');
-insert into point_status values(seq_point_no.nextval, 'tmddbs', '북클럽 디파짓 차감', 5000, 1030, sysdate-40, null, 'M');
-insert into point_status values(seq_point_no.nextval, 'tmddbs', '포인트 충전', 30000, 31030, sysdate-49, null, 'P');
+insert into point_status values(seq_point_no.nextval, 'tmddbs', '�룷�씤�듃 異⑹쟾', 1000, 16030, sysdate-20, null, 'P');
+insert into point_status values(seq_point_no.nextval, 'tmddbs', '遺곹겢�읇 �뵒�뙆吏� 李④컧', 10000, 6030, sysdate-22, null, 'M');
+insert into point_status values(seq_point_no.nextval, 'tmddbs', '遺곹겢�읇 �뵒�뙆吏� 李④컧', 5000, 1030, sysdate-40, null, 'M');
+insert into point_status values(seq_point_no.nextval, 'tmddbs', '�룷�씤�듃 異⑹쟾', 30000, 31030, sysdate-49, null, 'P');
 
 select last_day(sysdate) from dual;
 
@@ -851,12 +856,12 @@ from
     member m join interest i
         on m.member_id = i.member_id
 where
-    interest like '%언어%' and m.member_id != 'honggd';
+    interest like '%�뼵�뼱%' and m.member_id != 'honggd';
     
     
 select 
     m.*,
-    (select interest from interest where interest like '%언어%' and member_id != 'honggd') interest
+    (select interest from interest where interest like '%�뼵�뼱%' and member_id != 'honggd') interest
 from 
     member m ;
 
@@ -934,9 +939,9 @@ order by
     m_endDate;
 
          
-update club_book set book_title = '경제대마왕 반드시 부자되는 투자의 소신' where club_no = 45 and item_id = '9788957822074';
-update club_book set book_title = '부자의 독서법' where club_no = 45 and item_id = '9791187444770';
-update club_book set book_title = '월급쟁이 부자로 은퇴하라' where club_no = 45 and item_id = '9788925578156';
+update club_book set book_title = '寃쎌젣��留덉솗 諛섎뱶�떆 遺��옄�릺�뒗 �닾�옄�쓽 �냼�떊' where club_no = 45 and item_id = '9788957822074';
+update club_book set book_title = '遺��옄�쓽 �룆�꽌踰�' where club_no = 45 and item_id = '9791187444770';
+update club_book set book_title = '�썡湲됱웳�씠 遺��옄濡� ���눜�븯�씪' where club_no = 45 and item_id = '9788925578156';
 
 select * from mission_status;
 
@@ -1214,8 +1219,5 @@ select
         rnum between 1 and 2
     order by
         tb.enroll_date desc;
+        
 
-update member
-set nickname = 'devcami'
-where member_id = 'devcami';
-commit;

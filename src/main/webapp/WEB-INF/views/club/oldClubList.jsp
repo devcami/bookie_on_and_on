@@ -22,6 +22,10 @@
 			    	class="btn btn-sm" 
 			    	onclick="">북클럽 삭제</button>	    	
 			</sec:authorize>
+			<button 
+		    	id="btn-enroll"
+		    	class="btn btn-sm mr-1" 
+		    	onclick="location.href='${pageContext.request.contextPath}/club/clubList.do';">모집중인 클럽</button>
 
 		</div>	
 	</div>
