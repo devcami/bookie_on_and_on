@@ -66,6 +66,7 @@ header div#header-container img.sh-right{
 	vertical-align:middle;
 	margin: 18px 10px;
 	text-shadow : 3px 3px 1px #CCDA46;
+	position: relative;
 }
 
 #logout-btn #logout-i:hover, .alarm-i:hover{
@@ -78,10 +79,12 @@ header div#header-container img.sh-right{
 }
 .unread-count{
 	position: absolute;
-	width: 31px;
-	height : 31px;
-	top: 27px;
-	right: 42%;
+    /* width: 31px; */
+    /* height: 31px; */
+    top: -10px;
+    left: 35px;
+    font-size: 20px !important;
+    text-shadow: none !important;
 }
 
 /* navbar 통째 */

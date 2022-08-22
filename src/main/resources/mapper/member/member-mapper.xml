@@ -57,7 +57,7 @@
    </select>
    
    <update id="deleteMemberProfile">
-      update member set renamed_filename = null, original_filename = null where nickname = #{nickname}
+      update member set renamed_filename = null, original_filename = null where member_id = #{memberId}
    </update>
    
    <update id="miniUpdateMember">

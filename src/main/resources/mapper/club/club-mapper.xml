@@ -48,7 +48,9 @@
 		    from
 		        club c
 		    where
-		        recruit_end > sysdate)
+		    <![CDATA[
+		        to_char(recruit_end, 'YY/MM/DD') >= to_char(sysdate, 'YY/MM/DD'))			
+			]]>
 		where rnum between #{start} and #{end}
 	</select>
 	<resultMap type="club" id="clubListCollectionMap">
@@ -80,8 +82,10 @@
 		        (select count(*) from likes_club where club_no = c.club_no) likes_Cnt
 		    from
 		        club c
-		    where
-		        club_end &lt; sysdate)
+		     where
+		    <![CDATA[
+		        to_char(club_end, 'YY/MM/DD') < to_char(sysdate, 'YY/MM/DD'))			
+			]]>
 		where rnum between #{start} and #{end}
 	</select>
 	

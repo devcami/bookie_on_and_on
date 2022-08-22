@@ -473,3 +473,15 @@ input.follow-btn:checked:hover + span {
 }
 
 /********** 기록아이콘 **********/
+#record{
+	justify-content: space-around;
+}
+.record{
+	display: flex;
+	flex-direction: column;
+    align-items: center;
+    font-size: 22px;
+}
+.record:hover span{
+	text-decoration: underline;
+}

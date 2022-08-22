@@ -2,7 +2,6 @@ package com.kh.bookie.club.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
@@ -388,7 +387,9 @@ public class ClubController {
 			
 			Club club = clubService.selectOneClub(param);
 			
-						
+//			LocalDate today = LocalDate.now();
+//			
+//			mav.addObject("today", today);
 			mav.addObject("club", club);
 			
 		} catch(Exception e) {

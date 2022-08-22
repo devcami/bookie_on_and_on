@@ -20,7 +20,7 @@ public interface MemberService {
 
 	int memberEnroll(Member member);
 
-	int deleteMemberProfile(String nickname);
+	int deleteMemberProfile(String memberId);
 
 	int miniUpdateMember(Member logingMember);
 
