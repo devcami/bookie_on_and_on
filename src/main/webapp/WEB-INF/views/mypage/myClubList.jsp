@@ -68,7 +68,7 @@
 							<span>개</span>					
 						</div>
 					</div>
-					<c:if test="${club.clubStart ge nowDate}">
+					<c:if test="${club.clubStart gt nowDate}">
 						<span class="text-status">모집중인 북클럽입니다!</span>						
 					</c:if>
 					<c:if test="${club.clubStart le nowDate}">

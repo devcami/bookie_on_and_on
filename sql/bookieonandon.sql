@@ -1222,4 +1222,7 @@ select
     order by
         tb.enroll_date desc;
         
-
+        select * from club where club_no = 121;
+        
+    select * from likes_club;
+    select * from wishlist_club;
