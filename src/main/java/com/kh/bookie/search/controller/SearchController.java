@@ -87,13 +87,14 @@ public class SearchController {
 	            + "&Output=" + Output
 	            + "&Cover=" + Cover
 	            + "&Version=" + Version;
+	      log.debug("list book aladdin url = {}", searchUrl);
 	      if(!Query.equals("") && Query != null) {
 	         searchUrl += "&Query=" + Query;
 	         resource = resourceLoader.getResource(searchUrl);
 	      } else {
 	         resource = resourceLoader.getResource(bestUrl);
 	      }
-	      
+	      log.debug("resource = {}", resource);
 	      return ResponseEntity.ok(resource);
 	   }
 	
@@ -115,7 +116,9 @@ public class SearchController {
 					+ "&output=" + output
 					+ "&Cover=" + Cover
 					+ "&Version=" + Version;
+		log.debug("one book aladdin url = {}", url);
 		Resource resource = resourceLoader.getResource(url);
+		log.debug("resource = {}", resource);
 		return ResponseEntity.ok(resource);
 	}
 	
@@ -196,6 +199,7 @@ public class SearchController {
 			map.put("itemId", itemId);
 			map.put("memberId", memberId);
 			
+			// book에서 가져와
 			List<Book> bookList = searchService.selectReadList(map);
 			log.debug("bookList = {}", bookList);
 			

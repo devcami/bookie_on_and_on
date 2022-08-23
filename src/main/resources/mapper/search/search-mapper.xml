@@ -48,17 +48,9 @@
 	
 	<select id="getMyBook" resultType="book">
 	select *
-	from book b right join
-	(select
-	    ing_no, item_id, member_id, started_at, ended_at, add_date
-	    , row_number() over(order by add_date desc) rnum
-	from
-	    book_ing
-	where 
-	    member_id = #{memberId} and item_id = #{itemId}) 
-	    i on b.member_id = i.member_id
+	from book 
 	where
-	    b.member_id = #{memberId} and b.item_id = #{itemId} and i.rnum = 1
+	    member_id = #{memberId} and item_id = #{itemId}
 	</select>
 	
 	<update id="bookStatusUpdate">
@@ -100,7 +92,12 @@
 	</delete>
 	
 	<select id="selectReadList" resultMap="bookIngMap">
-		select * from book_ing where item_id = #{itemId} and member_id = #{memberId} order by started_at
+		<if test="status != '읽음' and status != '읽는 중'">
+		select * from book where item_id = #{itemId} and member_id = #{memberId}
+		</if>
+		<if test="status == '읽음' or status == '읽는 중'">
+		select * from book_ing where item_id = #{itemId} and member_id = #{memberId}
+		</if>
 	</select>
 	
 	<resultMap type="book" id="bookIngMap">
