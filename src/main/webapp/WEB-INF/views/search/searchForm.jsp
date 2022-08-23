@@ -27,16 +27,22 @@
 	</div>
 	<div class="" id="book-container">
 		<p id="resultP"></p>
+		<div id="btn-scroll-to-top-div">
+			<a id="btn-scroll-to-top" class="rounded-circle shadow text-center d-flex" href="#">
+				<i class="fa-solid fa-arrow-up"></i>
+			</a>
+		</div>	
 	</div>
 	<div id='btn-more-container'>
 		<button id="btn-more" class="btn gap-2 col-12" type="button">더보기</button>
 		<span style="display:none;" id="cPage">1</span>
 	</div>
-	<div id="btn-scroll-to-top" class="rounded-circle shadow text-center d-flex" onclick="location.href='#'">
-		<i class="fa-solid fa-arrow-up"></i>
-	</div>
+
 </section>
 <script>
+document.querySelector("#btn-scroll-to-top").addEventListener('click', (e) => {
+	e.stopImmediatePropagation();
+});
 <%-- 검색 제출 시 유효성 검사 & 비동기--%>
 document.querySelector("#btn-search").addEventListener('click', (e) => {
 	const searchKeyword = document.querySelector("#searchKeyword");

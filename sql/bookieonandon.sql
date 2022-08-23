@@ -556,10 +556,8 @@ select * from club_book;
 select * from mission;
 select * from my_club;
 select * from member;
-
 insert into authority values ('admin', 'ROLE_ADMIN');
 select * from authority;
-
 insert into my_club values ('25', 'honggd', 5000);
 insert into my_club values ('25', 'sinsa', 5000);
 insert into my_club values ('23', 'sinsa', 5000);
@@ -682,7 +680,7 @@ insert into wishlist_club values ('55', 'tmddbs');
 insert into wishlist_club values ('56', 'tmddbs');
 
 select * from my_club;
-select * from member;
+select * from book where status = '읽음';
 select point from member where member_id = 'tmddbs';
 
 select * from authority;

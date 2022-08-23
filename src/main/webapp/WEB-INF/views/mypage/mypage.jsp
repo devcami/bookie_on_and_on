@@ -528,9 +528,6 @@ window.addEventListener('load', () => {
 						method : "get",
 						success(data){
 							const {item} = data;
-							console.log(item);
-							console.log(item.length);
-							console.log(i);
 							item.forEach((bookIng)=> {
 								const {isbn13, title, author, publisher, pubDate, cover} = bookIng;
 								console.log("여긴어디냐");

@@ -932,7 +932,6 @@ public class MypageController {
 					RedirectAttributes redirectAttr,
 					@RequestParam("upFile") MultipartFile upFile,
 					@RequestParam String delFile,
-					@RequestParam String memberId,
 					@AuthenticationPrincipal Member loginMember) throws Exception {
 		log.debug("upFile = {}", upFile);
 		log.debug("delFile = {}", delFile);
@@ -940,60 +939,50 @@ public class MypageController {
 		log.debug("introduce = {}", introduce);
 		log.debug("newNickname = {}", newNickname);
 		
+		String memberId = loginMember.getMemberId();
 		Member member = memberService.selectOneMember(memberId);
-		log.debug("맴버 = {}", member.getNickname());
-		log.debug("맴버 = {}", member.getPhone());
-		log.debug("리네임드파일 = {}", member.getRenamedFilename());
-		log.debug("오리지날파일 = {}", member.getOriginalFilename());
-		String nickname = member.getNickname();
 		
 		// 파일저장위치
         String saveDirectory = application.getRealPath("/resources/upload/profile");
 		try {
 			// 1. 첨부파일 삭제 (파일 삭제)
 			if(delFile == "0" && (member.getRenamedFilename() != null)) {
-				Member profileMember =  memberService.selectOneMemberByNickname(nickname);
-				log.debug("profileMember = {}", profileMember);
 				
 				// a. 첨부파일삭제
-				String renamedFilename = profileMember.getRenamedFilename();
+				String renamedFilename = member.getRenamedFilename();
 				File deleteFile = new File(saveDirectory, renamedFilename);
 				if(deleteFile.exists()) {
 					deleteFile.delete();
-					log.debug("{}의 {}파일 삭제", nickname, renamedFilename);
 				}
 				
 				// b. 레코드삭제
 				int delResult = memberService.deleteMemberProfile(memberId);
-				log.debug("{}의 MemberProfile 레코드 삭제", memberId);
 			}
 			
 			int updateResult;
-			Member updateMember = member;
 			// 2. 첨부파일 등록 (파일 저장)
 			if(upFile.getSize() > 0) {
 				log.debug("요기?");
 				MultipartFile updateFile = upFile;
-				updateMember.setOriginalFilename(updateFile.getOriginalFilename());
-				updateMember.setRenamedFilename(HelloSpringUtils.getRenamedFilename(updateFile.getOriginalFilename()));
-				updateMember.setNickname(newNickname);
-				updateMember.setIntroduce(introduce);
-				updateMember.setSns(sns);
+				member.setOriginalFilename(updateFile.getOriginalFilename());
+				member.setRenamedFilename(HelloSpringUtils.getRenamedFilename(updateFile.getOriginalFilename()));
+				member.setNickname(newNickname);
+				member.setIntroduce(introduce);
+				member.setSns(sns);
 				
-				File destFile = new File(saveDirectory, updateMember.getRenamedFilename());
+				File destFile = new File(saveDirectory, member.getRenamedFilename());
 				upFile.transferTo(destFile);
-				updateResult = memberService.miniUpdateMember(updateMember);	
+				updateResult = memberService.miniUpdateMember(member);	
 			}
 			else {
 				// 3. 맴버 간단수정
-				updateMember.setOriginalFilename(member.getOriginalFilename());
-				updateMember.setRenamedFilename(member.getRenamedFilename());
-				updateMember.setNickname(newNickname);
-				updateMember.setIntroduce(introduce);
-				updateMember.setSns(sns);
-				updateResult = memberService.miniUpdateMember(updateMember);	
+				member.setOriginalFilename(member.getOriginalFilename());
+				member.setRenamedFilename(member.getRenamedFilename());
+				member.setNickname(newNickname);
+				member.setIntroduce(introduce);
+				member.setSns(sns);
+				updateResult = memberService.miniUpdateMember(member);	
 				log.debug("updateResult = {}", updateResult);
-				log.debug("여긴온거야??");
 			}
 			redirectAttr.addFlashAttribute("msg", "공개 프로필을 성공적으로 수정했습니다.");
 		} 
