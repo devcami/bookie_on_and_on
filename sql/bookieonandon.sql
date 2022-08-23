@@ -1222,20 +1222,15 @@ select
     order by
         tb.enroll_date desc;
         
-<<<<<<< HEAD
         select * from club where club_no = 121;
         
     select * from likes_club;
     select * from wishlist_club;
-=======
-<<<<<<< HEAD
+
 select * from member;
 select * from interest;
 --delete from member where member_id = 'tester2';
-=======
->>>>>>> branch 'master' of https://github.com/devcami/bookie_on_and_on.git
 
-<<<<<<< HEAD
 commit;
 
 select
@@ -1315,6 +1310,18 @@ select * from wishlist_club where member_id = 'tmddbs';
                 left join wishlist_club mc on c.club_no = mc.club_no         
         where
             member_id = 'tmddbs';
-=======
->>>>>>> branch 'master' of https://github.com/devcami/bookie_on_and_on.git
->>>>>>> branch 'master' of https://github.com/devcami/bookie_on_and_on.git
+
+select * from my_club where club_no = 121;
+insert into my_club values(121, 'hosi', 5000, sysdate+12, 2, 'I');
+
+commit;
+
+select * from chat_member;
+delete from chat_member where club_no = 121;
+
+update member set renamed_filename = '20220821_135752473_746.jpg' where member_id = 'hosi';
+update member set original_filename = 'hosi3.jpg' where member_id = 'hosi';
+select * from member where member_id = 'hosi';
+
+delete from point_status where member_id = 'hosi';
+select * from member where member_id = 'hosi';

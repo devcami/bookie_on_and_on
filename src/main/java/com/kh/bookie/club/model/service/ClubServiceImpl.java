@@ -368,8 +368,7 @@ public class ClubServiceImpl implements ClubService {
 			}
 			
 			missionList.get(i).setMissionStatus(ms);
-			
-			
+
 		}
 		
 		
