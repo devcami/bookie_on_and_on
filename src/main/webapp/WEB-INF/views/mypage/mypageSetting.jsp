@@ -94,7 +94,7 @@
 </div>
 <!-- 메뉴 -->
 <section style="background-color: #fcfbf9;">
-   <div>
+   <div style="min-height: 800px;">
       <!-- 계정관리 start -->
       <div class="f-title">
         <h1> 계정관리 </h1>
@@ -106,7 +106,7 @@
               <a title="" href="${pageContext.request.contextPath}/mypage/myMainProfile.do" target="_blank">
                <img alt="상세프로필설정" class="circle" 
                src="${pageContext.request.contextPath}/resources/images/icon/smile.png" title="상세프로필설정" border="0" height="72" width="72"> </a> 
-               <span class="title"><a title="" href="${pageContext.request.contextPath}/mypage/myMainProfile.do">상세프로필설정</a></span> </div>
+               <span class="title"><a title="" href="${pageContext.request.contextPath}/mypage/myMainProfile.do?">상세프로필설정</a></span> </div>
             <div style="clear: both;"></div>
           </li>
           <li>
@@ -148,15 +148,6 @@
 				<img alt="나의 Q&A 목록" class="circle" src="${pageContext.request.contextPath}/resources/images/icon/smile.png" title="나의 Q&A 목록" border="0" height="72" width="72"> 
 				<span class="title">
 					<a href="${pageContext.request.contextPath}/mypage/qnaList.do?memberId=${loginMember.memberId}">나의 Q&A 목록</a>
-				</span> 
-			 </div>
-			 <div style="clear: both;"></div>
-          </li>
-          <li>
-	         <div class="item-thumbnail" style="line-height: 42px;">
-				<img alt="신고관리" class="circle" src="${pageContext.request.contextPath}/resources/images/icon/smile.png" title="나의 Q&A 목록" border="0" height="72" width="72"> 
-				<span class="title">
-					<a href="${pageContext.request.contextPath}/mypage/qnaList.do?memberId=${loginMember.memberId}">나의 신고목록</a>
 				</span> 
 			 </div>
 			 <div style="clear: both;"></div>

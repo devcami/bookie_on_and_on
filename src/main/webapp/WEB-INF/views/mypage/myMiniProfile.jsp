@@ -77,20 +77,19 @@ a:hover {
 			<input type="hidden" id="nicknameValid" name="nicknameValid" value="0" /> <%-- 사용불가 0 사용가능 중복검사 통과 시 1 --%>
 		  </div>
 	      <p class="form-label" style="margin-top: 10px; color: orange;">소개 : </p>
-	          <input class="form-field" id="form-introduce" name="introduce" type="text" value="${loginMember.introduce}" placeholder="나에 대해 짧게 설명해주세요!">
+	          <input class="form-field" id="form-introduce" name="introduce" type="text" value="${member.introduce}" placeholder="나에 대해 짧게 설명해주세요!">
 	      <p class="form-label" style="margin-top: 10px; color: orange;">SNS : </p>
-	          <input class="form-field" id="form-sns" name="sns" type="url" value="${loginMember.sns}" placeholder="sns주소를 추가해주세요!">
+	          <input class="form-field" id="form-sns" name="sns" type="url" value="${member.sns}" placeholder="sns주소를 추가해주세요!">
 	      <div id="submit-btn" class="text-center">
 	          <input type="submit" value="정보수정">
 	      </div>
-	      <input type="hidden" name="memberId" value="${member.memberId}" />
     	</form:form>
 	  </div>
 </section>
 
 <script>
 var availableall = "";
-/* 아이디 중복검사 */
+/* 닉네임 중복검사 */
 function nickChech() {
 	const nickVal = document.querySelector("#form-nickname").value;
 	if(!nickVal){
@@ -128,7 +127,7 @@ function nickChech() {
 				}
 				else {
 					// 중복이긴 해 근데 내 지금 닉네임이랑 똑같애 그럼 사용가능
-					if(nickVal == '${loginMember.nickname}'){
+					if(nickVal == '${member.nickname}'){
 						document.querySelector("#nickerror1").style.display = "none";	
 						document.querySelector("#nickok").style.display = "inline";	
 						document.querySelector("#nicknameValid").value = "1";	
