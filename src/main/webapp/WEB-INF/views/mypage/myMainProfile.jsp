@@ -44,7 +44,7 @@ a:hover {
 <div id="title-header" class="">
 	<div id="header-div">
 		<div id="title-header-left">
-			<i class="fa-solid fa-angle-left" onclick="location.href='/bookie/mypage/mypage.do'"></i>		
+			<i class="fa-solid fa-angle-left" onclick="location.href='/bookie/mypage/mypageSetting.do'"></i>		
 		</div>
 	</div>
 </div>
@@ -78,7 +78,14 @@ a:hover {
 				    <label class="custom-file-label" for="upFile" id="profile-label">프로필 사진을 추가하세요!</label>
 				  </c:if>
 				  <c:if test="${not empty member.originalFilename}">
-				    <label class="custom-file-label" for="upFile" id="profile-label">${member.originalFilename}</label>
+				    <label class="custom-file-label" for="upFile" id="profile-label">
+				    	<c:if test="${fn:length(member.originalFilename) ge 30}">
+                    		${fn:substring(member.originalFilename, 0, 25)}
+                    	</c:if>
+                   		<c:if test="${fn:length(member.originalFilename) lt 30}">
+		   			 		${member.originalFilename}
+                    	</c:if>
+				    </label>
 				  </c:if>
 				  </div>
 				</div>
