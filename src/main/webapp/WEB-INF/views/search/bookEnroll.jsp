@@ -435,7 +435,7 @@ window.addEventListener('load', () => {
 		data : {
 			ttbkey : 'ttbiaj96820130001',
 			itemIdType : 'ISBN13', 
-			ItemId : ${isbn13},
+			ItemId : ${param.isbn13},
 			output : 'js',
 			Cover : 'Big',
 			Version : '20131101'
@@ -516,20 +516,24 @@ window.addEventListener('load', () => {
 			const container = document.querySelector("#recentReadList");
 			
 			resp.forEach((read) => {
-				const {startedAt, endedAt, ingNo} = read;
-				// console.log(startedAt, endedAt, ingNo);
-				if(startedAt.monthValue < 10) startedAt.monthValue = '0' + startedAt.monthValue; 
-				if(startedAt.dayOfMonth < 10) startedAt.dayOfMonth = '0' + startedAt.dayOfMonth; 
-				if(endedAt.monthValue < 10) endedAt.monthValue = '0' + endedAt.monthValue; 
-				if(endedAt.dayOfMonth < 10) endedAt.dayOfMonth = '0' + endedAt.dayOfMonth; 
-				
-				const started = `\${startedAt.year}-\${startedAt.monthValue}-\${startedAt.dayOfMonth}`; 
-				const ended = `\${endedAt.year}-\${endedAt.monthValue}-\${endedAt.dayOfMonth}`; 
-				
-				const li = `<li class="list-group-item item" data-ingNo='\${ingNo}' data-started='\${started}' data-ended='\${ended}'>\${started} 시작 ~ \${ended} 완독 
-							<span class="badge badge-pill badge-secondary bdg-delete float-right ml-2 mt-1" onclick="moreReadDelete(this);">삭제</span> 
-							<span class="badge badge-pill bdg-update float-right ml-2 mt-1" onclick="moreReadUpdate(this);">수정</span> </li>`;
-				container.insertAdjacentHTML('beforeend', li);
+				// 읽는중, 읽음인 경우
+				if(read.startedAt){
+					
+					const {startedAt, endedAt, ingNo} = read;
+					// console.log(startedAt, endedAt, ingNo);
+					if(startedAt.monthValue < 10) startedAt.monthValue = '0' + startedAt.monthValue; 
+					if(startedAt.dayOfMonth < 10) startedAt.dayOfMonth = '0' + startedAt.dayOfMonth; 
+					if(endedAt.monthValue < 10) endedAt.monthValue = '0' + endedAt.monthValue; 
+					if(endedAt.dayOfMonth < 10) endedAt.dayOfMonth = '0' + endedAt.dayOfMonth; 
+					
+					const started = `\${startedAt.year}-\${startedAt.monthValue}-\${startedAt.dayOfMonth}`; 
+					const ended = `\${endedAt.year}-\${endedAt.monthValue}-\${endedAt.dayOfMonth}`; 
+					
+					const li = `<li class="list-group-item item" data-ingNo='\${ingNo}' data-started='\${started}' data-ended='\${ended}'>\${started} 시작 ~ \${ended} 완독 
+								<span class="badge badge-pill badge-secondary bdg-delete float-right ml-2 mt-1" onclick="moreReadDelete(this);">삭제</span> 
+								<span class="badge badge-pill bdg-update float-right ml-2 mt-1" onclick="moreReadUpdate(this);">수정</span> </li>`;
+					container.insertAdjacentHTML('beforeend', li);
+				}
 			});
 		},
 		error: console.log
