@@ -107,7 +107,12 @@ public class DokooServiceImpl implements DokooService {
 	
 	@Override
 	public int deleteDokoo(int dokooNo) {
-		return dokooDao.deleteDokoo(dokooNo);
+		// dokoo 삭제될 때 likes_pheed column도 삭제
+		int result = dokooDao.deleteDokooLikes(dokooNo);
+		// dokoo 삭제될 때 wishlist_pheed column도 삭제
+		result = dokooDao.deleteDokooWishlists(dokooNo);
+		result = dokooDao.deleteDokoo(dokooNo); 
+		return result;
 	}
 	
 	@Override

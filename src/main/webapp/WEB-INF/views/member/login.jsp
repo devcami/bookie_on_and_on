@@ -10,6 +10,7 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp" >
 <jsp:param value="로그인" name="title"/>
 </jsp:include>
+<section style="min-height:800px;">
 
 <div class="global-container">
 	<div class="card login-form ">
@@ -51,6 +52,7 @@
 		</div>
 	</div>
 </div>
+</section>
 <script>
 //카카오로그인
 Kakao.init('057ff0aa472813117d2205a428300779');

@@ -44,6 +44,11 @@ section#content	{
 	box-shadow: 0px 0px 4px #5454544a;
 }
 /* 맨 위로 버튼 */
+#btn-scroll-to-top-div{
+	position: relative;
+    left: 90%;
+    top: 24rem;
+}
 #btn-scroll-to-top i{
 	font-size: 20px;
 }
@@ -52,16 +57,17 @@ section#content	{
 	width: 40px;
 	height : 40px;
 	position : fixed;
-	right : 35%;
-	bottom: 120px;
+    bottom: 120;
 	align-items: center;
     justify-content: center;
     background: transparent;
     border : 2px solid #CCDA46;
     cursor: pointer;
+    z-index:1;
 }
 #btn-scroll-to-top:hover{
     background-color: #CCDA46;
+    text-decoration: none;
     color : #FFF;
 }
 /* 검색한 책 */

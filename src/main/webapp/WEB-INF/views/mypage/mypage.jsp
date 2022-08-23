@@ -514,6 +514,7 @@ window.addEventListener('load', () => {
 			bookIngList = data;
 			console.log(i);
 			/* 읽은 책 찾아 뿌리기 */
+			let i = 1;
 		 	bookIngList.forEach((value, index, array)=>{
 		 		if(!value.endedAt){
 		 			i--;
@@ -528,9 +529,6 @@ window.addEventListener('load', () => {
 						method : "get",
 						success(data){
 							const {item} = data;
-							console.log(item);
-							console.log(item.length);
-							console.log(i);
 							item.forEach((bookIng)=> {
 								const {isbn13, title, author, publisher, pubDate, cover} = bookIng;
 								console.log("여긴어디냐");

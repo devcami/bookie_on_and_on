@@ -1,14 +1,12 @@
 @charset "UTF-8";
 
 .global-container{
-
 	background: #FFF;
-    min-height: 100%;
-
     display: flex;
     align-items: flex-start;
     justify-content: center;
     color: #fe9801 ;
+    height: 630px;
 }
 
 form{
@@ -18,7 +16,7 @@ form{
 }
 .login-form{
     width: 450px;
-    height: 550px;
+    height: 100%;
     margin: 20px;
    
 }

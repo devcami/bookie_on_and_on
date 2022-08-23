@@ -85,7 +85,7 @@
 </jsp:include>
 <sec:authentication property="principal" var="loginMember"/>
 <!-- 뒤로가기 -->
-<div id="title-header" class="">
+<div id="title-header" class="" >
 	<div id="header-div">
 		<div id="title-header-left">
 			<i class="fa-solid fa-angle-left" onclick="location.href='/bookie/mypage/mypage.do'"></i>		

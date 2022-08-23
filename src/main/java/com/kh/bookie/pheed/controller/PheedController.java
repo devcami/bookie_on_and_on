@@ -243,7 +243,6 @@ public class PheedController {
 				pheed.setAttach(attach);
 				
 			}
-			
 			int result = pheedService.pheedEnroll(pheed);
 			
 			ra.addFlashAttribute("msg", "피드 등록 완료 !");	

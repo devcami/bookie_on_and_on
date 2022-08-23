@@ -20,13 +20,11 @@
 		</div>
 	</div>
 	<div id="book-container">
+
 	</div>
 	<div id='btn-more-container'>
 		<button id="btn-more" class="btn gap-2 col-12" type="button">더보기</button>
 		<span style="display:none;" id="cPage">1</span>
-	</div>
-	<div id="btn-scroll-to-top" class="rounded-circle shadow text-center d-flex" onclick="location.href='#'">
-		<i class="fa-solid fa-arrow-up"></i>
 	</div>
 </section>
 
@@ -58,7 +56,7 @@ window.addEventListener('load', () => {
 	if(category == 'history') {p.innerText = '인문학 ➡︎ 역사'; categoryId = 74}
 	if(category == 'humanities') {p.innerText = '인문학 ➡︎ 인문학'; categoryId = 656}
 	if(category == 'socialScience') {p.innerText = '인문학 ➡︎ 사회과학'; categoryId = 798}
-	if(category == 'religion') {p.innerText = '종교 ➡︎ 종교/역학'; categoryId = 2137}
+	if(category == 'religion') {p.innerText = '종교 ➡︎ 종교/역학'; categoryId = 1237}
 	if(category == 'cartoon') {p.innerText = '기타 ➡︎ 만화'; categoryId = 2551}
 	if(category == 'magazine') {p.innerText = '기타 ➡︎ 잡지'; categoryId = 2913}
 	if(category == 'etc') {p.innerText = '기타 ➡︎ 사전/기타'; categoryId = 4395}
@@ -89,6 +87,11 @@ const getPage = (cPage, sort, categoryId) => {
 			item.forEach((book) => {
 				const {isbn13, title, author, publisher, pubDate, cover} = book;
 				const div = `
+					<div id="btn-scroll-to-top-div">
+						<a id="btn-scroll-to-top" class="rounded-circle text-center d-flex" href="#">
+							<i class="fa-solid fa-arrow-up"></i>
+						</a>
+					</div>
 					<div class="book-table" onclick="bookEnroll(this);">
 						<input type="hidden" name="isbn13" value=\${isbn13} />
 						<table class="tbl">

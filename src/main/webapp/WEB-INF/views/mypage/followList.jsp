@@ -11,7 +11,7 @@
 	<jsp:param value="유저 추천" name="title"/>
 </jsp:include>
 <sec:authentication property="principal" var="loginMember"/>
-<section id="content">
+<section id="content" style="min-height:800px;">
 	<div id="container-div">
 		<c:if test="${not empty followerList}">
 			<c:forEach items="${followerList}" var="follow" varStatus="vs">
@@ -46,12 +46,17 @@
 									</c:if>
 								</c:forEach>
 								<c:if test="${i eq 2}">
-									<input type="checkbox" name="follow-btn" id="follow-btn" class="follow-btn" onclick="followEvent(this);" data-follower-id="${follow.memberId}" checked/>
+									<c:if test="${loginMember.memberId ne follow.memberId}">
+										<input type="checkbox" name="follow-btn" id="follow-btn" class="follow-btn" onclick="followEvent(this);" data-follower-id="${follow.memberId}" checked/>
+										<span class="followSpan">follow</span>
+									</c:if>
 								</c:if>
 								<c:if test="${i eq 1}">
-									<input type="checkbox" name="follow-btn" id="follow-btn" class="follow-btn" onclick="followEvent(this);" data-follower-id="${follow.memberId}"/>
+									<c:if test="${loginMember.memberId ne follow.memberId}">
+										<input type="checkbox" name="follow-btn" id="follow-btn" class="follow-btn" onclick="followEvent(this);" data-follower-id="${follow.memberId}"/>
+										<span class="followSpan">follow</span>
+									</c:if>
 								</c:if>
-								<span class="followSpan">follow</span>
 							</label>
 						</div>
 					</div>
@@ -91,12 +96,17 @@
 									</c:if>
 								</c:forEach>
 								<c:if test="${i eq 2}">
+									<c:if test="${loginMember.memberId ne follow.followingMemberId}">
 									<input type="checkbox" name="follow-btn" id="follow-btn" class="follow-btn" onclick="followEvent(this);" data-follower-id="${follow.memberId}" checked/>
+									<span class="followSpan">follow</span>
+									</c:if>
 								</c:if>
 								<c:if test="${i eq 1}">
+									<c:if test="${loginMember.memberId ne follow.followingMemberId}">
 									<input type="checkbox" name="follow-btn" id="follow-btn" class="follow-btn" onclick="followEvent(this);" data-follower-id="${follow.memberId}"/>
+									<span class="followSpan">follow</span>
+									</c:if>
 								</c:if>
-								<span class="followSpan">follow</span>
 							</label>
 						</div>
 					</div>
