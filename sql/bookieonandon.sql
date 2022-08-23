@@ -680,7 +680,7 @@ insert into wishlist_club values ('55', 'tmddbs');
 insert into wishlist_club values ('56', 'tmddbs');
 
 select * from my_club;
-select * from member;
+select * from book where status = '읽음';
 select point from member where member_id = 'tmddbs';
 
 select * from authority;
