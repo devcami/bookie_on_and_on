@@ -28,7 +28,7 @@
 			<h1>📣북클럽 게시판📣</h1>
 			
 			<%-- 글이 있는 경우! --%>
-			<c:if test="${chat ne null}">
+			<c:if test="${chat.size() ne 0}">
 				<div id="sortTypeDiv">
 					<a 
 						href="${pageContext.request.contextPath}/club/clubBoard.do?clubNo=${clubNo}"
@@ -50,7 +50,7 @@
 		  	</c:if>
 		</div>
 		
-		<c:if test="${chat ne null}">
+		<c:if test="${chat.size ne 0}">
 			<div id="table-div">
 				<table>
 				  <thead>
@@ -84,6 +84,7 @@
 		
 		
 		<%-- 글이 없는 경우! --%>
+		<c:if test="${chat.size eq 0}">
 		<div id="noChatDiv">
 			<p id="noChatPfirst">게시글이 아직 없습니다!</p>
 			<p id="noChatPsecond">첫 번째 게시글의 작성자가 되어보세요!</p>
@@ -93,6 +94,7 @@
 				onclick="boardEnroll();"
 				class="btn">작성하기</button>
 		</div>
+		</c:if>
 		
 		
 		<%-- 글이 있는 경우! 끝 --%>

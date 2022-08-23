@@ -50,7 +50,7 @@
 					<h3>${lastlastMonth}월 내역</h3>
 				</div>
 		</c:if>
-		<c:if test="${list.size() ne 0}">
+<%-- 		<c:if test="${list.size() ne 0}"> --%>
 			<div class="point-bottom">
 				<div id="pointHeader" class="header flex-center-space mb-2">
 					<span class="plusMinus">+/-</span>
@@ -87,11 +87,11 @@
 				</c:forEach>
 			</div>
 		
-		</c:if>
+<%-- 		</c:if> --%>
 		
-		<c:if test="${list.size() eq 0}">
+<%-- 		<c:if test="${list.size() eq 0}">
 			<span style="font-size: 40px; text-align: center; margin-top: 90px;">내역이 없습니다.</span>
-		</c:if>
+		</c:if> --%>
 		
 		
 		</div>
