@@ -514,7 +514,6 @@ window.addEventListener('load', () => {
 			bookIngList = data;
 			console.log(i);
 			/* 읽은 책 찾아 뿌리기 */
-			let i = 1;
 		 	bookIngList.forEach((value, index, array)=>{
 		 		if(!value.endedAt){
 		 			i--;
