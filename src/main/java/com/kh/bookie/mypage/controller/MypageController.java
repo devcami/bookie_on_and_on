@@ -273,7 +273,7 @@ public class MypageController {
 			log.debug("presentedPassword = {}", presentedPassword);
 			log.debug("{}", bcryptPasswordEncoder.matches(nowPassword, presentedPassword));
 		    if (!bcryptPasswordEncoder.matches(nowPassword, presentedPassword)) {
-		        map.put("msg", "두 비밀번호가 일치하지 않습니다.");
+		        map.put("msg", "기존비밀번호와 일치하지 않습니다.");
 		        map.put("valid", "0");
 		    }
 		    else {
@@ -289,7 +289,7 @@ public class MypageController {
 	
 	/* 패스워드 변경 */
 	@PostMapping("/myPasswordUpdate.do")
-	public ResponseEntity<?> myPasswordUpdate(@RequestParam String newPasswordCheck, @AuthenticationPrincipal Member loginMember) {
+	public String myPasswordUpdate(@RequestParam String newPasswordCheck, @AuthenticationPrincipal Member loginMember) {
 		String newPassword = newPasswordCheck;
 		log.debug("newPassword = {}", newPassword);
 		Map<String, Object> param = new HashMap<>();
@@ -307,13 +307,14 @@ public class MypageController {
 			Authentication newAuthentication = new UsernamePasswordAuthenticationToken(
 															loginMember, loginMember.getPassword(), loginMember.getAuthorities());
 			SecurityContextHolder.getContext().setAuthentication(newAuthentication);
-			map.put("msg", "비밀번호를 성공적으로 수정했습니다.");
+//			map.put("msg", "비밀번호를 성공적으로 수정했습니다.");
+//			map.put("msg", "비밀번호를 성공적으로 수정했습니다.");
+			
 		} catch (Exception e) {
 			log.error("비밀번호 수정 오류!", e);
-			map.put("msg", "회원정보 수정오류!");
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(map);
+//			map.put("msg", "회원정보 수정오류!");
 		}
-		return ResponseEntity.ok(map);
+		return "redirect:/mypage/myPasswordUpdateFrm.do";
 	}
 	
 	/* 내 책정보 */
@@ -406,7 +407,7 @@ public class MypageController {
 		List<BookIng> bookIngList = new ArrayList<>();
 		try {
 			bookIngList = mypageService.SelectMyBookIngList(memberId);
-			log.debug("내 부킹부킹붕킹 bookIngList = {}" , bookIngList);
+
 		} catch (Exception e) {
 			log.error("bookIng 조회 오류", e);
 			throw e;
