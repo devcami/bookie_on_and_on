@@ -47,6 +47,7 @@ section#content	{
     overflow-y: scroll;
     padding: 10px 10px;
     position: relative;
+    min-height: 470px;
 }
 
 #alertDiv {

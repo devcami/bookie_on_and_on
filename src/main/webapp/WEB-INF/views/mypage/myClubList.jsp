@@ -14,7 +14,7 @@
 </sec:authorize>
 <section id="content">
 	<div id="menu">
-		<h1>북클럽리스트</h1>
+		<h1>내가 가입한 북클럽리스트</h1>
 		<div id="menu-left">
 			<select id="sortType" name="sortType" class="form-control d-inline form-select">
 		      <option ${sortType eq null ? 'selected' : ''} value="newList">최신순</option>
@@ -35,7 +35,12 @@
 			<div class="bookCard" id="card${club.clubNo}" data-no="${club.clubNo}">
 				<div class="card-top" style="background-color: #ffa50021;">
 					<div class='badge-div'>
-						<h6><span class="badge badge-pill badge-light">진행중</span></h6>
+					<c:if test="${club.clubStart gt nowDate}">
+						<h6><span class="badge badge-pill badge-light">모집중</span></h6>						
+					</c:if>
+					<c:if test="${club.clubStart le nowDate}">
+						<h6><span class="badge badge-pill badge-primary" >진행중</span></h6>					
+					</c:if>
 					</div>
 					<div class="img-div">
 						<c:forEach items="${club.bookList}" var="clubBook" varStatus="bs">
@@ -68,7 +73,12 @@
 							<span>개</span>					
 						</div>
 					</div>
-						<span class="text-status">진행중인 북클럽입니다!</span>	
+					<c:if test="${club.clubStart gt nowDate}">
+						<span class="text-status">모집중인 북클럽입니다!</span>						
+					</c:if>
+					<c:if test="${club.clubStart le nowDate}">
+						<span class="text-status">진행중인 북클럽입니다!</span>						
+					</c:if>
 					<div class="date-div">
 						<span class="text-date">${club.clubStart}</span>
 						<span class="text-date">~</span>

@@ -13,8 +13,6 @@
 <sec:authorize access="isAuthenticated()">
 	<sec:authentication property="principal" var="loginMember"/>
 </sec:authorize>
-${clubNo}
-${loginMember.memberId}
 <div id="clubBook-container">
 	<section id="content">
 		<div id="menuDiv">
@@ -26,6 +24,8 @@ ${loginMember.memberId}
 				<li id="fifth-li" class="menu-li nowPage" style="background-color: #D9534F;"><a href="${pageContext.request.contextPath}/chat/clubChat.do/${clubNo}">채팅</a></li>		
 			</ul>
 		</div>
+		
+		<h1 class="mb-4" style="text-align: center;">🌼북클럽 채팅🌼</h1>
 		
 		<div id="chatList">
 			<c:forEach items="${chatLogList}" var="chat" varStatus="vs">
