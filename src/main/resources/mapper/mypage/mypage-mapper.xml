@@ -224,7 +224,7 @@
 	            row_number() over(order by enroll_date desc) rnum,
 	            d.* 
 	                from dokoo d 
-	                    inner join wishlist_dokoo wd on d.dokoo_no = wd.dokoo_no where d.member_id = #{memberId}) tb 
+	                    inner join wishlist_dokoo wd on d.dokoo_no = wd.dokoo_no where wd.member_id = #{memberId}) tb 
 	                        left join member m on tb.member_id = m.member_id
 	    where 
 	        rnum between #{start} and #{end}
