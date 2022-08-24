@@ -71,7 +71,7 @@
 </div>
 <%-- 책 추가 모달 --%>
 <div class="modal fade" id="bookListModal" tabindex="-1" role="dialog" aria-labelledby="bookListModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog modal-dialog-scrollable" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="bookListModalLabel">나의 책 리스트</h5>
