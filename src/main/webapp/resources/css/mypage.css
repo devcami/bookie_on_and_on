@@ -485,3 +485,25 @@ input.follow-btn:checked:hover + span {
 .record:hover span{
 	text-decoration: underline;
 }
+/********** 그래프 **********/
+#graph-container{
+}
+#book-graph{
+	text-align:center;
+}
+#book-grapt-table{
+	text-align:center;
+	margin: 0 auto;
+	margin-top: 20px;
+}
+#month0{
+	height : 50px;
+}
+#book-grapt-table tr td{
+	margin: 0 20px;
+	width: 60px;
+}
+
+
+
+

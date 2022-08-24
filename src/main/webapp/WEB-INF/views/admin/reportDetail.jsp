@@ -106,8 +106,13 @@
 									<div class="co-writer flex-center">
 										<img class="rounded-circle shadow-1-strong m-1"
 											<%-- loginMember가 아니고 댓글단 사람 프로필 가져와야돼 --%>
-	                         			src="${pageContext.request.contextPath}/resources/upload/profile/${comment.renamedFilename}"
-											alt="avatar" width="40" height="40"> <span>${comment.nickname}</span>
+										<c:if test="${not empty comment.renamedFilename}">
+		                         			src="${pageContext.request.contextPath}/resources/upload/profile/${comment.renamedFilename}"
+										</c:if>
+										<c:if test="${empty comment.renamedFilename}">
+		                         			src="${pageContext.request.contextPath}/resources/images/icon/none-profile-img.png"
+										</c:if>
+										alt="avatar" width="40" height="40"> <span>${comment.nickname}</span>
 									</div>
 									<div class="co-Content" id="contentDiv${comment.dokooCNo}">
 										<span id="contentSpan${comment.dokooCNo}">${comment.content}</span>
@@ -135,7 +140,12 @@
 									<div class="co-writer flex-center">
 										<img class="rounded-circle shadow-1-strong m-1"
 											<%-- loginMember가 아니고 댓글단 사람 프로필 가져와야돼 --%>
-	                         src="${pageContext.request.contextPath}/resources/upload/profile/${comment.renamedFilename}"
+										<c:if test="${not empty comment.renamedFilename}">
+		                         			src="${pageContext.request.contextPath}/resources/upload/profile/${comment.renamedFilename}"
+										</c:if>
+										<c:if test="${empty comment.renamedFilename}">
+		                         			src="${pageContext.request.contextPath}/resources/images/icon/none-profile-img.png"
+										</c:if>
 											alt="avatar" width="40" height="40"> <span>${comment.nickname}</span>
 									</div>
 									<div class="co-Content" id="contentDiv${comment.dokooCNo}">
@@ -176,7 +186,7 @@
 						<img src="${pageContext.request.contextPath}/resources/upload/profile/${pheed.member.renamedFilename}" alt="프로필사진" />
 					</c:if>
 					<c:if test="${pheed.member.renamedFilename == null}">
-						<i class="fa-solid fa-user-large user-icon"></i>
+						<img src="${pageContext.request.contextPath}/resources/images/icon/none-profile-img.png" alt="프로필사진" />
 					</c:if>
 				</div>
 				<h2>${pheed.member.nickname}</h2>
@@ -213,7 +223,12 @@
 								<div class="co-writer flex-center">
 									<img class="rounded-circle shadow-1-strong m-1"
 										<%-- loginMember가 아니고 댓글단 사람 프로필 가져와야돼 --%>
-                         			src="${pageContext.request.contextPath}/resources/upload/profile/${comment.renamedFilename}"
+										<c:if test="${not empty comment.renamedFilename}">
+		                         			src="${pageContext.request.contextPath}/resources/upload/profile/${comment.renamedFilename}"
+										</c:if>
+										<c:if test="${empty comment.renamedFilename}">
+		                         			src="${pageContext.request.contextPath}/resources/images/icon/none-profile-img.png"
+										</c:if>
 										alt="avatar" width="40" height="40"> <span>${comment.nickname}</span>
 								</div>
 								<div class="co-Content" id="contentDiv${comment.pheedCNo}">
@@ -242,7 +257,12 @@
 								<div class="co-writer flex-center">
 									<img class="rounded-circle shadow-1-strong m-1"
 										<%-- loginMember가 아니고 댓글단 사람 프로필 가져와야돼 --%>
-                         src="${pageContext.request.contextPath}/resources/upload/profile/${comment.renamedFilename}"
+										<c:if test="${not empty comment.renamedFilename}">
+		                         			src="${pageContext.request.contextPath}/resources/upload/profile/${comment.renamedFilename}"
+										</c:if>
+										<c:if test="${empty comment.renamedFilename}">
+		                         			src="${pageContext.request.contextPath}/resources/images/icon/none-profile-img.png"
+										</c:if>
 										alt="avatar" width="40" height="40"> <span>${comment.nickname}</span>
 								</div>
 								<div class="co-Content" id="contentDiv${comment.pheedCNo}">

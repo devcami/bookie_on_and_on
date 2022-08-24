@@ -202,9 +202,10 @@ document.dokooEnrollFrm.addEventListener('submit', (e) => {
 		alert("내용을 작성해주세요.")
 		return;
 	}
-	if(document.querySelector("#content").value.length > 1000){
+	if(document.querySelector("#content").value.length > 10000){
 		e.preventDefault();
-		alert('1000자 이상 입력할 수 없습니다.')
+		console.log(document.querySelector("#content").value.length);
+		alert('1000자 이상 입력할 수 없습니다.');
 		return;
 	}
 	e.submit();

@@ -92,12 +92,7 @@
 	</delete>
 	
 	<select id="selectReadList" resultMap="bookIngMap">
-		<if test="status != '읽음' and status != '읽는 중'">
-		select * from book where item_id = #{itemId} and member_id = #{memberId}
-		</if>
-		<if test="status == '읽음' or status == '읽는 중'">
-		select * from book_ing where item_id = #{itemId} and member_id = #{memberId}
-		</if>
+		select * from book_ing where item_id = #{itemId} and member_id = #{memberId} order by started_at desc
 	</select>
 	
 	<resultMap type="book" id="bookIngMap">
