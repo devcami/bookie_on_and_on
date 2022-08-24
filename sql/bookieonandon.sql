@@ -1321,5 +1321,35 @@ update member set renamed_filename = '20220821_135752473_746.jpg' where member_i
 update member set original_filename = 'hosi3.jpg' where member_id = 'hosi';
 select * from member where member_id = 'hosi';
 
+update member set email = 'jyjmjs2@naver.com' where member_id = 'hosi';
 delete from point_status where member_id = 'hosi';
 select * from member where member_id = 'hosi';
+select * from club where club_no = 121;
+commit;
+
+select * from member;
+
+select * from my_club;
+
+insert into my_club values ('121', 'tester', 5000, sysdate+12, 2, 'I');
+insert into my_club values ('121', 'honggd', 5000, sysdate+12, 2, 'I');
+
+delete from my_club where member_id = 'bookie';
+
+select * from point_status where member_id = 'hosi';
+delete from point_status where imp_uid = 'imp_552130168255';
+commit;
+update member set point = 1000 where member_id = 'hosi';
+
+commit;
+delete from chat_member where club_no = 121;
+delete from chat_log where chatroom_id = 'chatRoom121';
+
+select * from chat_log;
+
+delete from chat_log where no between 82 and 83;
+commit;
+
+select * from mission where club_no = 121;
+update mission set m_title = '감명깊은 구절 올리기' where mission_no = 122;
+commit;

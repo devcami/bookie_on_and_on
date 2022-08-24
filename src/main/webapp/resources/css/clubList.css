@@ -164,3 +164,9 @@ section#content	{
     background-color: #ffc107 !important;
     border-color: #ffc107 !important;
 }
+
+
+.badge-primary {
+	font-weight: 100 !important;
+	background-color: var(--warning) !important;
+}

@@ -35,7 +35,12 @@
 			<div class="bookCard" id="card${club.clubNo}" data-no="${club.clubNo}">
 				<div class="card-top" style="background-color: #ffa50021;">
 					<div class='badge-div'>
-						<h6><span class="badge badge-pill badge-light">진행중</span></h6>
+					<c:if test="${club.clubStart gt nowDate}">
+						<h6><span class="badge badge-pill badge-light">모집중</span></h6>						
+					</c:if>
+					<c:if test="${club.clubStart le nowDate}">
+						<h6><span class="badge badge-pill badge-primary" >진행중</span></h6>					
+					</c:if>
 					</div>
 					<div class="img-div">
 						<c:forEach items="${club.bookList}" var="clubBook" varStatus="bs">
