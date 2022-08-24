@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/clubAnn.css" />
 <script src='${pageContext.request.contextPath}/resources/js/main.js'></script>
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/locales-all.js"></script>
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <%
 	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -26,7 +26,10 @@
     padding-bottom: 35px;
 }
 table tr td{
-	width: 3.5rem;
+	width: 4rem;
+	text-align: center;
+}
+table {
 }
 </style>
 <sec:authentication property="principal" var="loginMember" scope="page"/>
@@ -170,13 +173,13 @@ table tr td{
 <hr class="bar" style="border: solid 10px #f6f5f5; margin-top: 3rem;">
 
 <!-- 읽은 책 그래프 -->
-<div class="start-mypage" style="white-space: nowrap; padding: 10 20 10 20;">
+<div class="start-mypage" id="graph-container" style="white-space: nowrap; padding: 10 20 10 20;">
 <h1>읽은 책 그래프</h1>
 <div id="book-graph" style="border: none; padding-bottom: 0px;">
 	<table id="book-grapt-table">
 	    <tbody id="book-grapt-table-body">
-	        <tr id="month0">
-	            <td style="border-right: thin;"></td>
+	        <tr id="month0" >
+	            <td></td>
 	            <td>1월</td>
 	            <td>2월</td>
 	            <td>3월</td>
@@ -195,7 +198,15 @@ table tr td{
 </div>
 </div>
 
-<div id="columnchart_values" style="width: 900px; height: 300px;"></div>
+<hr class="bar" style="border: solid 10px #f6f5f5; margin-top: 3rem;">
+
+<!-- 취향 -->
+<div class="start-mypage" style="white-space: nowrap; padding: 10 20 10 20;">
+	<h1 style="text-align: center;">주 독서 분야</h1>
+</div>
+<div style="position: relative; height:50rem; width:800px;">
+  <canvas id="myChart"></canvas>
+</div>
 <br />
 <br />
 <br />
@@ -608,42 +619,89 @@ window.addEventListener('load', () => {
 	}); 
 });
 
-</script>
-<script type="text/javascript">
+/* 취향차트부분 */
+window.addEventListener('load', () => {
+	const memberId = "${member.memberId}";
+	/* 랜덤칼라 생성하기 함수 */
+	function colorize() {
+		var r = Math.floor(Math.random()*200);
+		var g = Math.floor(Math.random()*200);
+		var b = Math.floor(Math.random()*200);
+		var color = 'rgba(' + r + ', ' + g + ', ' + b + ', 0.7)';
+		return color;
+	}
+	
+	var itemId = [];
+	var categoryList = [];
+	var colorList = [];
+	
+	/* 내 책 전체정보 가져오기 */
+	$.ajax({
+		url : '${pageContext.request.contextPath}/mypage/myBookAllItemId.do',
+		data : { memberId :memberId },
+		async:false,
+		success(data){
+			console.log(data);
+			console.log(data[0]);
+			itemId = data;
+			/* 읽고 있는 책 찾아 뿌리기 */
+			itemId.forEach((value, index, array)=>{
+				$.ajax({
+					url: `${pageContext.request.contextPath}/mypage/statusBook.do`,
+					data: {
+						itemId : value
+					},
+					async:false,
+					method : "get",
+					success(data){
+						const {item} = data;
+						console.log(item);
+						console.log(item.length);
+						item.forEach((book) => {
+							const {isbn13, title, author, publisher, pubDate, cover, categoryName} = book;
+							categoryList.push(categoryName);
+						});
+			 		},
+					error : console.log
+				});	
+	 		})
+		},
+		error : console.log,
+	});
 
-	google.charts.load('current', {packages: ['corechart', 'bar']});
-	google.charts.setOnLoadCallback(drawStacked);
-	const list = [];
-	function drawStacked() {
-	  var data = google.visualization.arrayToDataTable(
-		  [['bookieonandone', '책이름 1', '책이름 2', '책이름 3', '책이름 4','책이름 5', '책이름 6', { role: 'annotation' } ],
-			  
-		  ['1월', 1, 2, 33, 10, 19, 9,''],
-	      ['2월', 1, 2, 33, 10, 19, 9, ''],
-	      ['3월', 1, 2, 44, 10, 19, 9, ''],
-	      ['4월', 1, 2, 33, 10, 19, 9, ''],
-	      ['5월', 1, 2, 23, 10, 19, 9, ''],
-	      ['6월', 1, 2, 33, 10, 19, 9, ''],
-	      ['7월', 1, 2, 23, 10, 19, 9, ''],
-	      ['8월', 1, 2, 33, 10, 19, 9, ''],
-	      ['9월', 1, 2, 23, 10, 19, 9, ''],
-	      ['10월', 1, 2, 33, 10, 19, 9, ''],
-	      ['11월', 1, 2, 33, 10, 19, 9, ''],
-	      ['12월', 1, 2, 29, 10, 19, 13, '']]
+	/* 찾아온 카테고리 중복값 제거 */
+	const result = {};
+	categoryList.forEach((x) => { 
+	  result[x] = (result[x] || 0)+1; 
+	});
+	console.log(Object.keys(result).length);
+	
+	/* 랜덤한 색깔 개수만큼 쌓아 */
+	for(let i = 0; i < Object.keys(result).length; i++){
+		colorList.push(colorize());
+	}
+	
+	const data = {
+		  
+		  labels: Object.keys(result),
+		  datasets: [{
+		    label: 'My Book Category Dataset',
+		    data: Object.values(result),
+		    backgroundColor: colorList,
+		    hoverOffset: 4
+		  }]
+		};
+	
+	 const config = {
+		  type: 'pie',
+		  data: data,
+		};
+	
+	 const myChart = new Chart(
+		    document.getElementById('myChart'),
+		    config
 		  );
-	
-	  var view = new google.visualization.DataView(data);
-	  view.setColumns([0, 1, 2, 3, 4, 5, 6, 7, { calc: "stringify", sourceColumn: 1, type: "string", role: "annotation" }, 7]);
-	
-	  var options = {
-	          width: 800,
-	          height: 500,
-	          legend: { position: 'top', maxLines: 1},
-	          bar: { groupWidth: '75%' },
-	          isStacked: true,
-	  };
-	  var chart = new google.visualization.ColumnChart(document.getElementById("columnchart_values"));
-	  chart.draw(view, options);
-}
+})
 </script>
+ 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

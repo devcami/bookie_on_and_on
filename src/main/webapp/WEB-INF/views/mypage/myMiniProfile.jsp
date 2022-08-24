@@ -30,7 +30,7 @@ a:hover {
 <div id="title-header" class="">
 	<div id="header-div">
 		<div id="title-header-left">
-			<i class="fa-solid fa-angle-left" onclick="location.href='/bookie/mypage/mypage.do'"></i>		
+			<i class="fa-solid fa-angle-left" onclick="location.href='/bookie/mypage/mypage.do?memberId=${member.memberId}'"></i>		
 		</div>
 	</div>
 </div>
