@@ -50,7 +50,7 @@
 					<td>${qna.memberId}</td>
 					<td>${qna.title}</td>
 		            <td>
-		            	<fmt:parseDate value="${qna.enrollDate}" pattern="yyyy-MM-dd'T'HH:mm" var="enrollDate"/>
+		            	<fmt:parseDate value="${qna.enrollDate}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="enrollDate"/>
 						<fmt:formatDate value="${enrollDate}" pattern="yyyy/MM/dd HH:mm"/>
 		            </td>
 		            <td>${qna.status eq 'U' ? '처리전' : '처리완료'}</td>
@@ -90,22 +90,22 @@ document.querySelector("#status").addEventListener('change', (e) => {
 				//console.log(report);
 				let {qnaNo, memberId, title, enrollDate, status} = qna;
 				//console.log(memberId, nickname, interest);
-				//console.log(createdAt);
-				let {year, monthValue, dayOfMonth, hour, minute} = enrollDate;
+				let {year, monthValue, dayOfMonth, hour, minute, second} = enrollDate;
 					
-				enrollDate = year + "/" + 
-							monthValue < 10 ? "0" + monthValue : monthValue + "/" + 
-							dayOfMonth < 10 ? "0" + dayOfMonth : dayOfMonth + " " +
-							hour < 10 ? "0" + hour : hour + ":" +
-							minute < 10? "0" + minute : minute;
+				monthValue = monthValue < 10 ? "0" + monthValue : monthValue; 
+				dayOfValue = dayOfMonth < 10 ? "0" + dayOfMonth : dayOfMonth;
+				hour =	hour < 10 ? "0" + hour : hour;
+				minute = minute < 10? "0" + minute : minute;
 				
+				const ed = year + "/" + monthValue + "/"+ dayOfValue + " " + hour + ":" + minute;
 				status = (status == 'U' ? '처리전' : '처리완료');  
 					
 				let div = `
-				<tr data-qna-no="\${qnaNo}">
+				<tr data-qna-no="\${qnaNo}"
+					onclick="location.href='${pageContext.request.contextPath}/mypage/qnaDetail.do?qnaNo=\${qnaNo}';">
 					<td>\${memberId}</td>
 					<td>\${title}</td>
-		            <td>\${enrollDate}</td>
+		            <td>\${ed}</td>
 		            <td>\${status}</td>
 				</tr>
 				`;

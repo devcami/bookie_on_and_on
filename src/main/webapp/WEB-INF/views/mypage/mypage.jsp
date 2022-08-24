@@ -173,7 +173,7 @@ table {
 <hr class="bar" style="border: solid 10px #f6f5f5; margin-top: 3rem;">
 
 <!-- 읽은 책 그래프 -->
-<div class="start-mypage" style="white-space: nowrap; padding: 10 20 10 20;">
+<div class="start-mypage" id="graph-container" style="white-space: nowrap; padding: 10 20 10 20;">
 <h1>읽은 책 그래프</h1>
 <div id="book-graph" style="border: none; padding-bottom: 0px;">
 	<table id="book-grapt-table">

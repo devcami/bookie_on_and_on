@@ -42,7 +42,7 @@
 		</div>
 
 		<input type="hidden" name="memberId" value="${loginMember.memberId}" />
-		<input type="hidden" name="itemId" id="itemId" value="" />
+		<input type="hidden" name="itemId" id="itemId" value="${dokoo.itemId}" />
 		<input type="hidden" name="dokooNo" value="${param.dokooNo}" />
 		
 		<div id="open-div">
@@ -122,14 +122,38 @@ window.addEventListener('load', () => {
 									<img src=\${cover} alt="책표지" />
 									\${title}</li>`;
 						container.insertAdjacentHTML('beforeend', li);
-						$("#book-img").attr("src", cover);
-						$("#book-title").text(title);
 					}
 				});
 			});
 		},
 		error : console.log
 	});
+	
+	// 현재 등록된 독후감의 책에 대한 정보 추가
+	const bookImg = document.querySelector("#book-img");
+	const bookTitle = document.querySelector("#book-title");
+	
+	$.ajax({
+		url : '${pageContext.request.contextPath}/search/selectBook.do',
+		data : {
+			ttbkey : 'ttbiaj96820130001',
+			itemIdType : 'ISBN13', 
+			ItemId : ${dokoo.itemId},
+			output : 'js',
+			Cover : 'mini',
+			Version : '20131101'
+		},
+		success(resp){
+			const {item} = resp;
+			let {title, cover} = item[0];
+			bookImg.src = `\${cover}`;
+			bookTitle.innerText = `\${title}`;
+		},
+		error : console.log
+	});
+	
+	
+	
 });
 
 <%-- 책 클릭 시   --%>
@@ -200,7 +224,7 @@ document.dokooUpdateFrm.addEventListener('submit', (e) => {
 		alert("제목을 작성해주세요.")
 		return;
 	}
-	if(document.querySelector("#content").value.length > 1000){
+	if(document.querySelector("#content").value.length > 10000){
 		e.preventDefault();
 		alert('1000자 이상 입력할 수 없습니다.')
 		return;

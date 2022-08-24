@@ -299,7 +299,7 @@ function infiniteScroll(){
 	//console.log("window innerHeight : " ,window.innerHeight);
 	//console.log($(window).scrollTop() + window.innerHeight);
 	
-    if($(window).scrollTop() + window.innerHeight == $(document).height()){
+    if($(window).scrollTop() + window.innerHeight + 0.5 == $(document).height()){
     	let cPage = document.querySelector("#cPage"); 
     	cPage.value = Number(cPage.value) + 1; 
     	console.log(cPage);
@@ -362,9 +362,14 @@ const pheedComment = (e) => {
 					`<div class="co-div comment-div" id="comment\${pheedCNo}">
 						<div class="co-left">
 							<div class="co-writer">
-								<img class="rounded-circle shadow-1-strong m-1"
+								<img class="rounded-circle shadow-1-strong m-1"`;
 								<%-- loginMember가 아니고 댓글단 사람 프로필 가져와야돼 --%>
-		              			src="${pageContext.request.contextPath}/resources/upload/profile/\${renamedFilename}"
+								if(renamedFilename != null)
+				                	div += `src="${pageContext.request.contextPath}/resources/upload/profile/\${renamedFilename}"`;
+			                	else
+				                	div += `src="${pageContext.request.contextPath}/resources/images/icon/none-profile-img.png"`;
+		              			
+		              			div += `
 								alt="avatar" width="40" height="40"> 
 		              			<span>
 		              			<a href="${pageContext.request.contextPath}/mypage/mypage.do?memberId=\${memberId}" class="text-link ml-1">\${nickname}</a>
@@ -412,9 +417,16 @@ const pheedComment = (e) => {
 					`<div class="co-div coComment-div" id="coComment\${pheedCNo}">
 						<div class="co-left" style="margin-left: 40px;">
 							<div class="co-writer">
-								↳<img class="rounded-circle shadow-1-strong m-1"
+								↳<img class="rounded-circle shadow-1-strong m-1"`;
 									<%-- loginMember가 아니고 댓글단 사람 프로필 가져와야돼 --%>
-			                        src="${pageContext.request.contextPath}/resources/upload/profile/\${renamedFilename}"
+								<c:if test="${not empty loginMember.renamedFilename}">
+				                	div += `src="${pageContext.request.contextPath}/resources/upload/profile/${renamedFilename}"`;
+				             	</c:if>
+				                <c:if test="${empty loginMember.renamedFilename}">
+				                	div += `src="${pageContext.request.contextPath}/resources/images/icon/none-profile-img.png"`;
+				             	</c:if>
+		              			
+		              			div += `
 									alt="avatar" width="40" height="40"> 
 			                     <span>
 			                     <a href="${pageContext.request.contextPath}/mypage/mypage.do?memberId=\${memberId}" class="text-link ml-1">\${nickname}</a>
@@ -492,16 +504,22 @@ const enrollComment = (e) => {
          
          const createdAt = year + "/" + month + "/" + day + " " + hours + ":" + minutes;
          
-         const div = `
-               <div class="co-div flex-center comment-div" id="comment\${pheedCNo}">
-               <div class="co-left flex-center">
-                  <div class="co-writer flex-center">
+         let div = `
+               <div class="co-div comment-div" id="comment\${pheedCNo}">
+               <div class="co-left">
+                  <div class="co-writer">
                      <img 
-                        class="rounded-circle shadow-1-strong m-1" 
-                        src="${pageContext.request.contextPath}/resources/upload/profile/${loginMember.renamedFilename}" 
-                        alt="avatar" width="40" height="40">
+                        class="rounded-circle shadow-1-strong m-1" `;
+                <c:if test="${not empty loginMember.renamedFilename}">
+                	div += `src="${pageContext.request.contextPath}/resources/upload/profile/${loginMember.renamedFilename}"`;
+             	</c:if>
+                <c:if test="${empty loginMember.renamedFilename}">
+                	div += `src="${pageContext.request.contextPath}/resources/images/icon/none-profile-img.png"`;
+             	</c:if>
+               		div += 
+                        `alt="avatar" width="40" height="40">
                      <span>
-                     <a href="${pageContext.request.contextPath}/mypage/mypage.do?memberId=\${memberId}" class="text-link ml-1">\${nickname}</a>
+                     <a href="${pageContext.request.contextPath}/mypage/mypage.do?memberId=\${memberId}" class="text-link ml-1">${loginMember.nickname}</a>
                      </span>
                   </div>
                   <div class="c-content" id="contentDiv\${pheedCNo}">
@@ -509,7 +527,7 @@ const enrollComment = (e) => {
                   </div>
                </div>
                <div class="co-right">
-                  <span class="text-secondary">
+                  <span class="text-secondary mr-3">
                      \${createdAt}
                   </span>
                   <div class="text-right">
@@ -729,14 +747,19 @@ const enrollCommentRef = (e) => {
          
          const createdAt = year + "/" + month + "/" + day + " " + hours + ":" + minutes;
          
-         const div = `
+         let div = `
             <div class="co-div coComment-div" id="coComment\${pheedCNo}">
                <div class="co-left" style="margin-left: 40px;">
                   <div class="co-writer">
                      ↳<img 
-                        class="rounded-circle shadow-1-strong m-1" 
-                        src="${pageContext.request.contextPath}/resources/upload/profile/${loginMember.renamedFilename}" 
-                        alt="avatar" width="40" height="40">
+                        class="rounded-circle shadow-1-strong m-1"`;
+                   	<c:if test="${not empty loginMember.renamedFilename}">
+	                	div += `src="${pageContext.request.contextPath}/resources/upload/profile/${loginMember.renamedFilename}"`;
+	             	</c:if>
+	                <c:if test="${empty loginMember.renamedFilename}">
+	                	div += `src="${pageContext.request.contextPath}/resources/images/icon/none-profile-img.png"`;
+	             	</c:if>
+                     div += `alt="avatar" width="40" height="40">
                      <span>
                      <a href="${pageContext.request.contextPath}/mypage/mypage.do?memberId=\${memberId}" class="text-link ml-1">\${nickname}</a>
                      </span>
