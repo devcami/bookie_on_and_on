@@ -2,7 +2,7 @@
 section#content	{
 	margin: 0 auto;
 	padding: 20px 71px 20px 95px;
-	min-height:600px;
+	min-height:1000px;
 	border-radius: 5px;
 }
 
@@ -116,4 +116,33 @@ nav {
     color: #fff !important;
     background-color: #ffc107 !important;
     border-color: #ffc107 !important;
+}
+
+/********* 게시글이 없는경우 ***********/
+#noChatDiv {
+	margin-top: 100px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+#noChatPfirst {
+	font-size: 50px !important;
+    margin-bottom: 0 !important;
+}
+#noChatPsecond {
+	font-size: 40px !important;
+}
+#noChatWriteBtn {
+	font-size: 30px;
+    background: none;
+    border-radius: 10px;
+    color: #FE9801;
+    border: 1px solid #FE9801;
+    transition: .1s ease-in-out;
+	width: 95%;
+}
+#noChatWriteBtn:hover {
+	background-color: #FE9801;
+    color: #fff;
+    box-shadow: 0px 0px 4px #5454544a;
 }

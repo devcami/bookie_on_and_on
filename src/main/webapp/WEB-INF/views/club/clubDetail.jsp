@@ -14,7 +14,6 @@
 	<sec:authentication property="principal" var="loginMember"/>
 </sec:authorize>
 
-${club}
 <section id="content">
 	<div id="menuDiv">
 		<ul>

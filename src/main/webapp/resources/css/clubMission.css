@@ -120,6 +120,7 @@ section#content	{
 .modal-body-top h5{
 	display: inline-block;
 	text-align: right;
+	margin-bottom: 0 !important;
 }
 .modal-body p {
 	font-size: 25px;

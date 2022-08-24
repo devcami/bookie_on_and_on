@@ -13,7 +13,6 @@
 <sec:authorize access="isAuthenticated()">
 	<sec:authentication property="principal" var="loginMember"/>
 </sec:authorize>
-${clubNo}
 <div id="clubBook-container">
 	<section id="content">
 		<div id="menuDiv">
@@ -27,51 +26,80 @@ ${clubNo}
 		</div>
 		<div id="title" class="text-center">
 			<h1>📣북클럽 게시판📣</h1>
-			<div id="sortTypeDiv">
-				<a 
-					href="${pageContext.request.contextPath}/club/clubBoard.do?clubNo=${clubNo}"
-					class="${sortType eq null ? 'textColor' : ''}"
-					>최신순</a>
-				<a 
-					href="${pageContext.request.contextPath}/club/clubBoard.do?clubNo=${clubNo}&sortType=oldList"
-					class="${sortType eq 'oldList' ? 'textColor' : ''}"
-					>오래된순</a>
-			</div>
-			<button 
-				type="button" 
-				class="btn btn-lg btn-link" 
-				id="clubBoard-enroll"
-				onclick="boardEnroll();">
-				<i class="fa-solid fa-plus"></i>
-			</button>
-		</div>
-		<div id="table-div">
-			<table>
-			  <thead>
-			    <tr class="tr">
-			      <th scope="col">No</th>
-			      <th scope="col">제목</th>
-			      <th scope="col">작성자</th>
-			      <th scope="col">작성일</th>
-			    </tr>
-			  </thead>
-			  <tbody>
-			  	<c:forEach items="${list}" var="chat" varStatus="vs">
-			  		<tr onclick="showDetailClubBoard(this)">
-				      <th scope="row">${chat.chatNo}</th>
-				      <td>${chat.title}</td>
-				      <td>${chat.nickname}</td>
-				      <td>
-				      	<fmt:parseDate value="${chat.enrollDate}" pattern="yyyy-MM-dd'T'HH:mm" var="enrollDate"/>
-				      	<fmt:formatDate value="${enrollDate}" pattern="yyyy/MM/dd HH:mm"/>
-				     </td>
-				    </tr>
-			  	</c:forEach>
-			  </tbody>
-			</table>
+			
+			<%-- 글이 있는 경우! --%>
+			<c:if test="${chat.size() ne 0}">
+				<div id="sortTypeDiv">
+					<a 
+						href="${pageContext.request.contextPath}/club/clubBoard.do?clubNo=${clubNo}"
+						class="${sortType eq null ? 'textColor' : ''}"
+						>최신순</a>
+					<a 
+						href="${pageContext.request.contextPath}/club/clubBoard.do?clubNo=${clubNo}&sortType=oldList"
+						class="${sortType eq 'oldList' ? 'textColor' : ''}"
+						>오래된순</a>
+				</div>
+				<button 
+					type="button" 
+					class="btn btn-lg btn-link" 
+					id="clubBoard-enroll"
+					onclick="boardEnroll();">
+					<i class="fa-solid fa-plus"></i>
+				</button>
+		  		<p>널임다</p>		
+		  	</c:if>
 		</div>
 		
-		<nav>${pagebar}</nav>
+		<c:if test="${chat.size ne 0}">
+			<div id="table-div">
+				<table>
+				  <thead>
+				    <tr class="tr">
+				      <th scope="col">No</th>
+				      <th scope="col">제목</th>
+				      <th scope="col">작성자</th>
+				      <th scope="col">작성일</th>
+				    </tr>
+				  </thead>
+				  <tbody>
+			  		
+				  	<c:forEach items="${list}" var="chat" varStatus="vs">
+				  		<tr onclick="showDetailClubBoard(this)">
+					      <th scope="row">${chat.chatNo}</th>
+					      <td>${chat.title}</td>
+					      <td>${chat.nickname}</td>
+					      <td>
+					      	<fmt:parseDate value="${chat.enrollDate}" pattern="yyyy-MM-dd'T'HH:mm" var="enrollDate"/>
+					      	<fmt:formatDate value="${enrollDate}" pattern="yyyy/MM/dd HH:mm"/>
+					     </td>
+					    </tr>
+				  	</c:forEach>
+				  </tbody>
+				</table>
+			</div>
+			
+			<nav>${pagebar}</nav>
+		</c:if>
+		<%-- 글이 있는 경우! 끝 --%>
+		
+		
+		<%-- 글이 없는 경우! --%>
+		<c:if test="${chat.size eq 0}">
+		<div id="noChatDiv">
+			<p id="noChatPfirst">게시글이 아직 없습니다!</p>
+			<p id="noChatPsecond">첫 번째 게시글의 작성자가 되어보세요!</p>
+			
+			<button 
+				id="noChatWriteBtn"
+				onclick="boardEnroll();"
+				class="btn">작성하기</button>
+		</div>
+		</c:if>
+		
+		
+		<%-- 글이 있는 경우! 끝 --%>
+		
+		
 	</section>
 
 </div>
