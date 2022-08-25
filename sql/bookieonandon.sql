@@ -561,12 +561,14 @@ select * from authority;
 insert into my_club values ('25', 'honggd', 5000);
 insert into my_club values ('25', 'sinsa', 5000);
 insert into my_club values ('23', 'sinsa', 5000);
-
-
+select * from book_ing;
+select * from book where member_id = 'tmddbs';
+select * from book b join book_ing i b.member_idwhere member_id = 'tmddbs';
+select * from qna;
+delete from qna where qna_no = 41;
 alter table club_book add IMG_SRC varchar2(4000);
 alter table mission add item_id varchar2(30);
 ALTER TABLE mission RENAME COLUMN m_end_Date TO m_endDate;
-
 select
     c.*,
     b.*,
