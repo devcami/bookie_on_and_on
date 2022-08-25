@@ -30,7 +30,7 @@
 
     <div class="container mt-4">
 	  
-      <table class="table table-fixed text-center">
+      <table class="table table-fixed text-center" style="transform: translateX(-45px);">
         <thead>
           <tr>
             <th scope="col" >아이디</th>

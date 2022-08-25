@@ -73,6 +73,12 @@ public interface ClubDao {
 
 	@Select("select count(*) from my_club where club_no = #{clubNo} and member_id = #{memberId}")
 	int checkClubJoined(Map<String, Object> param);
+	
+	@Select("select count(*) from likes_club where club_no = #{clubNo} and member_id = #{memberId}")
+	int checkClubLiked(Map<String, Object> param);
+
+	@Select("select count(*) from wishlist_club where club_no = #{clubNo} and member_id = #{memberId}")
+	int checkClubWished(Map<String, Object> param);
 
 	@Insert("insert into my_club values(#{clubNo}, #{memberId}, #{deposit}, #{clubEnd}, #{missionCnt}, 'I')")
 	int joinClub(Map<String, Object> map);
@@ -170,6 +176,8 @@ public interface ClubDao {
 	int refundDeposit(Map<String, Object> param);
 	
 	int addPointStatusRefundDeposit(Map<String, Object> param);
+
+
 
 
 }

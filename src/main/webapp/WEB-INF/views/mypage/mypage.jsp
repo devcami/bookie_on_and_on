@@ -29,7 +29,8 @@ table tr td{
 	width: 4rem;
 	text-align: center;
 }
-table {
+.table-bottom{
+	border-top: 1px solid black;
 }
 </style>
 <sec:authentication property="principal" var="loginMember" scope="page"/>
@@ -175,23 +176,23 @@ table {
 <!-- 읽은 책 그래프 -->
 <div class="start-mypage" id="graph-container" style="white-space: nowrap; padding: 10 20 10 20;">
 <h1>읽은 책 그래프</h1>
-<div id="book-graph" style="border: none; padding-bottom: 0px;">
-	<table id="book-grapt-table">
+<div id="book-graph">
+	<table id="book-grapt-table" style="margin-top: 10rem;">
 	    <tbody id="book-grapt-table-body">
 	        <tr id="month0" >
-	            <td></td>
-	            <td>1월</td>
-	            <td>2월</td>
-	            <td>3월</td>
-	            <td>4월</td>
-	            <td>5월</td>
-	            <td>6월</td>
-	            <td>7월</td>
-	            <td>8월</td>
-	            <td>9월</td>
-	            <td>10월</td>
-	            <td>11월</td>
-	            <td>12월</td>
+	            <td style="width:0px"></td>
+	            <td class="table-bottom">1월</td>
+	            <td class="table-bottom">2월</td>
+	            <td class="table-bottom">3월</td>
+	            <td class="table-bottom">4월</td>
+	            <td class="table-bottom">5월</td>
+	            <td class="table-bottom">6월</td>
+	            <td class="table-bottom">7월</td>
+	            <td class="table-bottom">8월</td>
+	            <td class="table-bottom">9월</td>
+	            <td class="table-bottom">10월</td>
+	            <td class="table-bottom">11월</td>
+	            <td class="table-bottom">12월</td>
 	        </tr>
 	    </tbody>
 	</table>
@@ -448,8 +449,8 @@ document.addEventListener('DOMContentLoaded', function() {
 						method : "get",
 						success(data){
 							const {item} = data;
-							console.log(item);
-							console.log(item.length);
+							//console.log(item);
+							//console.log(item.length);
 							item.forEach((bookIng)=>{
 								const {cover, isbn13} = bookIng;
 								const year = value.endedAt.year;
@@ -494,8 +495,8 @@ document.addEventListener('DOMContentLoaded', function() {
 		events: list,
 		eventContent: function(arg) {
 			let coverImg = document.createElement('img')
-			console.log("위치확인");
-			console.log(arg.event._def.extendedProps.cover);
+			//console.log("위치확인");
+			//console.log(arg.event._def.extendedProps.cover);
 			if (arg.event._def.extendedProps.cover) {
 				coverImg.setAttribute("src", "" + arg.event._def.extendedProps.cover + "");
 				coverImg.setAttribute("style", "width: 3.5rem; height: 5rem");
@@ -523,7 +524,7 @@ window.addEventListener('load', () => {
 		method : "get",
 		success(data){
 			bookIngList = data;
-			console.log(i);
+			//console.log(i);
 			/* 읽은 책 찾아 뿌리기 */
 		 	bookIngList.forEach((value, index, array)=>{
 		 		if(!value.endedAt){
@@ -541,14 +542,14 @@ window.addEventListener('load', () => {
 							const {item} = data;
 							item.forEach((bookIng)=> {
 								const {isbn13, title, author, publisher, pubDate, cover} = bookIng;
-								console.log("여긴어디냐");
-								console.log(value.endedAt.monthValue);
-								console.log(i);
+								//console.log("여긴어디냐");
+								//console.log(value.endedAt.monthValue);
+								//console.log(i);
 								const month = value.endedAt.monthValue;
-								console.log(bookIng);
+								//console.log(bookIng);
 								
 								const div = `<tr id="month\${i}">
-									            <td style="border-right: thin;"></td>
+									            <td style="width:0px"></td>
 									            <td></td>
 									            <td></td>
 									            <td></td>
@@ -562,18 +563,6 @@ window.addEventListener('load', () => {
 									            <td></td>
 									            <td></td>
 									        </tr>`;
-								/* if(document.querySelector(`#month\${i-1}`) != null) {
-									const arr = Array.from(document.querySelector(`#month\${i-1}`).children);
-									for(let j = 0; j < arr.length; j++){
-										if(arr[j].chilren.length == 1 && j + 1 == month){
-											container.insertAdjacentHTML('afterbegin', div);
-										} else {
-											document.querySelector(`#month\${i-1}`).children[month].innerHTML = `<img src=\${cover}  value=\${isbn13} onclick="bookEnroll(this);" style="width: 3.5rem; height: 5rem">`;
-										}
-									}
-								} else {
-									container.insertAdjacentHTML('afterbegin', div);
-								} */
 								container.insertAdjacentHTML('afterbegin', div);
 								if(i > 1){
 								 	for(let k = 1; k <= i; k++){
@@ -641,8 +630,8 @@ window.addEventListener('load', () => {
 		data : { memberId :memberId },
 		async:false,
 		success(data){
-			console.log(data);
-			console.log(data[0]);
+			//console.log(data);
+			//console.log(data[0]);
 			itemId = data;
 			/* 읽고 있는 책 찾아 뿌리기 */
 			itemId.forEach((value, index, array)=>{
@@ -655,11 +644,11 @@ window.addEventListener('load', () => {
 					method : "get",
 					success(data){
 						const {item} = data;
-						console.log(item);
-						console.log(item.length);
+						// console.log(item);
+						// console.log(item.length);
 						item.forEach((book) => {
 							const {isbn13, title, author, publisher, pubDate, cover, categoryName} = book;
-							categoryList.push(categoryName);
+							categoryList.push(categoryName.split('>', 2)[1]);
 						});
 			 		},
 					error : console.log
@@ -674,16 +663,20 @@ window.addEventListener('load', () => {
 	categoryList.forEach((x) => { 
 	  result[x] = (result[x] || 0)+1; 
 	});
-	console.log(Object.keys(result).length);
+	console.log(result);
 	
 	/* 랜덤한 색깔 개수만큼 쌓아 */
 	for(let i = 0; i < Object.keys(result).length; i++){
 		colorList.push(colorize());
 	}
+	const labelData = [];
+	for(let i = 0; i < Object.keys(result).length; i++){
+		labelData.push(Object.keys(result)[i] + "(" + Object.values(result)[i] + ")");
+	}
 	
 	const data = {
 		  
-		  labels: Object.keys(result),
+		  labels: labelData,
 		  datasets: [{
 		    label: 'My Book Category Dataset',
 		    data: Object.values(result),
@@ -695,6 +688,9 @@ window.addEventListener('load', () => {
 	 const config = {
 		  type: 'pie',
 		  data: data,
+		  options: {
+			  font: 50,
+		  }
 		};
 	
 	 const myChart = new Chart(

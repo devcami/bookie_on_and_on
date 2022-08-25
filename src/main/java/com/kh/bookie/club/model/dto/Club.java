@@ -22,6 +22,8 @@ public class Club extends ClubEntity {
 	private int currentNop;
 	private int likesCnt;
 	private int isJoined;
+	private int isLiked;
+	private int isWished;
 	
 	private int totalMission;
 	private List<Chat> clubBoard = new ArrayList<>();

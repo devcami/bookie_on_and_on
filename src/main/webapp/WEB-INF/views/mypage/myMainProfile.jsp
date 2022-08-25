@@ -359,7 +359,7 @@ document.querySelector("#quiz-form").addEventListener ('submit', (e) => {
 	}
 	
 	// 변경할려고 시도했는데 못쓰는 닉네임일때
-	if(document.querySelector("#nicknameValid").value == 0){
+	if(document.querySelector("#nicknameValid").value == "0"){
 		e.preventDefault();
 		alert("사용불가 닉네임입니다. 다시 확인하세요.");
 		return false;

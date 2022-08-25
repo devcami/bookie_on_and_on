@@ -421,21 +421,26 @@ const missionComplete = (e) => {
 			document.querySelector('#upFile').style.display = 'none';
 			// textarea readonly 걸어
 			$("#answer").attr("readonly", true);
+			// 모달 안에 제출 버튼 안보이게 해(이미 제출했고 승인대기중인 상태니까)
+			document.querySelector("#submitBtn").style.display = 'none';
+			// 제출했으니까 첨부파일 값 비워
+			document.querySelector("#upFile").value = '';
 			
 			
 			missionArr[vsNo].status = ms.status;
 			missionArr[vsNo].renamedFilename = ms.renamedFilename;
 			missionArr[vsNo].answer = ms.answer;
 			
+			// 동그라미 색 바꿔
 			const dotId = "#dot" + ms.missionNo;
 			document.querySelector(dotId).style.color = "#9a9b9b";
+			// 뱃지 텍스트는 승인대기중으로, 배경색은 회색으로 바꿔
 			const spanId = "#span" + ms.missionNo;
 			document.querySelector(spanId).innerHTML = "";
 			document.querySelector(spanId).innerHTML = "승인 대기중";
 			document.querySelector(spanId).style.background = 'grey';
 			document.querySelector(spanId).classList = 'status-span';
-			document.querySelector("#submitBtn").style.display = 'none';
-			document.querySelector("#upFile").value = '';
+			
 			
 		},
 		error: console.log

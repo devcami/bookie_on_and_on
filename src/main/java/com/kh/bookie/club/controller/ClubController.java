@@ -385,11 +385,9 @@ public class ClubController {
 				int result = clubService.cancelClubJoin(param);
 			}
 			
+
 			Club club = clubService.selectOneClub(param);
 			
-//			LocalDate today = LocalDate.now();
-//			
-//			mav.addObject("today", today);
 			mav.addObject("club", club);
 			
 		} catch(Exception e) {
