@@ -36,7 +36,11 @@ public class SearchServiceImpl implements SearchService {
 
 	@Override
 	public Book getMyBook(Map<String, Object> map) {
-		return searchDao.getMyBook(map);
+		Book book = searchDao.getMyBook(map);
+		if(book != null) {
+			book.setIngNo(searchDao.selectBookIngNo(map));
+		}
+		return book;
 	}
 	
 	@Override
@@ -55,7 +59,6 @@ public class SearchServiceImpl implements SearchService {
 		int result = searchDao.bookUpdate(book);
 		
 		// book_ing
-		book.setIngNo(beforeBook.getIngNo());
 		String status = book.getStatus();
 		switch(beforeBook.getStatus()) {
 		case "읽고 싶은" : 

@@ -62,4 +62,6 @@ public interface SearchDao {
 
 	List<String> selectMyBookAllItemId(String memberId);
 
+	int selectBookIngNo(Map<String, Object> map);
+
 }

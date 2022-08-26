@@ -252,4 +252,12 @@
 			member_id = #{memberId}
 	</select>
 	
+	<select id="selectBookIngNo" resultType="_int">
+		select
+			max(ing_no) ing_no
+		from
+			book_ing
+		where
+			member_id = #{memberId} and item_id = #{itemId}
+	</select>
 </mapper>
