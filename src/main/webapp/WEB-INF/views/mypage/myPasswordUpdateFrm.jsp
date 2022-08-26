@@ -91,12 +91,12 @@ function checkPassword(){
 	         const {msg, valid} = resp;
 	         alert(msg);
 	         console.log(valid);
-	         if(valid == "1"){
+	         if(valid == "1"){ // 사용가능
 	         	document.querySelector("#passwordValid1").value = "1";
 	         	document.querySelector("#passwordCheckOk").style.display = "inline";
 	         	document.querySelector("#passwordCheckError").style.display = "none";
 	         }
-	         else{	        	 
+	         else{	        
 	         	document.querySelector("#passwordValid1").value = "0";
 	         	document.querySelector("#passwordCheckOk").style.display = "none";
 	         	document.querySelector("#passwordCheckError").style.display = "inline";
@@ -109,9 +109,7 @@ function checkPassword(){
 /* 비밀번호 확인 */
 function passwordSameCheck() {
 	const newPassword = document.querySelector("#newPassword").value;
-	console.log(newPassword);
 	const passwordCheck = document.querySelector("#newPasswordCheck").value;
-	console.log(passwordCheck);
 	if(newPassword !== passwordCheck){
 		alert("두 비밀번호가 일치하지 않습니다.");
 		document.querySelector("#passwordOk").style.display = "none";
@@ -127,14 +125,22 @@ function passwordSameCheck() {
 };
 
 document.querySelector("#quiz-form").addEventListener ("submit", (e) =>{
+	const passwordValid1 = document.querySelector("#passwordValid1").value;
 	const passwordValid3 = document.querySelector("#passwordValid3").value;
-	const newPassword = document.querySelector("#newPassword").value;
-  	if(!/^[a-zA-Z0-9]{4,}$/.test(newPassword)){
+	const newPasswordCheck = document.querySelector("#newPasswordCheck").value;
+  	if(!/^[a-zA-Z0-9]{4,}$/.test(newPasswordCheck)){
         e.preventDefault();
         alert("비밀번호는 영문자/숫자/특수문자!@#$%^&*()로 6글자 이상이어야 합니다.");
         return false;
    	}
-	if(passwordValid1 != 0 || passwordValid3 != 0){
+	if(passwordValid1 == "0"){
+		alert("기존비밀번호가 일치하지 않습니다. 다시 확인해주세요.") 
+		e.preventDefault();
+		return false;
+	}
+	if(passwordValid3 == "0"){
+		alert("새로운 비밀번호가 일치하지 않습니다. 다시 확인해주세요") 
+		e.preventDefault();
 		return false;
 	}
 });

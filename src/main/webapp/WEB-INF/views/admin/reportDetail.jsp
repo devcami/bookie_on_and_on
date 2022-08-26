@@ -323,6 +323,7 @@ window.addEventListener('load', () => {
 	});
 });
 
+
 const deleteReport = (e) => {
 	console.log(e.dataset.beenziNo);	
 	console.log(e.dataset.category);	

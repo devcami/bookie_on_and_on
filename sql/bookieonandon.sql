@@ -410,10 +410,8 @@ create table point_status (
     constraint ck_point_status check (status in ('M', 'P'))
 );
 create sequence seq_point_no;
-<<<<<<< HEAD
 
 -- �듃由ш굅
-=======
 SELECT a.osuser
                ,a.SID
                ,a.serial#
@@ -423,7 +421,6 @@ SELECT a.osuser
               ,v$sqlarea b
 WHERE a.sql_address = b.address;
 -- 트리거
->>>>>>> branch 'master' of https://github.com/devcami/bookie_on_and_on.git
 select * from user_triggers;
 drop trigger trigger_dokoo_comment;
 drop trigger trigger_pheed_comment;
@@ -561,12 +558,12 @@ select * from authority;
 insert into my_club values ('25', 'honggd', 5000);
 insert into my_club values ('25', 'sinsa', 5000);
 insert into my_club values ('23', 'sinsa', 5000);
-
-
+select * from book_ing;
+select * from qna;
+delete from qna where qna_no = 41;
 alter table club_book add IMG_SRC varchar2(4000);
 alter table mission add item_id varchar2(30);
 ALTER TABLE mission RENAME COLUMN m_end_Date TO m_endDate;
-
 select
     c.*,
     b.*,
@@ -1354,6 +1351,7 @@ select * from mission where club_no = 121;
 update mission set m_title = '감명깊은 구절 올리기' where mission_no = 122;
 commit;
 
+<<<<<<< HEAD
 select * from mission_status;
 delete from mission_status where mission_no = 122;
 
@@ -1383,3 +1381,7 @@ update member set point = 6000 where member_id = 'hosi';
 select * from alarm;
 delete from alarm where member_id = 'hosi';
 commit;
+=======
+select * from book where member_id = 'devcami';
+select * from book_ing where member_id = 'devcami';
+>>>>>>> branch 'master' of https://github.com/devcami/bookie_on_and_on.git
