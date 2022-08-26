@@ -62,5 +62,4 @@ console.log('초기화여부판단:',Kakao.isInitialized());
 </script>
 
 
-
 <jsp:include page="/WEB-INF/views/common/footer.jsp" />

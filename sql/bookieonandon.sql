@@ -1353,3 +1353,33 @@ commit;
 select * from mission where club_no = 121;
 update mission set m_title = '감명깊은 구절 올리기' where mission_no = 122;
 commit;
+
+select * from mission_status;
+delete from mission_status where mission_no = 122;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+update club set club_end = sysdate - 1 where club_no = 121;
+commit;
+
+select * from my_club;
+update my_club set club_end = sysdate - 1 where club_no = 121 and member_id = 'hosi';
+
+update member set point = 6000 where member_id = 'hosi';
+
+select * from alarm;
+delete from alarm where member_id = 'hosi';
+commit;
