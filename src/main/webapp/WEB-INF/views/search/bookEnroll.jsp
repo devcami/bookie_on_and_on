@@ -104,7 +104,7 @@
 	            <input type="hidden" class="form-control" name="memberId" value="${loginMember.memberId}">
 	            <input type="hidden" class="form-control" name="itemId" value="${param.isbn13}">
 	            <input type="hidden" name="score" id="book-score" value="0"/>
-				<input type="text"  class="form-control" name="status" id="book-status" readonly />
+				<input type="text"  class="form-control" name="status" id="book-status" value="${book.status}"readonly />
           </div>
 			<h4 class="ml-2" id="modalBookTitle"></h4>
 			<div class="form-group form-content"></div>
@@ -135,6 +135,7 @@
 	            <input type="text" class="form-control" name="nickname" value="${loginMember.nickname}" readonly>
 	            <input type="hidden" class="form-control" name="memberId" value="${loginMember.memberId}">
 	            <input type="hidden" class="form-control" name="itemId" value="${book.itemId}">
+	            <input type="hidden" class="form-control" name="ingNo" value="${book.ingNo}">
 	            <input type="hidden" name="score" value="${book.score}"/>
 				<input type="text"  class="form-control" name="status" id="book-status-update" readonly />
           </div>
@@ -302,6 +303,7 @@ const setStatus = () => {
 	
 	let statusVal = document.querySelector("#book-status").value;
 	let statusUpdateVal = document.querySelector("#book-status-update").value;
+	
 	Array.from(document.querySelectorAll("[name=status]")).forEach((status) => {
 		if(status.checked){
 			document.querySelector("#book-status").value = status.value;
@@ -310,6 +312,9 @@ const setStatus = () => {
 			statusUpdateVal = status.value;
 		}
 	});
+	
+	console.log("statusVal : " + statusVal);
+	console.log("statusUpdateVal : " + statusUpdateVal);
 	
 	const div = `
 		<label for="content" class="col-form-label">한줄평(250자 이내):</label>
@@ -382,6 +387,7 @@ const bookEnroll = () => {
 };
 const bookUpdate = () => {
 	const updateStatus = document.querySelector("#book-status-update").value;
+	console.log("updateStatus : " + updateStatus + "${book.status}");
 	if(updateStatus == "" || updateStatus == '${book.status}'){
 		if(updateStatus == '읽음'){
 			document.bookUpdateFrm.submit();
@@ -520,19 +526,26 @@ window.addEventListener('load', () => {
 				if(read.startedAt){
 					
 					const {startedAt, endedAt, ingNo} = read;
-					// console.log(startedAt, endedAt, ingNo);
-					if(startedAt.monthValue < 10) startedAt.monthValue = '0' + startedAt.monthValue; 
+					console.log(startedAt, endedAt, ingNo);
+					const StartMV = startedAt.monthValue;
+					let endMV;
+					let ended;
+					if(endedAt != null){
+						endMV = endedAt.monthValue;
+						if(endedAt.dayOfMonth < 10) endedAt.dayOfMonth = '0' + endedAt.dayOfMonth; 
+						ended = `\${endedAt.year}-\${endMV}-\${endedAt.dayOfMonth}`; 
+					}
+					
 					if(startedAt.dayOfMonth < 10) startedAt.dayOfMonth = '0' + startedAt.dayOfMonth; 
-					if(endedAt.monthValue < 10) endedAt.monthValue = '0' + endedAt.monthValue; 
-					if(endedAt.dayOfMonth < 10) endedAt.dayOfMonth = '0' + endedAt.dayOfMonth; 
+					const started = `\${startedAt.year}-\${StartMV}-\${startedAt.dayOfMonth}`; 
 					
-					const started = `\${startedAt.year}-\${startedAt.monthValue}-\${startedAt.dayOfMonth}`; 
-					const ended = `\${endedAt.year}-\${endedAt.monthValue}-\${endedAt.dayOfMonth}`; 
-					
-					const li = `<li class="list-group-item item" data-ingNo='\${ingNo}' data-started='\${started}' data-ended='\${ended}'>\${started} 시작 ~ \${ended} 완독 
-								<span class="badge badge-pill badge-secondary bdg-delete float-right ml-2 mt-1" onclick="moreReadDelete(this);">삭제</span> 
-								<span class="badge badge-pill bdg-update float-right ml-2 mt-1" onclick="moreReadUpdate(this);">수정</span> </li>`;
-					container.insertAdjacentHTML('beforeend', li);
+					// 읽음 으로 처리된 애만 완독일에 추가
+					if(endedAt != null){
+						const li = `<li class="list-group-item item" data-ingNo='\${ingNo}' data-started='\${started}' data-ended='\${ended}'>\${started} 시작 ~ \${ended} 완독 
+									<span class="badge badge-pill badge-secondary bdg-delete float-right ml-2 mt-1" onclick="moreReadDelete(this);">삭제</span> 
+									<span class="badge badge-pill bdg-update float-right ml-2 mt-1" onclick="moreReadUpdate(this);">수정</span> </li>`;
+						container.insertAdjacentHTML('beforeend', li);
+					}
 				}
 			});
 		},
