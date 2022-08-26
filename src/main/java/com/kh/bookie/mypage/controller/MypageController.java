@@ -1,6 +1,7 @@
 package com.kh.bookie.mypage.controller;
 
 import java.io.File;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -207,14 +208,12 @@ public class MypageController {
 	
 	@GetMapping("/myMiniProfile.do")
 	public void myMiniProfile(@RequestParam String memberId, Model model) {
-		log.debug("여긴나와? = {}", "여기가문제야?");
 		log.debug("미니프로필수정 memberId = {}", memberId);
 		try {
 			Member member = memberService.selectOneMember(memberId);
-			log.debug("이 죽일놈의 사진 초기화 = {}" ,member.getRenamedFilename());
 			model.addAttribute("member", member);
 		} catch (Exception e) {
-			log.error("마이페이지 조회오류", e);
+			log.error("미니프로필 조회오류", e);
 			throw e;
 		}
 	}
@@ -307,12 +306,11 @@ public class MypageController {
 			Authentication newAuthentication = new UsernamePasswordAuthenticationToken(
 															loginMember, loginMember.getPassword(), loginMember.getAuthorities());
 			SecurityContextHolder.getContext().setAuthentication(newAuthentication);
-//			map.put("msg", "비밀번호를 성공적으로 수정했습니다.");
-//			map.put("msg", "비밀번호를 성공적으로 수정했습니다.");
+			map.put("msg", "비밀번호를 성공적으로 수정했습니다.");
 			
 		} catch (Exception e) {
 			log.error("비밀번호 수정 오류!", e);
-//			map.put("msg", "회원정보 수정오류!");
+			map.put("msg", "회원정보 수정오류!");
 		}
 		return "redirect:/mypage/myPasswordUpdateFrm.do";
 	}
@@ -432,12 +430,10 @@ public class MypageController {
 			String memberId = loginMember.getMemberId();
 			int numPerPage = 10;
 			
-			
 			// 목록 조회
 			
 			int start = ((cPage - 1) * numPerPage) + 1;
 			int end = cPage * numPerPage;
-			
 			
 			map.put("cPage", cPage);
 			map.put("numPerPage", numPerPage);
@@ -934,15 +930,9 @@ public class MypageController {
 					@RequestParam("upFile") MultipartFile upFile,
 					@RequestParam String delFile,
 					@AuthenticationPrincipal Member loginMember) throws Exception {
-		log.debug("upFile = {}", upFile);
-		log.debug("delFile = {}", delFile);
-		log.debug("sns = {}", sns);
-		log.debug("introduce = {}", introduce);
-		log.debug("newNickname = {}", newNickname);
-		
+
 		String memberId = loginMember.getMemberId();
 		Member member = memberService.selectOneMember(memberId);
-		
 		// 파일저장위치
         String saveDirectory = application.getRealPath("/resources/upload/profile");
 		try {
@@ -963,7 +953,6 @@ public class MypageController {
 			int updateResult;
 			// 2. 첨부파일 등록 (파일 저장)
 			if(upFile.getSize() > 0) {
-				log.debug("요기?");
 				MultipartFile updateFile = upFile;
 				member.setOriginalFilename(updateFile.getOriginalFilename());
 				member.setRenamedFilename(HelloSpringUtils.getRenamedFilename(updateFile.getOriginalFilename()));

@@ -1351,7 +1351,7 @@ select * from chat_log;
 
 delete from chat_log where no between 82 and 83;
 commit;
-
+select * from book_ing;
 select * from mission where club_no = 121;
 update mission set m_title = '감명깊은 구절 올리기' where mission_no = 122;
 commit;
