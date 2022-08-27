@@ -12,7 +12,6 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param value="피드" name="title"/>
 </jsp:include>
-${list}
 <sec:authentication property="principal" var="loginMember"/>
 <div id="pheed-container" >
 	<div id="pheed-header">
