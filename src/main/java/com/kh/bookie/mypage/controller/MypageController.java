@@ -220,23 +220,29 @@ public class MypageController {
 	
 	/* 회원탈퇴 */
 	@GetMapping("/deleteMember.do")
-	public String deleteMember(@AuthenticationPrincipal Member loginMember) {
+	public ModelAndView deleteMember(@AuthenticationPrincipal Member loginMember) {
 		String memberId = loginMember.getMemberId();
 		Map<String, Object> map = new HashMap<>();
+		ModelAndView mv = new ModelAndView();
 		try {
 			int result = memberService.deleteMember(memberId);
 			
 			if(result>0) {
-				map.put("msg", "성공적으로 회원정보를 삭제했습니다.");
+				mv.addObject("msg", "성공적으로 회원정보를 삭제했습니다.");
+				mv.setViewName("/mypage/mypage");
 				SecurityContextHolder.clearContext(); // 이 부분을 꼭 따로 추가해 줘야 스프링 시큐리티 탈퇴 시 로그아웃 처리가 됨!!!
+				return mv;
 			}
-			else 
-				map.put("msg", "회원정보삭제에 실패했습니다.");
+			else {
+				mv.addObject("msg", "회원정보삭제에 실패했습니다.");
+				mv.setViewName("/mypage/mypageSetting");
+				return mv;
+			}
 		} catch (Exception e) {
 			log.error("회원탈퇴 오류", e);
 			e.printStackTrace();
 		}
-		return "redirect:/";
+		return mv;
 	}
 
 
@@ -288,8 +294,9 @@ public class MypageController {
 	
 	/* 패스워드 변경 */
 	@PostMapping("/myPasswordUpdate.do")
-	public String myPasswordUpdate(@RequestParam String newPasswordCheck, @AuthenticationPrincipal Member loginMember) {
+	public ModelAndView myPasswordUpdate(@RequestParam String newPasswordCheck, @AuthenticationPrincipal Member loginMember) {
 		String newPassword = newPasswordCheck;
+		ModelAndView mv = new ModelAndView();
 		log.debug("newPassword = {}", newPassword);
 		Map<String, Object> param = new HashMap<>();
 		Map<String, Object> map = new HashMap<>();
@@ -306,13 +313,15 @@ public class MypageController {
 			Authentication newAuthentication = new UsernamePasswordAuthenticationToken(
 															loginMember, loginMember.getPassword(), loginMember.getAuthorities());
 			SecurityContextHolder.getContext().setAuthentication(newAuthentication);
-			map.put("msg", "비밀번호를 성공적으로 수정했습니다.");
-			
+			mv.addObject("msg", "비밀번호를 성공적으로 수정했습니다.");
+			mv.setViewName("/mypage/mypageSetting");
+			return mv;
 		} catch (Exception e) {
 			log.error("비밀번호 수정 오류!", e);
-			map.put("msg", "회원정보 수정오류!");
+			mv.addObject("msg", "비밀번호 수정실패 다시 확인하세요.");
+			mv.setViewName("/mypage/mypageSetting");
+			return mv;
 		}
-		return "redirect:/mypage/myPasswordUpdateFrm.do";
 	}
 	
 	/* 내 책정보 */
@@ -851,6 +860,7 @@ public class MypageController {
 		Member member = memberService.selectOneMember(updateMember.getMemberId());
 		String nickname = member.getNickname();
 		String[] interests = updateMember.getInterest().split(",");
+		log.debug("birthday = {}", updateMember.getBirthday());
 		
 		// 파일저장위치
         String saveDirectory = application.getRealPath("/resources/upload/profile");

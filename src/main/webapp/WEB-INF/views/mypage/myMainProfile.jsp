@@ -112,7 +112,7 @@ a:hover {
 		          	<input type="radio" name="gender" value="F" ${member.gender eq 'F' ? 'checked' : ''} required>여
 		        </label>
 		        <p class="form-label">생년월일</p>
-		       		<input class="form-field" type="date" value="${member.birthday}">
+		       		<input class="form-field" type="date" name="birthday" value="${member.birthday}">
 		        <p class="form-label">Phone Number:</p>
 		           <input class="form-field" type="tel" placeholder="(-없이)01012345678" name="phone" id="phone" maxlength="11" value="${member.phone}" required>
 		        <p class="form-label">관심 장르</p>
@@ -149,7 +149,7 @@ a:hover {
 	            	<input class="form-field" id="form-sns" name="sns" type="url" value="${member.sns}" placeholder="sns주소를 추가해주세요!">
 		        <div id="submit-btn">
 		          <input type="submit" value="정보수정">
-		          <input type="reset"  value="취소" onclick="location.href='${pageContext.request.contextPath}'">
+		          <input type="reset"  value="취소" onclick="location.href='${pageContext.request.contextPath}/mypage/mypageSetting.do'">
 		        </div>
 		      <!--   <input type="hidden" name="interest[]" id="interestArray" value=''> -->
 	      </form:form>
@@ -157,10 +157,6 @@ a:hover {
 </section>
 
 <script>
-window.addEventListener('load', () => {
-	console.log("${member.enrollDate}");
-
-});
 var availableall = "";
 
 /* 프로필삭제 클릭 시 비동기로 삭제처리 */
@@ -221,14 +217,15 @@ function nickChech() {
 		$.ajax({
 			url : "${pageContext.request.contextPath}/mypage/nicknameCheck.do",
 			method : "GET",
+			async:false,
 			data : {
 				nickname
 			},
 			success(resp) {
 				console.log(resp);
 				const {available} = resp;
+				console.log("여기확인");
 				console.log(available);
-				availableall = available;
 				if(available){
 					// 유효성검사
 				    if(!/^[a-zA-Z0-9ㄱ-ㅎ|ㅏ-ㅣ|가-힣]{2,10}$/.test(nickVal)){
@@ -248,7 +245,7 @@ function nickChech() {
 					if(nickVal == '${member.nickname}'){
 						document.querySelector("#nickerror1").style.display = "none";	
 						document.querySelector("#nickok").style.display = "inline";	
-						document.querySelector("#nicknameValid").value = "1";	
+						document.querySelector("#nicknameValid").value = "1";
 						return;
 					}
 					document.querySelector("#nickerror1").style.display = "inline";	
@@ -299,7 +296,7 @@ $('.mail-check-input').blur(function () {
 	   $('#mail-Check-Btn').attr('disabled',true);
 	   $('#email').attr('readonly',true);
 	   $('#email').attr('onFocus', 'this.initialSelect = this.selectedIndex');
-	     $('#email').attr('onChange', 'this.selectedIndex = this.initialSelect');
+	   $('#email').attr('onChange', 'this.selectedIndex = this.initialSelect');
 	}else{
 	   $resultMsg.html('인증번호가 불일치 합니다. 다시 확인해주세요!');
 	   checkInput.focus();
@@ -307,101 +304,63 @@ $('.mail-check-input').blur(function () {
 	}
 });
 
-document.querySelector("#memberId").addEventListener('keyup', (e) => {
-	const memberIdVal = e.target.value;
-	const ok = document.querySelector(".guide.ok");
-	const error = document.querySelector(".guide.error");
-	const idValid = document.querySelector("#idValid");
-	
-	if(memberIdVal.length < 4){
-		error.style.display = "inline";	
-		ok.style.display = "none";	
-		idValid.value = "0";
-		return;
-	}
-	//console.log(memberIdVal);
-	
-	$.ajax({
-		url : '${pageContext.request.contextPath}/member/checkIdDuplicate.do',
-		data : {
-			memberId : memberIdVal
-		},
-		success(resp){
-			//console.log(resp);
-			const {memberId, available} = resp;
-			
-			if(available){
-				error.style.display = "none";	
-				ok.style.display = "inline";	
-				idValid.value = "1";
-			}
-			else{
-				error.style.display = "inline";	
-				ok.style.display = "none";	
-				idValid.value = "0";
-			}
-		},
-		error(jqxhr, statusText, err){
-			console.log(jqxhr, statusText, err);
-			const {responseJSON : {error}} = jqxhr;
-			alert(error);
-		}
-	});
-});
-
 /* 제출 시 닉네임 유효성검사 */
 document.querySelector("#quiz-form").addEventListener ('submit', (e) => {
-
 	// 아무것도 안했을 때
-	if(availableall == ""){
-		document.querySelector("#quiz-form").submit();
-		return;
-	}
+/* 	if(availableall == ''){
+		e.preventDefault();
+		alert('변경사항이 없습니다.');
+		return false;
+	} */
+	
+	console.log("나와?여기?");
+	console.log(availableall);
 	
 	// 변경할려고 시도했는데 못쓰는 닉네임일때
 	if(document.querySelector("#nicknameValid").value == "0"){
-		e.preventDefault();
-		alert("사용불가 닉네임입니다. 다시 확인하세요.");
+		console.log("나와?여기?2");
+	    e.preventDefault();
+	    alert('사용불가 닉네임입니다. 다시 확인하세요.');     
 		return false;
 	};
 	
-	   // email인증을 아예 안했을 경우
-	   if(document.querySelector('#mail-check-warn').style.display == 'none'){
-	      e.preventDefault();
-	      alert('이메일 인증 후 가입 가능합니다.');      
-	      return false;
-	   }
+	// email인증을 아예 안했을 경우
+	if(document.querySelector('#mail-check-warn').style.display == 'none'){
+	    e.preventDefault();
+	    alert('이메일 인증 후 가입 가능합니다.');      
+	    return false;
+	}
 	   
-	   // 했는데 불일치할 경우
-	   const $resultMsg = $('#mail-check-warn');
-	   const checkInput = $('.mail-check-input');
-	   if(document.querySelector('#mail-check-warn').innerText == '인증번호가 불일치 합니다. 다시 확인해주세요!'){
-	      e.preventDefault();      
-	      checkInput.attr('readonly', false);
-	      checkInput.focus();
-	      alert('이메일 인증번호를 올바르게 입력해주세요.');
-	      return false;
-	   }
+	// 했는데 불일치할 경우
+    const $resultMsg = $('#mail-check-warn');
+    const checkInput = $('.mail-check-input');
+    if(document.querySelector('#mail-check-warn').innerText == '인증번호가 불일치 합니다. 다시 확인해주세요!'){
+       e.preventDefault();      
+       checkInput.attr('readonly', false);
+       checkInput.focus();
+       alert('이메일 인증번호를 올바르게 입력해주세요.');
+       return false;
+    }
 	   
-	   // phone
-	   if(!/^010\d{8}$/.test(phone.value)){
-	      e.preventDefault();
-	      alert("유효한 전화번호를 입력하세요.");
-	      return false;
-	   }
-	   
-	   // gender
-	   let cnt;
-	   document.querySelectorAll('[name=gender]').forEach((radio) => {
-	      if(!radio.checked){
-	         cnt++;         
-	      }
-	   });
-	   if(cnt == 2){
-	      e.preventDefault();      
-	      alert('성별을 입력해주세요.');
-	      return false;
-	   }
+    // phone
+    if(!/^010\d{8}$/.test(phone.value)){
+       e.preventDefault();
+       alert("유효한 전화번호를 입력하세요.");
+       return false;
+    }
+    
+    // gender
+    let cnt;
+    document.querySelectorAll('[name=gender]').forEach((radio) => {
+       if(!radio.checked){
+          cnt++;         
+       }
+    });
+    if(cnt == 2){
+       e.preventDefault();      
+       alert('성별을 입력해주세요.');
+       return false;
+    }
 });
 
 </script>

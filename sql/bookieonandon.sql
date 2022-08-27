@@ -1351,5 +1351,7 @@ select * from mission where club_no = 121;
 update mission set m_title = '감명깊은 구절 올리기' where mission_no = 122;
 commit;
 
-select * from book where member_id = 'devcami';
-select * from book_ing where member_id = 'devcami';
+select * from book where member_id = 'test1';
+select * from book_ing where member_id = 'test1';
+
+select * from member;
