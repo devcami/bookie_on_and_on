@@ -295,7 +295,7 @@ function getReadList(cPage) {
 function infiniteScroll(){
 	// scrollTop : 현재 위치 | document.height() : 문서 총 길이 | window.innerHeight : 윈도우 내부 창 사이즈 
 	//console.log("window scrollTop : ",  $(window).scrollTop()); 
-	//console.log("window height : ", $(window).height());
+	//console.log("window height : ", $(document).height());
 	//console.log("window innerHeight : " ,window.innerHeight);
 	//console.log($(window).scrollTop() + window.innerHeight);
 	

@@ -1355,3 +1355,13 @@ select * from book where member_id = 'test1';
 select * from book_ing where member_id = 'test1';
 
 select * from member;
+select * from book where member_id = 'devcami';
+select * from book_ing where member_id = 'devcami';
+
+select
+    max(ing_no) ing_no
+from
+    book_ing
+where
+    member_id = 'devcami' and item_id = '9791163030195';
+>>>>>>> branch 'master' of https://github.com/devcami/bookie_on_and_on.git
