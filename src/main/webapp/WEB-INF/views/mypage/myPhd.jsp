@@ -179,16 +179,10 @@ function getReadList(cPage) {
 	const container = document.querySelector("#content");
     // 비동기로 다음장 가져오기
     const url = document.location.href;
-    let now;
-    if(url == 'http://localhost:9090/bookie/pheed/pheedCList.do'){
-     	now = 'C';
-    }
-    if(url == 'http://localhost:9090/bookie/pheed/pheedFList.do'){
-    	now = 'F';
-    }
+    
     $.ajax({
-    	url : "${pageContext.request.contextPath}/pheed/getReadList.do",
-    	data : {cPage, now},
+    	url : "${pageContext.request.contextPath}/pheed/getMyReadList.do",
+    	data : {cPage},
     	success(resp){
     		//console.log(resp);
     		let {list, likesStr, wishStr} = resp;

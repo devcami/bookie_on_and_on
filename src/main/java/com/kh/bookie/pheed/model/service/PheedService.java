@@ -51,4 +51,6 @@ public interface PheedService {
 
 	PheedComment selectOnePheedComment(int pheedCNo);
 
+	List<Pheed> selectMyPheedList(Map<String, Object> map);
+
 }

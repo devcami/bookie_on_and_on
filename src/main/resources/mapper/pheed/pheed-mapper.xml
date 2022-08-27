@@ -26,6 +26,16 @@
     		rnum between #{cPage} and #{numPerPage}
 	</select>
 	
+	<select id="selectMyPheedList" resultType="pheed">
+		select 
+			ph.*,
+			(select count(*) from likes_pheed where pheed_no = ph.pheed_no) likes_cnt 
+		from 
+    		(select row_number() over (order by enroll_date desc) rnum, p.* from pheed p where is_opened = 'O' and member_id = #{memberId}) ph
+		where
+    		rnum between #{cPage} and #{numPerPage}
+	</select>
+	
 	<select id="selectAttachment" resultType="pheedAttachment">
 		select
 			*
