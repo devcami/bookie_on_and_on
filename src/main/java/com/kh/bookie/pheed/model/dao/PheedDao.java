@@ -19,6 +19,8 @@ public interface PheedDao {
 	List<Pheed> selectPheedFList(Map<String, Object> map);
 
 	List<Pheed> selectPheedCList(Map<String, Object> map);
+	
+	List<Pheed> selectMyPheedList(Map<String, Object> map);
 
 	PheedAttachment selectAttachment(int pheedNo);
 
@@ -79,5 +81,7 @@ public interface PheedDao {
 
 	@Delete("delete from wishlist_pheed where pheed_no = #{pheedNo}")
 	int deletePheedWishlists(int pheedNo);
+
+	
 
 }
