@@ -190,8 +190,8 @@ public class PheedController {
 			// cPage = 2 -> 4~6
 			// cPage = 3 -> 7~9 ...
 			log.debug("cPage = {}", cPage);
-			cPage = (cPage - 1) * 3 + 1;
 			int numPerPage = cPage * 3;
+			cPage = (cPage - 1) * 3 + 1;
 			map.put("cPage", cPage);
 			map.put("numPerPage", numPerPage);
 			List<Pheed> list = null;
