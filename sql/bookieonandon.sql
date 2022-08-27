@@ -1351,12 +1351,41 @@ select * from mission where club_no = 121;
 update mission set m_title = '감명깊은 구절 올리기' where mission_no = 122;
 commit;
 
+select * from mission_status;
+delete from mission_status where mission_no = 122;
+
+
+update club set club_end = sysdate - 1 where club_no = 121;
+commit;
+
+select * from my_club;
+update my_club set club_end = sysdate - 1 where club_no = 121 and member_id = 'hosi';
+
+update member set point = 6000 where member_id = 'hosi';
+
+select * from alarm;
+delete from alarm where member_id = 'hosi';
+commit;
+
 select * from book where member_id = 'test1';
 select * from book_ing where member_id = 'test1';
 
 select * from member;
+
 select * from book where member_id = 'devcami';
 select * from book_ing where member_id = 'devcami';
+
+
+select * from my_club;
+select * from mission_status;
+
+select * from club;
+update club set title='그냥 관리자 취향 책들입니다.', recruit_start = sysdate-7 where club_no = 101;
+commit;
+
+delete from club where club_no = 161;
+select * from point_status where member_id = 'tmddbs';
+delete from point_status where member_id = 'tmddbs';
 
 select
     max(ing_no) ing_no
@@ -1364,4 +1393,3 @@ from
     book_ing
 where
     member_id = 'devcami' and item_id = '9791163030195';
->>>>>>> branch 'master' of https://github.com/devcami/bookie_on_and_on.git

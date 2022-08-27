@@ -104,7 +104,7 @@ public class ClubController {
 			}
 			
 			Map<String, Object> map = new HashMap<>();	
-			int numPerPage = 4;
+			int numPerPage = 6;
 			int start = ((cPage - 1) * numPerPage) + 1;
 			int end = cPage * numPerPage;
 			
@@ -151,7 +151,7 @@ public class ClubController {
 	        log.debug("authentication member = {} ", loginMember.getMemberId());
 			
 			Map<String, Object> map = new HashMap<>();	
-			int numPerPage = 8;
+			int numPerPage = 6;
 			int start = ((cPage - 1) * numPerPage) + 1;
 			int end = cPage * numPerPage;
 
@@ -608,7 +608,7 @@ public class ClubController {
 //			log.debug("clubNo = {}", clubNo);
 			
 			Map<String, Object> map = new HashMap<>();			
-			int numPerPage = 14;
+			int numPerPage = 12;
 			int start = ((cPage - 1) * numPerPage) + 1;
 			int end = cPage * numPerPage;
 			

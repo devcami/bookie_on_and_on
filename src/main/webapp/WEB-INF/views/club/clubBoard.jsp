@@ -45,8 +45,7 @@
 					id="clubBoard-enroll"
 					onclick="boardEnroll();">
 					<i class="fa-solid fa-plus"></i>
-				</button>
-		  		<p>널임다</p>		
+				</button>	
 		  	</c:if>
 		</div>
 		
@@ -94,9 +93,7 @@
 				onclick="boardEnroll();"
 				class="btn">작성하기</button>
 		</div>
-		</c:if>
-		
-		
+		</c:if>		
 		<%-- 글이 있는 경우! 끝 --%>
 		
 		

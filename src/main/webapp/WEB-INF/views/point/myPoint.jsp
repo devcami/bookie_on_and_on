@@ -255,7 +255,8 @@ document.querySelector("#charge-btn").addEventListener('click', (e) => {
   	    			container.insertAdjacentHTML('afterend', div);
   	    			
   	    			// 모달 밖에 내 포인트도 바꿔
-  	    			document.querySelector('#myPointH4').innerHTML = pointStatus.totalPoint;
+  	    			const myNewPoint = pointStatus.totalPoint + "원"
+  	    			document.querySelector('#myPointH4').innerHTML = myNewPoint;
   	    			
   	    			// 모달 안에 인풋 내용 지워 
   	    			document.querySelector("#chargePoint").value = '';
