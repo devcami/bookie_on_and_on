@@ -12,6 +12,7 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param value="피드" name="title"/>
 </jsp:include>
+${list}
 <sec:authentication property="principal" var="loginMember"/>
 <div id="pheed-container" >
 	<div id="pheed-header">
@@ -296,9 +297,9 @@ function getReadList(cPage) {
 function infiniteScroll(){
 	// scrollTop : 현재 위치 | document.height() : 문서 총 길이 | window.innerHeight : 윈도우 내부 창 사이즈 
 	//console.log("window scrollTop : ",  $(window).scrollTop()); 
-	//console.log("window height : ", $(window).height());
-	//console.log("window innerHeight : " ,window.innerHeight);
-	//console.log($(window).scrollTop() + window.innerHeight);
+	 console.log("window height : ", $(window).height());
+	// console.log("window innerHeight : " ,window.innerHeight);
+	console.log($(window).scrollTop() + window.innerHeight);
 	
     if($(window).scrollTop() + window.innerHeight == $(document).height()){
     	let cPage = document.querySelector("#cPage"); 

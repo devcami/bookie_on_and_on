@@ -14,7 +14,6 @@
 <sec:authorize access="isAuthenticated()">
 	<sec:authentication property="principal" var="loginMember"/>
 </sec:authorize>
-
 <jsp:useBean id="today" class="java.util.Date" />
 <fmt:formatDate value='${today}' pattern='yyyy-MM-dd' var="nowDate"/>
 

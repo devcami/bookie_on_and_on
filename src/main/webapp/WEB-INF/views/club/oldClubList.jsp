@@ -20,7 +20,8 @@
 			    <button 
 			    	id="btn-enroll"
 			    	class="btn btn-sm" 
-			    	onclick="">북클럽 삭제</button>	    	
+			    	onclick=""
+			    	style="margin-right: 5px;">북클럽 삭제</button>	    	
 			</sec:authorize>
 			<button 
 		    	id="btn-enroll"
