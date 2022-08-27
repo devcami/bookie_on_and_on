@@ -1346,7 +1346,7 @@ select * from chat_log;
 
 delete from chat_log where no between 82 and 83;
 commit;
-
+select * from book_ing;
 select * from mission where club_no = 121;
 update mission set m_title = '감명깊은 구절 올리기' where mission_no = 122;
 commit;
@@ -1366,8 +1366,15 @@ update member set point = 6000 where member_id = 'hosi';
 select * from alarm;
 delete from alarm where member_id = 'hosi';
 commit;
+
+select * from book where member_id = 'test1';
+select * from book_ing where member_id = 'test1';
+
+select * from member;
+
 select * from book where member_id = 'devcami';
 select * from book_ing where member_id = 'devcami';
+
 
 select * from my_club;
 select * from mission_status;
@@ -1379,3 +1386,10 @@ commit;
 delete from club where club_no = 161;
 select * from point_status where member_id = 'tmddbs';
 delete from point_status where member_id = 'tmddbs';
+
+select
+    max(ing_no) ing_no
+from
+    book_ing
+where
+    member_id = 'devcami' and item_id = '9791163030195';
