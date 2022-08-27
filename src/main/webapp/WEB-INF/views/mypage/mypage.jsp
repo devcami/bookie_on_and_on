@@ -206,7 +206,7 @@ table tr td{
 	<h1 style="text-align: center;">주 독서 분야</h1>
 </div>
 <div style="position: relative; height:50rem; width:800px;">
-  <canvas id="myChart"></canvas>
+  <canvas id="myChart" width="500" height="500" style="margin: 0 auto;"></canvas>
 </div>
 <br />
 <br />
@@ -516,6 +516,7 @@ window.addEventListener('load', () => {
 	var list = [];
 	const memberId = "${member.memberId}";
 	let i = 1;
+	let l = 1;
 	
 	$.ajax({
 		url: `${pageContext.request.contextPath}/mypage/myBookIngList.do`,
@@ -528,9 +529,11 @@ window.addEventListener('load', () => {
 			/* 읽은 책 찾아 뿌리기 */
 		 	bookIngList.forEach((value, index, array)=>{
 		 		if(!value.endedAt){
-		 			i--;
+		 			l--;
 		 		}
 				if(value.endedAt){
+					console.log("여기야");
+					console.log(value);
 					$.ajax({
 						url: `${pageContext.request.contextPath}/mypage/myEndedAtBook.do`,
 						async:false,
@@ -543,12 +546,13 @@ window.addEventListener('load', () => {
 							item.forEach((bookIng)=> {
 								const {isbn13, title, author, publisher, pubDate, cover} = bookIng;
 								//console.log("여긴어디냐");
-								//console.log(value.endedAt.monthValue);
+								console.log(value.endedAt.monthValue);
 								//console.log(i);
 								const month = value.endedAt.monthValue;
 								//console.log(bookIng);
+								console.log(l);
 								
-								const div = `<tr id="month\${i}">
+								const div = `<tr id="month\${l}">
 									            <td style="width:0px"></td>
 									            <td></td>
 									            <td></td>
@@ -572,6 +576,7 @@ window.addEventListener('load', () => {
 						 				}
 									}
 								}
+								console.log("여긴옴?");
 					        	if(month == 1)
 					        		document.querySelector(`#month\${i}`).children[1].innerHTML = `<img src=\${cover}  value=\${isbn13} onclick="bookEnroll(this);" style="width: 3.5rem; height: 5rem">`;
 					        	if(month == 2)
@@ -601,7 +606,8 @@ window.addEventListener('load', () => {
 						error : console.log
 					});	
 				}
-				i++;   	
+				i++;  
+				l++;
  			}); 
 		},
 		error : console.log
@@ -689,7 +695,18 @@ window.addEventListener('load', () => {
 		  type: 'pie',
 		  data: data,
 		  options: {
-			  font: 50,
+			  responsive: false, // 차트크기변경할때 꼭 false
+			  legend:{
+			  	position: 'left',
+			  },
+			  title:{
+				diplay: true,
+				text : 'My Book Category',
+			  },
+			  animation:{
+				  animateScale: true,
+				  animateRotate: true
+			  },
 		  }
 		};
 	

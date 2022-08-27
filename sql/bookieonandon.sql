@@ -1346,11 +1346,15 @@ select * from chat_log;
 
 delete from chat_log where no between 82 and 83;
 commit;
-
+select * from book_ing;
 select * from mission where club_no = 121;
 update mission set m_title = '감명깊은 구절 올리기' where mission_no = 122;
 commit;
 
+select * from book where member_id = 'test1';
+select * from book_ing where member_id = 'test1';
+
+select * from member;
 select * from book where member_id = 'devcami';
 select * from book_ing where member_id = 'devcami';
 
@@ -1360,3 +1364,4 @@ from
     book_ing
 where
     member_id = 'devcami' and item_id = '9791163030195';
+>>>>>>> branch 'master' of https://github.com/devcami/bookie_on_and_on.git

@@ -138,6 +138,11 @@ document.querySelector("#quiz-form").addEventListener ("submit", (e) =>{
 		e.preventDefault();
 		return false;
 	}
+	if(passwordValid1 == "0"){
+		alert("기존비밀번호가 일치하지 않습니다. 다시 확인해주세요.") 
+		e.preventDefault();
+		return false;
+	}
 	if(passwordValid3 == "0"){
 		alert("새로운 비밀번호가 일치하지 않습니다. 다시 확인해주세요") 
 		e.preventDefault();
