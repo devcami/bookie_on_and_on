@@ -1353,3 +1353,10 @@ commit;
 
 select * from book where member_id = 'devcami';
 select * from book_ing where member_id = 'devcami';
+
+select
+    max(ing_no) ing_no
+from
+    book_ing
+where
+    member_id = 'devcami' and item_id = '9791163030195';
