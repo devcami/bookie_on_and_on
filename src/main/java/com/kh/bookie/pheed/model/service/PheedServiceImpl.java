@@ -175,6 +175,18 @@ public class PheedServiceImpl implements PheedService{
 	public PheedComment selectOnePheedComment(int pheedCNo) {
 		return pheedDao.selectOnePheedComment(pheedCNo);
 	}
+
+	@Override
+	public List<Pheed> getMyPheedWishList(Map<String, Object> map) {
+		List<Pheed> list = pheedDao.getMyPheedWishList(map);
+		for(Pheed p : list) {
+			PheedAttachment attach = pheedDao.selectAttachment(p.getPheedNo());
+			p.setAttach(attach);
+			Member member = pheedDao.selectMember(p.getMemberId());
+			p.setMember(member);
+		}
+		return list;
+	}
 	
 	
 	

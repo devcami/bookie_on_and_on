@@ -194,4 +194,15 @@
 			default,
 			2)
 	</insert>
+	
+	<select id="getMyPheedWishList" resultType="pheed">
+		select 
+		    ph.*,
+		    (select count(*) from likes_pheed where pheed_no = ph.pheed_no) likes_cnt 
+		from 
+		    (select  row_number() over (order by enroll_date desc) rnum, p.* from pheed p inner join wishlist_pheed wp on p.pheed_no = wp.pheed_no where wp.member_id = #{memberId}) ph
+		where
+		    rnum between #{cPage} and #{numPerPage}
+	</select>
+	
 </mapper>

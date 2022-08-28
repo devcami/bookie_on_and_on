@@ -214,6 +214,61 @@ public class PheedController {
 		}
 	}
 	
+	@GetMapping("/getMyPheedWishList.do")
+	public ResponseEntity<?> getMyPheedWishList(@RequestParam int cPage, @AuthenticationPrincipal Member loginMember){
+	      try {
+	          Map<String, Object> map = new HashMap<>();
+	          log.debug("authentication member = {} ", loginMember);
+	          log.debug("authentication member = {} ", loginMember.getNickname());
+	          
+	          String memberId = loginMember.getMemberId();
+	          map.put("memberId", memberId);
+
+			// 멤버 있으면 북클럽 찜 리스트 가져와 
+			List<String> pheedWishList = pheedService.getPheedWishListbyMemberId(loginMember.getUsername());
+			
+			String wishStr = "";
+			for(int i = 0; i < pheedWishList.size(); i++) {
+				wishStr += pheedWishList.get(i);
+				wishStr +=  ",";
+			}
+			
+			map.put("wishStr", wishStr);
+			
+			// 멤버 있으면 북클럽 하트 리스트 가져와 
+			List<String> pheedLikesList = pheedService.getPheedLikesListbyMemberId(loginMember.getUsername());
+			
+			String likesStr = "";
+			for(int j = 0;  j < pheedLikesList.size(); j++) {
+				likesStr += pheedLikesList.get(j);
+				likesStr +=  ",";
+			}
+			map.put("likesStr", likesStr);
+			
+			
+			
+			// cPage = 2 -> 4~6
+			// cPage = 3 -> 7~9 ...
+			log.debug("cPage = {}", cPage);
+			int numPerPage = cPage * 3;
+			cPage = (cPage - 1) * 3 + 1;
+			map.put("cPage", cPage);
+			map.put("numPerPage", numPerPage);
+			List<Pheed> list = pheedService.getMyPheedWishList(map);;
+
+			log.debug("list = {}", list);
+			if(list != null) {
+				map.put("list", list);
+				return ResponseEntity.ok(map);
+			}
+			else
+				return ResponseEntity.ok(null);
+		} catch (Exception e) {
+			log.error("피드 스크롤 더 가져오기 오류", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+	}
+	
 	@GetMapping("/getMyReadList.do")
 	public ResponseEntity<?> getMyReadList(@RequestParam int cPage, @AuthenticationPrincipal Member loginMember){
 	      try {
