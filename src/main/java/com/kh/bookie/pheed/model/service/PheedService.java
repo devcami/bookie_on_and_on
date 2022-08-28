@@ -53,4 +53,6 @@ public interface PheedService {
 
 	List<Pheed> selectMyPheedList(Map<String, Object> map);
 
+	List<Pheed> getMyPheedWishList(Map<String, Object> map);
+
 }

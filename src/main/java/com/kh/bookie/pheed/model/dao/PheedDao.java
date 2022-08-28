@@ -82,6 +82,7 @@ public interface PheedDao {
 	@Delete("delete from wishlist_pheed where pheed_no = #{pheedNo}")
 	int deletePheedWishlists(int pheedNo);
 
+	List<Pheed> getMyPheedWishList(Map<String, Object> map);
 	
 
 }

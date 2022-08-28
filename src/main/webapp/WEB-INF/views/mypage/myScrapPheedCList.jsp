@@ -178,15 +178,15 @@ function getReadList(cPage) {
 	const container = document.querySelector("#content");
     // 비동기로 다음장 가져오기
     const url = document.location.href;
-    let now;
-    if(url == 'http://localhost:9090/bookie/pheed/pheedCList.do'){
+	let now;
+    /* if(url == 'http://localhost:9090/bookie/pheed/pheedCList.do'){
      	now = 'C';
     }
     if(url == 'http://localhost:9090/bookie/pheed/pheedFList.do'){
     	now = 'F';
-    }
+    } */
     $.ajax({
-    	url : "${pageContext.request.contextPath}/pheed/getReadList.do",
+    	url : "${pageContext.request.contextPath}/pheed/getMyPheedWishList.do",
     	data : {cPage, now},
     	success(resp){
     		//console.log(resp);
